@@ -1,0 +1,56 @@
+{
+  "name": "@transmute/element-lib",
+  "version": "1.0.0",
+  "description": "Experimental Sidetree Protocol based DID Method `elem` with Ethereum and IPFS",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/decentralized-identity/element.git"
+  },
+  "scripts": {
+    "ganache": ". ../../.env && ganache-cli -i 133700 -m \"$ELEMENT_MNEUMONIC\"",
+    "ipfs": "ipfs daemon",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint ./src --fix",
+    "test": "jest --runInBand ",
+    "coverage": "jest --runInBand --coverage ",
+    "test:contracts": "truffle test",
+    "contracts:migrate:dev": "truffle migrate --network development --reset"
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "./test",
+      "__fixtures__"
+    ]
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "base64url": "^3.0.1",
+    "bip39": "^2.5.0",
+    "ethereumjs-util": "^6.1.0",
+    "fast-json-patch": "^2.0.7",
+    "hdkey": "^1.1.1",
+    "ipfs-api": "^26.1.2",
+    "ipfs-http-client": "^30.1.0",
+    "ipfs-unixfs": "^0.1.16",
+    "ipld-dag-pb": "^0.15.3",
+    "lodash": "^4.17.11",
+    "merkle-tools": "^1.4.0",
+    "multihashes": "^0.4.14",
+    "secp256k1": "^3.6.2",
+    "truffle-contract": "^4.0.9",
+    "truffle-hdwallet-provider": "^1.0.5",
+    "web3": "^1.0.0-beta.36",
+    "websocket": "^1.0.28"
+  },
+  "devDependencies": {
+    "jest": "^24.5.0",
+    "eslint": "^5.10.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jest": "^22.1.2",
+    "eslint-plugin-node": "^8.0.0",
+    "eslint-plugin-security": "^1.4.0"
+  }
+}

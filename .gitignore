@@ -1,0 +1,4 @@
+node_modules
+.env
+
+packages/element-lib/build

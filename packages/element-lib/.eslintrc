@@ -1,0 +1,33 @@
+{
+  "parserOptions": {
+    "ecmaVersion": 2018
+  },
+  "plugins": ["security", "jest"],
+  "extends": [
+    "airbnb-base",
+    "plugin:jest/recommended",
+    "plugin:node/recommended",
+    "plugin:security/recommended"
+  ],
+  "env": {
+    "node": true
+  },
+  "globals": {
+    "jest": true
+  },
+  "rules": {
+    "global-require": "off",
+    "security/detect-object-injection": "off",
+    "no-console": "off",
+    "jest/no-disabled-tests": "off",
+    "no-plusplus": "off",
+
+    "node/no-unsupported-features/es-syntax": "off",
+    "node/no-unpublished-require": [
+      "error",
+      {
+        "allowModules": ["jest-express"]
+      }
+    ]
+  }
+}
