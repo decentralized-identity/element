@@ -59,8 +59,6 @@ module.exports = async ({
 
   let updatedState = { ...initialState };
 
-
-
   // eslint-disable-next-line
   for (const anchoredOperation of anchoredOperations) {
     // eslint-disable-next-line

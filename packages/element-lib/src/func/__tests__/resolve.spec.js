@@ -34,20 +34,20 @@ describe('resolve', () => {
 
   // this is not very fast or efficient... better to trust a cache.
   it('can resolve a did', async () => {
-    // const did = `did:elem:${actorsArray[0].uid}`;
-    // const doc = await element.func.resolve(did);
-    // expect(doc.id).toBe(did);
+    const did = `did:elem:${actorsArray[0].uid}`;
+    const doc = await element.func.resolve(did);
+    expect(doc.id).toBe(did);
   });
 
-  // it('can resolve faster after cache hit ', async () => {
-  //   const did = `did:elem:${actorsArray[0].uid}`;
-  //   const doc = await element.func.resolve(did);
-  //   expect(doc.id).toBe(did);
-  // });
+  it('can resolve faster after cache hit ', async () => {
+    const did = `did:elem:${actorsArray[0].uid}`;
+    const doc = await element.func.resolve(did);
+    expect(doc.id).toBe(did);
+  });
 
-  // it('returns null when did dne', async () => {
-  //   const did = 'did:elem:dne';
-  //   const doc = await element.func.resolve(did);
-  //   expect(doc).toBe(null);
-  // });
+  it('returns null when did dne', async () => {
+    const did = 'did:elem:dne';
+    const doc = await element.func.resolve(did);
+    expect(doc).toBe(null);
+  });
 });

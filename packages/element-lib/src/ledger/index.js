@@ -121,9 +121,9 @@ const setDefaultSigningAddress = (address) => {
 };
 
 const getDefaultSigningAddress = () => {
-  // if (defaultSigningAddress) {
-  //   return defaultSigningAddress;
-  // }
+  if (defaultSigningAddress) {
+    return defaultSigningAddress;
+  }
   const sidetreeNodeKeypair = mnemonicToKeypair(process.env.ELEMENT_MNEUMONIC, "m/44'/60'/0'/0/0");
   const sidetreeNodeAddress = publicKeyToAddress(sidetreeNodeKeypair.publicKey);
   return sidetreeNodeAddress;
