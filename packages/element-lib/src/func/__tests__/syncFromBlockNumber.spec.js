@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const element = require('../../../index');
 
 const {
@@ -18,6 +19,7 @@ describe('syncFromBlockNumber', () => {
   });
 
   it('create and update from signed anchored operations', async () => {
+    let uids;
     const createPayload = {
       ...createPayloadTemplate,
     };
@@ -39,14 +41,14 @@ describe('syncFromBlockNumber', () => {
     const initialState = {};
 
     let updatedModel = await element.func.syncFromBlockNumber({
-      blockNumber: 0,
+      transactionTime: 0,
       initialState,
       reducer: element.reducer,
       storage,
       ledger,
       onUpdated: (model) => {
-        const uids = Object.keys(model);
-        expect(uids.length).toBe(1);
+        uids = _.without(Object.keys(model), 'transactionTime');
+
         expect(model[uids[0]].txns[0]).toEqual(txn);
         expect(model[uids[0]].doc.publicKey[0].publicKeyHex).toEqual(
           createPayload.publicKey[0].publicKeyHex,
@@ -54,7 +56,6 @@ describe('syncFromBlockNumber', () => {
       },
     });
 
-    let uids = Object.keys(updatedModel);
     const existingDoc = updatedModel[uids[0]].doc;
 
     txn = await element.func.operationsToTransaction({
@@ -76,19 +77,17 @@ describe('syncFromBlockNumber', () => {
     });
 
     updatedModel = await element.func.syncFromBlockNumber({
-      blockNumber: 0,
-      initialState,
+      transactionTime: 0,
+      initialState: {},
       reducer: element.reducer,
       storage,
       ledger,
       onUpdated: (model) => {
-        uids = Object.keys(model);
-        expect(uids.length).toBe(1);
         expect(model[uids[0]].txns[1]).toEqual(txn);
         expect(model[uids[0]].doc.publicKey[1].id).toEqual('#key2');
       },
     });
 
-    expect.assertions(6);
+    expect.assertions(4);
   });
 });

@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const element = require('../../../index');
 
 const aliceKeys = {
@@ -82,6 +83,90 @@ const aliceCreateAnchorFile = {
   merkleRoot: '5ff851e29d82e74b0df0c6c3016fb6bb72c7c78144552c31c0537aed518215d6',
 };
 
+const generateActor = () => {
+  const keypair = element.func.createKeys();
+  const createPayload = {
+    ...createPayloadTemplate,
+  };
+  createPayload.publicKey[0].publicKeyHex = keypair.publicKey;
+  const uid = element.func.payloadToHash(createPayload);
+  return {
+    uid,
+    keypair,
+  };
+};
+
+const getGroup = (g, p) => {
+  let m = (g * g) % p;
+  const members = [m];
+  while (m !== g) {
+    m = (m * g) % p;
+    members.push(m);
+  }
+  return members;
+  // return members.sort((a, b) => a > b);
+};
+
+const generateCreates = async (actorMap) => {
+  const operations = [];
+  _.values(actorMap).forEach(async (actor) => {
+    const operation = await element.func.payloadToOperation({
+      type: 'create',
+      kid: '#key1',
+      payload: {
+        '@context': 'https://w3id.org/did/v1',
+        publicKey: [
+          {
+            id: '#key1',
+            type: 'Secp256k1VerificationKey2018',
+            publicKeyHex: actor.keypair.publicKey,
+          },
+        ],
+      },
+      privateKey: actor.keypair.privateKey,
+    });
+    // eslint-disable-next-line
+    actorMap[actor.uid].createOp = operation;
+    operations.push(operation);
+  });
+  return operations;
+};
+
+const generateUpdate1 = async (actorMap) => {
+  const operations = [];
+  _.values(actorMap).forEach(async (actor) => {
+    const keypair = element.func.createKeys();
+    const operation = await element.func.payloadToOperation({
+      type: 'update',
+      kid: '#key1',
+      payload: {
+        did: `did:sidetree:${actor.uid}`,
+        operationNumber: 1,
+        previousOperationHash: element.func.encodedOperationToHash(actor.createOp),
+        patch: [
+          {
+            op: 'replace',
+            path: '/publicKey/1',
+            value: {
+              id: '#key2',
+              type: 'Secp256k1VerificationKey2018',
+              publicKeyHex: keypair.publicKey,
+            },
+          },
+        ],
+      },
+      privateKey: actor.keypair.privateKey,
+    });
+    operations.push(operation);
+
+    // eslint-disable-next-line
+    actorMap[actor.uid].update1 = operation;
+    // eslint-disable-next-line
+    actorMap[actor.uid].update1Kepair = keypair;
+  });
+  return operations;
+};
+
 module.exports = {
   aliceKeys,
   bobKeys,
@@ -94,4 +179,8 @@ module.exports = {
   aliceEncodedUpdateOp,
   aliceCreateBatchFile,
   aliceCreateAnchorFile,
+  generateActor,
+  getGroup,
+  generateCreates,
+  generateUpdate1,
 };

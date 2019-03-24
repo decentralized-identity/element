@@ -3,10 +3,9 @@ const crypto = require('crypto');
 const _ = require('lodash');
 
 module.exports = async ({
-  blockNumber, initialState, reducer, storage, ledger, onUpdated,
+  transactionTime, initialState, reducer, storage, ledger, onUpdated,
 }) => {
-  let stream = await ledger.getTransactions(blockNumber);
-
+  let stream = await ledger.getTransactions(transactionTime);
   stream = await Promise.all(
     stream.map(async txn => ({
       transaction: txn,
@@ -60,13 +59,21 @@ module.exports = async ({
 
   let updatedState = { ...initialState };
 
+
+
   // eslint-disable-next-line
   for (const anchoredOperation of anchoredOperations) {
     // eslint-disable-next-line
     updatedState = { ...(await reducer(updatedState, anchoredOperation)) };
   }
 
-  onUpdated(updatedState);
+  if (stream.length) {
+    updatedState.transactionTime = stream.pop().transaction.transactionTime;
+  }
+
+  if (onUpdated) {
+    onUpdated(updatedState);
+  }
 
   return updatedState;
 };

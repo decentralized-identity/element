@@ -40,6 +40,27 @@ const getWeb3 = ({ mneumonic, providerUrl }) => {
   return new Web3(provider);
 };
 
+const createNewContract = async () => {
+  const web3 = getWeb3({
+    mneumonic: process.env.ELEMENT_MNEUMONIC,
+    providerUrl: process.env.ELEMENT_PROVIDER,
+  });
+  const sidetreeNodeKeypair = mnemonicToKeypair(process.env.ELEMENT_MNEUMONIC, "m/44'/60'/0'/0/0");
+
+  const sidetreeNodeAddress = publicKeyToAddress(sidetreeNodeKeypair.publicKey);
+
+  // const [localAddress] = await web3.eth.getAccounts();
+  // console.log(localAddress)
+  anchorContract.setProvider(web3.currentProvider);
+  const newAnchorContract = await anchorContract.new({
+    from: sidetreeNodeAddress,
+    // TODO: Bad hard coded value, use gasEstimate
+    gas: 4712388,
+  });
+  anchorContractAddress = newAnchorContract.address;
+  return newAnchorContract;
+};
+
 const getAnchorContract = async () => {
   const web3 = getWeb3({
     mneumonic: process.env.ELEMENT_MNEUMONIC,
@@ -52,24 +73,7 @@ const getAnchorContract = async () => {
   } catch (e) {
     // console.log(e);
     // we are likely local.
-
-    const sidetreeNodeKeypair = mnemonicToKeypair(
-      process.env.ELEMENT_MNEUMONIC,
-      "m/44'/60'/0'/0/0",
-    );
-
-    const sidetreeNodeAddress = publicKeyToAddress(sidetreeNodeKeypair.publicKey);
-
-    // const [localAddress] = await web3.eth.getAccounts();
-    // console.log(localAddress)
-
-    const newAnchorContract = await anchorContract.new({
-      from: sidetreeNodeAddress,
-      // TODO: Bad hard coded value, use gasEstimate
-      gas: 4712388,
-    });
-    anchorContractAddress = newAnchorContract.address;
-    return newAnchorContract;
+    return createNewContract();
   }
 };
 
@@ -119,9 +123,11 @@ const write = async (anchorFileHash) => {
 };
 
 module.exports = {
+  createNewContract,
   generateBIP39Mnemonic,
   mnemonicToKeypair,
   write,
   getBlockchainTime,
   getTransactions,
+  anchorContractAddress,
 };

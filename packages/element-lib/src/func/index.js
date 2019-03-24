@@ -10,4 +10,7 @@ module.exports = {
   operationsToTransaction: require('./operationsToTransaction'),
   getOperationReceiptFromBatchFile: require('./getOperationReceiptFromBatchFile'),
   syncFromBlockNumber: require('./syncFromBlockNumber'),
+  payloadToHash: require('./payloadToHash'),
+  encodedOperationToHash: require('./encodedOperationToHash'),
+  resolve: require('./resolve'),
 };
