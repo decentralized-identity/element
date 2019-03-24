@@ -1,9 +1,10 @@
 const element = require('../../../index');
 
 describe('ledger', () => {
-  beforeAll(() => {
+  beforeAll(async () => {
     process.env.ELEMENT_MNEUMONIC = 'hazard pride garment scout search divide solution argue wait avoid title cave';
     process.env.ELEMENT_PROVIDER = 'http://localhost:8545';
+    await element.ledger.createNewContract();
   });
 
   describe('getBlockchainTime', () => {

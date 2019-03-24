@@ -11,7 +11,8 @@ const anchorContractArtifact = require('../../build/contracts/SimpleSidetreeAnch
 
 const anchorContract = contract(anchorContractArtifact);
 
-let anchorContractAddress = '0xDD126A9b05b74aeE06B54587F476eE4271AC79B7';
+let anchorContractAddress = null;
+let defaultSigningAddress = null;
 
 const generateBIP39Mnemonic = () => bip39.generateMnemonic();
 
@@ -36,6 +37,11 @@ const mnemonicToKeypair = (mnemonic, hdPath) => {
 };
 
 const getWeb3 = ({ mneumonic, providerUrl }) => {
+  // eslint-disable-next-line
+  if (window && window.web3) {
+    // eslint-disable-next-line
+    return window.web3;
+  }
   const provider = new HDWalletProvider(mneumonic, providerUrl, 0);
   return new Web3(provider);
 };
@@ -67,6 +73,9 @@ const getAnchorContract = async () => {
     providerUrl: process.env.ELEMENT_PROVIDER,
   });
   try {
+    if (anchorContractAddress === null) {
+      throw new Error('create the contract!');
+    }
     anchorContract.setProvider(web3.currentProvider);
     const instance = await anchorContract.at(anchorContractAddress);
     return instance;
@@ -107,20 +116,36 @@ const getTransactions = async (fromBlock) => {
   return logs.map(eventLogToSidetreeTransaction);
 };
 
+const setDefaultSigningAddress = (address) => {
+  defaultSigningAddress = address;
+};
+
+const getDefaultSigningAddress = () => {
+  // if (defaultSigningAddress) {
+  //   return defaultSigningAddress;
+  // }
+  const sidetreeNodeKeypair = mnemonicToKeypair(process.env.ELEMENT_MNEUMONIC, "m/44'/60'/0'/0/0");
+  const sidetreeNodeAddress = publicKeyToAddress(sidetreeNodeKeypair.publicKey);
+  return sidetreeNodeAddress;
+};
+
 const write = async (anchorFileHash) => {
   const instance = await getAnchorContract();
-
-  const sidetreeNodeKeypair = mnemonicToKeypair(process.env.ELEMENT_MNEUMONIC, "m/44'/60'/0'/0/0");
-
-  const sidetreeNodeAddress = publicKeyToAddress(sidetreeNodeKeypair.publicKey);
+  const from = getDefaultSigningAddress();
 
   const bytes32EncodedHash = func.base58EncodedMultihashToBytes32(anchorFileHash);
   const receipt = await instance.anchorHash(bytes32EncodedHash, {
-    from: sidetreeNodeAddress,
+    from,
   });
 
   return eventLogToSidetreeTransaction(receipt.logs[0]);
 };
+
+const setContractAddress = (address) => {
+  anchorContractAddress = address;
+};
+
+const getContractAddress = () => anchorContractAddress;
 
 module.exports = {
   createNewContract,
@@ -130,4 +155,7 @@ module.exports = {
   getBlockchainTime,
   getTransactions,
   anchorContractAddress,
+  setContractAddress,
+  getContractAddress,
+  setDefaultSigningAddress,
 };
