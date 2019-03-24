@@ -34,3 +34,4 @@ script:
   - npm run contracts:migrate:dev
   - npm run lint
   - npm run coverage
+  - npm run codecov
