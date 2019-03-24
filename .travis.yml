@@ -31,6 +31,7 @@ install:
   - npm run bootstrap
 
 script:
+  - npm run lint
   - npm run test:contracts
   - npm run contracts:migrate:dev
   - npm run coverage
