@@ -8,6 +8,8 @@ const {
 
 const { storage, ledger } = element;
 
+jest.setTimeout(10 * 1000);
+
 describe('syncFromBlockNumber', () => {
   beforeAll(() => {
     process.env.ELEMENT_MNEUMONIC = 'hazard pride garment scout search divide solution argue wait avoid title cave';
