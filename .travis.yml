@@ -7,9 +7,7 @@ cache:
     - "node_modules"
 
 env:
-  - ELEMENT_MNEUMONIC="hazard pride garment scout search divide solution argue wait avoid title cave"
-  - ELEMENT_PROVIDER="http://localhost:8545"
-  - ELEMENT_IPFS_MULTIADDR="/ip4/127.0.0.1/tcp/5001"
+  - ELEMENT_IPFS_MULTIADDR="/ip4/127.0.0.1/tcp/5001" ELEMENT_PROVIDER="http://localhost:8545" ELEMENT_MNEUMONIC="hazard pride garment scout search divide solution argue wait avoid title cave"
 
 before_install:
   # Install Ganache & Truffle
