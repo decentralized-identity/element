@@ -158,4 +158,5 @@ module.exports = {
   setContractAddress,
   getContractAddress,
   setDefaultSigningAddress,
+  getWeb3,
 };
