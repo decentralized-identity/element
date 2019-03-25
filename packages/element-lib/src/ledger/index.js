@@ -38,7 +38,7 @@ const mnemonicToKeypair = (mnemonic, hdPath) => {
 
 const getWeb3 = ({ mneumonic, providerUrl }) => {
   // eslint-disable-next-line
-  if (window && window.web3) {
+  if (typeof window !== 'undefined' && window.web3) {
     // eslint-disable-next-line
     return window.web3;
   }
