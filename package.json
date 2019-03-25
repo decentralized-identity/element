@@ -5,7 +5,7 @@
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "lint": "lerna run lint",
-    "test": "lerna run test",
+    "test": "lerna run test --stream",
     "coverage": "lerna run coverage",
     "test:contracts": "lerna run test:contracts",
     "contracts:migrate:dev": "lerna run contracts:migrate:dev",
