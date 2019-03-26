@@ -2,8 +2,8 @@
   "devMode": true,
   "port": 3000,
   "didMethodName": "did:elem:",
-  "casNodeUri": "http://127.0.0.1:5001",
-  "blockchainNodeUri": "http://127.0.0.1:8545",
+  "casNodeUri": "http://127.0.0.1:2001",
+  "blockchainNodeUri": "http://127.0.0.1:2000",
   "batchIntervalInSeconds": 10,
   "maxConcurrentCasDownloads": 20,
   "pollingIntervalInSeconds": 10

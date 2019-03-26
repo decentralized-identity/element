@@ -3,9 +3,9 @@ const crypto = require('crypto');
 const _ = require('lodash');
 
 module.exports = async ({
-  transactionTime, initialState, reducer, storage, ledger, onUpdated,
+  transactionTime, initialState, reducer, storage, blockchain, onUpdated,
 }) => {
-  let stream = await ledger.getTransactions(transactionTime);
+  let stream = await blockchain.getTransactions(transactionTime);
   stream = await Promise.all(
     stream.map(async txn => ({
       transaction: txn,

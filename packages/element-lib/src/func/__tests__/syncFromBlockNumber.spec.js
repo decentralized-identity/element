@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const element = require('../../../index');
+const config = require('../../json/config.local.json');
 
 const {
   aliceKeys,
@@ -7,15 +8,27 @@ const {
   updatePayloadTemplate,
 } = require('../../__tests__/__fixtures__');
 
-const { storage, ledger } = element;
-
 jest.setTimeout(10 * 1000);
 
+let storage;
+let blockchain;
+
 describe('syncFromBlockNumber', () => {
-  beforeAll(() => {
-    process.env.ELEMENT_MNEUMONIC = 'hazard pride garment scout search divide solution argue wait avoid title cave';
-    process.env.ELEMENT_PROVIDER = 'http://localhost:8545';
-    process.env.ELEMENT_IPFS_MULTIADDR = '/ip4/127.0.0.1/tcp/5001';
+  beforeAll(async () => {
+    blockchain = element.blockchain.ethereum.configure({
+      hdPath: "m/44'/60'/0'/0/0",
+      mneumonic: config.mneumonic,
+      providerUrl: config.web3ProviderUrl,
+      // when not defined, a new contract is created.
+      // anchorContractAddress: config.anchorContractAddress,
+    });
+
+    // wait for new contract.
+    await blockchain.resolving;
+
+    storage = element.storage.local.configure({
+      repo: 'elem-resolve-tests',
+    });
   });
 
   it('create and update from signed anchored operations', async () => {
@@ -35,7 +48,7 @@ describe('syncFromBlockNumber', () => {
         }),
       ],
       storage,
-      ledger,
+      blockchain,
     });
 
     const initialState = {};
@@ -45,7 +58,7 @@ describe('syncFromBlockNumber', () => {
       initialState,
       reducer: element.reducer,
       storage,
-      ledger,
+      blockchain,
       onUpdated: (model) => {
         uids = _.without(Object.keys(model), 'transactionTime');
 
@@ -73,7 +86,7 @@ describe('syncFromBlockNumber', () => {
         }),
       ],
       storage,
-      ledger: element.ledger,
+      blockchain,
     });
 
     updatedModel = await element.func.syncFromBlockNumber({
@@ -81,7 +94,7 @@ describe('syncFromBlockNumber', () => {
       initialState: {},
       reducer: element.reducer,
       storage,
-      ledger,
+      blockchain,
       onUpdated: (model) => {
         expect(model[uids[0]].txns[1]).toEqual(txn);
         expect(model[uids[0]].doc.publicKey[1].id).toEqual('#key2');

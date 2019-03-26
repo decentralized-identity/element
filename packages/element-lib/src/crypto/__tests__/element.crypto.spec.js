@@ -3,10 +3,10 @@ const element = require('../../../index');
 describe('element.crypto', () => {
   describe('mnemonic -> keypair -> compressed and back', () => {
     it('works as expected', async () => {
-      // const mnemonic = element.ledger.generateBIP39Mnemonic();
+      // const mnemonic = element.blockchain.generateBIP39Mnemonic();
       // eslint-disable-next-line
       // const mnemonic = 'panda lion unfold live venue spice urban member march gift obvious gossip';
-      // const hdKeypair = element.ledger.mnemonicToKeypair(mnemonic, "m/44'/60'/0'/0/0");
+      // const hdKeypair = element.blockchain.mnemonicToKeypair(mnemonic, "m/44'/60'/0'/0/0");
       const hdKeypair = {
         publicKey:
           'ccb779691f3599247f9a0ca3c9739ec966ead243aa7e0d312413ce2461d60233c25def15dd8a3608df8f14269e3af4bcf1783567fdaec15dd61c8d77b6ae9c4d',

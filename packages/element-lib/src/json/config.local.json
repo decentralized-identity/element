@@ -1,0 +1,12 @@
+{
+  "devMode": true,
+  "port": 3000,
+  "didMethodName": "did:elem:",
+  "batchIntervalInSeconds": 10,
+  "maxConcurrentCasDownloads": 20,
+  "pollingIntervalInSeconds": 10,
+  "web3ProviderUrl": "http://127.0.0.1:8545",
+  "mneumonic": "hazard pride garment scout search divide solution argue wait avoid title cave",
+  "anchorContractAddress": null,
+  "ipfsApiMultiAddr": "/ip4/127.0.0.1/tcp/5001"
+}

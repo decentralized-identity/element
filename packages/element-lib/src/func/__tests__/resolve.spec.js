@@ -1,53 +1,95 @@
 const _ = require('lodash');
 const element = require('../../../index');
+const config = require('../../json/config.local.json');
 
 const { generateActor, generateUpdate1, generateCreates } = require('../../__tests__/__fixtures__');
 
 jest.setTimeout(10 * 1000);
 
 const actorMap = {};
-let actorsArray = [];
-let createOperations = [];
-let updateOperations = [];
+
 const count = 3;
 
-describe('resolve', () => {
-  beforeAll(async () => {
-    process.env.ELEMENT_MNEUMONIC = 'hazard pride garment scout search divide solution argue wait avoid title cave';
-    process.env.ELEMENT_PROVIDER = 'http://localhost:8545';
-    process.env.ELEMENT_IPFS_MULTIADDR = '/ip4/127.0.0.1/tcp/5001';
+let blockchain;
+let storage;
 
-    for (let i = 0; i < count; i++) {
-      const actor = generateActor();
-      actorMap[actor.uid] = actor;
+describe('element.func.resolve', () => {
+  it('throws when called without sufficient args', async () => {
+    expect.assertions(1);
+    const did = 'did:elem:...';
+    try {
+      const doc = await element.func.resolve(did);
+      expect(doc.id).toBe(did);
+    } catch (e) {
+      expect(e.message).toBe('Invalid args: resolve({ did, cache, reducer, storage, blockchain})');
     }
-    actorsArray = _.values(actorMap);
-    createOperations = await generateCreates(actorMap);
-    updateOperations = await generateUpdate1(actorMap);
+  });
 
-    await element.func.operationsToTransaction({
-      operations: [...createOperations, ...updateOperations],
-      storage: element.storage,
-      ledger: element.ledger,
+  describe('resolve', () => {
+    beforeAll(async () => {
+      for (let i = 0; i < count; i++) {
+        const actor = generateActor();
+        actorMap[actor.uid] = actor;
+      }
+      const createOperations = await generateCreates(actorMap);
+      const updateOperations = await generateUpdate1(actorMap);
+
+      blockchain = element.blockchain.ethereum.configure({
+        hdPath: "m/44'/60'/0'/0/0",
+        mneumonic: config.mneumonic,
+        providerUrl: config.web3ProviderUrl,
+        // when not defined, a new contract is created.
+        // anchorContractAddress: config.anchorContractAddress,
+      });
+
+      // wait for new contract.
+      await blockchain.resolving;
+
+      storage = element.storage.local.configure({
+        repo: 'elem-resolve-tests',
+      });
+
+      await element.func.operationsToTransaction({
+        operations: [...createOperations, ...updateOperations],
+        storage,
+        blockchain,
+      });
     });
-  });
 
-  // this is not very fast or efficient... better to trust a cache.
-  it('can resolve a did', async () => {
-    const did = `did:elem:${actorsArray[0].uid}`;
-    const doc = await element.func.resolve(did);
-    expect(doc.id).toBe(did);
-  });
+    it('can resolve a did with path and fragment', async () => {
+      const did = `did:elem:${_.values(actorMap)[0].uid}/some/path#fragment=123`;
+      const doc = await element.func.resolve({
+        did,
+        cache: element.cache,
+        reducer: element.reducer,
+        storage,
+        blockchain,
+      });
+      expect(doc.id).toBe(did.split('/')[0]);
+    });
 
-  it('can resolve faster after cache hit ', async () => {
-    const did = `did:elem:${actorsArray[0].uid}`;
-    const doc = await element.func.resolve(did);
-    expect(doc.id).toBe(did);
-  });
+    it('can resolve faster after cache hit', async () => {
+      const did = `did:elem:${_.values(actorMap)[1].uid}`;
+      const doc = await element.func.resolve({
+        did,
+        cache: element.cache,
+        reducer: element.reducer,
+        storage,
+        blockchain,
+      });
+      expect(doc.id).toBe(did.split('/')[0]);
+    });
 
-  it('returns null when did dne', async () => {
-    const did = 'did:elem:dne';
-    const doc = await element.func.resolve(did);
-    expect(doc).toBe(null);
+    it('returns null when did dne', async () => {
+      const did = 'did:elem:dne';
+      const doc = await element.func.resolve({
+        did,
+        cache: element.cache,
+        reducer: element.reducer,
+        storage,
+        blockchain,
+      });
+      expect(doc).toBe(null);
+    });
   });
 });

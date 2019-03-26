@@ -1,10 +1,10 @@
 const operationsToAnchorFileHash = require('./operationsToAnchorFile');
 
-module.exports = async ({ operations, storage, ledger }) => {
+module.exports = async ({ operations, storage, blockchain }) => {
   const anchorFileHash = await operationsToAnchorFileHash({
     operations,
     storage,
   });
 
-  return ledger.write(anchorFileHash);
+  return blockchain.write(anchorFileHash);
 };

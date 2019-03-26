@@ -1,40 +1,47 @@
 const resolver = require('did-resolver');
 const config = require('../json/config.json');
 
-resolver.registerMethod(config.didMethodName.split(':')[1], async (did, parsed) => {
-  const syncFromBlockNumber = require('./syncFromBlockNumber');
-  const reducer = require('../reducer');
-  const storage = require('../storage');
-  const ledger = require('../ledger');
-  const cache = require('../cache');
-  // {
-  //   method: 'mymethod',
-  //   id: 'abcdefg',
-  //   did: 'did:mymethod:abcdefg/some/path#fragment=123',
-  //   path: '/some/path',
-  //   fragment: 'fragment=123'
-  // }
-  const cachedState = cache.getItem('elem.world');
-  // todo: get model from cache..
-  // use cache to only sync updates...
-  const transactionTime = cachedState ? cachedState.transactionTime : 0; // set from cache
-  // console.log(transactionTime);
-  const updated = await syncFromBlockNumber({
-    transactionTime: transactionTime + 1,
-    initialState: cachedState || {}, // set from cache
-    reducer,
-    storage,
-    ledger,
-  });
+const syncFromBlockNumber = require('./syncFromBlockNumber');
 
-  cache.setItem('elem.world', updated);
+const method = config.didMethodName.split(':')[1];
 
-  const record = updated[parsed.id];
-  if (record) {
-    return record.doc;
+const cacheName = `${method}.resolver.cache`;
+
+const resolve = ({
+  did, cache, reducer, storage, blockchain,
+}) => {
+  if (!did || !cache || !reducer || !storage || !blockchain) {
+    throw new Error('Invalid args: resolve({ did, cache, reducer, storage, blockchain})');
   }
 
-  return null;
-});
+  resolver.registerMethod(method, async (_did, parsed) => {
+    // {
+    //   method: 'mymethod',
+    //   id: 'abcdefg',
+    //   did: 'did:mymethod:abcdefg/some/path#fragment=123',
+    //   path: '/some/path',
+    //   fragment: 'fragment=123'
+    // }
+    // console.log(did, parsed);
+    const cachedState = cache.getItem(cacheName);
+    const transactionTime = cachedState ? cachedState.transactionTime : 0; // set from cache
+    const updated = await syncFromBlockNumber({
+      transactionTime: transactionTime + 1,
+      initialState: cachedState || {}, // set from cache
+      reducer,
+      storage,
+      blockchain,
+    });
 
-module.exports = did => resolver.default(did);
+    cache.setItem(cacheName, updated);
+    const record = updated[parsed.id];
+    if (record) {
+      return record.doc;
+    }
+    return null;
+  });
+
+  return resolver.default(did);
+};
+
+module.exports = resolve;

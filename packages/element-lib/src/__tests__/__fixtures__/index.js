@@ -50,7 +50,7 @@ const storage = {
   read: async cid => inMemoryStorage[cid],
 };
 
-const ledger = {
+const blockchain = {
   write: anchorFileHash => ({
     transactionTime: 53,
     transactionTimeHash: '0xa6dd7120730ddccf4788a082b0b5607fd1f39dbb80ebc170678551878b90b835',
@@ -173,7 +173,7 @@ module.exports = {
   createPayloadTemplate,
   updatePayloadTemplate,
   storage,
-  ledger,
+  blockchain,
   alicePatch,
   aliceEncodedCreateOp,
   aliceEncodedUpdateOp,

@@ -1,13 +1,13 @@
 const element = require('../../../index');
 
-const { aliceEncodedCreateOp, storage, ledger } = require('../../__tests__/__fixtures__');
+const { aliceEncodedCreateOp, storage, blockchain } = require('../../__tests__/__fixtures__');
 
 describe('operationsToTransaction', () => {
-  it('should batch and anchor operations to ledger', async () => {
+  it('should batch and anchor operations to blockchain', async () => {
     const txn = await element.func.operationsToTransaction({
       operations: [aliceEncodedCreateOp],
       storage,
-      ledger,
+      blockchain,
     });
     expect(txn).toEqual({
       anchorFileHash: 'QmNovBcAAXy5tgq5gvE1Mbw8MuX2dzkJA8azbUZxFBKKNR',

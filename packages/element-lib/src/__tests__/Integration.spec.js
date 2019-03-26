@@ -1,6 +1,8 @@
 const _ = require('lodash');
 const fixtures = require('./__fixtures__');
 
+const config = require('../json/config.local.json');
+
 const element = require('../../index');
 
 const p = 3;
@@ -11,11 +13,25 @@ let updateOperations;
 
 const { generateCreates, generateUpdate1, generateActor } = fixtures;
 
+let storage;
+let blockchain;
+
 describe('Integration', () => {
   beforeAll(async () => {
-    process.env.ELEMENT_MNEUMONIC = 'hazard pride garment scout search divide solution argue wait avoid title cave';
-    process.env.ELEMENT_PROVIDER = 'http://localhost:8545';
-    process.env.ELEMENT_IPFS_MULTIADDR = '/ip4/127.0.0.1/tcp/5001';
+    blockchain = element.blockchain.ethereum.configure({
+      hdPath: "m/44'/60'/0'/0/0",
+      mneumonic: config.mneumonic,
+      providerUrl: config.web3ProviderUrl,
+      // when not defined, a new contract is created.
+      // anchorContractAddress: config.anchorContractAddress,
+    });
+
+    // wait for new contract.
+    await blockchain.resolving;
+
+    storage = element.storage.local.configure({
+      repo: 'elem-resolve-tests',
+    });
 
     for (let i = 0; i < p; i++) {
       const actor = generateActor();
@@ -29,16 +45,16 @@ describe('Integration', () => {
   it('sync works when operations are in order', async () => {
     await element.func.operationsToTransaction({
       operations: [...createOperations, ...updateOperations],
-      storage: element.storage,
-      ledger: element.ledger,
+      storage,
+      blockchain,
     });
 
     const updatedModel = await element.func.syncFromBlockNumber({
       blockNumber: 0,
       initialState: {},
       reducer: element.reducer,
-      storage: element.storage,
-      ledger: element.ledger,
+      storage,
+      blockchain,
     });
 
     actorsArray.forEach((actor) => {
@@ -51,19 +67,19 @@ describe('Integration', () => {
 
   it('sync works when operations are NOT in order', async () => {
     // generate a new anchor
-    await element.ledger.createNewContract();
+    await blockchain.createNewContract();
     await element.func.operationsToTransaction({
       operations: [...updateOperations, ...createOperations].sort(),
-      storage: element.storage,
-      ledger: element.ledger,
+      storage,
+      blockchain,
     });
 
     const updatedModel = await element.func.syncFromBlockNumber({
       blockNumber: 0,
       initialState: {},
       reducer: element.reducer,
-      storage: element.storage,
-      ledger: element.ledger,
+      storage,
+      blockchain,
     });
 
     actorsArray.forEach((actor) => {
