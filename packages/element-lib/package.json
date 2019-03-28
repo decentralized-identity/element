@@ -8,7 +8,7 @@
     "url": "git+https://github.com/decentralized-identity/element.git"
   },
   "scripts": {
-    "ganache": ". ../../.env && ganache-cli -i 133700 -m \"$ELEMENT_MNEUMONIC\"",
+    "ganache": ". ../../.env && ganache-cli -i 133700 -m \"$ELEMENT_MNEMONIC\"",
     "ipfs": "ipfs daemon",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
@@ -36,6 +36,7 @@
     "ipfs-http-client": "^30.1.0",
     "ipfs-unixfs": "^0.1.16",
     "ipld-dag-pb": "^0.15.3",
+    "jsonschema": "^1.2.4",
     "lodash": "^4.17.11",
     "merkle-tools": "^1.4.0",
     "multihashes": "^0.4.14",

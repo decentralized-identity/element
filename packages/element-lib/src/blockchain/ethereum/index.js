@@ -7,13 +7,13 @@ const base58EncodedMultihashToBytes32 = require('../../func/base58EncodedMultiha
 
 const anchorContractArtifact = require('../../../build/contracts/SimpleSidetreeAnchor.json');
 
-const getWeb3 = ({ mneumonic, hdPath, providerUrl }) => {
+const getWeb3 = ({ mnemonic, hdPath, providerUrl }) => {
   // eslint-disable-next-line
   if (typeof window !== 'undefined' && window.web3) {
     // eslint-disable-next-line
     return window.web3;
   }
-  const provider = new HDWalletProvider(mneumonic, providerUrl, 0, 1, hdPath);
+  const provider = new HDWalletProvider(mnemonic, providerUrl, 0, 1, hdPath);
   return new Web3(provider);
 };
 
@@ -24,6 +24,14 @@ const eventLogToSidetreeTransaction = log => ({
   anchorFileHash: bytes32EnodedMultihashToBase58EncodedMultihash(log.args.anchorFileHash),
 });
 
+const getAccounts = web3 => new Promise((resolve, reject) => {
+  web3.eth.getAccounts((err, accounts) => {
+    if (err) {
+      reject(err);
+    }
+    resolve(accounts);
+  });
+});
 class EthereumBlockchain {
   constructor(web3, contractAddress) {
     this.web3 = web3;
@@ -35,14 +43,18 @@ class EthereumBlockchain {
       this.anchorContractAddress = contractAddress;
     } else {
       // probably local, create a new contract.
-      this.resolving = web3.eth.getAccounts().then(accounts => this.createNewContract(accounts[0]));
+      // const defaultWeb3 = getDefaultWeb3();
+      // console.log(defaultWeb3)
+      this.resolving = this.createNewContract().then(() => {
+        this.anchorContract.setProvider(this.web3.currentProvider);
+      });
     }
   }
 
   async createNewContract(fromAddress) {
     if (!fromAddress) {
       // eslint-disable-next-line
-      [fromAddress] = await this.web3.eth.getAccounts();
+      [fromAddress] = await getAccounts(this.web3);
     }
     const instance = await this.anchorContract.new({
       from: fromAddress,
@@ -51,7 +63,7 @@ class EthereumBlockchain {
     });
 
     this.anchorContractAddress = instance.address;
-
+    // console.log('update configs to use new contract address: ', this.anchorContractAddress);
     return instance;
   }
 
@@ -76,7 +88,7 @@ class EthereumBlockchain {
   }
 
   async write(anchorFileHash) {
-    const [from] = await this.web3.eth.getAccounts();
+    const [from] = await getAccounts(this.web3);
     const instance = await this.anchorContract.at(this.anchorContractAddress);
     const bytes32EncodedHash = base58EncodedMultihashToBytes32(anchorFileHash);
     const receipt = await instance.anchorHash(bytes32EncodedHash, {
@@ -87,9 +99,9 @@ class EthereumBlockchain {
 }
 
 const configure = ({
-  mneumonic, hdPath, providerUrl, anchorContractAddress,
+  mnemonic, hdPath, providerUrl, anchorContractAddress,
 }) => {
-  const web3 = getWeb3({ mneumonic, hdPath, providerUrl });
+  const web3 = getWeb3({ mnemonic, hdPath, providerUrl });
   return new EthereumBlockchain(web3, anchorContractAddress);
 };
 

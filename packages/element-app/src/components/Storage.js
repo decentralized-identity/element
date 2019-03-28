@@ -1,15 +1,18 @@
 import React, { Component } from "react";
 
-import ipfsClient from "ipfs-http-client";
+import element from "@transmute/element-lib";
 
 import config from "../config";
 
-const ipfs = ipfsClient(config.ELEMENT_IPFS_MULTIADDR);
+
+const storage = element.storage.ipfs.configure({
+  multiaddr: config.ELEMENT_IPFS_MULTIADDR
+});
 
 class Storage extends Component {
   state = {};
   async componentWillMount() {
-    const info = await ipfs.id();
+    const info = await storage.ipfs.id();
     this.setState({
       info
     });

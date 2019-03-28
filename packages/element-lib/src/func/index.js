@@ -13,4 +13,8 @@ module.exports = {
   payloadToHash: require('./payloadToHash'),
   encodedOperationToHash: require('./encodedOperationToHash'),
   resolve: require('./resolve'),
+  signEncodedPayload: require('./signEncodedPayload'),
+  decodeJson: require('./decodeJson'),
+  encodeJson: require('./encodeJson'),
+  requestBodyToEncodedOperation: require('./requestBodyToEncodedOperation'),
 };

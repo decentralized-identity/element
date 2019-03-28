@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@transmute/element-lib": "0.0.1-1",
+    "@transmute/element-lib": "0.0.1-2",
     "ipfs-http-client": "^30.1.0",
     "react": "^16.8.5",
     "react-dom": "^16.8.5",

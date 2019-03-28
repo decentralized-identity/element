@@ -2,18 +2,40 @@ import React, { Component } from "react";
 
 import element from "@transmute/element-lib";
 
+import config from "../config";
+
 class Sidetree extends Component {
   state = {};
   async componentWillMount() {
-    this.setState({
-      contract: element.ledger.getContractAddress()
+    let anchorContractAddress = localStorage.getItem("anchorContractAddress");
+    const blockchain = element.blockchain.ethereum.configure({
+      anchorContractAddress: anchorContractAddress
     });
+
+    await blockchain.resolving;
+
+    this.setState({
+      contract: blockchain.anchorContractAddress
+    });
+
+    localStorage.setItem(
+      "anchorContractAddress",
+      blockchain.anchorContractAddress
+    );
+
+    const storage = element.storage.ipfs.configure({
+      multiaddr: config.ELEMENT_IPFS_MULTIADDR
+    });
+
+    this.blockchain = blockchain;
+    this.storage = storage;
+
     const model = await element.func.syncFromBlockNumber({
       transactionTime: 0,
       initialState: {},
       reducer: element.reducer,
-      storage: element.storage,
-      ledger: element.ledger
+      storage: this.storage,
+      blockchain: this.blockchain
     });
     this.setState({
       model
@@ -46,10 +68,9 @@ class Sidetree extends Component {
   anchorOperations = async () => {
     const tx = await element.func.operationsToTransaction({
       operations: this.state.operations,
-      storage: element.storage,
-      ledger: element.ledger
+      storage: this.storage,
+      blockchain: this.blockchain
     });
-
     this.setState({
       lastTx: tx,
       operations: []
@@ -59,8 +80,8 @@ class Sidetree extends Component {
         transactionTime: 0,
         initialState: {},
         reducer: element.reducer,
-        storage: element.storage,
-        ledger: element.ledger
+        storage: this.storage,
+        blockchain: this.blockchain
       })
       .then(model => {
         this.setState({
@@ -73,6 +94,11 @@ class Sidetree extends Component {
     return (
       <div className="Sidetree">
         <h3>Sidetree</h3>
+        <h5>
+          On first load with metamask, you be asked to deploy a contract that
+          will be used for the rest of the demo. You will need to clear local
+          storage if you restart ganache.
+        </h5>
         <pre>
           {JSON.stringify(
             {

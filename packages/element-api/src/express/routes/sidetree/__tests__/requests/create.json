@@ -1,0 +1,10 @@
+{
+  "header": {
+    "operation": "create",
+    "kid": "#key1",
+    "alg": "ES256K",
+    "proofOfWork": {}
+  },
+  "payload": "eyJAY29udGV4dCI6Imh0dHBzOi8vdzNpZC5vcmcvZGlkL3YxIiwicHVibGljS2V5IjpbeyJpZCI6IiNrZXkxIiwidHlwZSI6IlNlY3AyNTZrMVZlcmlmaWNhdGlvbktleTIwMTgiLCJwdWJsaWNLZXlIZXgiOiIwMmRmOTY4Y2Y4ZDY5YmViMmNkNWRmYjU3OGI4MGM2NmZjMmY4NWNjZDUyNmU0YmU3NDkwN2FkYzA2MDFlYjIzNTIifV19",
+  "signature": "EfpNTkNDtWNzWJDTp8juIhSFIPPuqVeAuGRikIRpmz1ZXRTQor1h6-Cna4Ar0RXcml1_ZwunOWECC5jC3yRN-Q"
+}

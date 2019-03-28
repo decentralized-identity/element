@@ -36,7 +36,7 @@ describe('element.func.resolve', () => {
 
       blockchain = element.blockchain.ethereum.configure({
         hdPath: "m/44'/60'/0'/0/0",
-        mneumonic: config.mneumonic,
+        mnemonic: config.mnemonic,
         providerUrl: config.web3ProviderUrl,
         // when not defined, a new contract is created.
         // anchorContractAddress: config.anchorContractAddress,

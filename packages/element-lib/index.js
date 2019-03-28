@@ -7,6 +7,8 @@ const crypto = require('./src/crypto');
 const blockchain = require('./src/blockchain');
 const storage = require('./src/storage');
 
+const schema = require('./src/schema');
+
 module.exports = {
   func,
   reducer,
@@ -14,4 +16,5 @@ module.exports = {
   crypto,
   blockchain,
   storage,
+  schema,
 };

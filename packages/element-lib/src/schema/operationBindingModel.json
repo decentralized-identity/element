@@ -1,0 +1,38 @@
+{
+  "id": "operationBindingModel",
+  "type": "object",
+  "properties": {
+    "header": {
+      "type": "object",
+      "properties": {
+        "operation": {
+          "type": "string",
+          "enum": ["create", "update", "delete"],
+          "example": "create"
+        },
+        "kid": {
+          "type": "string",
+          "example": "#key1"
+        },
+        "alg": {
+          "type": "string",
+          "enum": ["ES256K"],
+          "example": "ES256K"
+        },
+        "proofOfWork": {
+          "type": "string",
+          "example": ""
+        }
+      }
+    },
+    "payload": {
+      "type": "string",
+      "example": "eyJAY29udGV4dCI6Imh0dHBzOi8vdzNpZC5vcmcvZGlkL3YxIiwicHVibGljS2V5IjpbeyJpZCI6IiNrZXkxIiwidHlwZSI6IlNlY3AyNTZrMVZlcmlmaWNhdGlvbktleTIwMTgiLCJwdWJsaWNLZXlIZXgiOiIwMmRmOTY4Y2Y4ZDY5YmViMmNkNWRmYjU3OGI4MGM2NmZjMmY4NWNjZDUyNmU0YmU3NDkwN2FkYzA2MDFlYjIzNTIifV19"
+    },
+    "signature": {
+      "type": "string",
+      "example": "EfpNTkNDtWNzWJDTp8juIhSFIPPuqVeAuGRikIRpmz1ZXRTQor1h6-Cna4Ar0RXcml1_ZwunOWECC5jC3yRN-Q"
+    }
+  },
+  "required": ["header", "payload", "signature"]
+}
