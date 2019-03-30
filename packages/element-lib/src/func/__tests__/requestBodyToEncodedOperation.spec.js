@@ -2,7 +2,7 @@ const element = require('../../../index');
 
 describe('element.func.requestBodyToEncodedOperation', () => {
   // TODO: in the future Proof of Work.
-  it('returns null when did dne', async () => {
+  it('encodes a client request as an operation', async () => {
     const keys = await element.func.createKeys();
     const payload = {
       '@context': 'https://w3id.org/did/v1',

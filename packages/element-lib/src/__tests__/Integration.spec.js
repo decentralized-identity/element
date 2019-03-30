@@ -50,7 +50,7 @@ describe('Integration', () => {
     });
 
     const updatedModel = await element.func.syncFromBlockNumber({
-      blockNumber: 0,
+      transactionTime: 0,
       initialState: {},
       reducer: element.reducer,
       storage,
@@ -75,7 +75,7 @@ describe('Integration', () => {
     });
 
     const updatedModel = await element.func.syncFromBlockNumber({
-      blockNumber: 0,
+      transactionTime: 0,
       initialState: {},
       reducer: element.reducer,
       storage,

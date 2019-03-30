@@ -11,6 +11,8 @@ module.exports = async (state, anchoredOperation) => {
     return state;
   }
 
+  const opName = 'recover';
+
   const {
     did,
     previousOperationHash,
@@ -21,7 +23,7 @@ module.exports = async (state, anchoredOperation) => {
   const uid = did.split(':')[2];
 
   if (!state[uid]) {
-    throw new Error('Cannot update a DID that does not exist.');
+    throw new Error(`Cannot ${opName} a DID that does not exist.`);
   }
 
   const preUpdateDidDoc = state[uid].doc;
@@ -31,15 +33,24 @@ module.exports = async (state, anchoredOperation) => {
   const signingKey = _.find(preUpdateDidDoc.publicKey, pubKey => pubKey.id === kid);
 
   if (state[uid].previousOperationHash !== previousOperationHash) {
-    throw new Error('previousOperationHash is not correct, update invalid');
+    throw new Error(`previousOperationHash is not correct, ${opName} invalid`);
   }
 
   if (state[uid].operationNumber !== operationNumber - 1) {
-    throw new Error('operationNumber is not correct, update invalid');
+    throw new Error(`operationNumber is not correct, ${opName} invalid`);
   }
 
   if (!signingKey) {
-    throw new Error('Cannot find kid in doc, update invalid.');
+    throw new Error(`Cannot find kid in doc, ${opName} invalid.`);
+  }
+
+  if (signingKey.id !== '#recovery') {
+    throw new Error("Recovery ops can only be signed by keys with id '#recovery'");
+  }
+
+  //   TODO: this needs to be a better check.
+  if (patch[0].value.id !== '#recovery') {
+    throw new Error('First patch of recovery must update the recovery key');
   }
 
   const isSignatureValid = await verifyOperationSignature({
@@ -48,7 +59,7 @@ module.exports = async (state, anchoredOperation) => {
   });
 
   if (!isSignatureValid) {
-    throw new Error('Signature is not valid.');
+    throw new Error(`Signature for ${opName} is not valid.`);
   }
 
   const updatedDoc = patch.reduce(applyReducer, preUpdateDidDoc);

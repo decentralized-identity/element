@@ -10,8 +10,8 @@ const reducer = async (state = {}, anchoredOperation) => {
     }
     throw new Error('operation not supported');
   } catch (e) {
-    console.log('Reducer error on ', JSON.stringify(anchoredOperation, null, 2));
-    console.log('Reducer state on ', JSON.stringify(state, null, 2));
+    console.log('Operation rejected', JSON.stringify(anchoredOperation.decodedOperationPayload, null, 2));
+    console.log('Sidetree: ', JSON.stringify(state, null, 2));
     console.log(e);
     throw new Error(e);
   }
