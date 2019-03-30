@@ -1,10 +1,11 @@
 const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
+const element = require('@transmute/element-lib');
+
 const pack = require('../../../package.json');
 
 const { getBasePath, getBaseConfig, getAPIBaseUrl } = require('../../config');
 
-const element = require('@transmute/element-lib');
 
 const { schemas } = element.schema;
 

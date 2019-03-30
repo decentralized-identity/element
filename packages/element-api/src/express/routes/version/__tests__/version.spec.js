@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 const request = require('supertest');
 
 const app = require('../../../../express/app');
