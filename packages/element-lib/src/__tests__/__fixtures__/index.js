@@ -96,17 +96,6 @@ const generateActor = () => {
   };
 };
 
-const getGroup = (g, p) => {
-  let m = (g * g) % p;
-  const members = [m];
-  while (m !== g) {
-    m = (m * g) % p;
-    members.push(m);
-  }
-  return members;
-  // return members.sort((a, b) => a > b);
-};
-
 const generateCreates = async (actorMap) => {
   const operations = [];
   _.values(actorMap).forEach(async (actor) => {
@@ -180,7 +169,6 @@ module.exports = {
   aliceCreateBatchFile,
   aliceCreateAnchorFile,
   generateActor,
-  getGroup,
   generateCreates,
   generateUpdate1,
 };
