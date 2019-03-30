@@ -9,7 +9,7 @@
     "coverage": "lerna run coverage",
     "test:contracts": "lerna run test:contracts",
     "contracts:migrate:dev": "lerna run contracts:migrate:dev",
-    "pre:push": "npm run lint && npm run test:contracts && npm run contracts:migrate:dev &&  npm run coverage",
+    "pre:push": "npm run bootstrap && npm run lint && npm run test:contracts && npm run contracts:migrate:dev && npm run coverage",
     "codecov": "codecov"
   },
   "devDependencies": {
