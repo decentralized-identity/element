@@ -29,6 +29,7 @@ install:
   - npm run bootstrap
 
 script:
+  - mkdir ./packages/element-api/secrets
   - firebase functions:config:get > ./packages/element-api/secrets/.runtimeconfig.json
   - npm run test:contracts
   - npm run contracts:migrate:dev
