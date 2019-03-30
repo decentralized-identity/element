@@ -83,7 +83,8 @@ const getSidetree = async () => {
   const cacheName = 'sidetree.root';
   const cachedState = element.cache.getItem(cacheName);
   // eslint-disable-next-line
-  const transactionTime = cachedState.transactionTime ? cachedState.transactionTime : 0; // set from cache
+  const transactionTime =
+    cachedState && cachedState.transactionTime ? cachedState.transactionTime : 0; // set from cache
   const updated = await element.func.syncFromBlockNumber({
     transactionTime: transactionTime + 1,
     initialState: cachedState || {}, // set from cache

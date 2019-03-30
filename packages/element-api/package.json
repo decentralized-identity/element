@@ -6,6 +6,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "lint": "eslint ./src",
+    "contracts:migrate": "./scripts/set-new-anchor-contract.sh",
     "test": "NODE_ENV='testing' jest ",
     "coverage": "jest --coverage",
     "serve": "firebase serve --only functions",
