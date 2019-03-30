@@ -97,7 +97,12 @@ class Sidetree extends Component {
         <h5>
           On first load with metamask, you be asked to deploy a contract that
           will be used for the rest of the demo. You will need to clear local
-          storage if you restart ganache.
+          storage if you restart ganache. When testing with MetaMask, you may
+          need to reset your account to fix the nonce issue reported{" "}
+          <a href="https://ethereum.stackexchange.com/questions/30921/tx-doesnt-have-the-correct-nonce-metamask">
+            here
+          </a>
+          .
         </h5>
         <pre>
           {JSON.stringify(

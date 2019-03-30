@@ -1,5 +1,5 @@
 {
-  "name": "element-app",
+  "name": "@transmute/element-app",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -12,7 +12,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "NODE_OPTIONS=--max_old_space_size=4096 react-scripts build",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
