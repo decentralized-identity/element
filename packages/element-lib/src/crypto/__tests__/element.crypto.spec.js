@@ -3,7 +3,8 @@ const element = require('../../../index');
 describe('element.crypto', () => {
   describe('mnemonic -> keypair -> compressed and back', () => {
     it('works as expected', async () => {
-      // const mnemonic = element.blockchain.generateBIP39Mnemonic();
+      // const mnemonic = element.crypto.bip39.generateMnemonic();
+      // console.log(mnemonic);
       // eslint-disable-next-line
       // const mnemonic = 'panda lion unfold live venue spice urban member march gift obvious gossip';
       // const hdKeypair = element.blockchain.mnemonicToKeypair(mnemonic, "m/44'/60'/0'/0/0");
