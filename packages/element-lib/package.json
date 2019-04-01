@@ -8,14 +8,15 @@
     "url": "git+https://github.com/decentralized-identity/element.git"
   },
   "scripts": {
-    "ganache": ". ../../.env && ganache-cli -i 133700 -m \"$ELEMENT_MNEMONIC\"",
+    "ganache": ". ../../example.env && ganache-cli -i 133700 -m \"$ELEMENT_MNEMONIC\"",
     "ipfs": "ipfs daemon",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
     "test": "jest --runInBand ",
     "coverage": "jest --runInBand --coverage ",
     "test:contracts": "truffle test",
-    "contracts:migrate:dev": "truffle migrate --network development --reset"
+    "contracts:migrate:dev": "truffle migrate --network development",
+    "contracts:migrate:ropsten": "truffle migrate --network ropsten"
   },
   "jest": {
     "testPathIgnorePatterns": [
@@ -48,12 +49,13 @@
     "websocket": "^1.0.28"
   },
   "devDependencies": {
-    "jest": "^24.5.0",
+    "dotenv": "^7.0.0",
     "eslint": "^5.10.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jest": "^22.1.2",
     "eslint-plugin-node": "^8.0.0",
-    "eslint-plugin-security": "^1.4.0"
+    "eslint-plugin-security": "^1.4.0",
+    "jest": "^24.5.0"
   }
 }
