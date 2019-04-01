@@ -8,6 +8,8 @@ const {
 
   aliceEncodedCreateOp,
   aliceEncodedUpdateOp,
+  aliceEncodedDeleteOp,
+  aliceEncodedRecoverOp,
 } = require('../../__tests__/__fixtures__');
 
 describe('payloadToOperation', () => {
@@ -38,7 +40,43 @@ describe('payloadToOperation', () => {
     expect(op).toBe(aliceEncodedUpdateOp);
   });
 
-  it.skip('delete', async () => {
-    console.warn('delete op not implemented.');
+  it('recover', async () => {
+    const payload = {
+      did: 'did:sidetree:123',
+      operationNumber: 2,
+      previousOperationHash: 'invalid',
+      patch: [
+        // first op should update recovery key.
+        {
+          op: 'replace',
+          path: '/publicKey/1',
+          value: {
+            id: '#recovery',
+            type: 'Secp256k1VerificationKey2018',
+            publicKeyHex: aliceKeys.publicKey,
+          },
+        },
+      ],
+    };
+    const op = await element.func.payloadToOperation({
+      type: 'recover',
+      payload,
+      kid: '#key1',
+      privateKey: aliceKeys.privateKey,
+    });
+    expect(op).toBe(aliceEncodedRecoverOp);
+  });
+
+  it('delete', async () => {
+    const payload = {
+      did: 'did:elem:123',
+    };
+    const op = await element.func.payloadToOperation({
+      type: 'delete',
+      payload,
+      kid: '#key1',
+      privateKey: aliceKeys.privateKey,
+    });
+    expect(op).toBe(aliceEncodedDeleteOp);
   });
 });
