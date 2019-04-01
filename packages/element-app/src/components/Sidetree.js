@@ -9,7 +9,7 @@ class Sidetree extends Component {
   async componentWillMount() {
     let anchorContractAddress = localStorage.getItem("anchorContractAddress");
     const blockchain = element.blockchain.ethereum.configure({
-      anchorContractAddress: anchorContractAddress
+      anchorContractAddress: config.ELEMENT_CONTRACT_ADDRESS || anchorContractAddress
     });
 
     await blockchain.resolving;
