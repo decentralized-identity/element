@@ -15,7 +15,7 @@
     "test": "jest --runInBand ",
     "coverage": "jest --runInBand --coverage ",
     "test:contracts": "truffle test",
-    "contracts:migrate:dev": "truffle migrate --network development",
+    "contracts:migrate:dev": "truffle migrate --network development --reset",
     "contracts:migrate:ropsten": "truffle migrate --network ropsten"
   },
   "jest": {
