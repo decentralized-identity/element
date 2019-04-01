@@ -22,6 +22,8 @@ firebase functions:config:set element.ethereum.anchor_contract_address='0x128b72
 
 firebase functions:config:set element.ethereum.anchor_contract_address=$(cat ./node_modules/@transmute/element-lib/build/contracts/SimpleSidetreeAnchor.json| jq -r '.networks["133700"].address')
 
+firebase functions:config:unset element.ethereum.mneumonic 
+
 ```
 
 
