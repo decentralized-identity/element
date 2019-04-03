@@ -1,8 +1,9 @@
-const crypto = require('crypto');
+
 const _ = require('lodash');
-const base64url = require('base64url');
 
 const config = require('../../json/config.json');
+
+const payloadToHash = require('../../func/payloadToHash');
 
 const verifyOperationSignature = require('../../func/verifyOperationSignature');
 
@@ -13,12 +14,7 @@ module.exports = async (state, anchoredOperation) => {
 
   const didDoc = anchoredOperation.decodedOperationPayload;
 
-  const didUniqueSuffix = base64url.encode(
-    crypto
-      .createHash('sha256')
-      .update(base64url.toBuffer(anchoredOperation.decodedOperation.payload))
-      .digest(),
-  );
+  const didUniqueSuffix = payloadToHash(anchoredOperation.decodedOperationPayload);
 
   if (state[didUniqueSuffix]) {
     throw new Error('DID Already Exists.');
@@ -41,15 +37,8 @@ module.exports = async (state, anchoredOperation) => {
     throw new Error('Signature is not valid.');
   }
 
-  // we're breaking with the spec because
-  // operationHash should be a hash of an encodedOperation,
-  // not a decodedOperation's encodedPayload.
-  const previousOperationHash = base64url.encode(
-    crypto
-      .createHash('sha256')
-      .update(base64url.toBuffer(anchoredOperation.encodedOperation))
-      .digest(),
-  );
+
+  const previousOperationHash = didUniqueSuffix;
 
   return {
     ...state,

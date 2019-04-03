@@ -135,7 +135,7 @@ const generateUpdate1 = async (actorMap) => {
       payload: {
         did: `did:sidetree:${actor.uid}`,
         operationNumber: 1,
-        previousOperationHash: element.func.encodedOperationToHash(actor.createOp),
+        previousOperationHash: actor.uid,
         patch: [
           {
             op: 'replace',

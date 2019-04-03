@@ -1,8 +1,9 @@
-const crypto = require('crypto');
+
 const _ = require('lodash');
-const base64url = require('base64url');
 const { applyReducer } = require('fast-json-patch');
 const verifyOperationSignature = require('../../func/verifyOperationSignature');
+
+const payloadToHash = require('../../func/payloadToHash');
 
 module.exports = async (state, anchoredOperation) => {
   // console.log("update", anchoredOperation);
@@ -50,15 +51,7 @@ module.exports = async (state, anchoredOperation) => {
 
   const updatedDoc = patch.reduce(applyReducer, preUpdateDidDoc);
 
-  // we're breaking with the spec because
-  // operationHash should be a hash of an encodedOperation,
-  // not a decodedOperation's encodedPayload.
-  const newPreviousOperationHash = base64url.encode(
-    crypto
-      .createHash('sha256')
-      .update(base64url.toBuffer(anchoredOperation.encodedOperation))
-      .digest(),
-  );
+  const newPreviousOperationHash = payloadToHash(anchoredOperation.decodedOperationPayload);
 
   return {
     ...state,
