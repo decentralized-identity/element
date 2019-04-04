@@ -28,10 +28,6 @@ const storage = element.storage.ipfs.configure({
 
 const getWebFingerRecord = async (resource) => {
   const [did, domain] = resource.replace('acct:', '').split('@');
-  //   const didDocument = await didLib.resolver.resolve(did);
-  //   if (!didDocument) {
-  //     throw new Error('Webfinger could not resolve did.');
-  //   }
   const result = {
     subject: `acct:${did}@${domain}`,
     links: [
@@ -56,17 +52,11 @@ const processRequest = async ({ header, payload, signature }) => {
     signature,
   });
 
-  // TODO: just add to the batch, and anchor batch when its full... for now, batchSize of one.
-  // const batch = await batchService.getBatch();
-  // if (batch.operations && batch.operations.length < parseInt(config.sidetree.max_batch_size, 10)) {
-  // } else {
-  // }
-
-  await batchService.addOp(encodedOperation);
+  // TODO: Fix batch processing, use max_size, etc...
+  batchService.addOp(encodedOperation);
 
   setTimeout(async () => {
     const batchFile = await batchService.getBatchFile();
-
     if (batchFile.operations && batchFile.operations.length) {
       element.func.operationsToTransaction({
         operations: [...batchFile.operations],
