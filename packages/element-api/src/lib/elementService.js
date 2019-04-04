@@ -3,6 +3,9 @@ const { getBasePath, getBaseConfig } = require('../config');
 
 const config = getBaseConfig();
 
+const batchService = require('./batchService');
+const storageService = require('./storageService');
+
 if (!config.ethereum.anchor_contract_address) {
   // eslint-disable-next-line
   console.warn('You need to set the anchorFile contract before proceeding.');
@@ -54,14 +57,48 @@ const processRequest = async ({ header, payload, signature }) => {
   });
 
   // TODO: just add to the batch, and anchor batch when its full... for now, batchSize of one.
-  return element.func.operationsToTransaction({
-    operations: [encodedOperation],
+  // const batch = await batchService.getBatch();
+  // if (batch.operations && batch.operations.length < parseInt(config.sidetree.max_batch_size, 10)) {
+  // } else {
+  // }
+
+  await batchService.addOp(encodedOperation);
+
+  setTimeout(async () => {
+    const batchFile = await batchService.getBatchFile();
+
+    if (batchFile.operations && batchFile.operations.length) {
+      element.func.operationsToTransaction({
+        operations: [...batchFile.operations],
+        storage,
+        blockchain,
+      });
+      batchService.deleteBatchFile();
+    }
+  }, parseInt(config.sidetree.batch_interval_in_seconds, 10) * 1000);
+  return true;
+};
+
+const getSidetree = async () => {
+  const cachedState = await storageService.read({ collection: 'sidetree', key: 'root' });
+  // eslint-disable-next-line
+  const transactionTime =
+    cachedState && cachedState.transactionTime
+      ? parseInt(cachedState.transactionTime, 10) + 1
+      : parseInt(config.sidetree.start_block, 10); // set from cache
+  const updated = await element.func.syncFromBlockNumber({
+    transactionTime,
+    initialState: cachedState || {}, // set from cache
+    reducer: element.reducer,
     storage,
     blockchain,
   });
+
+  await storageService.create({ collection: 'sidetree', key: 'root', value: updated });
+  return updated;
 };
 
-const resolve = (arg) => {
+const resolve = async (arg) => {
   let did;
   if (arg.indexOf('did:') === -1) {
     const calcDid = element.func.payloadToHash(element.func.decodeJson(arg));
@@ -70,30 +107,16 @@ const resolve = (arg) => {
     did = arg;
   }
 
-  return element.func.resolve({
-    did,
-    cache: element.cache,
-    reducer: element.reducer,
-    storage,
-    blockchain,
-  });
-};
+  const uid = did.split(':')[2];
 
-const getSidetree = async () => {
-  const cacheName = 'sidetree.root';
-  const cachedState = element.cache.getItem(cacheName);
+  const tree = await getSidetree();
   // eslint-disable-next-line
-  const transactionTime =
-    cachedState && cachedState.transactionTime ? cachedState.transactionTime : 0; // set from cache
-  const updated = await element.func.syncFromBlockNumber({
-    transactionTime: transactionTime + 1,
-    initialState: cachedState || {}, // set from cache
-    reducer: element.reducer,
-    storage,
-    blockchain,
-  });
-  element.cache.setItem(cacheName, updated);
-  return updated;
+  if (tree[uid]) {
+    // eslint-disable-next-line
+    return tree[uid].doc;
+  }
+
+  return null;
 };
 
 const getNodeInfo = async () => {
@@ -105,10 +128,14 @@ const getNodeInfo = async () => {
     ethereum: {
       anchorContractAddress: blockchain.anchorContractAddress,
     },
+    sidetree: config.sidetree,
   };
 };
 
+const getCurrentBatch = async () => batchService.getBatchFile();
+
 module.exports = {
+  getCurrentBatch,
   getNodeInfo,
   getWebFingerRecord,
   processRequest,

@@ -1,26 +1,7 @@
 const functions = require('firebase-functions');
-const fs = require('fs');
-const path = require('path');
-
-const localConfig = path.resolve(__dirname, '../../secrets/.runtimeconfig.json');
 
 const getBaseConfig = () => {
-  let config;
-
-  if (process.env.NODE_ENV !== 'production') {
-    // eslint-disable-next-line
-    if (fs.existsSync(localConfig)) {
-      // eslint-disable-next-line
-      config = require(localConfig);
-    } else {
-      throw new Error('Local development requires ./secrets/.runtimeconfig.json');
-    }
-  }
-
-  if (process.env.NODE_ENV === 'production') {
-    config = functions.config();
-  }
-
+  const config = functions.config();
   return config.element;
 };
 

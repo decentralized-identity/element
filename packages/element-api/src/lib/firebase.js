@@ -14,7 +14,10 @@ const config = {
 };
 
 let serviceAccountKey = false;
-const serviceAccountPath = path.resolve(__dirname, '../../element-did-firebase-adminsdk-oqgpz-08625dd272.json');
+const serviceAccountPath = path.resolve(
+  __dirname,
+  '../../element-did-firebase-adminsdk-oqgpz-08625dd272.json',
+);
 // eslint-disable-next-line security/detect-non-literal-fs-filename
 if (fs.existsSync(serviceAccountPath)) {
   /* eslint-disable max-len */
@@ -37,9 +40,15 @@ const auth = firebase.auth();
 const authAdmin = firebaseAdmin.auth();
 const db = firebaseAdmin.database();
 
+const teardown = async () => {
+  firebase.app('[DEFAULT]').delete();
+  firebaseAdmin.app().delete();
+};
+
 module.exports = {
   auth,
   authAdmin,
   db,
   functions: firebaseFunctions,
+  teardown,
 };

@@ -5,7 +5,16 @@ const element = require('@transmute/element-lib');
 
 const app = require('../../../../express/app');
 
+jest.setTimeout(5 * 1000);
+
+const batchService = require('../../../../lib/batchService');
+
+const sleep = seconds => new Promise((resolve) => {
+  setTimeout(resolve, seconds * 1000);
+});
+
 describe('sidetree', () => {
+  let server;
   let uid;
   let encodedCreatePayload;
   let encodedPayload;
@@ -17,6 +26,12 @@ describe('sidetree', () => {
   beforeAll(async () => {
     firstKeypair = await element.func.createKeys();
     secondKeypair = await element.func.createKeys();
+    server = await request(app);
+  });
+
+  afterAll(async () => {
+    await batchService.teardown();
+    await sleep(1);
   });
 
   describe('POST /sidetree', () => {
@@ -48,22 +63,17 @@ describe('sidetree', () => {
         signature,
       };
 
-      const { body } = await request(app)
+      let res = await server
         .post('/api/v1/sidetree')
         .send(requestBody)
         .set('Accept', 'application/json');
 
-      expect(body.transactionTime).toBeDefined();
-      expect(body.transactionTimeHash).toBeDefined();
-      expect(body.transactionNumber).toBeDefined();
-      expect(body.anchorFileHash).toBeDefined();
+      await sleep(2);
 
-      const res = await request(app)
-        .get('/api/v1/sidetree')
-        .set('Accept', 'application/json');
+      res = await server.get('/api/v1/sidetree').set('Accept', 'application/json');
 
       // eslint-disable-next-line
-      expect(res.body[uid].previousOperationHash).toBe(element.func.payloadToHash(requestBody));
+      expect(res.body[uid].previousOperationHash).toBe(element.func.payloadToHash(payload));
       // eslint-disable-next-line
       previousOperationHash = res.body[uid].previousOperationHash;
     });
@@ -99,22 +109,17 @@ describe('sidetree', () => {
         signature,
       };
 
-      const { body } = await request(app)
+      let res = await server
         .post('/api/v1/sidetree')
         .send(requestBody)
         .set('Accept', 'application/json');
 
-      expect(body.transactionTime).toBeDefined();
-      expect(body.transactionTimeHash).toBeDefined();
-      expect(body.transactionNumber).toBeDefined();
-      expect(body.anchorFileHash).toBeDefined();
+      await sleep(2);
 
-      const res = await request(app)
-        .get('/api/v1/sidetree')
-        .set('Accept', 'application/json');
+      res = await server.get('/api/v1/sidetree').set('Accept', 'application/json');
 
       // eslint-disable-next-line
-      expect(res.body[uid].previousOperationHash).toBe(element.func.payloadToHash(requestBody));
+      expect(res.body[uid].previousOperationHash).toBe(element.func.payloadToHash(payload));
       // eslint-disable-next-line
       previousOperationHash = res.body[uid].previousOperationHash;
       // eslint-disable-next-line
@@ -124,26 +129,23 @@ describe('sidetree', () => {
 
   describe('GET /sidetree/:did', () => {
     it('resolve a doc by encoding payload', async () => {
-      const { body } = await request(app)
+      const { body } = await server
         .get(`/api/v1/sidetree/${encodedCreatePayload}`)
         .set('Accept', 'application/json');
       expect(body.id).toBe(`did:elem:${uid}`);
     });
 
     it('resolve a doc by did', async () => {
-      const { body } = await request(app)
+      const { body } = await server
         .get(`/api/v1/sidetree/did:elem:${uid}`)
         .set('Accept', 'application/json');
-
       expect(body.id).toBe(`did:elem:${uid}`);
     });
   });
 
   describe('GET /sidetree', () => {
     it('should return the whole tree', async () => {
-      const { body } = await request(app)
-        .get('/api/v1/sidetree')
-        .set('Accept', 'application/json');
+      const { body } = await server.get('/api/v1/sidetree').set('Accept', 'application/json');
       expect(body.transactionTime).toBeDefined();
     });
   });

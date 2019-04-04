@@ -16,11 +16,16 @@ const config = {
         process.env.ELEMENT_MNEMONIC
         || 'hazard pride garment scout search divide solution argue wait avoid title cave',
     },
+    sidetree: {
+      start_block: '0',
+      max_batch_size: '10',
+      batch_interval_in_seconds: '1',
+    },
     env: 'local',
   },
 };
 
-const dir = path.resolve(__dirname, '../secrets');
+const dir = path.resolve(__dirname, '..');
 
 // eslint-disable-next-line
 if (!fs.existsSync(dir)) {
@@ -30,6 +35,6 @@ if (!fs.existsSync(dir)) {
 
 // eslint-disable-next-line
 fs.writeFileSync(
-  path.resolve(__dirname, '../secrets/.runtimeconfig.json'),
+  path.resolve(__dirname, '../.runtimeconfig.json'),
   JSON.stringify(config, null, 2),
 );

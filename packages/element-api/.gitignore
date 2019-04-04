@@ -1,5 +1,8 @@
 secrets
 node_modules
 coverage
+.runtimeconfig.json
 
 *.log
+
+*firebase-adminsdk-*

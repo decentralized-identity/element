@@ -31,6 +31,30 @@ router.get('/node', async (req, res, next) => {
  * @swagger
  *
  * paths:
+ *   "/sidetree/batch":
+ *     get:
+ *       description: Return the current batch
+ *       tags: [Sidetree]
+ *       produces:
+ *       - application/json
+ *       responses:
+ *         '200':
+ *           description: Success
+ *           type: object
+ */
+router.get('/batch', async (req, res, next) => {
+  try {
+    const result = await elementService.getCurrentBatch();
+    res.status(200).json(result);
+  } catch (e) {
+    next(e);
+  }
+});
+
+/**
+ * @swagger
+ *
+ * paths:
  *   "/sidetree":
  *     get:
  *       description: Return sidetree from root.

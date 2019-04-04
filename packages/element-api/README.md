@@ -24,6 +24,11 @@ firebase functions:config:set element.ethereum.anchor_contract_address=$(cat ./n
 
 firebase functions:config:unset element.ethereum.mneumonic 
 
+
+firebase functions:config:set element.sidetree.start_block='0'
+firebase functions:config:set element.sidetree.max_batch_size='10'
+firebase functions:config:set element.sidetree.batch_interval_in_seconds='10'
+
 ```
 
 
