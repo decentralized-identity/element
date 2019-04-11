@@ -6,7 +6,7 @@
     "bootstrap": "lerna bootstrap",
     "lint": "lerna run lint",
     "test": "lerna run test --stream",
-    "coverage": "lerna run coverage",
+    "coverage": "lerna run coverage --ignore @transmute/element-api",
     "test:contracts": "lerna run test:contracts",
     "create-local-runtimeconfig": "lerna run create-local-runtimeconfig",
     "contracts:migrate:dev": "lerna run contracts:migrate:dev",
