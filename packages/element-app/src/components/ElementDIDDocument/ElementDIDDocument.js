@@ -40,7 +40,7 @@ class GithubDIDDocument extends Component {
             </Typography>
             <ExpansionPanelList
               panels={didDocument.publicKey.map(k => ({
-                title: `${k.type} ${k.id}`,
+                title: `${k.id} ${k.type}`,
                 children: (
                   <form noValidate autoComplete="off" style={{ width: '100%' }}>
                     <FormControl fullWidth disabled>

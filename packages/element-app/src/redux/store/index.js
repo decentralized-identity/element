@@ -8,14 +8,16 @@ import storage from 'redux-persist/lib/storage';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 
-import did from '../did';
 import snackbar from '../snackbar';
 import wallet from '../wallet';
+import lightNode from '../lightNode';
+import fullNode from '../fullNode';
 
 export const history = createBrowserHistory();
 
 const rootReducer = {
-  did: did.reducer,
+  lightNode: lightNode.reducer,
+  fullNode: fullNode.reducer,
   snackbar: snackbar.reducer,
   wallet: wallet.reducer,
   router: connectRouter(history),
@@ -25,7 +27,7 @@ export default (appReducers) => {
   // Persistance configuration
   const persistConfig = {
     key: 'root',
-    blacklist: ['did'],
+    blacklist: ['fullNode', 'lightNode'],
     storage,
   };
 

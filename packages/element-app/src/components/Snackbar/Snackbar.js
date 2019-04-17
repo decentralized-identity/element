@@ -16,11 +16,11 @@ class Snackbar extends Component {
       this.setState({
         ...nextProps.snackbar.snackbarMessage,
       });
-      // setTimeout(() => {
-      //   this.setState({
-      //     open: false,
-      //   });
-      // }, 3 * 1000);
+      setTimeout(() => {
+        this.setState({
+          open: false,
+        });
+      }, 3 * 1000);
     }
   }
 

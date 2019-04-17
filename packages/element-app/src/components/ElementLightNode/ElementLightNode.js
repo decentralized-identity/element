@@ -39,7 +39,7 @@ class ElementLightNode extends Component {
           </Grid>
 
           <Grid item xs={12}>
-            <DIDResolver />
+            <DIDResolver resolveDID={this.props.resolveDID} did={this.props.lightNode} />
           </Grid>
         </Grid>
       </div>
@@ -49,6 +49,8 @@ class ElementLightNode extends Component {
 
 ElementLightNode.propTypes = {
   wallet: PropTypes.object.isRequired,
+  resolveDID: PropTypes.func.isRequired,
+  lightNode: PropTypes.object.isRequired,
 };
 
 export default ElementLightNode;

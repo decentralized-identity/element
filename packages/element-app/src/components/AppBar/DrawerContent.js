@@ -9,6 +9,7 @@ import {
   VpnKey,
   // Fingerprint, Search, Lock,
   DeveloperBoard,
+  CloudQueueOutlined,
 } from '@material-ui/icons';
 
 import MenuSection from './MenuSection';
@@ -28,6 +29,11 @@ const DrawerContent = ({ classes }) => (
           label: 'Light Node',
           icon: <DeveloperBoard />,
           link: '/light-node',
+        },
+        {
+          label: 'Full Node',
+          icon: <CloudQueueOutlined />,
+          link: '/full-node',
         },
 
         // {

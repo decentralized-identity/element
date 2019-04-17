@@ -15,6 +15,7 @@ import Decrypt from './Decrypt';
 import Credits from './Credits';
 
 import LightNode from './LightNode';
+import FullNode from './FullNode';
 
 export default {
   Default: DefaultPage,
@@ -29,4 +30,5 @@ export default {
   Decrypt,
   Credits,
   LightNode,
+  FullNode,
 };

@@ -22,6 +22,7 @@ class App extends Component {
                 <Route exact path="/" render={() => <Pages.Landing />} />
                 <Route exact path="/wallet" render={() => <Pages.Wallet />} />
                 <Route exact path="/light-node" render={() => <Pages.LightNode />} />
+                <Route exact path="/full-node" render={() => <Pages.FullNode />} />
                 {/* <Route path="/sign/:base64EncodedJsonLd" render={() => <Pages.Sign />} />
                 <Route path="/verify/:base64EncodedJsonLd" render={() => <Pages.Verify />} />
                 <Route path="/encrypt/:base64EncodedJsonLd" render={() => <Pages.Encrypt />} />

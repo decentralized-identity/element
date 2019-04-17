@@ -31,7 +31,7 @@ class DIDResolver extends Component {
 
     return (
       <Grid container spacing={24}>
-        <Grid item xs={12} sm={11}>
+        <Grid item xs={12} sm={10}>
           <TextField
             label="Element Resolver"
             value={currentDID}
@@ -45,7 +45,7 @@ class DIDResolver extends Component {
             margin="normal"
           />
         </Grid>
-        <Grid item xs={12} sm={1}>
+        <Grid item xs={12} sm={2}>
           <Button
             style={{ marginTop: '28px' }}
             fullWidth
