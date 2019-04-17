@@ -29,8 +29,8 @@ describe('Integration', () => {
     // wait for new contract.
     await blockchain.resolving;
 
-    storage = element.storage.local.configure({
-      repo: 'elem-resolve-tests',
+    storage = element.storage.ipfs.configure({
+      multiaddr: config.ipfsApiMultiAddr,
     });
 
     for (let i = 0; i < p; i++) {

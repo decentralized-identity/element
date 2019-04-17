@@ -13,6 +13,20 @@ const count = 3;
 let blockchain;
 let storage;
 
+// eslint-disable-next-line
+const getItem = id => JSON.parse(localStorage.getItem(id));
+
+const setItem = (id, value) => {
+  // eslint-disable-next-line
+  localStorage.setItem(id, JSON.stringify(value));
+  return value;
+};
+
+const cache = {
+  getItem,
+  setItem,
+};
+
 describe('element.func.resolve', () => {
   it('throws when called without sufficient args', async () => {
     expect.assertions(1);
@@ -45,8 +59,8 @@ describe('element.func.resolve', () => {
       // wait for new contract.
       await blockchain.resolving;
 
-      storage = element.storage.local.configure({
-        repo: 'elem-resolve-tests',
+      storage = element.storage.ipfs.configure({
+        multiaddr: config.ipfsApiMultiAddr,
       });
 
       await element.func.operationsToTransaction({
@@ -60,7 +74,7 @@ describe('element.func.resolve', () => {
       const did = `did:elem:${_.values(actorMap)[0].uid}/some/path#fragment=123`;
       const doc = await element.func.resolve({
         did,
-        cache: element.cache,
+        cache,
         reducer: element.reducer,
         storage,
         blockchain,
@@ -72,7 +86,7 @@ describe('element.func.resolve', () => {
       const did = `did:elem:${_.values(actorMap)[1].uid}`;
       const doc = await element.func.resolve({
         did,
-        cache: element.cache,
+        cache,
         reducer: element.reducer,
         storage,
         blockchain,
@@ -84,7 +98,7 @@ describe('element.func.resolve', () => {
       const did = 'did:elem:dne';
       const doc = await element.func.resolve({
         did,
-        cache: element.cache,
+        cache,
         reducer: element.reducer,
         storage,
         blockchain,
