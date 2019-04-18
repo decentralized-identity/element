@@ -1,5 +1,6 @@
 {
-  "id": "/didDoc",
+  "$schema": "http://json-schema.org/schema#",
+  "$id": "#didDoc",
   "type": "object",
   "properties": {
     "@context": {

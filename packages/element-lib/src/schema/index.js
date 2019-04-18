@@ -24,7 +24,7 @@ class SchemaValidator {
         throw new Error(`No schema found for ${sk}`);
       }
       //   eslint-disable-next-line
-      this._validator.addSchema(s, s.id);
+      this._validator.addSchema(s, s.$id);
     });
   }
 
@@ -36,7 +36,7 @@ class SchemaValidator {
    */
   addSchema(s) {
     //   eslint-disable-next-line
-    this._validator.addSchema(s, s.id);
+    this._validator.addSchema(s, s.$id);
   }
 
   /**

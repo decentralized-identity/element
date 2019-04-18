@@ -1,5 +1,6 @@
 {
-  "id": "operationBindingModel",
+  "$schema": "http://json-schema.org/schema#",
+  "$id": "#operationBindingModel",
   "type": "object",
   "properties": {
     "header": {
