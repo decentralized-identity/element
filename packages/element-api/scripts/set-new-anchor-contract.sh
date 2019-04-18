@@ -6,5 +6,3 @@ firebase functions:config:set element.ethereum.anchor_contract_address=$ADDRESS
 
 tmp=$(mktemp)
 jq ".element.ethereum.anchor_contract_address = \"$ADDRESS\"" ./.runtimeconfig.json > "$tmp" && mv "$tmp" ./.runtimeconfig.json
-
-rm -rf ./elem-cache

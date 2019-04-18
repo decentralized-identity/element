@@ -26,10 +26,6 @@ const generateCreate = async () => {
     signature,
   };
 
-  // element.cache.setItem(uid, {
-  //   firstKeypair,
-  //   create: requestBody,
-  // });
   return requestBody;
 };
 
