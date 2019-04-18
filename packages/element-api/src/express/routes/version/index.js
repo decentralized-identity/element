@@ -17,17 +17,15 @@ const router = express.Router();
  *       responses:
  *         '200':
  *           description: Version information
- *           content:
- *            application/json:
- *               schema:
- *                type: object
- *                properties:
- *                  version:
- *                    type: string
- *                    example: 0.1.2
- *                  commit:
- *                    type: string
- *                    example: 10512b16efa6f0c4e2b8ed64546bfaf8a17af8da
+ *           schema:
+ *            type: object
+ *            properties:
+ *              version:
+ *                type: string
+ *                example: 0.1.2
+ *              commit:
+ *                type: string
+ *                example: 10512b16efa6f0c4e2b8ed64546bfaf8a17af8da
  */
 router.get('/', async (req, res, next) => {
   try {

@@ -6,7 +6,6 @@ const pack = require('../../../package.json');
 
 const { getBasePath, getBaseConfig, getAPIBaseUrl } = require('../../config');
 
-
 const { schemas } = element.schema;
 
 module.exports = (app) => {
@@ -27,9 +26,11 @@ module.exports = (app) => {
   // Add all JSON schemas as definitions in the Swagger JS doc
   Object.keys(schemas).forEach((schemaName) => {
     // eslint-disable-next-line
-    const jsonSchema = schemas[schemaName];
+    const jsonSchema = { ...schemas[schemaName] };
     const { $id } = jsonSchema;
     if ($id) {
+      delete jsonSchema.$id;
+      delete jsonSchema.$schema;
       // eslint-disable-next-line
       swaggerDoc.definitions[$id] = jsonSchema;
       // eslint-disable-next-line

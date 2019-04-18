@@ -16,10 +16,8 @@ const router = express.Router();
  *       responses:
  *         '200':
  *           description: Node information
- *           content:
- *            application/json:
- *               schema:
- *                type: object
+ *           schema:
+ *              type: object
  */
 router.get('/node', async (req, res, next) => {
   try {
@@ -43,10 +41,8 @@ router.get('/node', async (req, res, next) => {
  *       responses:
  *         '200':
  *           description: A batch of operations to be anchored
- *           content:
- *            application/json:
- *               schema:
- *                type: object
+ *           schema:
+ *              type: object
  */
 router.get('/batch', async (req, res, next) => {
   try {
@@ -70,10 +66,8 @@ router.get('/batch', async (req, res, next) => {
  *       responses:
  *         '200':
  *           description: All DID Documents and related model data
- *           content:
- *            application/json:
- *               schema:
- *                type: object
+ *           schema:
+ *              type: object
  */
 router.get('/', async (req, res, next) => {
   try {
@@ -99,14 +93,12 @@ router.get('/', async (req, res, next) => {
  *           in: body
  *           required: true
  *           schema:
- *             "$ref": "#/definitions/operationBindingModel"
+ *             "$ref": "#/definitions/#operationBindingModel"
  *       responses:
  *         '200':
  *           description: Operation Accepted
- *           content:
- *            application/json:
- *               schema:
- *                type: object
+ *           schema:
+ *              type: object
  */
 router.post('/', async (req, res, next) => {
   try {
@@ -138,10 +130,8 @@ router.post('/', async (req, res, next) => {
  *       responses:
  *         '200':
  *           description: A JSON-LD DID Document
- *           content:
- *            application/json:
- *               schema:
- *                type: object
+ *           schema:
+ *             "$ref": "#/definitions/#didDoc"
  */
 router.get('/:did', async (req, res, next) => {
   try {
