@@ -15,8 +15,11 @@ const router = express.Router();
  *       - application/json
  *       responses:
  *         '200':
- *           description: Node info
- *           type: object
+ *           description: Node information
+ *           content:
+ *            application/json:
+ *               schema:
+ *                type: object
  */
 router.get('/node', async (req, res, next) => {
   try {
@@ -39,8 +42,11 @@ router.get('/node', async (req, res, next) => {
  *       - application/json
  *       responses:
  *         '200':
- *           description: Success
- *           type: object
+ *           description: A batch of operations to be anchored
+ *           content:
+ *            application/json:
+ *               schema:
+ *                type: object
  */
 router.get('/batch', async (req, res, next) => {
   try {
@@ -63,8 +69,11 @@ router.get('/batch', async (req, res, next) => {
  *       - application/json
  *       responses:
  *         '200':
- *           description: Success
- *           type: object
+ *           description: All DID Documents and related model data
+ *           content:
+ *            application/json:
+ *               schema:
+ *                type: object
  */
 router.get('/', async (req, res, next) => {
   try {
@@ -93,8 +102,11 @@ router.get('/', async (req, res, next) => {
  *             "$ref": "#/definitions/operationBindingModel"
  *       responses:
  *         '200':
- *           description: Success
- *           type: object
+ *           description: Operation Accepted
+ *           content:
+ *            application/json:
+ *               schema:
+ *                type: object
  */
 router.post('/', async (req, res, next) => {
   try {
@@ -125,8 +137,11 @@ router.post('/', async (req, res, next) => {
  *         value: did:elem:123
  *       responses:
  *         '200':
- *           description: Success
- *           type: object
+ *           description: A JSON-LD DID Document
+ *           content:
+ *            application/json:
+ *               schema:
+ *                type: object
  */
 router.get('/:did', async (req, res, next) => {
   try {

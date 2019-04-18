@@ -23,9 +23,6 @@ app.options('*', cors({ origin: true }));
 
 app.use('/api/v1/', require('../../src/express/routes/index'));
 
-// hack for swagger.
-app.use('/.well-known/', require('../../src/express/routes/.well-known'));
-
 // Handle errors.
 app.use(onErrorResponse);
 

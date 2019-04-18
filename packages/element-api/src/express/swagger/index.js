@@ -28,10 +28,10 @@ module.exports = (app) => {
   Object.keys(schemas).forEach((schemaName) => {
     // eslint-disable-next-line
     const jsonSchema = schemas[schemaName];
-    const { id } = jsonSchema;
-    if (id) {
+    const { $id } = jsonSchema;
+    if ($id) {
       // eslint-disable-next-line
-      swaggerDoc.definitions[id] = jsonSchema;
+      swaggerDoc.definitions[$id] = jsonSchema;
       // eslint-disable-next-line
     }
   });
