@@ -126,7 +126,6 @@ router.post('/', async (req, res, next) => {
  *         description: DID to resolve
  *         required: true
  *         type: string
- *         value: did:elem:123
  *       responses:
  *         '200':
  *           description: A JSON-LD DID Document
