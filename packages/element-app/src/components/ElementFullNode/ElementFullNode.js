@@ -18,17 +18,24 @@ import 'brace/theme/github';
 
 import { DIDResolver } from '../index';
 
+import OperationDialog from './OperationDialog';
+
 const SWAGGER_UI = window.location.hostname === 'element-did.com'
   ? 'https://element-did.com/api/docs'
   : 'http://localhost:5002/element-did/us-central1/main/docs';
 
 class ElementFullNode extends Component {
+  state = {
+    isDialogOpen: false,
+  };
+
   componentWillMount() {
     this.props.getNodeInfo();
   }
 
   render() {
-    // const { wallet } = this.props;
+    const { wallet } = this.props;
+    const { isDialogOpen } = this.state;
     return (
       <div className="ElementFullNode" style={{ padding: '16px' }}>
         <Grid container spacing={24}>
@@ -39,7 +46,29 @@ class ElementFullNode extends Component {
             <br />
             <Button variant={'contained'} size={'small'} href={SWAGGER_UI}>
               Docs
+            </Button>{' '}
+            <Button
+              color="primary"
+              variant={'contained'}
+              size={'small'}
+              onClick={() => {
+                this.setState({
+                  isDialogOpen: true,
+                });
+              }}
+            >
+              New Operation
             </Button>
+            <OperationDialog
+              open={isDialogOpen}
+              wallet={wallet}
+              signAndSubmit={this.props.signAndSubmit}
+              onClose={() => {
+                this.setState({
+                  isDialogOpen: false,
+                });
+              }}
+            />
           </Grid>
 
           <Grid item xs={12}>
@@ -75,6 +104,7 @@ ElementFullNode.propTypes = {
   wallet: PropTypes.object.isRequired,
   resolveDID: PropTypes.func.isRequired,
   getNodeInfo: PropTypes.func.isRequired,
+  signAndSubmit: PropTypes.func.isRequired,
   fullNode: PropTypes.object.isRequired,
 };
 

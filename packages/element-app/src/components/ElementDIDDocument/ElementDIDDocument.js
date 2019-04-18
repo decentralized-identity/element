@@ -32,7 +32,7 @@ class GithubDIDDocument extends Component {
     return (
       <Paper className={classes.container}>
         <Grid container spacing={24}>
-          <Grid item xs={8}>
+          <Grid item xs={12} sm={8}>
             <Typography variant={'body1'}>{didDocument.id}</Typography>
             <br />
             <Typography variant={'body2'} className={classes.publicKeysHeading}>
@@ -92,10 +92,58 @@ class GithubDIDDocument extends Component {
                 ),
               }))}
             />
+            <br />
+            <Typography variant={'body2'} className={classes.publicKeysHeading}>
+              Service
+            </Typography>
+            <ExpansionPanelList
+              panels={didDocument.service.map(k => ({
+                title: `${k.id}`,
+                children: (
+                  <form noValidate autoComplete="off" style={{ width: '100%' }}>
+                    <FormControl fullWidth disabled>
+                      <TextField
+                        label="id"
+                        className={classes.textField}
+                        value={k.id}
+                        margin="normal"
+                      />
+                    </FormControl>
+                    <FormControl fullWidth disabled>
+                      <TextField
+                        label="type"
+                        className={classes.textField}
+                        value={k.type}
+                        margin="normal"
+                      />
+                    </FormControl>
+
+                    <FormControl fullWidth disabled>
+                      <CopyToClipboard
+                        text={k.serviceEndpoint}
+                        onCopy={() => {
+                          this.props.snackbarMessage({
+                            snackbarMessage: {
+                              message: 'Copied Service Endpoint ...',
+                              variant: 'success',
+                              open: true,
+                            },
+                          });
+                        }}
+                      >
+                        <Button style={{ marginTop: '28px' }} fullWidth variant="contained">
+                          Copy Service Endpoint
+                        </Button>
+                      </CopyToClipboard>
+                    </FormControl>
+                  </form>
+                ),
+              }))}
+            />
           </Grid>
 
-          <Grid item xs={4}>
-            <QRCode value={didDocument.id} style={{ width: '100%', height: '100%' }} />
+          <Grid item xs={12} sm={4}>
+            <QRCode value={didDocument.id} style={{ width: '128px', height: '128px' }} />
           </Grid>
         </Grid>
       </Paper>
