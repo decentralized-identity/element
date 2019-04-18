@@ -1,8 +1,9 @@
 const express = require('express');
-const morgan = require('morgan');
+
 const cors = require('cors');
 
-const winston = require('../../src/lib/winston');
+// const morgan = require('morgan');
+// const winston = require('../../src/lib/winston');
 
 const swagger = require('../../src/express/swagger');
 
@@ -13,9 +14,10 @@ const onErrorResponse = require('../../src/express/onErrorResponse');
 // Automatically allow cross-origin requests
 app.use(cors({ origin: true }));
 app.use(express.json());
-if (process.env.NODE_ENV !== 'testing') {
-  app.use(morgan('combined', { stream: winston.stream }));
-}
+
+// if (process.env.NODE_ENV !== 'testing') {
+//   app.use(morgan('combined', { stream: winston.stream }));
+// }
 
 app.options('*', cors({ origin: true }));
 
