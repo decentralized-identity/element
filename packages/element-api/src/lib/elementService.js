@@ -112,11 +112,13 @@ const resolve = async (arg) => {
 const getNodeInfo = async () => {
   // make sure we have a contract.
   await blockchain.resolving;
+  const accounts = await blockchain.web3.eth.getAccounts();
   const ipfs = await storage.ipfs.id();
   return {
     ipfs,
     ethereum: {
       anchorContractAddress: blockchain.anchorContractAddress,
+      accounts,
     },
     sidetree: config.sidetree,
   };
