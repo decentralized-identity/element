@@ -4,9 +4,7 @@
 
 #### 🔥 Experimental Sidetree Protocol based DID Method `elem` with Ethereum and IPFS
 
-<p align="center">
-  <img src="./BrowserDemo.png"/>
-</p>
+[![Element Testnet Demo](./BrowserDemo.png)](https://www.youtube.com/watch?v=KY_dt2tKQxw)
 
 This is a lerna mono repo, see [packages](./packages) for all modules.
 
