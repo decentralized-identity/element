@@ -13,7 +13,18 @@ const getWeb3 = ({ mnemonic, hdPath, providerUrl }) => {
     // eslint-disable-next-line
     return window.web3;
   }
-  const provider = new HDWalletProvider(mnemonic, providerUrl, 0, 1, hdPath);
+
+  const parts = hdPath.split('/');
+  const accountIndex = parseInt(parts.pop(), 10);
+  const hdPathWithoutAccountIndex = `${parts.join('/')}/`;
+
+  const provider = new HDWalletProvider(
+    mnemonic,
+    providerUrl,
+    accountIndex,
+    1,
+    hdPathWithoutAccountIndex,
+  );
   return new Web3(provider);
 };
 
