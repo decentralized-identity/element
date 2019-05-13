@@ -4,6 +4,8 @@
 
 #### 🔥 Experimental Sidetree Protocol based DID Method `elem` with Ethereum and IPFS
 
+### [See our blog post](https://medium.com/transmute-techtalk/introducing-element-328b4260e757)
+
 Click below image for demo video.
 
 [![Element Testnet Demo](./BrowserDemo.png)](https://www.youtube.com/watch?v=KY_dt2tKQxw)
