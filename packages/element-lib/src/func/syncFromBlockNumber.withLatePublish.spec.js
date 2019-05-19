@@ -1,6 +1,6 @@
+const _ = require('lodash');
 const element = require('../../index');
 const config = require('../json/config.local.json');
-
 const {
   primaryKeypair,
   primaryKeypair2,
@@ -16,8 +16,11 @@ const fixtureStorage = require('../__tests__/__fixtures__').storage;
 
 let storage;
 let blockchain;
+let service;
 
 // Why Sidetree DIDs are non transferable.
+// we need randomness here, because obviously IPFS will have the published
+// data after one test run.
 describe('syncFromBlockNumber.withLatePublish', () => {
   console.info('This test should log warnings.');
   beforeEach(async () => {
@@ -35,6 +38,14 @@ describe('syncFromBlockNumber.withLatePublish', () => {
     storage = element.storage.ipfs.configure({
       multiaddr: config.ipfsApiMultiAddr,
     });
+
+    service = [
+      {
+        id: '#transmute.element.test',
+        type: 'Transmute.Element.Test',
+        serviceEndpoint: `http://vanity.example.com#${Math.random()}`,
+      },
+    ];
   });
 
   it('create, revoke (no publish), revoke (publish), sync, publish, sync', async () => {
@@ -53,6 +64,7 @@ describe('syncFromBlockNumber.withLatePublish', () => {
           publicKeyHex: recoveryKeypair.publicKey,
         },
       ],
+      service,
     });
     let signature = element.func.signEncodedPayload(encodedPayload, primaryKeypair.privateKey);
     let requestBody = {
@@ -75,11 +87,22 @@ describe('syncFromBlockNumber.withLatePublish', () => {
       blockchain,
     });
 
+    let updatedModel = await element.func.syncFromBlockNumber({
+      transactionTime: 0,
+      initialState: {},
+      reducer: element.reducer,
+      storage,
+      blockchain,
+    });
+
+    const didUniqueSuffix = _.without(Object.keys(updatedModel), 'transactionTime')[0];
+
+    expect(updatedModel[didUniqueSuffix].doc.id).toBe(`did:elem:${didUniqueSuffix}`);
     // Out sneeky trick.
     // RECOVER
     encodedPayload = element.func.encodeJson({
-      didUniqueSuffix: 'MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI',
-      previousOperationHash: 'MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI', // should see this twice.
+      didUniqueSuffix,
+      previousOperationHash: didUniqueSuffix, // should see this twice.
       patch: [
         // first op should update recovery key.
         {
@@ -121,7 +144,7 @@ describe('syncFromBlockNumber.withLatePublish', () => {
     });
     await blockchain.write(anchorFileHash);
 
-    let updatedModel = await element.func.syncFromBlockNumber({
+    updatedModel = await element.func.syncFromBlockNumber({
       transactionTime: 0,
       initialState: {},
       reducer: element.reducer,
@@ -129,21 +152,18 @@ describe('syncFromBlockNumber.withLatePublish', () => {
       blockchain,
     });
 
-    expect(updatedModel['MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI'].doc.id).toBe(
-      'did:elem:MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI',
+    expect(updatedModel[didUniqueSuffix].doc.publicKey[0].publicKeyHex).toBe(
+      primaryKeypair.publicKey,
     );
-    expect(
-      updatedModel['MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI'].doc.publicKey[0].publicKeyHex,
-    ).toBe(primaryKeypair.publicKey);
-    expect(
-      updatedModel['MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI'].doc.publicKey[1].publicKeyHex,
-    ).toBe(recoveryKeypair.publicKey);
+    expect(updatedModel[didUniqueSuffix].doc.publicKey[1].publicKeyHex).toBe(
+      recoveryKeypair.publicKey,
+    );
 
     // now we pretend to transfer...
     // RECOVER
     encodedPayload = element.func.encodeJson({
-      didUniqueSuffix: 'MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI',
-      previousOperationHash: 'MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI', // should see this twice.
+      didUniqueSuffix,
+      previousOperationHash: didUniqueSuffix, // should see this twice.
       patch: [
         // first op should update recovery key.
         {
@@ -196,12 +216,12 @@ describe('syncFromBlockNumber.withLatePublish', () => {
     // Ledger observers think we transfered!
     // (because some anchorFiles timeout and are ignored.)
 
-    expect(
-      updatedModel['MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI'].doc.publicKey[0].publicKeyHex,
-    ).toBe(primaryKeypair2.publicKey);
-    expect(
-      updatedModel['MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI'].doc.publicKey[1].publicKeyHex,
-    ).toBe(recoveryKeypair2.publicKey);
+    expect(updatedModel[didUniqueSuffix].doc.publicKey[0].publicKeyHex).toBe(
+      primaryKeypair2.publicKey,
+    );
+    expect(updatedModel[didUniqueSuffix].doc.publicKey[1].publicKeyHex).toBe(
+      recoveryKeypair2.publicKey,
+    );
 
     // Now we publish our sneeky trick.
     const ourLateAnchorFile = await fixtureStorage.read(anchorFileHash);
@@ -217,12 +237,12 @@ describe('syncFromBlockNumber.withLatePublish', () => {
       blockchain,
     });
 
-    expect(
-      updatedModel['MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI'].doc.publicKey[0].publicKeyHex,
-    ).toBe(primaryKeypair2.publicKey);
-    expect(
-      updatedModel['MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI'].doc.publicKey[1].publicKeyHex,
-    ).toBe(secondaryKeypair.publicKey);
+    expect(updatedModel[didUniqueSuffix].doc.publicKey[0].publicKeyHex).toBe(
+      primaryKeypair2.publicKey,
+    );
+    expect(updatedModel[didUniqueSuffix].doc.publicKey[1].publicKeyHex).toBe(
+      secondaryKeypair.publicKey,
+    );
     // Looks like we never actually transfered recovery power (control)....
   });
 });
