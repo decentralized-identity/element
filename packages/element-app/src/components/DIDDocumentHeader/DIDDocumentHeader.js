@@ -16,15 +16,16 @@ import { FilterNone, VerifiedUser } from '@material-ui/icons';
 
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
+// eslint-disable-next-line
 const styles = theme => ({});
 
 class DIDDocumentHeader extends Component {
   render() {
-    const { classes, did, onCopyToClipboard } = this.props;
+    const { did, onCopyToClipboard } = this.props;
 
     return (
       <React.Fragment>
-        <Paper>
+        <Paper style={{ width: '100%' }}>
           <List>
             <ListItem>
               <Avatar>

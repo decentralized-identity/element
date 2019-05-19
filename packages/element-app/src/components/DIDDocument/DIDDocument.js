@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
 import {
-  Paper,
   Typography,
   List,
   ListItem,
@@ -22,7 +21,6 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 
 import {
   FilterNone,
-  VerifiedUser,
   DeviceHub,
   Fingerprint,
   VpnKey,
@@ -35,6 +33,7 @@ import QRCode from 'qrcode.react';
 
 import { DIDDocumentHeader } from '../DIDDocumentHeader';
 
+// eslint-disable-next-line
 const styles = theme => ({
   didQRCode: {
     width: '128px',
@@ -51,7 +50,7 @@ class DIDDocument extends Component {
       <React.Fragment>
         <DIDDocumentHeader did={didDocument.id} onCopyToClipboard={onCopyToClipboard} />
 
-        <ExpansionPanel>
+        <ExpansionPanel style={{ width: '100%' }}>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
             <Typography>Scan QRCode DID</Typography>
           </ExpansionPanelSummary>

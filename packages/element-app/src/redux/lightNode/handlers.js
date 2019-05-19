@@ -40,7 +40,7 @@ export default withHandlers({
       didResolved({ didDocument: doc });
       snackbarMessage({
         snackbarMessage: {
-          message: 'Resolve DID',
+          message: `Resolved ${doc.id}`,
           variant: 'success',
           open: true,
         },
