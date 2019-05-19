@@ -1,5 +1,20 @@
 const ipfsClient = require('ipfs-http-client');
 
+const resolveValueOrNullInSeconds = (promise, seconds) => new Promise(async (resolve, reject) => {
+  const maybeNull = setTimeout(() => {
+    resolve(null);
+  }, seconds * 1000);
+
+  try {
+    const value = await promise;
+    clearTimeout(maybeNull);
+    resolve(value);
+  } catch (e) {
+    clearTimeout(maybeNull);
+    reject(e);
+  }
+});
+
 class IpfsStorage {
   constructor(multiaddr) {
     const parts = multiaddr.split('/');
@@ -19,7 +34,7 @@ class IpfsStorage {
   }
 
   async read(cid) {
-    const [node] = await this.ipfs.get(cid);
+    const [node] = await resolveValueOrNullInSeconds(this.ipfs.get(cid), 5);
     let parsed = {};
     try {
       parsed = JSON.parse(node.content);
