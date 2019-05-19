@@ -43,6 +43,8 @@ describe('operationsToAnchorFile', () => {
       ...requestBody,
     });
 
+    expect(encodedOperation).toMatchSnapshot();
+
     const anchorFileHash = await element.func.operationsToAnchorFile({
       operations: [encodedOperation],
       storage,
@@ -81,6 +83,7 @@ describe('operationsToAnchorFile', () => {
     const encodedOperation = element.func.requestBodyToEncodedOperation({
       ...requestBody,
     });
+    expect(encodedOperation).toMatchSnapshot();
 
     const anchorFileHash = await element.func.operationsToAnchorFile({
       operations: [encodedOperation],
@@ -130,6 +133,7 @@ describe('operationsToAnchorFile', () => {
     const encodedOperation = element.func.requestBodyToEncodedOperation({
       ...requestBody,
     });
+    expect(encodedOperation).toMatchSnapshot();
 
     const anchorFileHash = await element.func.operationsToAnchorFile({
       operations: [encodedOperation],
@@ -157,6 +161,7 @@ describe('operationsToAnchorFile', () => {
     const encodedOperation = element.func.requestBodyToEncodedOperation({
       ...requestBody,
     });
+    expect(encodedOperation).toMatchSnapshot();
 
     const anchorFileHash = await element.func.operationsToAnchorFile({
       operations: [encodedOperation],

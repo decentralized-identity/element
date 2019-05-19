@@ -34,12 +34,18 @@ module.exports = async ({ operations, storage }) => {
     operations,
   };
 
-  const decodedOperations = operations.map(decodeJson).map(op => ({
-    ...op,
-    decodedPayload: decodeJson(op.payload),
-  }));
+  let decodedOperations;
+  let didUniqueSuffixes;
 
-  const didUniqueSuffixes = extractDidUniqueSuffixesFromDecodedOps(decodedOperations);
+  try {
+    decodedOperations = operations.map(decodeJson).map(op => ({
+      ...op,
+      decodedPayload: decodeJson(op.payload),
+    }));
+    didUniqueSuffixes = extractDidUniqueSuffixesFromDecodedOps(decodedOperations);
+  } catch (e) {
+    throw new Error('Operation encoding is not correct.');
+  }
 
   const batchFileHash = await storage.write(batchFile);
   merkleTools.addLeaves(operations, true);

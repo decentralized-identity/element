@@ -10,7 +10,9 @@ const reducer = async (state = {}, anchoredOperation) => {
     }
     throw new Error('operation not supported');
   } catch (e) {
-    console.warn('Operation rejected', anchoredOperation.decodedOperationPayload, state);
+    console.warn('Operation rejected', e);
+    console.warn('Operation: ', anchoredOperation);
+    console.warn('State: ', state);
     return state;
   }
 };

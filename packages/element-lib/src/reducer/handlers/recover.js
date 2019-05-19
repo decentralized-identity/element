@@ -1,8 +1,7 @@
-
 const _ = require('lodash');
+const jsonpatch = require('fast-json-patch');
 
-const { applyReducer } = require('fast-json-patch');
-
+const { applyReducer } = jsonpatch;
 const payloadToHash = require('../../func/payloadToHash');
 
 const verifyOperationSignature = require('../../func/verifyOperationSignature');
@@ -57,13 +56,14 @@ module.exports = async (state, anchoredOperation) => {
   });
 
   if (!isSignatureValid) {
-    throw new Error(`Signature for ${opName} is not valid.`);
+    throw new Error(
+      `Signature for ${opName} is not valid. Make sure this op was signed with key id: '#recovery'`,
+    );
   }
 
   const updatedDoc = patch.reduce(applyReducer, preUpdateDidDoc);
 
   const newPreviousOperationHash = payloadToHash(anchoredOperation.decodedOperationPayload);
-
 
   return {
     ...state,

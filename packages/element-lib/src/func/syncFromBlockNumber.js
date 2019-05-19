@@ -3,24 +3,81 @@ const crypto = require('crypto');
 const _ = require('lodash');
 
 module.exports = async ({
-  transactionTime, initialState, reducer, storage, blockchain, onUpdated,
+  transactionTime,
+  initialState,
+  didUniqueSuffixes,
+  reducer,
+  storage,
+  blockchain,
+  onUpdated,
 }) => {
-  
+  if (
+    initialState.transactionTime
+    && parseInt(initialState.transactionTime, 10) + 1 < transactionTime
+  ) {
+    console.warn(
+      'syncFromBlockNumber has not processed this transactionTime - 1, rewinding to initialState.transactionTime + 1. If you wish to rebuild state, pass an empty initialState.',
+    );
+    // eslint-disable-next-line
+    transactionTime = parseInt(initialState.transactionTime, 10) + 1;
+  }
+
+  if (
+    initialState.transactionTime
+    && parseInt(initialState.transactionTime, 10) >= transactionTime
+  ) {
+    console.warn(
+      'syncFromBlockNumber has already processed this transactionTime, fast forwarding to initialState.transactionTime + 1. If you wish to rebuild state, pass an empty initialState.',
+    );
+    // eslint-disable-next-line
+    transactionTime = parseInt(initialState.transactionTime, 10) + 1;
+  }
+
   let stream = await blockchain.getTransactions(transactionTime);
 
-  stream = await Promise.all(
-    stream.map(async txn => ({
-      transaction: txn,
-      anchorFile: await storage.read(txn.anchorFileHash),
-    })),
-  );
+  let hasProcessedBad = false;
+  for (let txIndex = 0; txIndex < stream.length; txIndex++) {
+    const item = stream[txIndex];
+    item.transaction = stream[txIndex];
+    try {
+      // eslint-disable-next-line
+      item.anchorFile = await storage.read(item.anchorFileHash);
+    } catch (e) {
+      console.warn(e);
+      item.anchorFile = null;
+      hasProcessedBad = true;
+    }
+  }
 
-  stream = await Promise.all(
-    stream.map(async s => ({
-      ...s,
-      batchFile: await storage.read(s.anchorFile.batchFileHash),
-    })),
-  );
+  if (hasProcessedBad) {
+    console.warn('Removing Sidetree Transactions with bad anchorFiles');
+    stream = stream.filter(s => s.anchorFile !== null);
+  }
+
+  if (didUniqueSuffixes) {
+    // eslint-disable-next-line
+    stream = stream.filter(
+      s => _.intersection(s.anchorFile.didUniqueSuffixes, didUniqueSuffixes).length !== 0,
+    );
+  }
+
+  hasProcessedBad = false;
+  for (let txIndex = 0; txIndex < stream.length; txIndex++) {
+    const item = stream[txIndex];
+    try {
+      // eslint-disable-next-line
+      item.batchFile = await storage.read(item.anchorFile.batchFileHash);
+    } catch (e) {
+      console.warn(e);
+      item.batchFile = null;
+      hasProcessedBad = true;
+    }
+  }
+
+  if (hasProcessedBad) {
+    console.warn('Removing Sidetree Transactions with bad batchFiles');
+    stream = stream.filter(s => s.batchFile !== null);
+  }
 
   stream = await Promise.all(
     stream.map(s => ({
@@ -68,7 +125,8 @@ module.exports = async ({
   }
 
   if (stream.length) {
-    updatedState.transactionTime = stream.pop().transaction.transactionTime;
+    const lastTxn = stream.pop().transaction;
+    updatedState.transactionTime = lastTxn.transactionTime;
   }
 
   if (onUpdated) {

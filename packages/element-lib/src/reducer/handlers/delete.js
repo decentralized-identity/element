@@ -14,9 +14,9 @@ module.exports = async (state, anchoredOperation) => {
 
   const opName = 'delete';
 
-  const { did } = anchoredOperation.decodedOperationPayload;
+  const { didUniqueSuffix } = anchoredOperation.decodedOperationPayload;
 
-  const uid = did.split(':')[2];
+  const uid = didUniqueSuffix;
 
   if (!state[uid]) {
     throw new Error(`Cannot ${opName} a DID that does not exist.`);

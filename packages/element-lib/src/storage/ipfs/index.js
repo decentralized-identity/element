@@ -20,7 +20,15 @@ class IpfsStorage {
 
   async read(cid) {
     const [node] = await this.ipfs.get(cid);
-    return JSON.parse(node.content);
+    let parsed = {};
+    try {
+      parsed = JSON.parse(node.content);
+    } catch (e) {
+      console.error(e);
+      throw new Error(`Invalid AnchorFile JSON: https://ipfs.io/ipfs/${cid}`);
+    }
+
+    return parsed;
   }
 }
 
