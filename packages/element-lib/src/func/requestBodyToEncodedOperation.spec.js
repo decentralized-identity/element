@@ -1,4 +1,4 @@
-const element = require('../../../index');
+const element = require('../../index');
 
 describe('element.func.requestBodyToEncodedOperation', () => {
   // TODO: in the future Proof of Work.
@@ -21,7 +21,7 @@ describe('element.func.requestBodyToEncodedOperation', () => {
         operation: 'create',
         kid: '#key1',
         alg: 'ES256K',
-        proofOfWork: {},
+        
       },
       payload: encodedPayload,
       signature,

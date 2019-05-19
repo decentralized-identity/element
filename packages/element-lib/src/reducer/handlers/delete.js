@@ -59,7 +59,6 @@ module.exports = async (state, anchoredOperation) => {
       ...state[uid],
       doc: updatedDoc,
       previousOperationHash: newPreviousOperationHash,
-      operationNumber: state.operationNumber + 1,
       deleted: true,
       txns: [...state[uid].txns, anchoredOperation.transaction],
     },

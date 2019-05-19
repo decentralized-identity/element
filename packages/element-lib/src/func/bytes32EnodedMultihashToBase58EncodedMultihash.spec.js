@@ -1,4 +1,4 @@
-const element = require('../../../index');
+const element = require('../../index');
 
 describe('bytes32EnodedMultihashToBase58EncodedMultihash', () => {
   it('should encode as base58', async () => {

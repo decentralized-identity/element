@@ -1,6 +1,6 @@
-const element = require('../../../index');
+const element = require('../../index');
 
-const { aliceEncodedCreateOp, storage, blockchain } = require('../../__tests__/__fixtures__');
+const { aliceEncodedCreateOp, storage, blockchain } = require('../__tests__/__fixtures__');
 
 describe('operationsToTransaction', () => {
   it('should batch and anchor operations to blockchain', async () => {

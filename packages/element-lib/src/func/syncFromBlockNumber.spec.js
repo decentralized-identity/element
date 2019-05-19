@@ -1,12 +1,12 @@
 const _ = require('lodash');
-const element = require('../../../index');
-const config = require('../../json/config.local.json');
+const element = require('../../index');
+const config = require('../json/config.local.json');
 
 const {
   aliceKeys,
   createPayloadTemplate,
   updatePayloadTemplate,
-} = require('../../__tests__/__fixtures__');
+} = require('../__tests__/__fixtures__');
 
 jest.setTimeout(10 * 1000);
 
@@ -80,7 +80,6 @@ describe('syncFromBlockNumber', () => {
             ...updatePayloadTemplate,
             did: existingDoc.id,
             previousOperationHash: updatedModel[uids[0]].previousOperationHash,
-            operationNumber: updatedModel[uids[0]].operationNumber + 1,
           },
           privateKey: aliceKeys.privateKey,
         }),

@@ -1,8 +1,8 @@
 const _ = require('lodash');
-const element = require('../../../index');
-const config = require('../../json/config.local.json');
+const element = require('../../index');
+const config = require('../json/config.local.json');
 
-const { generateActor, generateUpdate1, generateCreates } = require('../../__tests__/__fixtures__');
+const { generateActor, generateUpdate1, generateCreates } = require('../__tests__/__fixtures__');
 
 jest.setTimeout(10 * 1000);
 

@@ -24,7 +24,6 @@ const createPayloadTemplate = {
 
 const updatePayloadTemplate = {
   did: 'did:sidetree:EiDFDFUSgoxlZoxSlu-17yz_FmMCIx4hpSareCE7IRZv0A',
-  operationNumber: 1,
   previousOperationHash: 'EiDFDFUSgoxlZoxSlu-17yz_FmMCIx4hpSareCE7IRZv0A',
   patch: [
     {
@@ -133,8 +132,7 @@ const generateUpdate1 = async (actorMap) => {
       type: 'update',
       kid: '#key1',
       payload: {
-        did: `did:sidetree:${actor.uid}`,
-        operationNumber: 1,
+        didUniqueSuffix: `${actor.uid}`,
         previousOperationHash: actor.uid,
         patch: [
           {
@@ -160,6 +158,31 @@ const generateUpdate1 = async (actorMap) => {
   return operations;
 };
 
+const primaryKeypair = {
+  publicKey: '0286cdfebc43519c64baf08017b9f14a66871ee907770e6bc8fcd62282ebc72dc0',
+  privateKey: '68be85c3ca96c4f67056e57c1a6d9169734b54ab87ed9a853e349461da0e8c0e',
+};
+
+const primaryKeypair2 = {
+  publicKey: '028316a20dd69c606df6d5e13013d151d7414814f417c13079bed6cd0ee4d8ca3d',
+  privateKey: 'f6ad23e902f6228d1bc4e8d2551fb48b403550e44720dd66b5a2b62ed862163e',
+};
+
+const secondaryKeypair = {
+  publicKey: '0353ece606c1be9e28416cdb4a51f78db13efab1b55837c1fa584d4c36b01d10d0',
+  privateKey: 'b338c1c9ae9f5649c57fcf79de8daf9e4bcaacdadffa055892baf7d34cd24a24',
+};
+
+const recoveryKeypair = {
+  publicKey: '0234835352ed6924be6ad5e2caed0a366c92987ddaed52a76fa91602846ac8fda3',
+  privateKey: 'a9ab60d0be5f8c114c374825320bc592fa768674ee815388f92f577d23a7cb4e',
+};
+
+const recoveryKeypair2 = {
+  publicKey: '03e4eb42abd2c98a9063a9af13baa6dd1e5fd8e223f164f5d362439a3a6700e268',
+  privateKey: '64548c3886186a07bcd2f53914dd88dbc25a5965e1168f3ae431661f8265e45f',
+};
+
 module.exports = {
   aliceKeys,
   bobKeys,
@@ -177,4 +200,9 @@ module.exports = {
   generateActor,
   generateCreates,
   generateUpdate1,
+  primaryKeypair,
+  primaryKeypair2,
+  secondaryKeypair,
+  recoveryKeypair,
+  recoveryKeypair2,
 };

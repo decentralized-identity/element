@@ -1,4 +1,4 @@
-const element = require('../../../index');
+const element = require('../../index');
 
 const {
   aliceCreateBatchFile,
@@ -6,7 +6,7 @@ const {
   aliceEncodedCreateOp,
   storage,
   blockchain,
-} = require('../../__tests__/__fixtures__');
+} = require('../__tests__/__fixtures__');
 
 const createFromKeypair = (publicKey, privateKey) => {
   const payload = {
@@ -26,7 +26,7 @@ const createFromKeypair = (publicKey, privateKey) => {
       operation: 'create',
       kid: '#key1',
       alg: 'ES256K',
-      proofOfWork: {},
+      
     },
     payload: encodedPayload,
     signature,

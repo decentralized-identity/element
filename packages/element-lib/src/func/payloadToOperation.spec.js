@@ -1,4 +1,4 @@
-const element = require('../../../index');
+const element = require('../../index');
 
 const {
   aliceKeys,
@@ -10,7 +10,7 @@ const {
   aliceEncodedUpdateOp,
   aliceEncodedDeleteOp,
   aliceEncodedRecoverOp,
-} = require('../../__tests__/__fixtures__');
+} = require('../__tests__/__fixtures__');
 
 describe('payloadToOperation', () => {
   it('create', async () => {
@@ -42,8 +42,7 @@ describe('payloadToOperation', () => {
 
   it('recover', async () => {
     const payload = {
-      did: 'did:sidetree:123',
-      operationNumber: 2,
+      didUniqueSuffix: '123',
       previousOperationHash: 'invalid',
       patch: [
         // first op should update recovery key.

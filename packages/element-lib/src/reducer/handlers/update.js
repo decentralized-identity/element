@@ -11,13 +11,12 @@ module.exports = async (state, anchoredOperation) => {
   }
 
   const {
-    did,
+    didUniqueSuffix,
     previousOperationHash,
     patch,
-    operationNumber,
   } = anchoredOperation.decodedOperationPayload;
 
-  const uid = did.split(':')[2];
+  const uid = didUniqueSuffix;
 
   if (!state[uid]) {
     throw new Error('Cannot update a DID that does not exist.');
@@ -33,9 +32,6 @@ module.exports = async (state, anchoredOperation) => {
     throw new Error('previousOperationHash is not correct, update invalid');
   }
 
-  if (state[uid].operationNumber !== operationNumber - 1) {
-    throw new Error('operationNumber is not correct, update invalid');
-  }
 
   if (!signingKey) {
     throw new Error('Cannot find kid in doc, update invalid.');
@@ -60,7 +56,6 @@ module.exports = async (state, anchoredOperation) => {
       ...state[uid],
       doc: updatedDoc,
       previousOperationHash: newPreviousOperationHash,
-      operationNumber,
       txns: [...state[uid].txns, anchoredOperation.transaction],
     },
   };

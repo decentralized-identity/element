@@ -47,7 +47,6 @@ module.exports = async (state, anchoredOperation) => {
         ...anchoredOperation.decodedOperationPayload,
         id: config.didMethodName + didUniqueSuffix,
       },
-      operationNumber: 0,
       previousOperationHash,
       txns: [anchoredOperation.transaction],
     },

@@ -1,6 +1,6 @@
-const element = require('../../../index');
+const element = require('../../index');
 
-const { aliceEncodedCreateOp } = require('../../__tests__/__fixtures__');
+const { aliceEncodedCreateOp } = require('../__tests__/__fixtures__');
 
 describe('objectToMultihash', () => {
   it('should return the content id of an object', async () => {

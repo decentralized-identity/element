@@ -4,10 +4,43 @@ const merkleTools = new MerkleTools({
   hashType: 'sha256', // optional, defaults to 'sha256'
 });
 
+const payloadToHash = require('./payloadToHash');
+const decodeJson = require('./decodeJson');
+
+const extractDidUniqueSuffixesFromDecodedOps = (decodedOperations) => {
+  const didUniqueSuffixes = [];
+
+  // didUniqueSuffix
+  decodedOperations.forEach((op) => {
+    switch (op.header.operation) {
+      case 'create':
+        didUniqueSuffixes.push(payloadToHash(op.decodedPayload));
+        break;
+      case 'update':
+      case 'recover':
+      case 'delete':
+        didUniqueSuffixes.push(op.decodedPayload.didUniqueSuffix);
+        break;
+      default:
+        throw Error(`Cannot extractDidUniqueSuffixesFromDecodedOps from: ${op.header.operation}`);
+    }
+  });
+
+  return didUniqueSuffixes;
+};
+
 module.exports = async ({ operations, storage }) => {
   const batchFile = {
     operations,
   };
+
+  const decodedOperations = operations.map(decodeJson).map(op => ({
+    ...op,
+    decodedPayload: decodeJson(op.payload),
+  }));
+
+  const didUniqueSuffixes = extractDidUniqueSuffixesFromDecodedOps(decodedOperations);
+
   const batchFileHash = await storage.write(batchFile);
   merkleTools.addLeaves(operations, true);
   const doubleHash = false;
@@ -16,6 +49,7 @@ module.exports = async ({ operations, storage }) => {
   merkleTools.resetTree();
   const anchorFile = {
     batchFileHash,
+    didUniqueSuffixes,
     merkleRoot: root.toString('hex'),
   };
   const anchorFileHash = await storage.write(anchorFile);

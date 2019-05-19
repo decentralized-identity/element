@@ -84,7 +84,7 @@ describe('create.update.recover.delete', () => {
         operation: 'create',
         kid: '#primary',
         alg: 'ES256K',
-        proofOfWork: {},
+        
       },
       payload: encodedPayload,
       signature,
@@ -115,8 +115,7 @@ describe('create.update.recover.delete', () => {
 
   it('update', async () => {
     const payload = {
-      did: `did:sidetree:${uid}`,
-      operationNumber: 1,
+      didUniqueSuffix: `${uid}`,
       previousOperationHash,
       patch: [
         {
@@ -137,7 +136,7 @@ describe('create.update.recover.delete', () => {
         operation: 'update',
         kid: '#primary',
         alg: 'ES256K',
-        proofOfWork: {},
+        
       },
       payload: encodedPayload,
       signature,
@@ -168,8 +167,7 @@ describe('create.update.recover.delete', () => {
 
   it('recover', async () => {
     const payload = {
-      did: `did:sidetree:${uid}`,
-      operationNumber: 2,
+      didUniqueSuffix: `${uid}`,
       previousOperationHash,
       patch: [
         // first op should update recovery key.
@@ -200,7 +198,7 @@ describe('create.update.recover.delete', () => {
         operation: 'recover',
         kid: '#recovery',
         alg: 'ES256K',
-        proofOfWork: {},
+        
       },
       payload: encodedPayload,
       signature,
@@ -231,7 +229,7 @@ describe('create.update.recover.delete', () => {
 
   it('delete', async () => {
     const payload = {
-      did: `did:sidetree:${uid}`,
+      didUniqueSuffix: `${uid}`,
     };
     const encodedPayload = element.func.encodeJson(payload);
     const signature = element.func.signEncodedPayload(encodedPayload, primaryKeypair2.privateKey);
@@ -240,7 +238,7 @@ describe('create.update.recover.delete', () => {
         operation: 'delete',
         kid: '#primary',
         alg: 'ES256K',
-        proofOfWork: {},
+        
       },
       payload: encodedPayload,
       signature,

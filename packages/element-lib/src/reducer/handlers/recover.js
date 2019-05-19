@@ -17,13 +17,12 @@ module.exports = async (state, anchoredOperation) => {
   const opName = 'recover';
 
   const {
-    did,
+    didUniqueSuffix,
     previousOperationHash,
     patch,
-    operationNumber,
   } = anchoredOperation.decodedOperationPayload;
 
-  const uid = did.split(':')[2];
+  const uid = didUniqueSuffix;
 
   if (!state[uid]) {
     throw new Error(`Cannot ${opName} a DID that does not exist.`);
@@ -37,10 +36,6 @@ module.exports = async (state, anchoredOperation) => {
 
   if (state[uid].previousOperationHash !== previousOperationHash) {
     throw new Error(`previousOperationHash is not correct, ${opName} invalid`);
-  }
-
-  if (state[uid].operationNumber !== operationNumber - 1) {
-    throw new Error(`operationNumber is not correct, ${opName} invalid`);
   }
 
   if (!signingKey) {
@@ -76,7 +71,6 @@ module.exports = async (state, anchoredOperation) => {
       ...state[uid],
       doc: updatedDoc,
       previousOperationHash: newPreviousOperationHash,
-      operationNumber,
       txns: [...state[uid].txns, anchoredOperation.transaction],
     },
   };
