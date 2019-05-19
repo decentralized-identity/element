@@ -26,13 +26,13 @@ const resolve = ({
     const cachedState = cache.getItem(cacheName);
     const transactionTime = cachedState ? cachedState.transactionTime : 0; // set from cache
     const updated = await syncFromBlockNumber({
+      didUniqueSuffixes: [parsed.id],
       transactionTime: transactionTime + 1,
       initialState: cachedState || {}, // set from cache
       reducer,
       storage,
       blockchain,
     });
-
     cache.setItem(cacheName, updated);
     const record = updated[parsed.id];
     if (record) {

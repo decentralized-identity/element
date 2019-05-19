@@ -35,13 +35,16 @@ module.exports = async ({
 
   let stream = await blockchain.getTransactions(transactionTime);
 
+  stream = stream.map(s => ({
+    transaction: s,
+  }));
+
   let hasProcessedBad = false;
   for (let txIndex = 0; txIndex < stream.length; txIndex++) {
     const item = stream[txIndex];
-    item.transaction = stream[txIndex];
     try {
       // eslint-disable-next-line
-      item.anchorFile = await storage.read(item.anchorFileHash);
+      item.anchorFile = await storage.read(item.transaction.anchorFileHash);
     } catch (e) {
       console.warn(e);
       item.anchorFile = null;

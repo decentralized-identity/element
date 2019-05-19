@@ -108,6 +108,15 @@ describe('syncFromBlockNumber.withPoisonedBatchFiles', () => {
       blockchain,
     });
 
-    console.log(updatedModel);
+    expect(
+      updatedModel['MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI'].doc.publicKey[0].publicKeyHex,
+    ).toBe(primaryKeypair.publicKey);
+    expect(
+      updatedModel['MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI'].doc.publicKey[1].publicKeyHex,
+    ).toBe(recoveryKeypair.publicKey);
+
+    expect(
+      updatedModel['MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI'].doc.publicKey[2],
+    ).toBeUndefined();
   });
 });
