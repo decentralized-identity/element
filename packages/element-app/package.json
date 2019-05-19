@@ -5,7 +5,7 @@
   "homepage": "https://element-did.com",
   "license": "Apache-2.0",
   "dependencies": {
-    "@material-ui/core": "^3.8.3",
+    "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.2",
     "@transmute/did-wallet": "0.0.0-0",
     "@transmute/element-lib": "0.0.1-6",
@@ -19,10 +19,10 @@
     "moment": "^2.23.0",
     "prop-types": "^15.5.4",
     "qrcode.react": "^0.8.0",
-    "react": "^16.5.2",
+    "react": "16.5.2",
     "react-ace": "^6.3.2",
     "react-copy-to-clipboard": "^5.0.1",
-    "react-dom": "~16.5.0",
+    "react-dom": "16.5.2",
     "react-particles-js": "^2.4.2",
     "react-qr-reader": "^2.2.1",
     "react-redux": "^6.0.0",
@@ -44,7 +44,10 @@
     "test": "react-scripts test --coverage",
     "eject": "react-scripts eject",
     "lint": "eslint --ext js src",
-    "lint-fix": "eslint -ext js --fix src"
+    "lint-fix": "eslint -ext js --fix src",
+    "storybook": "start-storybook -s ./public -p 6006",
+    "storybook:build": "build-storybook && cp ./public/CNAME ./storybook-static/CNAME && cp -r ./public/cys ./storybook-static/cys && cp -r ./public/svg ./storybook-static/svg",
+    "storybook:deploy": "gh-pages -d storybook-static"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -56,10 +59,16 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "@babel/core": "^7.4.4",
+    "@storybook/addon-actions": "^5.0.11",
+    "@storybook/addon-links": "^5.0.11",
+    "@storybook/addons": "^5.0.11",
+    "@storybook/react": "^5.0.11",
     "babel-eslint": "^9.0.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jest": "^22.1.2",
-    "eslint-plugin-react": "^7.11.1"
+    "eslint-plugin-react": "^7.11.1",
+    "gh-pages": "^2.0.1"
   }
 }

@@ -1,7 +1,9 @@
-// import LOCAL from './local';
+import LOCAL from './local';
 import ROPSTEN from './ropsten';
 
-export default {
-  ...ROPSTEN,
-  // ...LOCAL,
+const ENVS = {
+  ROPSTEN,
+  LOCAL,
 };
+
+export default ENVS.LOCAL;

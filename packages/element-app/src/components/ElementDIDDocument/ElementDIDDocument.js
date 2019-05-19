@@ -25,7 +25,7 @@ const styles = theme => ({
   },
 });
 
-class GithubDIDDocument extends Component {
+class DIDDocument extends Component {
   render() {
     const { classes, didDocument } = this.props;
 
@@ -156,10 +156,14 @@ class GithubDIDDocument extends Component {
   }
 }
 
-GithubDIDDocument.propTypes = {
+DIDDocument.propTypes = {
   classes: PropTypes.object.isRequired,
   snackbarMessage: PropTypes.func.isRequired,
   didDocument: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(GithubDIDDocument);
+const MaterialUIDIDDocument = withStyles(styles)(DIDDocument);
+
+export { MaterialUIDIDDocument as ElementDIDDocument };
+
+export default MaterialUIDIDDocument;

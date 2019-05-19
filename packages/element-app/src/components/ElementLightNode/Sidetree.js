@@ -15,10 +15,9 @@ class Sidetree extends Component {
   state = {};
 
   async componentWillMount() {
-    const anchorContractAddress = localStorage.getItem('anchorContractAddress');
     // console.log(anchorContractAddress);
     const blockchain = element.blockchain.ethereum.configure({
-      anchorContractAddress: config.ELEMENT_CONTRACT_ADDRESS || anchorContractAddress,
+      anchorContractAddress: config.ELEMENT_CONTRACT_ADDRESS,
     });
 
     if (!this.props.wallet.data || !this.props.wallet.data.keys) {
@@ -32,8 +31,6 @@ class Sidetree extends Component {
     this.setState({
       contract: blockchain.anchorContractAddress,
     });
-
-    localStorage.setItem('anchorContractAddress', blockchain.anchorContractAddress);
 
     const storage = element.storage.ipfs.configure({
       multiaddr: config.ELEMENT_IPFS_MULTIADDR,

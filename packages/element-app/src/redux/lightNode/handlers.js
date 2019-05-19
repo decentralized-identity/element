@@ -20,9 +20,9 @@ const cache = {
 export default withHandlers({
   resolveDID: ({ didResolved, snackbarMessage, set }) => async (did) => {
     set({ resolving: true });
-    const anchorContractAddress = localStorage.getItem('anchorContractAddress');
+
     const blockchain = element.blockchain.ethereum.configure({
-      anchorContractAddress: config.ELEMENT_CONTRACT_ADDRESS || anchorContractAddress,
+      anchorContractAddress: config.ELEMENT_CONTRACT_ADDRESS,
     });
 
     const storage = element.storage.ipfs.configure({
@@ -40,7 +40,7 @@ export default withHandlers({
       didResolved({ didDocument: doc });
       snackbarMessage({
         snackbarMessage: {
-          message: `Resolved: ...${did.substring(32, 64)}...`,
+          message: 'Resolve DID',
           variant: 'success',
           open: true,
         },
