@@ -3,6 +3,8 @@ import { withHandlers } from 'recompose';
 import element from '@transmute/element-lib';
 import config from '../../config';
 
+import * as elementService from '../../services/element';
+
 // eslint-disable-next-line
 const getItem = id => JSON.parse(localStorage.getItem(id));
 
@@ -18,6 +20,41 @@ const cache = {
 };
 
 export default withHandlers({
+  getAll: ({ snackbarMessage, set }) => async () => {
+    set({ resolving: true });
+
+    const { blockchain, storage } = elementService;
+
+    try {
+      const model = await element.func.syncFromBlockNumber({
+        transactionTime: 0,
+        initialState: {},
+        reducer: element.reducer,
+        storage,
+        blockchain,
+      });
+
+      set({ tree: model });
+      snackbarMessage({
+        snackbarMessage: {
+          message: 'Resolved sidetree.',
+          variant: 'success',
+          open: true,
+        },
+      });
+    } catch (e) {
+      console.error(e);
+      snackbarMessage({
+        snackbarMessage: {
+          message: 'Could not resolve sidetree.',
+          variant: 'error',
+          open: true,
+        },
+      });
+    }
+    set({ resolving: false });
+  },
+
   resolveDID: ({ didResolved, snackbarMessage, set }) => async (did) => {
     set({ resolving: true });
 

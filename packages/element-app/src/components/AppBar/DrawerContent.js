@@ -7,9 +7,12 @@ import {
   Code,
   Star,
   VpnKey,
-  // Fingerprint, Search, Lock,
+  Fingerprint,
+  Search,
+  Lock,
   DeveloperBoard,
   CloudQueueOutlined,
+  List,
 } from '@material-ui/icons';
 
 import MenuSection from './MenuSection';
@@ -26,36 +29,30 @@ const DrawerContent = ({ classes }) => (
           link: '/',
         },
         {
-          label: 'Light Node',
-          icon: <DeveloperBoard />,
-          link: '/light-node',
-        },
-        {
-          label: 'Full Node',
-          icon: <CloudQueueOutlined />,
-          link: '/full-node',
-        },
-
-        // {
-        //   label: 'Resolve',
-        //   icon: <Search />,
-        //   link: '/resolver',
-        // },
-
-        // {
-        //   label: 'Sign',
-        //   icon: <Fingerprint />,
-        //   link: '/sign/new',
-        // },
-        // {
-        //   label: 'Encrypt',
-        //   icon: <Lock />,
-        //   link: '/encrypt/new',
-        // },
-        {
           label: 'DID Wallet',
           icon: <VpnKey />,
           link: '/wallet',
+        },
+      ]}
+    />
+
+    <MenuSection
+      subheader={'DApp / Light Node'}
+      items={[
+        {
+          label: 'My DID',
+          icon: <DeveloperBoard />,
+          link: '/dapp/did/profile',
+        },
+        {
+          label: 'DID Resolver',
+          icon: <Search />,
+          link: '/dapp/resolver',
+        },
+        {
+          label: 'DID List',
+          icon: <List />,
+          link: '/dapp/did/all',
         },
       ]}
     />

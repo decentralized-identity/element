@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-import { DIDWallet, Pages } from '../../index';
+import { DIDWallet, Pages } from '../components/index';
 
-class Wallet extends Component {
+export class Wallet extends Component {
   render() {
     return (
       <Pages.WithNavigation>

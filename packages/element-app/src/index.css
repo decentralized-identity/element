@@ -20,3 +20,7 @@ a:link {
 a:visited {
   color: green;
 }
+
+div{
+  word-break: break-all;
+}

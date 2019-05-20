@@ -27,7 +27,7 @@ export default (appReducers) => {
   // Persistance configuration
   const persistConfig = {
     key: 'elementDID',
-    blacklist: ['fullNode', 'lightNode'],
+    whitelist: ['wallet'],
     storage,
   };
 

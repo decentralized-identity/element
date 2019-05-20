@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 
 import { Typography } from '@material-ui/core';
 
-import { Pages } from '../../index';
+import { Pages } from '../components/index';
 
-class Credits extends Component {
+export class Credits extends Component {
   render() {
     return (
       <Pages.WithNavigation>

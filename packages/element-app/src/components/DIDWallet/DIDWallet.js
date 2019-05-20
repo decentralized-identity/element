@@ -53,6 +53,11 @@ class DIDWallet extends Component {
 
     return (
       <div>
+        <Typography variant="h6">
+          A DID Wallet is required to store keys used to sign Sidetree Operations, whether you are
+          anchoring them to a blockchain yourself, or using a server / full node.
+        </Typography>
+        <br />
         <Grid container spacing={24}>
           {wallet.data && (
             <Grid item xs={12}>
@@ -71,6 +76,18 @@ class DIDWallet extends Component {
 
                 <div style={{ flexDirection: 'column', display: 'flex' }}>
                   <FormControl component="fieldset">
+                    <div style={{ float: 'right' }}>
+                      <Button
+                        style={{ float: 'right' }}
+                        onClick={() => {
+                          localStorage.removeItem('persist:elementDID');
+                          window.location.reload();
+                        }}
+                        variant="contained"
+                      >
+                        Delete From Browser
+                      </Button>
+                    </div>
                     <FormLabel component="legend">DID Wallet</FormLabel>
                     <FormGroup>
                       <FormControlLabel

@@ -5,11 +5,14 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import ListSubheader from '@material-ui/core/ListSubheader';
 
 import { history } from '../../redux/store';
 
-const MenuSection = ({ items }) => (
-  <List>
+const MenuSection = ({ items, subheader }) => (
+  <List
+    subheader={subheader ? <ListSubheader component="div">{subheader}</ListSubheader> : undefined}
+  >
     {items.map(({ label, icon, link }) => (
       <ListItem
         selected={history.location.pathname === link}
@@ -32,6 +35,7 @@ const MenuSection = ({ items }) => (
 
 MenuSection.propTypes = {
   items: PropTypes.any.isRequired,
+  subheader: PropTypes.any,
 };
 
 export default MenuSection;

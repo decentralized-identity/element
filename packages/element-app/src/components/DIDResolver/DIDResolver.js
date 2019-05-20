@@ -22,12 +22,21 @@ class DIDResolver extends Component {
     this.props.resolveDID(this.state.currentDID);
   };
 
+  componentWillMount() {
+    if (this.props.did) {
+      this.setState({
+        currentDID: this.props.did,
+      });
+      this.props.resolveDID(this.props.did);
+    }
+  }
+
   render() {
-    const { did, classes } = this.props;
+    const { store, classes } = this.props;
     const { currentDID } = this.state;
 
-    const showProgress = currentDID && did.resolving;
-    const didDocument = did.dids[currentDID];
+    const showProgress = currentDID && store.resolving;
+    const didDocument = store.dids[currentDID];
 
     return (
       <Grid container spacing={24}>
@@ -49,7 +58,7 @@ class DIDResolver extends Component {
           <Button
             style={{ marginTop: '28px' }}
             fullWidth
-            disabled={did.resolving}
+            disabled={store.resolving}
             variant="contained"
             onClick={() => {
               this.safeResolve();
@@ -71,8 +80,9 @@ class DIDResolver extends Component {
 
 DIDResolver.propTypes = {
   classes: PropTypes.object.isRequired,
+  did: PropTypes.string,
   resolveDID: PropTypes.func.isRequired,
-  did: PropTypes.object.isRequired,
+  store: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(DIDResolver);

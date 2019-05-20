@@ -20,6 +20,10 @@ class Sidetree extends Component {
       anchorContractAddress: config.ELEMENT_CONTRACT_ADDRESS,
     });
 
+    const storage = element.storage.ipfs.configure({
+      multiaddr: config.ELEMENT_IPFS_MULTIADDR,
+    });
+
     if (!this.props.wallet.data || !this.props.wallet.data.keys) {
       //   eslint-disable-next-line
       alert('You must create and unlock a wallet to test sidetree.');
@@ -30,10 +34,6 @@ class Sidetree extends Component {
 
     this.setState({
       contract: blockchain.anchorContractAddress,
-    });
-
-    const storage = element.storage.ipfs.configure({
-      multiaddr: config.ELEMENT_IPFS_MULTIADDR,
     });
 
     this.blockchain = blockchain;

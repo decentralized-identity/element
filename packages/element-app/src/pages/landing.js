@@ -17,9 +17,9 @@ import { AutoRotatingCarousel, Slide } from 'material-auto-rotating-carousel';
 
 import { Button, Typography } from '@material-ui/core';
 
-import { Pages } from '../../index';
+import { Pages } from '../components/index';
 
-class Landing extends Component {
+export class Landing extends Component {
   state = {
     mobile: false,
     isCarouselOpen: !localStorage.getItem('hasClosedTour'),
