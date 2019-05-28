@@ -1,1 +1,1 @@
-export * from './CreateDefaultDID'
+export * from './CreateDefaultDID';

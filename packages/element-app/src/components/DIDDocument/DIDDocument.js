@@ -49,7 +49,7 @@ class DIDDocument extends Component {
         <DIDDocumentHeader did={didDocument.id} onCopyToClipboard={onCopyToClipboard} />
 
         {!!editor && editor}
-        
+
         <ExpansionPanel style={{ width: '100%' }}>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
             <Typography>Scan QRCode DID</Typography>
