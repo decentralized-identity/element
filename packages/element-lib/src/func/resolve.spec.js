@@ -13,20 +13,6 @@ const count = 3;
 let blockchain;
 let storage;
 
-// eslint-disable-next-line
-const getItem = id => JSON.parse(localStorage.getItem(id));
-
-const setItem = (id, value) => {
-  // eslint-disable-next-line
-  localStorage.setItem(id, JSON.stringify(value));
-  return value;
-};
-
-const cache = {
-  getItem,
-  setItem,
-};
-
 describe('element.func.resolve', () => {
   it('throws when called without sufficient args', async () => {
     expect.assertions(1);
@@ -35,7 +21,7 @@ describe('element.func.resolve', () => {
       const doc = await element.func.resolve(did);
       expect(doc.id).toBe(did);
     } catch (e) {
-      expect(e.message).toBe('Invalid args: resolve({ did, cache, reducer, storage, blockchain})');
+      expect(e.message).toBe('Invalid args: resolve({ did, reducer, storage, blockchain, transactionTime})');
     }
   });
 
@@ -74,7 +60,7 @@ describe('element.func.resolve', () => {
       const did = `did:elem:${_.values(actorMap)[0].uid}/some/path#fragment=123`;
       const doc = await element.func.resolve({
         did,
-        cache,
+        transactionTime: 0,
         reducer: element.reducer,
         storage,
         blockchain,
@@ -86,7 +72,7 @@ describe('element.func.resolve', () => {
       const did = `did:elem:${_.values(actorMap)[1].uid}`;
       const doc = await element.func.resolve({
         did,
-        cache,
+        transactionTime: 0,
         reducer: element.reducer,
         storage,
         blockchain,
@@ -98,7 +84,7 @@ describe('element.func.resolve', () => {
       const did = 'did:elem:dne';
       const doc = await element.func.resolve({
         did,
-        cache,
+        transactionTime: 0,
         reducer: element.reducer,
         storage,
         blockchain,

@@ -8,8 +8,14 @@ const method = config.didMethodName.split(':')[1];
 const resolve = ({
   did, reducer, storage, blockchain, transactionTime,
 }) => {
-  if (!did || !reducer || !storage || !blockchain || !transactionTime) {
-    throw new Error('Invalid args: resolve({ did, reducer, storage, blockchain})');
+  if (
+    did === undefined
+    || reducer === undefined
+    || storage === undefined
+    || blockchain === undefined
+    || transactionTime === undefined
+  ) {
+    throw new Error('Invalid args: resolve({ did, reducer, storage, blockchain, transactionTime})');
   }
 
   resolver.registerMethod(method, async (_did, parsed) => {
@@ -22,7 +28,7 @@ const resolve = ({
     // }
     // console.log(did, parsed);
     // eslint-disable-next-line
-   
+
     const updated = await syncFromBlockNumber({
       didUniqueSuffixes: [parsed.id],
       transactionTime,
