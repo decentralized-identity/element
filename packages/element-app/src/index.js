@@ -9,10 +9,13 @@ import { Route, Switch } from 'react-router'; // react-router v4
 import { ConnectedRouter } from 'connected-react-router';
 import * as serviceWorker from './serviceWorker';
 import createStore from './redux/store';
+import withTracker from './utils/withTracker';
 
 import * as Pages from './pages';
 
 const { store, persistor, history } = createStore();
+
+const TrackedSwitch = withTracker(Switch);
 
 class App extends React.Component {
   render() {
@@ -21,7 +24,7 @@ class App extends React.Component {
         <Provider store={store}>
           <PersistGate persistor={persistor}>
             <ConnectedRouter history={history}>
-              <Switch>
+              <TrackedSwitch>
                 <Route exact path="/" render={() => <Pages.Landing />} />
                 <Route exact path="/wallet" render={() => <Pages.Wallet />} />
                 <Route exact path="/dapp/did/profile" render={() => <Pages.LightNodeMyDIDPage />} />
@@ -59,7 +62,7 @@ class App extends React.Component {
                 <Route path="/decrypt/:base64EncodedJsonLd" render={() => <Pages.Decrypt />} />
 
                 */}
-              </Switch>
+              </TrackedSwitch>
             </ConnectedRouter>
           </PersistGate>
         </Provider>

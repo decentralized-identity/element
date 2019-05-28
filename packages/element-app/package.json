@@ -23,6 +23,7 @@
     "react-ace": "^6.3.2",
     "react-copy-to-clipboard": "^5.0.1",
     "react-dom": "16.5.2",
+    "react-ga": "^2.5.7",
     "react-particles-js": "^2.4.2",
     "react-qr-reader": "^2.2.1",
     "react-redux": "^6.0.0",
