@@ -21,7 +21,7 @@ describe('element.func.requestBodyToEncodedOperation', () => {
         operation: 'create',
         kid: '#key1',
         alg: 'ES256K',
-        
+
       },
       payload: encodedPayload,
       signature,
