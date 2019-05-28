@@ -7,11 +7,11 @@ import {
   Code,
   Star,
   VpnKey,
-  Fingerprint,
+  // Fingerprint,
   Search,
-  Lock,
+  // Lock,
   DeveloperBoard,
-  CloudQueueOutlined,
+  // CloudQueueOutlined,
   List,
 } from '@material-ui/icons';
 
@@ -37,7 +37,7 @@ const DrawerContent = ({ classes }) => (
     />
 
     <MenuSection
-      subheader={'DApp / Light Node'}
+      subheader={'Browser'}
       items={[
         {
           label: 'My DID',
@@ -53,6 +53,28 @@ const DrawerContent = ({ classes }) => (
           label: 'DID List',
           icon: <List />,
           link: '/dapp/did/all',
+        },
+      ]}
+    />
+    <Divider />
+
+    <MenuSection
+      subheader={'Server'}
+      items={[
+        {
+          label: 'My DID',
+          icon: <DeveloperBoard />,
+          link: '/server/did/profile',
+        },
+        {
+          label: 'DID Resolver',
+          icon: <Search />,
+          link: '/server/resolver',
+        },
+        {
+          label: 'DID List',
+          icon: <List />,
+          link: '/server/did/all',
         },
       ]}
     />

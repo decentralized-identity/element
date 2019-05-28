@@ -76,4 +76,19 @@ export default withHandlers({
     }
     set({ loading: false });
   },
+  addKeyToWallet: ({ snackbarMessage, set, wallet }) => async (key) => {
+    set({ resolving: true });
+    const wall = didWallet.create({
+      keys: _.values(wallet.data.keys),
+    });
+    wall.addKey(key);
+    set({ data: wall });
+    snackbarMessage({
+      snackbarMessage: {
+        message: 'Key added to wallet. Be sure to export.',
+        variant: 'info',
+        open: true,
+      },
+    });
+  },
 });

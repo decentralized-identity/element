@@ -1,0 +1,25 @@
+const element = require('@transmute/element-lib');
+// const Web3 = require('web3');
+// eslint-disable-next-line
+const config = require('../.runtimeconfig.json');
+
+describe('web3.sanity', () => {
+  //   it('works with normal provider', async () => {
+  //   const provider = new Web3.providers.HttpProvider(config.element.ethereum.provider_url)
+  //     const web3 = new Web3(provider);
+  //     const block = await web3.eth.getBlock('latest');
+  //     console.log(block);
+  //   });
+
+  it('works with normal provider', async () => {
+    const blockchain = element.blockchain.ethereum.configure({
+      hdPath: "m/44'/60'/0'/0/0",
+      mnemonic: config.element.ethereum.mnemonic,
+      providerUrl: config.element.ethereum.provider_url,
+      // when not defined, a new contract is created.
+      // anchorContractAddress: config.anchorContractAddress,
+    });
+    const accounts = await blockchain.web3.eth.getAccounts();
+    // console.log('asdf', accounts);
+  });
+});

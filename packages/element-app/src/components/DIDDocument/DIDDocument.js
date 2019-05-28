@@ -20,11 +20,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 
 import {
-  FilterNone,
-  DeviceHub,
-  Fingerprint,
-  VpnKey,
-  Https,
+  FilterNone, DeviceHub, Fingerprint, VpnKey, Https,
 } from '@material-ui/icons';
 
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -44,12 +40,16 @@ const styles = theme => ({
 
 class DIDDocument extends Component {
   render() {
-    const { classes, didDocument, onCopyToClipboard } = this.props;
+    const {
+      classes, didDocument, onCopyToClipboard, editor,
+    } = this.props;
 
     return (
       <React.Fragment>
         <DIDDocumentHeader did={didDocument.id} onCopyToClipboard={onCopyToClipboard} />
 
+        {!!editor && editor}
+        
         <ExpansionPanel style={{ width: '100%' }}>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
             <Typography>Scan QRCode DID</Typography>
@@ -247,6 +247,7 @@ DIDDocument.propTypes = {
   classes: PropTypes.object.isRequired,
   didDocument: PropTypes.object.isRequired,
   onCopyToClipboard: PropTypes.func.isRequired,
+  editor: PropTypes.object,
 };
 
 const MaterialUIDIDDocument = withStyles(styles)(DIDDocument);

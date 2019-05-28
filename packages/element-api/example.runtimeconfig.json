@@ -5,7 +5,8 @@
     "ethereum": {
       "mnemonic": "hazard pride garment scout search divide solution argue wait avoid title cave",
       "provider_url": "http://localhost:8545",
-      "anchor_contract_address": "0x4A8B09F2a5EfB777a4885446884B0EDc9473D6CD"
+      "anchor_contract_address": "0x4A8B09F2a5EfB777a4885446884B0EDc9473D6CD",
+      "anchor_contract_start_block": "5650892"
     },
     "ipfs": {
       "multiaddr": "/ip4/127.0.0.1/tcp/5001"

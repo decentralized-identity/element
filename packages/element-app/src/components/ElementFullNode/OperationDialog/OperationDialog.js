@@ -90,7 +90,6 @@ class DisplayPlayloadDialog extends React.Component {
                   type: 'update',
                   jsonData: {
                     did: 'did:sidetree:UID',
-                    operationNumber: 1,
                     previousOperationHash: 'UID',
                     patch: [
                       {

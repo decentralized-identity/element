@@ -4,7 +4,6 @@ const { getBasePath, getBaseConfig } = require('../config');
 const config = getBaseConfig();
 
 const batchService = require('./batchService');
-const storageService = require('./storageService');
 
 if (!config.ethereum.anchor_contract_address) {
   // eslint-disable-next-line
@@ -69,25 +68,6 @@ const processRequest = async ({ header, payload, signature }) => {
   return true;
 };
 
-const getSidetree = async () => {
-  const cachedState = await storageService.read({ collection: 'sidetree', key: 'root' });
-  // eslint-disable-next-line
-  const transactionTime =
-    cachedState && cachedState.transactionTime
-      ? parseInt(cachedState.transactionTime, 10) + 1
-      : parseInt(config.sidetree.start_block, 10); // set from cache
-  const updated = await element.func.syncFromBlockNumber({
-    transactionTime,
-    initialState: cachedState || {}, // set from cache
-    reducer: element.reducer,
-    storage,
-    blockchain,
-  });
-
-  await storageService.create({ collection: 'sidetree', key: 'root', value: updated });
-  return updated;
-};
-
 const resolve = async (arg) => {
   let did;
   if (arg.indexOf('did:') === -1) {
@@ -97,27 +77,35 @@ const resolve = async (arg) => {
     did = arg;
   }
 
-  const uid = did.split(':')[2];
-
-  const tree = await getSidetree();
-  // eslint-disable-next-line
-  if (tree[uid]) {
-    // eslint-disable-next-line
-    return tree[uid].doc;
-  }
-
-  return null;
+  const doc = await element.func.resolve({
+    did,
+    transactionTime: config.ethereum.anchor_contract_start_block,
+    reducer: element.reducer,
+    storage,
+    blockchain,
+  });
+  return doc;
 };
+
+// const getAccounts = () => new Promise((resolve, reject) => {
+//   blockchain.web3.eth.getAccounts((err, accounts) => {
+//     if (err) {
+//       return reject(err);
+//     }
+//     resolve(accounts);
+//   });
+// });
 
 const getNodeInfo = async () => {
   // make sure we have a contract.
   await blockchain.resolving;
   const accounts = await blockchain.web3.eth.getAccounts();
-  const ipfs = await storage.ipfs.id();
+  const data = await storage.ipfs.version();
   return {
-    ipfs,
+    ipfs: data,
     ethereum: {
-      anchorContractAddress: blockchain.anchorContractAddress,
+      anchor_contract_address: config.ethereum.anchor_contract_address,
+      anchor_contract_start_block: config.ethereum.anchor_contract_start_block,
       accounts,
     },
     sidetree: config.sidetree,
@@ -126,11 +114,39 @@ const getNodeInfo = async () => {
 
 const getCurrentBatch = async () => batchService.getBatchFile();
 
+const syncAll = async () => {
+  const model = await element.func.syncFromBlockNumber({
+    transactionTime: config.ethereum.anchor_contract_start_block,
+    initialState: {},
+    reducer: element.reducer,
+    storage,
+    blockchain,
+  });
+  return model;
+};
+
+const getRecord = async (did) => {
+  const didUniqueSuffix = did.split(':').pop();
+  const model = await element.func.syncFromBlockNumber({
+    didUniqueSuffixes: [didUniqueSuffix],
+    transactionTime: config.ethereum.anchor_contract_start_block,
+    initialState: {},
+    reducer: element.reducer,
+    storage,
+    blockchain,
+  });
+  // eslint-disable-next-line
+  return model[didUniqueSuffix];
+};
+
 module.exports = {
   getCurrentBatch,
   getNodeInfo,
   getWebFingerRecord,
   processRequest,
   resolve,
-  getSidetree,
+  syncAll,
+  getRecord,
+  storage,
+  blockchain,
 };

@@ -25,7 +25,7 @@ const didDocument = {
   id: 'did:elem:YVjYTpfZ4xjM1cyMK9g6d5GYtBEyUbrInWgjdVN1-kk',
 };
 
-storiesOf('DID Document Header', module).add('basic', () => (
+storiesOf('DID Document ', module).add('Header', () => (
   <DIDDocumentHeader did={didDocument.id} onCopyToClipboard={(item)=>{
     action('copied to clipboard: ')(item)
   }} />

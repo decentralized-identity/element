@@ -19,7 +19,7 @@ import ligthNode from '../../../redux/lightNode';
 import { DIDDocument } from '../../../components/DIDDocument';
 import { SidetreeTransaction } from '../../../components/SidetreeTransaction';
 
-class DAppDIDViewAllPAge extends Component {
+class LightNodeViewAllDIDPage extends Component {
   componentWillMount() {
     this.props.getAll();
   }
@@ -42,7 +42,13 @@ class DAppDIDViewAllPAge extends Component {
                   <DIDDocument
                     didDocument={record.doc}
                     onCopyToClipboard={(item) => {
-                      console.log('snack bar', item);
+                      this.props.snackbarMessage({
+                        snackbarMessage: {
+                          message: `Copied : ${item.substring(0, 32)} ...`,
+                          variant: 'success',
+                          open: true,
+                        },
+                      });
                     }}
                   />
 
@@ -61,6 +67,7 @@ class DAppDIDViewAllPAge extends Component {
                       ))}
                     </ExpansionPanelDetails>
                   </ExpansionPanel>
+                  <br />
                 </div>
             )))}
           </div>
@@ -70,9 +77,10 @@ class DAppDIDViewAllPAge extends Component {
   }
 }
 
-DAppDIDViewAllPAge.propTypes = {
+LightNodeViewAllDIDPage.propTypes = {
   lightNode: PropTypes.object.isRequired,
   resolveDID: PropTypes.func.isRequired,
+  snackbarMessage: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired,
   getAll: PropTypes.func.isRequired,
 };
@@ -81,8 +89,8 @@ const ConnectedPage = compose(
   withRouter,
   wallet.container,
   ligthNode.container,
-)(DAppDIDViewAllPAge);
+)(LightNodeViewAllDIDPage);
 
-export { ConnectedPage as DAppDIDViewAllPAge };
+export { ConnectedPage as LightNodeViewAllDIDPage };
 
 export default ConnectedPage;

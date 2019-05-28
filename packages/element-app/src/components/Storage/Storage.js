@@ -2,19 +2,13 @@ import React, { Component } from 'react';
 
 import { Paper, Typography } from '@material-ui/core';
 
-import element from '@transmute/element-lib';
+import { storage } from '../../services/element';
 
-import config from '../../config';
-
-const storage = element.storage.ipfs.configure({
-  multiaddr: config.ELEMENT_IPFS_MULTIADDR,
-});
-
-class Storage extends Component {
+export class Storage extends Component {
   state = {};
 
   async componentWillMount() {
-    const info = await storage.ipfs.id();
+    const info = await storage.ipfs.version();
     this.setState({
       info,
     });
@@ -30,9 +24,8 @@ class Storage extends Component {
           <Typography variant={'h6'}>Loading...</Typography>
         ) : (
           <div>
-            <Typography>ID: {info.id}</Typography>
-            <Typography>Agent Version: {info.agentVersion}</Typography>
-            <Typography>Protocol Version: {info.protocolVersion}</Typography>
+            <Typography>Version: {info.version}</Typography>
+            <Typography>Repo: {info.repo}</Typography>
           </div>
         )}
       </Paper>

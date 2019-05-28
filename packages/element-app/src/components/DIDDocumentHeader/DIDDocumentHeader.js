@@ -25,7 +25,7 @@ class DIDDocumentHeader extends Component {
 
     return (
       <React.Fragment>
-        <Paper style={{ width: '100%' }}>
+        <Paper style={{ width: '100%', wordBreak: 'break-all' }}>
           <List>
             <ListItem>
               <Avatar>

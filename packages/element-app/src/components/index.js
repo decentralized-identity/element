@@ -18,7 +18,6 @@ export { default as DIDDecrypter } from './DIDDecrypter';
 
 export { default as DisplayPayloadDialog } from './DisplayPayloadDialog';
 
-export { default as ElementLightNode } from './ElementLightNode';
 export { default as ElementFullNode } from './ElementFullNode';
 
 export { default as Pages } from './Pages';

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { Paper, Typography } from '@material-ui/core';
 
-class Ledger extends Component {
+export class Ledger extends Component {
   state = {};
 
   async componentWillMount() {

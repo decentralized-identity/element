@@ -71,7 +71,7 @@ router.get('/batch', async (req, res, next) => {
  */
 router.get('/', async (req, res, next) => {
   try {
-    const result = await elementService.getSidetree();
+    const result = await elementService.syncAll();
     res.status(200).json(result);
   } catch (e) {
     next(e);
@@ -136,6 +136,37 @@ router.get('/:did', async (req, res, next) => {
   try {
     const { did } = req.params;
     const result = await elementService.resolve(did);
+    res.status(200).json(result);
+  } catch (e) {
+    next(e);
+  }
+});
+
+
+/**
+ * @swagger
+ *
+ * paths:
+ *   "/sidetree/{did}/record":
+ *     get:
+ *       description: Get a sidetree record for a given DID.
+ *       tags: [Sidetree]
+ *       produces:
+ *       - application/json
+ *       parameters:
+ *       - in: path
+ *         name: did
+ *         description: DID to resolve
+ *         required: true
+ *         type: string
+ *       responses:
+ *         '200':
+ *           description: A sidetree record.
+ */
+router.get('/:did/record', async (req, res, next) => {
+  try {
+    const { did } = req.params;
+    const result = await elementService.getRecord(did);
     res.status(200).json(result);
   } catch (e) {
     next(e);

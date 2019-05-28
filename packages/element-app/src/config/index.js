@@ -6,4 +6,4 @@ const ENVS = {
   LOCAL,
 };
 
-export default ENVS.LOCAL;
+export default ENVS.ROPSTEN;

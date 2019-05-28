@@ -24,15 +24,28 @@ class App extends React.Component {
               <Switch>
                 <Route exact path="/" render={() => <Pages.Landing />} />
                 <Route exact path="/wallet" render={() => <Pages.Wallet />} />
-                <Route exact path="/dapp/did/profile" render={() => <Pages.DAppMyDIDPage />} />
+                <Route exact path="/dapp/did/profile" render={() => <Pages.LightNodeMyDIDPage />} />
 
                 <Route exact path="/dapp/resolver" render={() => <Pages.DAppDIDResolverPage />} />
-                <Route exact path="/dapp/did/all" render={() => <Pages.DAppDIDViewAllPAge />} />
+                <Route exact path="/dapp/did/all" render={() => <Pages.LightNodeViewAllDIDPage />} />
                 <Route
                   exact
                   path="/dapp/resolver/:did"
                   render={() => <Pages.DAppDIDResolverPage />}
                 />
+
+                <Route
+                  exact
+                  path="/server/resolver"
+                  render={() => <Pages.FullNodeResolverPage />}
+                />
+                <Route
+                  exact
+                  path="/server/did/profile"
+                  render={() => <Pages.FullNodeMyDIDPage />}
+                />
+                <Route exact path="/server/did/all" render={() => <Pages.FullNodeViewAllDIDPAge />} />
+
                 <Route exact path="/credits" render={() => <Pages.Credits />} />
 
                 <Route path="*" render={() => <Pages.NotFound />} />

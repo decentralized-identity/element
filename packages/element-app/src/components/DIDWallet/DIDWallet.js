@@ -26,9 +26,12 @@ import WalletLockDialog from './WalletLockDialog';
 
 import { ExpansionPanelList } from '../index';
 
+import { AddKeyDialog } from './AddKeyDialog';
+
 class DIDWallet extends Component {
   state = {
     isWalletLockDialogOpen: false,
+    isAddKeyDialogOpen: false,
   };
 
   handleChange = () => () => {
@@ -40,14 +43,15 @@ class DIDWallet extends Component {
   handleUnlock = (password) => {
     this.setState({
       isWalletLockDialogOpen: false,
+      isAddKeyDialogOpen: false,
     });
     this.props.toggleWallet(password);
     this.setState({ locked: false });
   };
 
   render() {
-    const { importCipherTextWallet, wallet } = this.props;
-    const { isWalletLockDialogOpen } = this.state;
+    const { importCipherTextWallet, wallet, addKeyToWallet } = this.props;
+    const { isWalletLockDialogOpen, isAddKeyDialogOpen } = this.state;
     const walletIsLocked = typeof wallet.data === 'string';
     const walletState = !walletIsLocked ? 'unlocked' : 'locked';
 
@@ -109,58 +113,80 @@ class DIDWallet extends Component {
                       && Object.keys(wallet.data.keys).map((kid) => {
                         const key = wallet.data.keys[kid];
                         return (
-                          <ExpansionPanelList
-                            key={kid}
-                            panels={[
-                              {
-                                title: `${key.tags[0]} ${kid.substring(0, 8)}...`,
-                                children: (
-                                  <div style={{ width: '100%' }}>
-                                    <Typography variant="body2">{key.notes}</Typography>
-                                    <br />
-
-                                    <div>
-                                      {key.tags.map(t => (
-                                        <Chip
-                                          key={t}
-                                          label={t}
-                                          variant="outlined"
-                                          style={{ margin: '4px' }}
-                                        />
-                                      ))}
-                                    </div>
-                                    <br />
-                                    <CopyToClipboard
-                                      text={key.publicKey}
-                                      onCopy={() => {
-                                        this.props.snackbarMessage({
-                                          snackbarMessage: {
-                                            message: `Copied Public Key: ${key.publicKey.substring(
-                                              0,
-                                              32,
-                                            )} ...`,
-                                            variant: 'success',
-                                            open: true,
-                                          },
-                                        });
-                                      }}
-                                    >
-                                      <Button
-                                        style={{ marginTop: '16px' }}
-                                        fullWidth
-                                        variant="contained"
+                          <React.Fragment key={kid}>
+                            <ExpansionPanelList
+                              panels={[
+                                {
+                                  title: `${key.tags[0]} ${kid.substring(0, 8)}...`,
+                                  children: (
+                                    <div style={{ width: '100%' }}>
+                                      <Typography variant="body2">{key.notes}</Typography>
+                                      <br />
+                                      <div>
+                                        {key.tags.map(t => (
+                                          <Chip
+                                            key={t}
+                                            label={t}
+                                            variant="outlined"
+                                            style={{ margin: '4px' }}
+                                          />
+                                        ))}
+                                      </div>
+                                      <br />
+                                      <CopyToClipboard
+                                        text={key.publicKey}
+                                        onCopy={() => {
+                                          this.props.snackbarMessage({
+                                            snackbarMessage: {
+                                              message: `Copied Public Key: ${key.publicKey.substring(
+                                                0,
+                                                32,
+                                              )} ...`,
+                                              variant: 'success',
+                                              open: true,
+                                            },
+                                          });
+                                        }}
                                       >
-                                        Copy Public Key
-                                      </Button>
-                                    </CopyToClipboard>
-                                  </div>
-                                ),
-                              },
-                            ]}
-                          />
+                                        <Button style={{ marginTop: '16px' }} variant="contained">
+                                          Copy Public Key
+                                        </Button>
+                                      </CopyToClipboard>{' '}
+                                      {/* <Button style={{ marginTop: '16px' }} variant="contained">
+                                        Delete Key
+                                      </Button> */}
+                                    </div>
+                                  ),
+                                },
+                              ]}
+                            />
+                            <br />
+                          </React.Fragment>
                         );
                       })}
                   </FormControl>
+                </div>
+
+                <div style={{ paddingTop: '16px' }}>
+                  <Button
+                    variant="contained"
+                    onClick={() => {
+                      this.setState({
+                        isAddKeyDialogOpen: true,
+                      });
+                    }}
+                  >
+                    Add New Key
+                  </Button>
+                  <AddKeyDialog
+                    open={isAddKeyDialogOpen}
+                    onSubmit={(data) => {
+                      addKeyToWallet(data);
+                      this.setState({
+                        isAddKeyDialogOpen: false,
+                      });
+                    }}
+                  />
                 </div>
               </Paper>
             </Grid>
@@ -186,6 +212,7 @@ DIDWallet.propTypes = {
   importCipherTextWallet: PropTypes.func.isRequired,
   toggleWallet: PropTypes.func.isRequired,
   snackbarMessage: PropTypes.func.isRequired,
+  addKeyToWallet: PropTypes.func.isRequired,
 };
 
 export default DIDWallet;

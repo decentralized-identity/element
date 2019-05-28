@@ -3,8 +3,7 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 
-import { DIDDocument } from './DIDDocument';
-import { DIDDocumentEditorBar } from '../DIDDocumentEditorBar';
+import { DIDDocumentEditorBar } from './DIDDocumentEditorBar';
 
 const didDocument = {
   '@context': 'https://w3id.org/did/v1',
@@ -12,7 +11,7 @@ const didDocument = {
     {
       id: '#key1',
       type: 'Secp256k1VerificationKey2018',
-      publicKeyHex: '0391990754cb15bb588c35ef8bee1092ceeac150f6fae8ae54b166b6f247bd4e75',
+      publicKeyHex: '038311c9ccabb41774c8459d624efe8cda0ed4cd538b0018ce308b5ecb7ab77d60',
     },
   ],
   service: [
@@ -62,33 +61,15 @@ const wallet = {
   resolving: true,
 };
 
-storiesOf('DID Document / View', module)
-  .add('Read Only', () => (
-    <DIDDocument
-      didDocument={didDocument}
-      onCopyToClipboard={(item) => {
-        action('copied to clipboard: ')(item);
-      }}
-    />
-  ))
-  .add('With Editor', () => (
-    <DIDDocument
-      didDocument={didDocument}
-      showEditor={true}
-      editor={
-        <DIDDocumentEditorBar
-          didDocument={didDocument}
-          keys={wallet.data.keys}
-          handleAddKey={(key) => {
-            action('handle add key: ')(key);
-          }}
-          handleRemoveKey={(key) => {
-            action('handle remove key: ')(key);
-          }}
-        />
-      }
-      onCopyToClipboard={(item) => {
-        action('copied to clipboard: ')(item);
-      }}
-    />
-  ));
+storiesOf('DID Document ', module).add('Editor Bar', () => (
+  <DIDDocumentEditorBar
+    didDocument={didDocument}
+    keys={wallet.data.keys}
+    handleAddKey={(key) => {
+      action('handle add key: ')(key);
+    }}
+    handleRemoveKey={(key) => {
+      action('handle remove key: ')(key);
+    }}
+  />
+));
