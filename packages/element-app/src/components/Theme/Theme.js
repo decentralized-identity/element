@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
-import { amber, lightBlue } from '@material-ui/core/colors';
+import { amber, deepPurple } from '@material-ui/core/colors';
 
 class Theme extends Component {
   render() {
@@ -67,9 +67,9 @@ class Theme extends Component {
           dark: amber[800],
         },
         secondary: {
-          light: lightBlue[300],
-          main: lightBlue[400],
-          dark: lightBlue[500],
+          light: deepPurple[300],
+          main: deepPurple[400],
+          dark: deepPurple[500],
         },
       },
       overrides: {

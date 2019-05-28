@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router';
+import PropTypes from 'prop-types';
 
 import {
   grey,
@@ -19,7 +21,7 @@ import { Button, Typography } from '@material-ui/core';
 
 import { Pages } from '../components/index';
 
-export class Landing extends Component {
+class Landing extends Component {
   state = {
     mobile: false,
     isCarouselOpen: !localStorage.getItem('hasClosedTour'),
@@ -105,6 +107,29 @@ export class Landing extends Component {
           </Button>
         </div>
 
+        <br />
+        <br />
+
+        <Typography variant="h4">Getting Started</Typography>
+        <br />
+        <Typography variant="body1">
+          {`Remember, this is a demo, and element is under active development. 
+          In order to control a DID you must control private keys associated with it. 
+          For testing and development purposes, we created a browser wallet system, 
+          which you can use to create and manage your DID.`}
+        </Typography>
+        <br />
+
+        <Button
+          variant="contained"
+          color={'secondary'}
+          onClick={() => {
+            this.props.history.push('/wallet');
+          }}
+        >
+          Create Wallet
+        </Button>
+
         <AutoRotatingCarousel
           label="Get started"
           interval={6 * 1000}
@@ -181,4 +206,11 @@ export class Landing extends Component {
   }
 }
 
-export default Landing;
+
+Landing.propTypes = {
+  history: PropTypes.any.isRequired,
+};
+
+const ConnectedPage = withRouter(Landing);
+export { ConnectedPage as Landing };
+export default ConnectedPage;
