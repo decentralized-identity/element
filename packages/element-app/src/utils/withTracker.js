@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import GoogleAnalytics from 'react-ga';
+import { withRouter } from 'react-router';
 
 GoogleAnalytics.initialize('UA-117945399-5');
 
@@ -16,8 +17,7 @@ const withTracker = (WrappedComponent, options = {}) => {
   const HOC = class extends Component {
     componentDidMount() {
       // eslint-disable-next-line
-      console.log(this.props)
-      const page = window.location.pathname + window.location.search;
+      const page = this.props.location.pathname + this.props.location.search;
       trackPage(page);
     }
 
@@ -35,7 +35,7 @@ const withTracker = (WrappedComponent, options = {}) => {
     }
   };
 
-  return HOC;
+  return withRouter(HOC);
 };
 
 export default withTracker;
