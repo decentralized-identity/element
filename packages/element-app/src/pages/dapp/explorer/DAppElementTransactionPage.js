@@ -35,10 +35,10 @@ class DAppElementTransactionPage extends Component {
               Element Transaction
             </Typography>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12}>
             <Ledger />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12}>
             <Storage />
           </Grid>
           <Grid item xs={12}>

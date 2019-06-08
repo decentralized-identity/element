@@ -4,7 +4,7 @@ import { withRouter } from 'react-router';
 
 import { compose } from 'recompose';
 
-import { Typography, Grid } from '@material-ui/core';
+import { Typography, Grid, LinearProgress } from '@material-ui/core';
 
 import { Pages } from '../../../components/index';
 
@@ -26,7 +26,6 @@ class DAppElementExplorerPage extends Component {
     }
   }
 
-
   render() {
     const { lightNode } = this.props;
     const { sidetreeTxns } = lightNode;
@@ -38,15 +37,19 @@ class DAppElementExplorerPage extends Component {
               Element Explorer
             </Typography>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12}>
             <Ledger />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12}>
             <Storage />
           </Grid>
 
-          {sidetreeTxns
-            && sidetreeTxns.map(txn => (
+          {!sidetreeTxns ? (
+            <Grid item xs={12}>
+              <LinearProgress color="primary" variant="query" />
+            </Grid>
+          ) : (
+            sidetreeTxns.map(txn => (
               <Grid item xs={12} key={txn.transactionNumber}>
                 <SidetreeTransaction
                   txn={txn}
@@ -57,7 +60,8 @@ class DAppElementExplorerPage extends Component {
                   }}
                 />
               </Grid>
-            ))}
+            ))
+          )}
         </Grid>
       </Pages.WithNavigation>
     );
