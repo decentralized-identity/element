@@ -27,10 +27,29 @@ class App extends React.Component {
               <TrackedSwitch>
                 <Route exact path="/" render={() => <Pages.Landing />} />
                 <Route exact path="/wallet" render={() => <Pages.Wallet />} />
-                <Route exact path="/dapp/did/profile" render={() => <Pages.LightNodeMyDIDPage />} />
+                <Route
+                  exact
+                  path="/dapp/explorer"
+                  render={() => <Pages.DAppElementExplorerPage />}
+                />
+                <Route
+                  exact
+                  path="/dapp/explorer/transactions/:transactionTimeHash"
+                  render={() => <Pages.DAppElementTransactionPage />}
+                />
+                <Route
+                  exact
+                  path="/dapp/explorer/operations/:uid"
+                  render={() => <Pages.DAppElementOperationsPage />}
+                />
 
+                <Route exact path="/dapp/did/profile" render={() => <Pages.LightNodeMyDIDPage />} />
                 <Route exact path="/dapp/resolver" render={() => <Pages.DAppDIDResolverPage />} />
-                <Route exact path="/dapp/did/all" render={() => <Pages.LightNodeViewAllDIDPage />} />
+                <Route
+                  exact
+                  path="/dapp/did/all"
+                  render={() => <Pages.LightNodeViewAllDIDPage />}
+                />
                 <Route
                   exact
                   path="/dapp/resolver/:did"
@@ -47,7 +66,11 @@ class App extends React.Component {
                   path="/server/did/profile"
                   render={() => <Pages.FullNodeMyDIDPage />}
                 />
-                <Route exact path="/server/did/all" render={() => <Pages.FullNodeViewAllDIDPAge />} />
+                <Route
+                  exact
+                  path="/server/did/all"
+                  render={() => <Pages.FullNodeViewAllDIDPAge />}
+                />
 
                 <Route exact path="/credits" render={() => <Pages.Credits />} />
 

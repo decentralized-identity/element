@@ -3,6 +3,23 @@ import { withHandlers } from 'recompose';
 import * as elementService from '../../services/element';
 
 export default withHandlers({
+  getSidetreeTransactions: ({ set }) => async (args) => {
+    const txns = await elementService.getSidetreeTransactions(args);
+    set({ sidetreeTxns: txns });
+  },
+
+  getSidetreeOperationsFromTransactionTimeHash: ({ set }) => async (transactionTimeHash) => {
+    const record = await elementService.getSidetreeOperationsFromTransactionTimeHash(
+      transactionTimeHash,
+    );
+    set({ sidetreeTxn: record });
+  },
+
+  getOperationsForUID: ({ set }) => async (uid) => {
+    const record = await elementService.getOperationsForUID(uid);
+    set({ sidetreeOperations: record });
+  },
+
   getDefaultDID: ({ set }) => async (wallet) => {
     const defaultDID = elementService.walletToDID(wallet);
     set({ predictedDefaultDID: defaultDID });

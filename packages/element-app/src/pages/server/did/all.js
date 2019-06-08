@@ -6,18 +6,12 @@ import { compose } from 'recompose';
 
 import { Typography, LinearProgress } from '@material-ui/core';
 
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
 import { Pages } from '../../../components/index';
 
 import wallet from '../../../redux/wallet';
-import ligthNode from '../../../redux/fullNode';
+import fullNode from '../../../redux/fullNode';
 
-import { DIDDocument } from '../../../components/DIDDocument';
-import { SidetreeTransaction } from '../../../components/SidetreeTransaction';
+import { ElementDIDWithTransactions } from '../../../components/ElementDIDWithTransactions';
 
 class FullNodeViewAllDIDPAge extends Component {
   componentWillMount() {
@@ -39,8 +33,8 @@ class FullNodeViewAllDIDPAge extends Component {
               undefined
             ) : (
                 <div key={record.doc.id}>
-                  <DIDDocument
-                    didDocument={record.doc}
+                  <ElementDIDWithTransactions
+                    record={record}
                     onCopyToClipboard={(item) => {
                       this.props.snackbarMessage({
                         snackbarMessage: {
@@ -51,23 +45,6 @@ class FullNodeViewAllDIDPAge extends Component {
                       });
                     }}
                   />
-
-                  <ExpansionPanel style={{ width: '100%' }}>
-                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                      <Typography>Sidetree Transactions</Typography>
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails>
-                      {record.txns.map(txn => (
-                        <SidetreeTransaction
-                          key={txn.transactionNumber}
-                          txn={txn}
-                          blockchain={'Ethereum'}
-                          network={'ropsten'}
-                        />
-                      ))}
-                    </ExpansionPanelDetails>
-                  </ExpansionPanel>
-                  <br />
                 </div>
             )))}
           </div>
@@ -88,7 +65,7 @@ FullNodeViewAllDIDPAge.propTypes = {
 const ConnectedPage = compose(
   withRouter,
   wallet.container,
-  ligthNode.container,
+  fullNode.container,
 )(FullNodeViewAllDIDPAge);
 
 export { ConnectedPage as FullNodeViewAllDIDPAge };

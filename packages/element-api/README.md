@@ -18,7 +18,7 @@ firebase functions:config:set element.ethereum.provider_url='http://localhost:85
 
 firebase functions:config:set element.ipfs.multiaddr='/ip4/127.0.0.1/tcp/5001'
 
-firebase functions:config:set element.ethereum.anchor_contract_address='0x128b72578baf00c9fbF1c4a5b57cd69c61De1dd1'
+firebase functions:config:set element.ethereum.anchor_contract_address='0xD49Da2b7C0A15f6ac5A856f026D68A9B9848D96f'
 
 firebase functions:config:set element.ethereum.anchor_contract_address=$(cat ./node_modules/@transmute/element-lib/build/contracts/SimpleSidetreeAnchor.json| jq -r '.networks["133700"].address')
 

@@ -78,19 +78,26 @@ class EthereumBlockchain {
     return instance;
   }
 
-  async getTransactions(fromBlock) {
+  async getTransactions(fromBlock, toBlock) {
     const instance = await this.anchorContract.at(this.anchorContractAddress);
     const logs = await instance.getPastEvents('Anchor', {
       // TODO: add indexing here...
       // https://ethereum.stackexchange.com/questions/8658/what-does-the-indexed-keyword-do
       fromBlock,
-      toBlock: 'latest',
+      toBlock: toBlock || 'latest',
     });
     return logs.map(eventLogToSidetreeTransaction);
   }
 
   async getBlockchainTime(blockHashOrBlockNumber) {
-    const block = await this.web3.eth.getBlock(blockHashOrBlockNumber);
+    const block = await new Promise((resolve, reject) => {
+      this.web3.eth.getBlock(blockHashOrBlockNumber, (err, data) => {
+        if (err) {
+          return reject(err);
+        }
+        return resolve(data);
+      });
+    });
     const unPrefixedBlockhash = block.hash.replace('0x', '');
     return {
       time: block.number,

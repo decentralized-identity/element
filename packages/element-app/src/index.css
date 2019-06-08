@@ -13,12 +13,12 @@ html {
 }
 
 a:link {
-  color: red;
+  color: goldenrod;
 }
 
 /* visited link */
 a:visited {
-  color: green;
+  color: lightgoldenrodyellow;
 }
 
 /* div {

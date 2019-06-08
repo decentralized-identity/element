@@ -1,7 +1,9 @@
 import element from '@transmute/element-lib';
+import base64url from 'base64url';
+import crypto from 'crypto';
 import config from '../config';
 
-const START_BLOCK = 5650892;
+export const START_BLOCK = 5650892;
 
 export const blockchain = element.blockchain.ethereum.configure({
   anchorContractAddress: config.ELEMENT_CONTRACT_ADDRESS,
@@ -200,4 +202,65 @@ export const removeKeyFromDIDDocument = async (wallet, key) => {
     blockchain,
   });
   return tx;
+};
+
+export const getSidetreeTransactions = async (args) => {
+  const params = {
+    since: 0,
+    ...args,
+  };
+  const time = !params.transactionTimeHash
+    ? START_BLOCK
+    : (await blockchain.getBlockchainTime(params.transactionTimeHash)).time;
+  const txns = await blockchain.getTransactions(time);
+  return txns.filter(txn => txn.transactionNumber >= params.since);
+};
+
+export const getSidetreeOperationsFromTransactionTimeHash = async (transactionTimeHash) => {
+  const startTime = (await blockchain.getBlockchainTime(transactionTimeHash)).time;
+  const [txn] = await blockchain.getTransactions(startTime, startTime + 1);
+  const anchorFile = await storage.read(txn.anchorFileHash);
+  const batchFile = await storage.read(anchorFile.batchFileHash);
+
+  const operations = batchFile.operations.map((encodedOp) => {
+    const operationHash = base64url.encode(
+      crypto
+        .createHash('sha256')
+        .update(base64url.toBuffer(encodedOp))
+        .digest(),
+    );
+    const decodedOperation = JSON.parse(base64url.decode(encodedOp));
+    const decodedOperationPayload = JSON.parse(base64url.decode(decodedOperation.payload));
+    return {
+      operationHash,
+      decodedOperation,
+      decodedOperationPayload,
+    };
+  });
+
+  return {
+    txn,
+    anchorFile,
+    batchFile,
+    operations,
+  };
+};
+
+export const getOperationsForUID = async (uid) => {
+  const model = await element.func.syncFromBlockNumber({
+    transactionTime: START_BLOCK,
+    didUniqueSuffixes: [uid],
+    initialState: {},
+    reducer: element.reducer,
+    storage,
+    blockchain,
+  });
+
+  // remove this before converting record...
+  // type / code smell.
+  delete model.transactionTime;
+
+  return Object.values(model)
+    .map(record => record.ops)
+    .flat();
 };

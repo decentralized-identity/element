@@ -50,6 +50,11 @@ const DrawerContent = ({ classes }) => (
           link: '/dapp/resolver',
         },
         {
+          label: 'Explorer',
+          icon: <Search />,
+          link: '/dapp/explorer',
+        },
+        {
           label: 'DID List',
           icon: <List />,
           link: '/dapp/did/all',

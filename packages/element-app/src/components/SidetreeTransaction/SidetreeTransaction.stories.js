@@ -1,6 +1,6 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import SidetreeTransaction from '.';
+import { SidetreeTransaction } from '.';
 
 storiesOf('SidetreeTransaction', module).add('SidetreeTransaction', () => (
   <div>

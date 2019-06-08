@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid/Grid';
 import Typography from '@material-ui/core/Typography/Typography';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel/ExpansionPanel';
@@ -15,16 +16,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import {
-  DoneAll, VerifiedUser, Receipt, ExpandMore, Link,
+  DoneAll, VerifiedUser, Receipt, ExpandMore, Link, Fingerprint,
 } from '@material-ui/icons';
-
-const getBlockExplorerUrl = (blockHash, blockchain, network) => {
-  if (blockchain === 'Ethereum') {
-    const sub = network ? `${network}.` : '';
-    return `https://${sub}etherscan.io/block/${blockHash}`;
-  }
-  return '#';
-};
 
 const getIpfsUrl = (anchorFileBase, anchorFileHash) => {
   if (anchorFileBase) {
@@ -33,7 +26,7 @@ const getIpfsUrl = (anchorFileBase, anchorFileHash) => {
   return `https://ipfs.io/ipfs/${anchorFileHash}`;
 };
 
-export class SidetreeTransaction extends Component {
+export class SidetreeAnchorFile extends Component {
   state = {
     expanded: false,
   };
@@ -45,14 +38,10 @@ export class SidetreeTransaction extends Component {
   }
 
   render() {
-    const {
-      txn, blockchain, network, anchorFileBase,
-    } = this.props;
+    const { anchorFileHash, anchorFileBase, anchorFile } = this.props;
 
     const { expanded } = this.state;
 
-    const blochHashUrl = getBlockExplorerUrl(txn.transactionTimeHash, blockchain, network);
-    const ipfsUrl = getIpfsUrl(anchorFileBase, txn.anchorFileHash);
     return (
       <ExpansionPanel expanded={expanded}>
         <ExpansionPanelSummary
@@ -64,19 +53,20 @@ export class SidetreeTransaction extends Component {
           expandIcon={<ExpandMore />}
         >
           <Grid container>
-            <Grid item xs={12} sm={9} style={{ display: 'inherit' }}>
+            <Grid item xs={12} md={6} style={{ display: 'inherit' }}>
               <Avatar style={{ marginRight: '16px' }}>
                 <VerifiedUser />
               </Avatar>
               <Typography
                 style={{ paddingTop: '4px' }}
                 variant={'subtitle1'}
-              >{`${blockchain}`}</Typography>
+              >{`${'Anchor File'}`}</Typography>
             </Grid>
-            <Grid item xs={12} sm={3}>
-              <Typography style={{ paddingTop: '8px' }} variant={'subtitle2'}>{`Transaction ${
-                txn.transactionNumber
-              }`}</Typography>
+            <Grid item xs={12} md={6}>
+              <Typography
+                style={{ paddingTop: '8px', wordBreak: 'break-all' }}
+                variant={'subtitle2'}
+              >{`${anchorFileHash}`}</Typography>
             </Grid>
           </Grid>
         </ExpansionPanelSummary>
@@ -86,47 +76,71 @@ export class SidetreeTransaction extends Component {
               <ListItem>
                 <ListItemAvatar>
                   <Avatar>
-                    <Receipt />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText
-                  style={{ wordBreak: 'break-all', marginRight: '2px' }}
-                  primary={`Block ${txn.transactionTime}`}
-                  secondary={txn.transactionTimeHash}
-                />
-                <ListItemSecondaryAction>
-                  <IconButton
-                    aria-label="Link"
-                    onClick={() => {
-                      if (this.props.onClickTransactionTimeHash) {
-                        this.props.onClickTransactionTimeHash(txn.transactionTimeHash);
-                      } else {
-                        window.open(blochHashUrl);
-                      }
-                    }}
-                  >
-                    <Link />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </ListItem>
-
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar>
                     <DoneAll />
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText
                   style={{ wordBreak: 'break-all', marginRight: '2px' }}
-                  primary="Anchor File Hash"
-                  secondary={txn.anchorFileHash}
+                  primary="Batch File Hash"
+                  secondary={anchorFile.batchFileHash}
                 />
                 <ListItemSecondaryAction>
-                  <IconButton aria-label="Link" href={ipfsUrl} target="_blank">
+                  <IconButton
+                    aria-label="Link"
+                    target="_blank"
+                    href={getIpfsUrl(anchorFileBase, anchorFile.batchFileHash)}
+                  >
                     <Link />
                   </IconButton>
                 </ListItemSecondaryAction>
               </ListItem>
+              <ListItem>
+                <ListItemAvatar>
+                  <Avatar>
+                    <Receipt />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  style={{ wordBreak: 'break-all', marginRight: '2px' }}
+                  primary={'Merkle Root'}
+                  secondary={anchorFile.merkleRoot}
+                />
+                {/* TODO: add verify dialog button here... */}
+                {/* <ListItemSecondaryAction>
+                  <IconButton aria-label="Link" href={'asdf'}>
+                    <Link />
+                  </IconButton>
+                </ListItemSecondaryAction> */}
+              </ListItem>
+
+              <ListItem>
+                <ListItemAvatar>
+                  <Avatar>
+                    <Fingerprint />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  style={{ wordBreak: 'break-all', marginRight: '2px' }}
+                  primary="UIDs"
+                  secondary={anchorFile.didUniqueSuffixes.length}
+                />
+              </ListItem>
+
+              {anchorFile.didUniqueSuffixes.map(uid => (
+                <Button
+                  size={'small'}
+                  variant={'outlined'}
+                  style={{ marginTop: '4px' }}
+                  key={uid}
+                  onClick={() => {
+                    if (this.props.onClickUID) {
+                      this.props.onClickUID(uid);
+                    }
+                  }}
+                >
+                  {uid}
+                </Button>
+              ))}
             </List>
           </div>
         </ExpansionPanelDetails>
@@ -135,13 +149,11 @@ export class SidetreeTransaction extends Component {
   }
 }
 
-SidetreeTransaction.propTypes = {
-  txn: PropTypes.object.isRequired,
-  blockchain: PropTypes.string.isRequired,
-  network: PropTypes.string,
+SidetreeAnchorFile.propTypes = {
+  anchorFileHash: PropTypes.string.isRequired,
+  anchorFile: PropTypes.object.isRequired,
+  onClickUID: PropTypes.func,
   expanded: PropTypes.bool,
-  anchorFileBase: PropTypes.string,
-  onClickTransactionTimeHash: PropTypes.func,
 };
 
-export default SidetreeTransaction;
+export default SidetreeAnchorFile;

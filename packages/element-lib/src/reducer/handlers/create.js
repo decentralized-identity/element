@@ -48,7 +48,9 @@ module.exports = async (state, anchoredOperation) => {
         id: config.didMethodName + didUniqueSuffix,
       },
       previousOperationHash,
+      // TODO: clean this up... probably not a good idea to do this.
       txns: [anchoredOperation.transaction],
+      ops: [anchoredOperation],
     },
   };
 };
