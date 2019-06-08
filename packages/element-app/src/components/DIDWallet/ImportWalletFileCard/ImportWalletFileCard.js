@@ -29,7 +29,6 @@ class ImportWalletFileCard extends React.Component {
       const file = event.target.files[index];
       const reader = new FileReader();
       reader.onload = (upload) => {
-        console.log();
         this.props.importCipherTextWallet(upload.target.result);
       };
       return reader.readAsText(file);

@@ -68,7 +68,6 @@ export class AddKeyDialog extends React.Component {
             name="signatureEditor"
             value={jsonEditorValue}
             onChange={(newValue) => {
-              // console.log('change', newValue);
               this.setState({
                 jsonEditorValue: newValue,
               });

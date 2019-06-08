@@ -52,7 +52,7 @@ const DrawerContent = ({ classes }) => (
         {
           label: 'Explorer',
           icon: <Search />,
-          link: '/dapp/explorer',
+          link: '/dapp/explore',
         },
         {
           label: 'DID List',

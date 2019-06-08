@@ -3,7 +3,7 @@ import base64url from 'base64url';
 import crypto from 'crypto';
 import config from '../config';
 
-export const START_BLOCK = 5650892;
+export const START_BLOCK = config.ELEMENT_START_BLOCK;
 
 export const blockchain = element.blockchain.ethereum.configure({
   anchorContractAddress: config.ELEMENT_CONTRACT_ADDRESS,
@@ -52,7 +52,6 @@ export const createDefaultDIDPayload = (wallet) => {
 export const walletToDID = (wallet) => {
   const payload = createDefaultDIDPayload(wallet);
   const didUniqueSuffix = element.func.payloadToHash(payload);
-  // console.log(JSON.stringify(payload, null, 2))
   return `did:elem:${didUniqueSuffix}`;
 };
 
@@ -213,9 +212,12 @@ export const getSidetreeTransactions = async (args) => {
     ? START_BLOCK
     : (await blockchain.getBlockchainTime(params.transactionTimeHash)).time;
   const txns = await blockchain.getTransactions(time);
-  return txns.filter(txn => txn.transactionNumber >= params.since);
+  return txns
+    .filter(txn => txn.transactionNumber >= params.since)
+    .sort((a, b) => (a.transactionNumber > b.transactionNumber ? -1 : 1));
 };
 
+// TODO: use sync here instead...
 export const getSidetreeOperationsFromTransactionTimeHash = async (transactionTimeHash) => {
   const startTime = (await blockchain.getBlockchainTime(transactionTimeHash)).time;
   const [txn] = await blockchain.getTransactions(startTime, startTime + 1);
@@ -233,6 +235,7 @@ export const getSidetreeOperationsFromTransactionTimeHash = async (transactionTi
     const decodedOperationPayload = JSON.parse(base64url.decode(decodedOperation.payload));
     return {
       operationHash,
+      transaction: txn,
       decodedOperation,
       decodedOperationPayload,
     };
@@ -247,14 +250,21 @@ export const getSidetreeOperationsFromTransactionTimeHash = async (transactionTi
 };
 
 export const getOperationsForUID = async (uid) => {
-  const model = await element.func.syncFromBlockNumber({
-    transactionTime: START_BLOCK,
+  const args = {
+    transactionTime: 0,
     didUniqueSuffixes: [uid],
     initialState: {},
     reducer: element.reducer,
     storage,
     blockchain,
-  });
+  };
+
+  // get all
+  if (!uid) {
+    delete args.didUniqueSuffixes;
+  }
+
+  const model = await element.func.syncFromBlockNumber(args);
 
   // remove this before converting record...
   // type / code smell.
@@ -262,5 +272,6 @@ export const getOperationsForUID = async (uid) => {
 
   return Object.values(model)
     .map(record => record.ops)
-    .flat();
+    .flat()
+    .sort((a, b) => (a.transaction.transactionNumber > b.transaction.transactionNumber ? -1 : 1));
 };

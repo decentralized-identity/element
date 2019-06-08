@@ -23,13 +23,10 @@ class DAppElementOperationsPage extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-  }
 
   render() {
     const { lightNode } = this.props;
-    const { sidetreeOperations } = lightNode;
+    const { sidetreeOperations, loading } = lightNode;
     return (
       <Pages.WithNavigation>
         <Grid container spacing={24}>
@@ -38,21 +35,29 @@ class DAppElementOperationsPage extends Component {
               Element Operations
             </Typography>
           </Grid>
-          <Grid item xs={6}>
-            <Ledger />
+
+          <Grid item xs={12}>
+            <Ledger
+              operationCount={sidetreeOperations ? sidetreeOperations.length : 'loading...'}
+            />
           </Grid>
-          <Grid item xs={6}>
+
+          <Grid item xs={12}>
             <Storage />
           </Grid>
 
-          {!sidetreeOperations ? (
-            <LinearProgress color="primary" variant="query" />
+          {!sidetreeOperations || loading ? (
+            <Grid item xs={12}>
+              <LinearProgress color="primary" variant="query" />
+            </Grid>
           ) : (
-            sidetreeOperations.map(op => (
-              <Grid item xs={12} key={op.operationHash}>
-                <SidetreeOperation operation={op} expanded={false} />
-              </Grid>
-            ))
+            <React.Fragment>
+              {sidetreeOperations.map(op => (
+                <Grid item xs={12} key={op.operationHash}>
+                  <SidetreeOperation operation={op} expanded={false} />
+                </Grid>
+              ))}
+            </React.Fragment>
           )}
         </Grid>
       </Pages.WithNavigation>

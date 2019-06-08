@@ -5,6 +5,7 @@ import { didResolved, set } from './actions';
 const initialState = {
   version: 0,
   resolving: false,
+  loading: true,
   dids: {},
 };
 

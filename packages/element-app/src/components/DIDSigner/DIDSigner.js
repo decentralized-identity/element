@@ -118,7 +118,6 @@ class DIDSigner extends Component {
               theme="github"
               style={{ width: '100%' }}
               onChange={(newValue) => {
-                // console.log('change', newValue);
                 this.setState({
                   jsonEditorValue: newValue,
                 });

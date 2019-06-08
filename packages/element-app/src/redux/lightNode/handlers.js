@@ -4,20 +4,23 @@ import * as elementService from '../../services/element';
 
 export default withHandlers({
   getSidetreeTransactions: ({ set }) => async (args) => {
+    set({ loading: true });
     const txns = await elementService.getSidetreeTransactions(args);
-    set({ sidetreeTxns: txns });
+    set({ sidetreeTxns: txns, loading: false });
   },
 
   getSidetreeOperationsFromTransactionTimeHash: ({ set }) => async (transactionTimeHash) => {
+    set({ loading: true });
     const record = await elementService.getSidetreeOperationsFromTransactionTimeHash(
       transactionTimeHash,
     );
-    set({ sidetreeTxn: record });
+    set({ sidetreeTxn: record, loading: false });
   },
 
   getOperationsForUID: ({ set }) => async (uid) => {
+    set({ loading: true });
     const record = await elementService.getOperationsForUID(uid);
-    set({ sidetreeOperations: record });
+    set({ sidetreeOperations: record, loading: false });
   },
 
   getDefaultDID: ({ set }) => async (wallet) => {

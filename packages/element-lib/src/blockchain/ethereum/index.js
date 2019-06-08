@@ -35,6 +35,13 @@ const eventLogToSidetreeTransaction = log => ({
   anchorFileHash: bytes32EnodedMultihashToBase58EncodedMultihash(log.args.anchorFileHash),
 });
 
+const extendSidetreeTransactionWithTimestamp = async (blockchain, txns) => Promise.all(
+  txns.map(async txn => ({
+    ...txn,
+    transactionTimestamp: (await blockchain.getBlockchainTime(txn.transactionTime)).timestamp,
+  })),
+);
+
 const getAccounts = web3 => new Promise((resolve, reject) => {
   web3.eth.getAccounts((err, accounts) => {
     if (err) {
@@ -86,7 +93,9 @@ class EthereumBlockchain {
       fromBlock,
       toBlock: toBlock || 'latest',
     });
-    return logs.map(eventLogToSidetreeTransaction);
+    const txns = logs.map(eventLogToSidetreeTransaction);
+
+    return extendSidetreeTransactionWithTimestamp(this, txns);
   }
 
   async getBlockchainTime(blockHashOrBlockNumber) {
@@ -101,6 +110,7 @@ class EthereumBlockchain {
     const unPrefixedBlockhash = block.hash.replace('0x', '');
     return {
       time: block.number,
+      timestamp: block.timestamp,
       hash: unPrefixedBlockhash,
     };
   }

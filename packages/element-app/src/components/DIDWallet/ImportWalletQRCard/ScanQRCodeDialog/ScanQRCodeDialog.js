@@ -33,7 +33,6 @@ class ScanQRCodeDialog extends React.Component {
 
   handleScan = (data) => {
     if (data) {
-      console.log('scanned: ', data);
       this.props.onScan(data);
       this.handleClose();
     }

@@ -29,17 +29,22 @@ class App extends React.Component {
                 <Route exact path="/wallet" render={() => <Pages.Wallet />} />
                 <Route
                   exact
-                  path="/dapp/explorer"
+                  path="/dapp/explore"
                   render={() => <Pages.DAppElementExplorerPage />}
                 />
                 <Route
                   exact
-                  path="/dapp/explorer/transactions/:transactionTimeHash"
+                  path="/dapp/transactions/:transactionTimeHash"
                   render={() => <Pages.DAppElementTransactionPage />}
                 />
                 <Route
                   exact
-                  path="/dapp/explorer/operations/:uid"
+                  path="/dapp/operations/:uid"
+                  render={() => <Pages.DAppElementOperationsPage />}
+                />
+                <Route
+                  exact
+                  path="/dapp/operations"
                   render={() => <Pages.DAppElementOperationsPage />}
                 />
 

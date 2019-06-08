@@ -26,9 +26,6 @@ class DAppElementExplorerPage extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-  }
 
   render() {
     const { lightNode } = this.props;
@@ -56,7 +53,7 @@ class DAppElementExplorerPage extends Component {
                   blockchain={'Ethereum'}
                   network={'ropsten'}
                   onClickTransactionTimeHash={(transactionTimeHash) => {
-                    this.props.history.push(`/dapp/explorer/transactions/${transactionTimeHash}`);
+                    this.props.history.push(`/dapp/transactions/${transactionTimeHash}`);
                   }}
                 />
               </Grid>

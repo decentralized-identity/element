@@ -29,7 +29,6 @@ class ElementDIDDocument extends Component {
       <DIDDocument
         didDocument={didDocument}
         onCopyToClipboard={(item) => {
-          console.log(item);
           this.props.snackbarMessage({
             snackbarMessage: {
               message: 'Copied ',

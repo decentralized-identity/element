@@ -23,9 +23,6 @@ class DAppElementTransactionPage extends Component {
     );
   }
 
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-  }
 
   render() {
     const { lightNode } = this.props;
@@ -60,7 +57,7 @@ class DAppElementTransactionPage extends Component {
                   anchorFileHash={sidetreeTxn.txn.anchorFileHash}
                   anchorFile={sidetreeTxn.anchorFile}
                   onClickUID={(uid) => {
-                    this.props.history.push(`/dapp/explorer/operations/${uid}`);
+                    this.props.history.push(`/dapp/operations/${uid}`);
                   }}
                   expanded={true}
                 />

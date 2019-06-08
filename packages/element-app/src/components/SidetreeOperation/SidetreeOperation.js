@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
+import moment from 'moment';
+
 // eslint-disable-next-line
 import brace from 'brace';
 import AceEditor from 'react-ace';
@@ -11,7 +13,6 @@ import 'brace/mode/json';
 // eslint-disable-next-line
 import 'brace/theme/mono_industrial';
 
-import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid/Grid';
 import Typography from '@material-ui/core/Typography/Typography';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel/ExpansionPanel';
@@ -19,16 +20,15 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary/Expan
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails/ExpansionPanelDetails';
 
 import Avatar from '@material-ui/core/Avatar';
-import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import {
-  VerifiedUser, Receipt, ExpandMore, Lock, Edit,
+  VerifiedUser, ExpandMore, Lock, Edit,
 } from '@material-ui/icons';
 
+// eslint-disable-next-line
 const styles = theme => ({
   // Look at here: applied specific styles to resizing and background
   expansion: {
@@ -77,7 +77,7 @@ class SidetreeOperation extends Component {
               <Typography
                 style={{ paddingTop: '8px', wordBreak: 'break-all' }}
                 variant={'subtitle2'}
-              >{`${operation.operationHash}`}</Typography>
+              >{`${moment(operation.transaction.transactionTimestamp * 1000).fromNow()}`}</Typography>
             </Grid>
           </Grid>
         </ExpansionPanelSummary>

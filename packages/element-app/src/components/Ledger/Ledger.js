@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
-
+import PropTypes from 'prop-types';
 import { Paper, Typography } from '@material-ui/core';
+
+
+import config from '../../config';
 
 export class Ledger extends Component {
   state = {};
@@ -12,7 +15,7 @@ export class Ledger extends Component {
     } else {
       window.web3.eth.getAccounts((err, accounts) => {
         if (err) {
-          console.log(err);
+          console.error(err);
           return;
         }
         if (!accounts.length) {
@@ -22,7 +25,6 @@ export class Ledger extends Component {
         }
         window.web3.eth.getBalance(accounts[0], async (err, balance) => {
           const bal = balance.toNumber();
-          console.log('metamask balance: ', accounts[0], bal);
           this.setState({
             ...this.state,
             account: accounts[0],
@@ -41,9 +43,19 @@ export class Ledger extends Component {
         <Typography>Network: {this.state.networkVersion}</Typography>
         <Typography>Account: {this.state.account}</Typography>
         <Typography>Balance: {this.state.balance}</Typography>
+        <Typography>Contract: {config.ELEMENT_CONTRACT_ADDRESS}</Typography>
+        <Typography>Start Block: {config.ELEMENT_START_BLOCK}</Typography>
+
+        {this.props.operationCount && (
+          <Typography>Operations: {this.props.operationCount}</Typography>
+        )}
       </Paper>
     );
   }
 }
+
+Ledger.propTypes = {
+  operationCount: PropTypes.any,
+};
 
 export default Ledger;

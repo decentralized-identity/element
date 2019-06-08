@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import moment from 'moment';
+
 import Grid from '@material-ui/core/Grid/Grid';
 import Typography from '@material-ui/core/Typography/Typography';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel/ExpansionPanel';
@@ -15,7 +17,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import {
-  DoneAll, VerifiedUser, Receipt, ExpandMore, Link,
+  DoneAll, VerifiedUser, Receipt, ExpandMore, Link, LocalActivity
 } from '@material-ui/icons';
 
 const getBlockExplorerUrl = (blockHash, blockchain, network) => {
@@ -68,14 +70,15 @@ export class SidetreeTransaction extends Component {
               <Avatar style={{ marginRight: '16px' }}>
                 <VerifiedUser />
               </Avatar>
-              <Typography
-                style={{ paddingTop: '4px' }}
-                variant={'subtitle1'}
-              >{`${blockchain}`}</Typography>
+              <Typography style={{ paddingTop: '4px' }} variant={'subtitle1'}>
+                {'Anchor'}
+              </Typography>
             </Grid>
             <Grid item xs={12} sm={3}>
-              <Typography style={{ paddingTop: '8px' }} variant={'subtitle2'}>{`Transaction ${
-                txn.transactionNumber
+              <Typography style={{ paddingTop: '8px' }} variant={'subtitle2'}>{`${
+                !txn.transactionTimestamp
+                  ? `Transaction ${txn.transactionNumber}`
+                  : `${moment(txn.transactionTimestamp * 1000).fromNow()}`
               }`}</Typography>
             </Grid>
           </Grid>
@@ -86,15 +89,33 @@ export class SidetreeTransaction extends Component {
               <ListItem>
                 <ListItemAvatar>
                   <Avatar>
+                    <LocalActivity />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  style={{ wordBreak: 'break-all', marginRight: '2px' }}
+                  primary={`Transaction ${txn.transactionNumber}`}
+                  secondary={
+                    !txn.transactionTimestamp
+                      ? ''
+                      : `${moment(txn.transactionTimestamp * 1000).fromNow()}`
+                  }
+                />
+               
+              </ListItem>
+
+              <ListItem>
+                <ListItemAvatar>
+                  <Avatar>
                     <Receipt />
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText
                   style={{ wordBreak: 'break-all', marginRight: '2px' }}
-                  primary={`Block ${txn.transactionTime}`}
+                  primary={`${blockchain} Block ${txn.transactionTime}`}
                   secondary={txn.transactionTimeHash}
                 />
-                <ListItemSecondaryAction>
+                 <ListItemSecondaryAction>
                   <IconButton
                     aria-label="Link"
                     onClick={() => {
