@@ -18,7 +18,7 @@ class InMemoryOpStore {
       return;
     }
 
-    console.log('adding ops: ', anchoredOperations.operations);
+    // console.log('adding ops: ', anchoredOperations.operations);
     // eslint-disable-next-line
     this.operations = [...this.operations, ...normalizedOperations];
   }

@@ -124,7 +124,7 @@ class EthereumBlockchain {
         return resolve(data);
       });
     });
-    return this.getBlockchainTime(block.numer);
+    return this.getBlockchainTime(block.number);
   }
 
   async write(anchorFileHash) {

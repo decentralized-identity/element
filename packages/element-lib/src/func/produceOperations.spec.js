@@ -15,7 +15,8 @@ const count = 3;
 const actorMap = {};
 let createOperations;
 let updateOperations;
-let model;
+let startTime;
+let endTime;
 
 jest.setTimeout(20 * 1000);
 
@@ -40,6 +41,9 @@ describe('produceOperations', () => {
     }
     createOperations = await generateCreates(actorMap);
     updateOperations = await generateUpdate1(actorMap);
+
+    startTime = await blockchain.getCurrentTime();
+
     await element.func.operationsToTransaction({
       operations: [...createOperations],
       storage,
@@ -51,18 +55,20 @@ describe('produceOperations', () => {
       storage,
       blockchain,
     });
-    model = await element.func.syncFromBlockNumber({
+    await element.func.syncFromBlockNumber({
       transactionTime: 0,
       initialState: {},
       reducer: element.reducer,
       storage,
       blockchain,
     });
+
+    endTime = await blockchain.getCurrentTime();
   });
 
   it('can process a single txn', (done) => {
     expect.assertions(4);
-    const { txns } = Object.values(model)[0];
+
     const bus = nanobus();
 
     bus.on('element:sidetree:txn', (txn) => {
@@ -85,8 +91,8 @@ describe('produceOperations', () => {
 
     produceOperations({
       bus,
-      fromTransactionTime: txns[0].transactionTime,
-      toTransactionTime: txns[0].transactionTime,
+      fromTransactionTime: startTime.time,
+      toTransactionTime: startTime.time + 1,
       blockchain,
       storage,
     });
@@ -94,7 +100,7 @@ describe('produceOperations', () => {
 
   it('can process multiple txns', (done) => {
     expect.assertions(8);
-    const { txns } = Object.values(model)[0];
+
     const bus = nanobus();
 
     bus.on('element:sidetree:txn', (txn) => {
@@ -120,8 +126,8 @@ describe('produceOperations', () => {
 
     produceOperations({
       bus,
-      fromTransactionTime: txns[0].transactionTime,
-      toTransactionTime: txns[1].transactionTime,
+      fromTransactionTime: startTime.time - 1,
+      toTransactionTime: endTime.time + 1,
       blockchain,
       storage,
     });

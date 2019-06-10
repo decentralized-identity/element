@@ -92,15 +92,15 @@ describe('resolveFromOperationStore', () => {
     });
   });
 
-  // it('can resolve a DID record from opStore', async () => {
-  //   const record = await resolveFromOperationStore(opStore, element.reducer, doc.id);
-  //   expect(record.doc.id).toBe(doc.id);
-  // });
+  it('can resolve a DID record from opStore', async () => {
+    const record = await resolveFromOperationStore(opStore, element.reducer, doc.id);
+    expect(record.doc.id).toBe(doc.id);
+  });
 
   it('can resolve a everything from opStore (DO NOT USE)', async () => {
-    const model = await resolveFromOperationStore(opStore, element.reducer);
+    model = await resolveFromOperationStore(opStore, element.reducer);
     // should produce a model like syncAll
-    console.log(model);
-    // expect(record.doc.id).toBe(doc.id);
+    // console.log(model);
+    expect(model).toBeDefined();
   });
 });
