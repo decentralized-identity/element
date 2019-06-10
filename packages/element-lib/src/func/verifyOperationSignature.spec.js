@@ -10,4 +10,8 @@ describe('verifyOperationSignature', () => {
     });
     expect(valid).toBe(true);
   });
+
+  it('fails', () => {
+    throw 'handle new case..';
+  });
 });

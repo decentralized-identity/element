@@ -23,6 +23,7 @@
     "no-plusplus": "off",
 
     "node/no-unsupported-features/es-syntax": "off",
+    "node/no-unsupported-features/es-builtins": "off",
     "node/no-unpublished-require": [
       "error",
       {

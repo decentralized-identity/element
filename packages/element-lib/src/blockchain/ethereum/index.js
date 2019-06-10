@@ -115,6 +115,18 @@ class EthereumBlockchain {
     };
   }
 
+  async getCurrentTime() {
+    const block = await new Promise((resolve, reject) => {
+      this.web3.eth.getBlock('latest', (err, data) => {
+        if (err) {
+          return reject(err);
+        }
+        return resolve(data);
+      });
+    });
+    return this.getBlockchainTime(block.numer);
+  }
+
   async write(anchorFileHash) {
     const [from] = await getAccounts(this.web3);
     const instance = await this.anchorContract.at(this.anchorContractAddress);

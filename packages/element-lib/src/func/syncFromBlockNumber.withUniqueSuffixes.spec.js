@@ -10,7 +10,7 @@ const {
   // eslint-disable-next-line
 } = require('../__tests__/__fixtures__');
 
-jest.setTimeout(10 * 1000);
+jest.setTimeout(20 * 1000);
 
 let storage;
 let blockchain;
@@ -75,11 +75,7 @@ describe('syncFromBlockNumber.withUniqueSuffixes', () => {
       blockchain,
     });
 
-    const initialState = {};
-
     let updatedModel = await element.func.syncFromBlockNumber({
-      transactionTime: 0,
-      initialState,
       reducer: element.reducer,
       storage,
       blockchain,
@@ -137,8 +133,6 @@ describe('syncFromBlockNumber.withUniqueSuffixes', () => {
 
     // this will warn about an off by one error which is common.
     updatedModel = await element.func.syncFromBlockNumber({
-      transactionTime: updatedModel.transactionTime,
-      initialState: updatedModel,
       reducer: element.reducer,
       storage,
       blockchain,
@@ -147,10 +141,6 @@ describe('syncFromBlockNumber.withUniqueSuffixes', () => {
     expect(
       updatedModel['MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI'].doc.publicKey[2].publicKeyHex,
     ).toBe(secondaryKeypair.publicKey);
-
-    // CREATE 2 (The start of what we care about...)
-
-    const protocolUpdateTime = updatedModel.transactionTime;
 
     encodedPayload = element.func.encodeJson({
       '@context': 'https://w3id.org/did/v1',
@@ -235,8 +225,6 @@ describe('syncFromBlockNumber.withUniqueSuffixes', () => {
     });
 
     updatedModel = await element.func.syncFromBlockNumber({
-      transactionTime: updatedModel.transactionTime + 2,
-      initialState: updatedModel,
       reducer: element.reducer,
       storage,
       blockchain,
@@ -274,8 +262,6 @@ describe('syncFromBlockNumber.withUniqueSuffixes', () => {
     });
 
     updatedModel = await element.func.syncFromBlockNumber({
-      transactionTime: updatedModel.transactionTime + 1,
-      initialState: updatedModel,
       reducer: element.reducer,
       storage,
       blockchain,
@@ -288,27 +274,12 @@ describe('syncFromBlockNumber.withUniqueSuffixes', () => {
 
     expect(Object.keys(updatedModel)).toEqual([
       'MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI',
-      'transactionTime',
-      'SeRw-08dzolbAp469FM4R8CLxpgYdHrn0fXeqOpaYGY',
-    ]);
-
-    const modelWithoutOldData = await element.func.syncFromBlockNumber({
-      transactionTime: protocolUpdateTime + 1,
-      initialState: {},
-      reducer: element.reducer,
-      storage,
-      blockchain,
-    });
-
-    expect(Object.keys(modelWithoutOldData)).toEqual([
       'SeRw-08dzolbAp469FM4R8CLxpgYdHrn0fXeqOpaYGY',
       'transactionTime',
     ]);
 
     // only transactions that are about didUniqueSuffixes
     const modelWithOnlyUniqueSuffixMatches = await element.func.syncFromBlockNumber({
-      transactionTime: 0,
-      initialState: {},
       didUniqueSuffixes: ['SeRw-08dzolbAp469FM4R8CLxpgYdHrn0fXeqOpaYGY'],
       reducer: element.reducer,
       storage,

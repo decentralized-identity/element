@@ -1,20 +1,37 @@
+// we need a better abstraction for this...
+const nanobus = require('nanobus');
+
+const _ = require('lodash');
 const element = require('../../index');
 const config = require('../json/config.local.json');
-
 const {
   primaryKeypair,
   primaryKeypair2,
   secondaryKeypair,
   recoveryKeypair,
   recoveryKeypair2,
-} = require('../__tests__/__fixtures__');
+  // eslint-disable-next-line
+} = require('./__fixtures__');
 
-jest.setTimeout(10 * 1000);
+jest.setTimeout(30 * 1000);
+
+const fixtureStorage = require('./__fixtures__').storage;
+
+const InMemoryOpStore = require('../operationStore/InMemoryOpStore');
+
+const opStore = new InMemoryOpStore();
+const bus = nanobus();
 
 let storage;
 let blockchain;
+let service;
 
-describe('syncFromBlockNumber.withNoCache', () => {
+
+// Why Sidetree DIDs are non transferable.
+// we need randomness here, because obviously IPFS will have the published
+// data after one test run.
+describe('LatePublishAttack', () => {
+  console.info('This test should log warnings.');
   beforeEach(async () => {
     blockchain = element.blockchain.ethereum.configure({
       hdPath: "m/44'/60'/0'/0/0",
@@ -30,9 +47,17 @@ describe('syncFromBlockNumber.withNoCache', () => {
     storage = element.storage.ipfs.configure({
       multiaddr: config.ipfsApiMultiAddr,
     });
+
+    service = [
+      {
+        id: '#transmute.element.test',
+        type: 'Transmute.Element.Test',
+        serviceEndpoint: `http://vanity.example.com#${Math.random()}`,
+      },
+    ];
   });
 
-  it('no cache: create, sync, update, sync, recover, sync, delete, sync', async () => {
+  it('create, revoke (no publish), revoke (publish), sync, publish, sync', async () => {
     // CREATE
     let encodedPayload = element.func.encodeJson({
       '@context': 'https://w3id.org/did/v1',
@@ -48,6 +73,7 @@ describe('syncFromBlockNumber.withNoCache', () => {
           publicKeyHex: recoveryKeypair.publicKey,
         },
       ],
+      service,
     });
     let signature = element.func.signEncodedPayload(encodedPayload, primaryKeypair.privateKey);
     let requestBody = {
@@ -70,51 +96,49 @@ describe('syncFromBlockNumber.withNoCache', () => {
       blockchain,
     });
 
-    let initialState = {};
-
     let updatedModel = await element.func.syncFromBlockNumber({
-      transactionTime: 0,
-      initialState,
+      opStore,
+      bus,
       reducer: element.reducer,
       storage,
       blockchain,
     });
 
-    expect(updatedModel['MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI'].doc.id).toBe(
-      'did:elem:MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI',
-    );
-    expect(
-      updatedModel['MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI'].doc.publicKey[0].publicKeyHex,
-    ).toBe(primaryKeypair.publicKey);
-    expect(
-      updatedModel['MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI'].doc.publicKey[1].publicKeyHex,
-    ).toBe(recoveryKeypair.publicKey);
+    const didUniqueSuffix = _.without(Object.keys(updatedModel), 'transactionTime')[0];
 
-    expect(
-      updatedModel['MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI'].doc.publicKey[2],
-    ).toBeUndefined();
-
-    // UPDATE
+    expect(updatedModel[didUniqueSuffix].doc.id).toBe(`did:elem:${didUniqueSuffix}`);
+    // Out sneeky trick.
+    // RECOVER
     encodedPayload = element.func.encodeJson({
-      didUniqueSuffix: 'MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI',
-      previousOperationHash: 'MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI',
+      didUniqueSuffix,
+      previousOperationHash: didUniqueSuffix, // should see this twice.
       patch: [
+        // first op should update recovery key.
         {
           op: 'replace',
-          path: '/publicKey/2',
+          path: '/publicKey/1',
           value: {
-            id: '#secondary',
+            id: '#recovery',
             type: 'Secp256k1VerificationKey2018',
             publicKeyHex: secondaryKeypair.publicKey,
           },
         },
+        {
+          op: 'replace',
+          path: '/publicKey/0',
+          value: {
+            id: '#primary',
+            type: 'Secp256k1VerificationKey2018',
+            publicKeyHex: primaryKeypair2.publicKey,
+          },
+        },
       ],
     });
-    signature = element.func.signEncodedPayload(encodedPayload, primaryKeypair.privateKey);
+    signature = element.func.signEncodedPayload(encodedPayload, recoveryKeypair.privateKey);
     requestBody = {
       header: {
-        operation: 'update',
-        kid: '#primary',
+        operation: 'recover',
+        kid: '#recovery',
         alg: 'ES256K',
       },
       payload: encodedPayload,
@@ -123,31 +147,32 @@ describe('syncFromBlockNumber.withNoCache', () => {
     encodedOperation = element.func.requestBodyToEncodedOperation({
       ...requestBody,
     });
-
-    txn = await element.func.operationsToTransaction({
+    const anchorFileHash = await element.func.operationsToAnchorFile({
       operations: [encodedOperation],
-      storage,
-      blockchain,
+      storage: fixtureStorage, // this should be fixture storage
     });
-
-    initialState = {};
+    await blockchain.write(anchorFileHash);
 
     updatedModel = await element.func.syncFromBlockNumber({
-      transactionTime: 0,
-      initialState,
+      opStore,
+      bus,
       reducer: element.reducer,
       storage,
       blockchain,
     });
 
-    expect(
-      updatedModel['MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI'].doc.publicKey[2].publicKeyHex,
-    ).toBe(secondaryKeypair.publicKey);
+    expect(updatedModel[didUniqueSuffix].doc.publicKey[0].publicKeyHex).toBe(
+      primaryKeypair.publicKey,
+    );
+    expect(updatedModel[didUniqueSuffix].doc.publicKey[1].publicKeyHex).toBe(
+      recoveryKeypair.publicKey,
+    );
 
+    // now we pretend to transfer...
     // RECOVER
     encodedPayload = element.func.encodeJson({
-      didUniqueSuffix: 'MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI',
-      previousOperationHash: 'N2K69iH3ZvrjOZjaMAx8rhtPB8yyM1DgjQPg6_B6bBQ',
+      didUniqueSuffix,
+      previousOperationHash: didUniqueSuffix, // should see this twice.
       patch: [
         // first op should update recovery key.
         {
@@ -183,67 +208,50 @@ describe('syncFromBlockNumber.withNoCache', () => {
     encodedOperation = element.func.requestBodyToEncodedOperation({
       ...requestBody,
     });
-
     txn = await element.func.operationsToTransaction({
       operations: [encodedOperation],
       storage,
       blockchain,
     });
 
-    initialState = {};
-
     updatedModel = await element.func.syncFromBlockNumber({
-      transactionTime: 0,
-      initialState,
+      opStore,
+      bus,
       reducer: element.reducer,
       storage,
       blockchain,
     });
 
-    expect(
-      updatedModel['MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI'].doc.publicKey[0].publicKeyHex,
-    ).toBe(primaryKeypair2.publicKey);
-    expect(
-      updatedModel['MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI'].doc.publicKey[1].publicKeyHex,
-    ).toBe(recoveryKeypair2.publicKey);
+    // Ledger observers think we transfered!
+    // (because some anchorFiles timeout and are ignored.)
 
-    // DELETE
-    encodedPayload = element.func.encodeJson({
-      didUniqueSuffix: 'MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI',
-    });
-    signature = element.func.signEncodedPayload(encodedPayload, primaryKeypair2.privateKey);
-    requestBody = {
-      header: {
-        operation: 'delete',
-        kid: '#primary',
-        alg: 'ES256K',
-      },
-      payload: encodedPayload,
-      signature,
-    };
-    encodedOperation = element.func.requestBodyToEncodedOperation({
-      ...requestBody,
-    });
-
-    txn = await element.func.operationsToTransaction({
-      operations: [encodedOperation],
-      storage,
-      blockchain,
-    });
-
-    initialState = {};
-
-    updatedModel = await element.func.syncFromBlockNumber({
-      transactionTime: 0,
-      initialState,
-      reducer: element.reducer,
-      storage,
-      blockchain,
-    });
-
-    expect(updatedModel['MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI'].doc.publicKey.length).toBe(
-      0,
+    expect(updatedModel[didUniqueSuffix].doc.publicKey[0].publicKeyHex).toBe(
+      primaryKeypair2.publicKey,
     );
-    expect(updatedModel['MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI'].deleted).toBe(true);
+    expect(updatedModel[didUniqueSuffix].doc.publicKey[1].publicKeyHex).toBe(
+      recoveryKeypair2.publicKey,
+    );
+
+    // Now we publish our sneeky trick.
+    const ourLateAnchorFile = await fixtureStorage.read(anchorFileHash);
+    const ourLateBatchFile = await fixtureStorage.read(ourLateAnchorFile.batchFileHash);
+    storage.write(ourLateAnchorFile);
+    storage.write(ourLateBatchFile);
+
+    updatedModel = await element.func.syncFromBlockNumber({
+      opStore,
+      bus,
+      reducer: element.reducer,
+      storage,
+      blockchain,
+    });
+
+    expect(updatedModel[didUniqueSuffix].doc.publicKey[0].publicKeyHex).toBe(
+      primaryKeypair2.publicKey,
+    );
+    expect(updatedModel[didUniqueSuffix].doc.publicKey[1].publicKeyHex).toBe(
+      secondaryKeypair.publicKey,
+    );
+    // Looks like we never actually transfered recovery power (control)....
   });
 });

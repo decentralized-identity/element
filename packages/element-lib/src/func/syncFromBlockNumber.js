@@ -3,35 +3,13 @@ const crypto = require('crypto');
 const _ = require('lodash');
 
 module.exports = async ({
-  transactionTime,
-  initialState,
-  didUniqueSuffixes,
-  reducer,
-  storage,
-  blockchain,
-  onUpdated,
+  didUniqueSuffixes, reducer, storage, blockchain, onUpdated,
 }) => {
-  if (
-    initialState.transactionTime
-    && parseInt(initialState.transactionTime, 10) + 1 < transactionTime
-  ) {
-    console.warn(
-      'syncFromBlockNumber has not processed this transactionTime - 1, rewinding to initialState.transactionTime + 1. If you wish to rebuild state, pass an empty initialState.',
-    );
-    // eslint-disable-next-line
-    transactionTime = parseInt(initialState.transactionTime, 10) + 1;
-  }
-
-  if (
-    initialState.transactionTime
-    && parseInt(initialState.transactionTime, 10) >= transactionTime
-  ) {
-    console.warn(
-      'syncFromBlockNumber has already processed this transactionTime, fast forwarding to initialState.transactionTime + 1. If you wish to rebuild state, pass an empty initialState.',
-    );
-    // eslint-disable-next-line
-    transactionTime = parseInt(initialState.transactionTime, 10) + 1;
-  }
+  console.warn(
+    '[DEPRECATION WARNING] syncFromBlockNumber will be removed soon. use resolveFromOperationStore and produceOperations instead.',
+  );
+  const transactionTime = 0;
+  const initialState = {};
 
   let stream = await blockchain.getTransactions(transactionTime);
 

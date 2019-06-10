@@ -32,7 +32,8 @@ module.exports = async (state, anchoredOperation) => {
   }
 
   const isSignatureValid = await verifyOperationSignature({
-    operation: anchoredOperation.encodedOperation,
+    encodedOperationPayload: anchoredOperation.decodedOperation.payload,
+    signature: anchoredOperation.decodedOperation.signature,
     publicKey: signingKey.publicKeyHex,
   });
 
@@ -59,9 +60,7 @@ module.exports = async (state, anchoredOperation) => {
       doc: updatedDoc,
       previousOperationHash: newPreviousOperationHash,
       deleted: true,
-      // TODO: clean this up, not a good idea.
-      txns: [...state[uid].txns, anchoredOperation.transaction],
-      ops: [...state[uid].ops, anchoredOperation],
+      lastTransactionTime: anchoredOperation.transaction.transactionTime,
     },
   };
 };

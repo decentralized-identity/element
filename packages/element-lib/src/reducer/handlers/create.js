@@ -1,4 +1,3 @@
-
 const _ = require('lodash');
 
 const config = require('../../json/config.json');
@@ -29,14 +28,14 @@ module.exports = async (state, anchoredOperation) => {
   }
 
   const isSignatureValid = await verifyOperationSignature({
-    operation: anchoredOperation.encodedOperation,
+    encodedOperationPayload: anchoredOperation.decodedOperation.payload,
+    signature: anchoredOperation.decodedOperation.signature,
     publicKey: signingKey.publicKeyHex,
   });
 
   if (!isSignatureValid) {
     throw new Error('Signature is not valid.');
   }
-
 
   const previousOperationHash = didUniqueSuffix;
 
@@ -48,9 +47,7 @@ module.exports = async (state, anchoredOperation) => {
         id: config.didMethodName + didUniqueSuffix,
       },
       previousOperationHash,
-      // TODO: clean this up... probably not a good idea to do this.
-      txns: [anchoredOperation.transaction],
-      ops: [anchoredOperation],
+      lastTransactionTime: anchoredOperation.transaction.transactionTime,
     },
   };
 };
