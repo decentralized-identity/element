@@ -1,10 +1,7 @@
 const element = require('../../index');
 const config = require('../json/config.local.json');
 
-const {
-  primaryKeypair,
-  recoveryKeypair,
-} = require('../__tests__/__fixtures__');
+const { primaryKeypair, recoveryKeypair } = require('../__tests__/__fixtures__');
 
 jest.setTimeout(10 * 1000);
 
@@ -12,7 +9,6 @@ let storage;
 let blockchain;
 
 describe('syncFromBlockNumber.withPoisonedAnchorFiles', () => {
-  console.info('This test should log warnings.');
   beforeEach(async () => {
     blockchain = element.blockchain.ethereum.configure({
       hdPath: "m/44'/60'/0'/0/0",

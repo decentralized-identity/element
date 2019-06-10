@@ -1,5 +1,9 @@
 const _ = require('lodash');
+const nanobus = require('nanobus');
+
+const serviceBus = nanobus();
 const element = require('../../../index');
+const operationGenerator = require('./operationGenerator');
 
 const aliceKeys = {
   publicKey: '0249b2d0d92622bdf194a2af90f9d166e0dd324aff9b42c8727de90e887d76a4dc',
@@ -190,6 +194,7 @@ module.exports = {
   updatePayloadTemplate,
   storage,
   blockchain,
+  serviceBus,
   alicePatch,
   aliceEncodedCreateOp,
   aliceEncodedUpdateOp,
@@ -205,4 +210,5 @@ module.exports = {
   secondaryKeypair,
   recoveryKeypair,
   recoveryKeypair2,
+  operationGenerator,
 };

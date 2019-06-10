@@ -8,6 +8,7 @@
     "url": "git+https://github.com/decentralized-identity/element.git"
   },
   "scripts": {
+    "clean" : "rm -rf element-pouchdb*",
     "ganache": ". ../../example.env && ganache-cli -i 133700 -m \"$ELEMENT_MNEMONIC\"",
     "ipfs": "ipfs daemon",
     "lint": "eslint ./src",
@@ -40,8 +41,12 @@
     "jsonschema": "^1.2.4",
     "lodash": "^4.17.11",
     "merkle-tools": "^1.4.0",
+    "moment": "^2.24.0",
     "multihashes": "^0.4.14",
     "node-localstorage": "^1.3.1",
+    "pouchdb": "^7.0.0",
+    "pouchdb-find": "^7.0.0",
+    "pouchdb-upsert": "^2.2.0",
     "secp256k1": "^3.6.2",
     "tar": ">=2.2.2",
     "truffle-contract": "^4.0.17",

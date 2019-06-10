@@ -23,5 +23,8 @@
     "hooks": {
       "pre-push": "npm run pre:push"
     }
+  },
+  "dependencies": {
+    "pouchdb": "^7.0.0"
   }
 }

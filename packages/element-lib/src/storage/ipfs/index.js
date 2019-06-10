@@ -40,7 +40,7 @@ class IpfsStorage {
       parsed = JSON.parse(node.content);
     } catch (e) {
       console.warn(e);
-      throw new Error(`Invalid AnchorFile JSON: https://ipfs.io/ipfs/${cid}`);
+      throw new Error(`Invalid JSON: https://ipfs.io/ipfs/${cid}`);
     }
 
     return parsed;

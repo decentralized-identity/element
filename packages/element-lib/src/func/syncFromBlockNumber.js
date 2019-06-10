@@ -1,37 +1,105 @@
-const base64url = require('base64url');
-const crypto = require('crypto');
 const _ = require('lodash');
 
-module.exports = async ({
-  didUniqueSuffixes, reducer, storage, blockchain, onUpdated,
-}) => {
-  console.warn(
-    '[DEPRECATION WARNING] syncFromBlockNumber will be removed soon. use resolveFromOperationStore and produceOperations instead.',
-  );
-  const transactionTime = 0;
-  const initialState = {};
+const batchFileToOperations = require('./batchFileToOperations');
 
-  let stream = await blockchain.getTransactions(transactionTime);
+module.exports = async ({
+  transactionTime,
+  initialState,
+  didUniqueSuffixes,
+  reducer,
+  storage,
+  blockchain,
+  serviceBus,
+  db,
+}) => {
+  // eslint-disable-next-line
+  transactionTime = transactionTime || 0;
+  // eslint-disable-next-line
+  initialState = initialState || {};
+  let docs;
+  let stream = [];
+
+  if (db) {
+    ({ docs } = await db.find({
+      selector: { type: 'element:sidetree:transaction' },
+    }));
+    if (!docs.length) {
+      stream = await blockchain.getTransactions(transactionTime);
+    } else {
+      stream = docs;
+      const lastTransactionTime = stream[stream.length - 1].transactionTime;
+      const newTransactions = await blockchain.getTransactions(lastTransactionTime + 1);
+
+      // if (newTransactions.length) {
+      //   console.log('there were new transactions.');
+      // }
+
+      // eslint-disable-next-line
+      stream = [...stream, ...newTransactions];
+    }
+  } else {
+    stream = await blockchain.getTransactions(transactionTime);
+  }
 
   stream = stream.map(s => ({
     transaction: s,
   }));
 
+  stream = stream.filter(s => s.transaction.failing === undefined);
+
+  if (serviceBus) {
+    stream.map(s => serviceBus.emit('element:sidetree:transaction', {
+      transaction: s.transaction,
+    }));
+  }
+
   let hasProcessedBad = false;
+
   for (let txIndex = 0; txIndex < stream.length; txIndex++) {
     const item = stream[txIndex];
     try {
-      // eslint-disable-next-line
-      item.anchorFile = await storage.read(item.transaction.anchorFileHash);
+      if (db) {
+        try {
+          // eslint-disable-next-line
+          ({ docs } = await db.find({
+            selector: { _id: `element:sidetree:anchorFile:${item.transaction.anchorFileHash}` },
+          }));
+          if (docs.length) {
+            const [record] = docs;
+            item.anchorFile = record;
+            // console.log('loaded anchorFile from cache.');
+          }
+        } catch (e) {
+          console.error('cache read error', e);
+        }
+      }
+      if (!item.anchorFile) {
+        // eslint-disable-next-line
+        item.anchorFile = await storage.read(item.transaction.anchorFileHash);
+        if (serviceBus && item.anchorFile) {
+          serviceBus.emit('element:sidetree:anchorFile', {
+            transaction: item.transaction,
+            anchorFile: item.anchorFile,
+          });
+        }
+      }
     } catch (e) {
-      console.warn(e);
       item.anchorFile = null;
       hasProcessedBad = true;
     }
   }
 
   if (hasProcessedBad) {
-    console.warn('Removing Sidetree Transactions with bad anchorFiles');
+    // mark transaction as bad, so it can be skipped next time.
+    const badStreams = stream.filter(s => s.anchorFile === null);
+    if (serviceBus) {
+      await Promise.all(
+        badStreams.map(s => serviceBus.emit('element:sidetree:transaction:failing', {
+          transaction: s.transaction,
+        })),
+      );
+    }
+
     stream = stream.filter(s => s.anchorFile !== null);
   }
 
@@ -45,9 +113,35 @@ module.exports = async ({
   hasProcessedBad = false;
   for (let txIndex = 0; txIndex < stream.length; txIndex++) {
     const item = stream[txIndex];
+
+    if (db) {
+      try {
+        // eslint-disable-next-line
+        ({ docs } = await db.find({
+          selector: { _id: `element:sidetree:batchFile:${item.anchorFile.batchFileHash}` },
+        }));
+        if (docs.length) {
+          const [record] = docs;
+          item.batchFile = record;
+          // console.log('loaded batchFile from cache.');
+        }
+      } catch (e) {
+        console.error('cache read error', e);
+      }
+    }
+
     try {
-      // eslint-disable-next-line
-      item.batchFile = await storage.read(item.anchorFile.batchFileHash);
+      if (!item.batchFile) {
+        // eslint-disable-next-line
+        item.batchFile = await storage.read(item.anchorFile.batchFileHash);
+        if (serviceBus && item.batchFile) {
+          serviceBus.emit('element:sidetree:batchFile', {
+            transaction: item.transaction,
+            anchorFile: item.anchorFile,
+            batchFile: item.batchFile,
+          });
+        }
+      }
     } catch (e) {
       console.warn(e);
       item.batchFile = null;
@@ -56,7 +150,11 @@ module.exports = async ({
   }
 
   if (hasProcessedBad) {
-    console.warn('Removing Sidetree Transactions with bad batchFiles');
+    console.warn(
+      'Removing Sidetree Transactions with bad batchFiles... make sure to update cache, so we can skip next time.',
+    );
+    // const badStreams = stream.filter(s => s.batchFile === null);
+    // console.log(badStreams);
     stream = stream.filter(s => s.batchFile !== null);
   }
 
@@ -64,21 +162,7 @@ module.exports = async ({
     stream.map(s => ({
       ...s,
       batchFile: {
-        operations: _.map(s.batchFile.operations, (op) => {
-          const operationHash = base64url.encode(
-            crypto
-              .createHash('sha256')
-              .update(base64url.toBuffer(op))
-              .digest(),
-          );
-          const decodedOperation = JSON.parse(base64url.decode(op));
-          return {
-            operationHash,
-            decodedOperation,
-            encodedOperation: op,
-            decodedOperationPayload: JSON.parse(base64url.decode(decodedOperation.payload)),
-          };
-        }),
+        operations: batchFileToOperations(s.batchFile),
       },
     })),
   );
@@ -93,6 +177,7 @@ module.exports = async ({
         ...op,
         transaction,
         anchorFile,
+        batchFile,
       });
     }
   }
@@ -108,10 +193,6 @@ module.exports = async ({
   if (stream.length) {
     const lastTxn = stream.pop().transaction;
     updatedState.transactionTime = lastTxn.transactionTime;
-  }
-
-  if (onUpdated) {
-    onUpdated(updatedState);
   }
 
   return updatedState;
