@@ -1,7 +1,5 @@
 const _ = require('lodash');
-const nanobus = require('nanobus');
 
-const serviceBus = nanobus();
 const element = require('../../../index');
 const operationGenerator = require('./operationGenerator');
 
@@ -194,7 +192,6 @@ module.exports = {
   updatePayloadTemplate,
   storage,
   blockchain,
-  serviceBus,
   alicePatch,
   aliceEncodedCreateOp,
   aliceEncodedUpdateOp,

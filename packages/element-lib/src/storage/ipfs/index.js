@@ -39,7 +39,7 @@ class IpfsStorage {
     try {
       parsed = JSON.parse(node.content);
     } catch (e) {
-      console.warn(e);
+      // console.warn(e);
       throw new Error(`Invalid JSON: https://ipfs.io/ipfs/${cid}`);
     }
 

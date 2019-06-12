@@ -7,19 +7,25 @@ const reducer = require('../reducer');
 
 class Sidetree {
   constructor({
-    serviceBus, db, blockchain, storage,
+    serviceBus, db, blockchain, storage, config,
   }) {
     this.blockchain = blockchain;
     this.storage = storage;
     this.serviceBus = serviceBus;
     this.db = db;
+    this.config = config || {
+      CACHE_EXPIRES_SECONDS: 2,
+      VERBOSITY: 0,
+    };
     this.registerServiceBusHandlers();
-    this.CACHE_EXPIRES_SECONDS = 2;
+    this.sleep = seconds => new Promise(r => setTimeout(r, seconds * 1000));
   }
 
   async close() {
+    await this.serviceBus.close();
     await this.db.close();
     await this.blockchain.web3.currentProvider.engine.stop();
+    await this.sleep(2);
   }
 
   saveOperationFromRequestBody(requestBody) {
@@ -49,9 +55,7 @@ class Sidetree {
 
     const uid = did.split(':').pop();
 
-    const { docs } = await this.db.find({
-      selector: { _id: `element:sidetree:didRecord:${uid}` },
-    });
+    const docs = await this.db.read(`element:sidetree:didRecord:${uid}`);
 
     // did document cache hit
     if (docs.length) {
@@ -70,15 +74,11 @@ class Sidetree {
     });
 
     try {
-      await this.db.upsert(`element:sidetree:didRecord:${uid}`, (doc) => {
-        // eslint-disable-next-line
-        doc = {
-          ...model[uid],
-          expires: moment()
-            .add(this.CACHE_EXPIRES_SECONDS, 'seconds')
-            .toISOString(),
-        };
-        return doc;
+      await this.db.write(`element:sidetree:didRecord:${uid}`, {
+        ...model[uid],
+        expires: moment()
+          .add(this.config.CACHE_EXPIRES_SECONDS, 'seconds')
+          .toISOString(),
       });
     } catch (e) {
       console.warn(e);
@@ -89,10 +89,17 @@ class Sidetree {
 
   // split up into files.
   registerServiceBusHandlers() {
+    this.serviceBus.on('element:sidetree:error', async ({ error, anchoredOperation, state }) => {
+      if (this.config.VERBOSITY > 0) {
+        console.warn('Operation rejected', error);
+        console.warn('Operation: ', anchoredOperation);
+        console.warn('State: ', state);
+      }
+    });
+
     this.serviceBus.on('element:sidetree:transaction', async ({ transaction }) => {
       try {
-        await this.db.put({
-          _id: `element:sidetree:transaction:${transaction.transactionTimeHash}`,
+        await this.db.write(`element:sidetree:transaction:${transaction.transactionTimeHash}`, {
           type: 'element:sidetree:transaction',
           ...transaction,
         });
@@ -109,14 +116,11 @@ class Sidetree {
 
     this.serviceBus.on('element:sidetree:transaction:failing', async ({ transaction }) => {
       try {
-        await this.db.upsert(
-          `element:sidetree:transaction:${transaction.transactionTimeHash}`,
-          (doc) => {
-            // eslint-disable-next-line
-            doc.failing = true;
-            return doc;
-          },
-        );
+        await this.db.write(`element:sidetree:transaction:${transaction.transactionTimeHash}`, {
+          // eslint-disable-next-line
+          ...transaction,
+          failing: true,
+        });
       } catch (e) {
         if (e.status === 409) {
           // Document update conflict
@@ -130,8 +134,7 @@ class Sidetree {
 
     this.serviceBus.on('element:sidetree:anchorFile', async ({ transaction, anchorFile }) => {
       try {
-        await this.db.put({
-          _id: `element:sidetree:anchorFile:${transaction.anchorFileHash}`,
+        await this.db.write(`element:sidetree:anchorFile:${transaction.anchorFileHash}`, {
           type: 'element:sidetree:anchorFile',
           ...anchorFile,
         });
@@ -150,8 +153,7 @@ class Sidetree {
       'element:sidetree:batchFile',
       async ({ transaction, anchorFile, batchFile }) => {
         try {
-          await this.db.put({
-            _id: `element:sidetree:batchFile:${anchorFile.batchFileHash}`,
+          await this.db.write(`element:sidetree:batchFile:${anchorFile.batchFileHash}`, {
             type: 'element:sidetree:batchFile',
             ...batchFile,
           });
@@ -167,8 +169,7 @@ class Sidetree {
         // migth as well save operations here too
         try {
           await Promise.all(
-            batchFile.operations.map(operation => this.db.put({
-              _id: `element:sidetree:operation:${operation.operationHash}`,
+            batchFile.operations.map(operation => this.db.write(`element:sidetree:operation:${operation.operationHash}`, {
               type: 'element:sidetree:operation',
               transaction,
               ...operation,

@@ -7,6 +7,9 @@ const blockchain = require('./src/blockchain');
 const storage = require('./src/storage');
 
 const schema = require('./src/schema');
+const adapters = require('./src/adapters');
+
+const Sidetree = require('./src/sidetree');
 
 module.exports = {
   func,
@@ -15,4 +18,6 @@ module.exports = {
   blockchain,
   storage,
   schema,
+  adapters,
+  Sidetree,
 };

@@ -1,13 +1,6 @@
-const nanobus = require('nanobus');
-const PouchDB = require('pouchdb');
-PouchDB.plugin(require('pouchdb-find'));
-PouchDB.plugin(require('pouchdb-upsert'));
-
 const fixtures = require('../__tests__/__fixtures__');
-const Sidetree = require('../sidetree/Sidetree');
 
-const element = require('../../index');
-const config = require('../json/config.local.json');
+const getLocalSidetree = require('./__fixtures__/getLocalSidetree');
 
 jest.setTimeout(10 * 1000);
 
@@ -17,50 +10,21 @@ let sidetree;
 let blockchain;
 let serviceBus;
 
+beforeAll(async () => {
+  sidetree = await getLocalSidetree('PoisonedAnchorFileAttack');
+  await sidetree.saveOperationFromRequestBody(
+    fixtures.operationGenerator.createDID(fixtures.primaryKeypair, fixtures.recoveryKeypair),
+  );
+
+  await sleep(1);
+});
+
+afterAll(async () => {
+  await sleep(1);
+  await sidetree.close();
+});
+
 describe('Poisoned Anchor File Attack', () => {
-  beforeAll(async () => {
-    serviceBus = nanobus();
-    const db = new PouchDB('element-pouchdb.Poisoned');
-    // eslint-ignore-next-line
-
-    try {
-      db.createIndex({
-        index: { fields: ['type', 'anchorFileHash', 'operationHash', 'batchFileHash'] },
-      });
-    } catch (e) {
-      // no update conflict
-    }
-
-    const storage = element.storage.ipfs.configure({
-      multiaddr: config.ipfsApiMultiAddr,
-    });
-
-    blockchain = element.blockchain.ethereum.configure({
-      hdPath: "m/44'/60'/0'/0/0",
-      mnemonic: config.mnemonic,
-      providerUrl: config.web3ProviderUrl,
-      // when not defined, a new contract is created.
-      // anchorContractAddress: config.anchorContractAddress,
-    });
-
-    await db
-      .allDocs()
-      .then(result => Promise.all(result.rows.map(row => db.remove(row.id, row.value.rev))));
-    await blockchain.resolving;
-    sidetree = new Sidetree({
-      blockchain,
-      storage,
-      serviceBus,
-      db,
-    });
-
-    await sidetree.saveOperationFromRequestBody(
-      fixtures.operationGenerator.createDID(fixtures.primaryKeypair, fixtures.recoveryKeypair),
-    );
-
-    await sleep(1);
-  });
-
   it('survives small poison', async (done) => {
     // Insert poison
     await blockchain.write('QmTJGHccriUtq3qf3bvAQUcDUHnBbHNJG2x2FYwYUecN43');
@@ -78,14 +42,8 @@ describe('Poisoned Anchor File Attack', () => {
   });
 
   it('skips poison after it is discovered', async () => {
-    
     await sidetree.resolve('did:elem:MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI');
     await sidetree.resolve('did:elem:MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI');
     await sidetree.resolve('did:elem:MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI');
-  });
-
-  afterAll(async () => {
-    await sleep(5);
-    await sidetree.close();
   });
 });

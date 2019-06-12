@@ -8,13 +8,15 @@
     "url": "git+https://github.com/decentralized-identity/element.git"
   },
   "scripts": {
-    "clean" : "rm -rf element-pouchdb*",
+    "clean": "rm -rf element-pouchdb*",
     "ganache": ". ../../example.env && ganache-cli -i 133700 -m \"$ELEMENT_MNEMONIC\"",
     "ipfs": "ipfs daemon",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
     "test": "jest --runInBand ",
+    "posttest": "npm run clean",
     "coverage": "jest --runInBand --coverage ",
+    "postcoverage": "npm run clean",
     "test:contracts": "truffle test",
     "contracts:migrate:dev": "truffle migrate --network development --reset",
     "contracts:migrate:ropsten": "truffle migrate --network ropsten"
@@ -52,7 +54,8 @@
     "truffle-contract": "^4.0.17",
     "truffle-hdwallet-provider": "^1.0.5",
     "web3": "1.0.0-beta.36",
-    "websocket": "^1.0.28"
+    "websocket": "^1.0.28",
+    "nanobus": "^4.4.0"
   },
   "devDependencies": {
     "dotenv": "^7.0.0",
@@ -62,7 +65,6 @@
     "eslint-plugin-jest": "^22.1.2",
     "eslint-plugin-node": "^8.0.0",
     "eslint-plugin-security": "^1.4.0",
-    "jest": "^24.5.0",
-    "nanobus": "^4.4.0"
+    "jest": "^24.5.0"
   }
 }

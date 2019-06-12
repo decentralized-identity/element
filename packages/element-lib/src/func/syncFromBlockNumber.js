@@ -20,9 +20,8 @@ module.exports = async ({
   let stream = [];
 
   if (db) {
-    ({ docs } = await db.find({
-      selector: { type: 'element:sidetree:transaction' },
-    }));
+    docs = await db.readCollection('element:sidetree:transaction');
+    docs = docs.sort((a, b) => (a.transactionTime > b.transactionTime ? 1 : -1));
     if (!docs.length) {
       stream = await blockchain.getTransactions(transactionTime);
     } else {
@@ -35,7 +34,7 @@ module.exports = async ({
       // }
 
       // eslint-disable-next-line
-      stream = [...stream, ...newTransactions];
+      stream = [...stream, ...newTransactions].sort((a, b) => a.transactionTime > b.transactionTime ? 1 : -1,);
     }
   } else {
     stream = await blockchain.getTransactions(transactionTime);
@@ -61,9 +60,7 @@ module.exports = async ({
       if (db) {
         try {
           // eslint-disable-next-line
-          ({ docs } = await db.find({
-            selector: { _id: `element:sidetree:anchorFile:${item.transaction.anchorFileHash}` },
-          }));
+          docs = await db.read(`element:sidetree:anchorFile:${item.transaction.anchorFileHash}`);
           if (docs.length) {
             const [record] = docs;
             item.anchorFile = record;
@@ -117,9 +114,7 @@ module.exports = async ({
     if (db) {
       try {
         // eslint-disable-next-line
-        ({ docs } = await db.find({
-          selector: { _id: `element:sidetree:batchFile:${item.anchorFile.batchFileHash}` },
-        }));
+        docs = await db.read(`element:sidetree:batchFile:${item.anchorFile.batchFileHash}`);
         if (docs.length) {
           const [record] = docs;
           item.batchFile = record;
@@ -138,7 +133,9 @@ module.exports = async ({
           serviceBus.emit('element:sidetree:batchFile', {
             transaction: item.transaction,
             anchorFile: item.anchorFile,
-            batchFile: item.batchFile,
+            batchFile: {
+              operations: batchFileToOperations(item.batchFile),
+            },
           });
         }
       }
@@ -187,7 +184,7 @@ module.exports = async ({
   // eslint-disable-next-line
   for (const anchoredOperation of anchoredOperations) {
     // eslint-disable-next-line
-    updatedState = { ...(await reducer(updatedState, anchoredOperation)) };
+    updatedState = { ...(await reducer(updatedState, anchoredOperation, serviceBus)) };
   }
 
   if (stream.length) {
