@@ -4,7 +4,7 @@ import { withRouter } from 'react-router';
 
 import Web3 from 'web3';
 
-const withMetaMask = (WrappedComponent, options = {}) => {
+const withMetaMask = (WrappedComponent) => {
   // eslint-disable-next-line
   const HOC = class extends Component {
     componentDidMount() {
@@ -16,21 +16,13 @@ const withMetaMask = (WrappedComponent, options = {}) => {
             // Request account access if needed
             await window.ethereum.enable();
             // Acccounts now exposed
-            // web3.eth.sendTransaction({
-            //   /* ... */
-            // });
           } catch (error) {
-            // User denied account access...
             console.log(error);
           }
-        }
-        // Legacy dapp browsers...
-        else if (window.web3) {
+        } else if (window.web3) {
           window.web3 = new Web3(window.web3.currentProvider);
-          // Acccounts always exposed
-        }
-        // Non-dapp browsers...
-        else {
+        } else {
+          // eslint-disable-next-line
           alert('MetaMask is required to use this demo, please use the LATEST VERSION.');
         }
       });
