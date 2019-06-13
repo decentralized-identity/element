@@ -91,8 +91,11 @@ class Sidetree {
     } catch (e) {
       console.warn(e);
     }
-
-    return model[uid].doc;
+    // console.log(model);
+    if (model[uid]) {
+      return model[uid].doc;
+    }
+    return null;
   }
 
   // split up into files.

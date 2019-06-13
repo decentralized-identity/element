@@ -1,7 +1,7 @@
-const element = require('../../index');
-const config = require('../json/config.local.json');
+const element = require('../../../index');
+const config = require('../../json/config.local.json');
 
-const { primaryKeypair, recoveryKeypair } = require('../__tests__/__fixtures__');
+const { primaryKeypair, recoveryKeypair } = require('../../__tests__/__fixtures__');
 
 jest.setTimeout(10 * 1000);
 

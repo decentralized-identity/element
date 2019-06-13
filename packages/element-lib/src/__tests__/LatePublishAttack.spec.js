@@ -160,9 +160,11 @@ describe('LatePublishAttack', () => {
   });
 
   it('observers think the transfer occured', async () => {
-    tree = await sidetree.resolve();
-    expect(tree[didUniqueSuffix].doc.publicKey[0].publicKeyHex).toBe(primaryKeypair2.publicKey);
-    expect(tree[didUniqueSuffix].doc.publicKey[1].publicKeyHex).toBe(recoveryKeypair2.publicKey);
+    await sidetree.db.deleteDB();
+    await sleep(3);
+    const didDoc = await sidetree.resolve(`did:elem:${didUniqueSuffix}`);
+    expect(didDoc.publicKey[0].publicKeyHex).toBe(primaryKeypair2.publicKey);
+    expect(didDoc.publicKey[1].publicKeyHex).toBe(recoveryKeypair2.publicKey);
   });
 
   it('publish attack payload', async () => {
