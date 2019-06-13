@@ -1,4 +1,4 @@
-const PouchDB = require('pouchdb');
+const PouchDB = require('pouchdb').default;
 PouchDB.plugin(require('pouchdb-find'));
 PouchDB.plugin(require('pouchdb-upsert'));
 

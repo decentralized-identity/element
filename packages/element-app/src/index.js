@@ -10,12 +10,13 @@ import { ConnectedRouter } from 'connected-react-router';
 import * as serviceWorker from './serviceWorker';
 import createStore from './redux/store';
 import withTracker from './utils/withTracker';
+import withMetaMask from './utils/withMetaMask';
 
 import * as Pages from './pages';
 
 const { store, persistor, history } = createStore();
 
-const TrackedSwitch = withTracker(Switch);
+const TrackedSwitch = withMetaMask(withTracker(Switch));
 
 class App extends React.Component {
   render() {

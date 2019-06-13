@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Paper, Typography } from '@material-ui/core';
 
-
 import config from '../../config';
 
 export class Ledger extends Component {
@@ -11,7 +10,7 @@ export class Ledger extends Component {
   async componentWillMount() {
     if (!window.web3) {
       // eslint-disable-next-line
-      alert('MetaMask is required to use this demo.');
+      alert('MetaMask is required to use this demo, please use the LATEST VERSION.');
     } else {
       window.web3.eth.getAccounts((err, accounts) => {
         if (err) {
@@ -20,17 +19,17 @@ export class Ledger extends Component {
         }
         if (!accounts.length) {
           // eslint-disable-next-line
-          alert('MetaMask is required to use this demo.');
+          alert('MetaMask is required to use this demo, please use the LATEST VERSION.');
           return;
         }
         window.web3.eth.getBalance(accounts[0], async (err, balance) => {
-          const bal = balance.toNumber();
-          this.setState({
-            ...this.state,
-            account: accounts[0],
-            balance: bal,
-            networkVersion: window.web3.currentProvider.networkVersion,
-          });
+          if (!err) {
+            this.setState({
+              account: accounts[0],
+              balance: balance.toNumber ? balance.toNumber() : balance,
+              networkVersion: window.web3.currentProvider.networkVersion,
+            });
+          }
         });
       });
     }
