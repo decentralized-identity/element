@@ -38,6 +38,14 @@ class Sidetree {
     });
   }
 
+  async getTransactions(fromTransactionTime = 0, toTransactionTime = 'latest') {
+    return this.blockchain.getTransactions(fromTransactionTime, toTransactionTime);
+  }
+
+  async getOperations() {
+    return this.db.readCollection('element:sidetree:operation');
+  }
+
   async resolve(did) {
     const syncArgs = {
       transactionTime: 0,
