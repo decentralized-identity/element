@@ -53,7 +53,7 @@ class ElementPouchDB {
   }
 
   async close() {
-    return await this.db.close();
+    return this.db.close();
   }
 }
 

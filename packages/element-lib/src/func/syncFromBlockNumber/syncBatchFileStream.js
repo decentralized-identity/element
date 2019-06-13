@@ -1,6 +1,8 @@
 const batchFileToOperations = require('../batchFileToOperations');
 
-module.exports = async ({ stream, storage, db, serviceBus }) => {
+module.exports = async ({
+  stream, storage, db, serviceBus,
+}) => {
   let hasProcessedBad = false;
   for (let txIndex = 0; txIndex < stream.length; txIndex++) {
     const item = stream[txIndex];
