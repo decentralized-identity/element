@@ -17,7 +17,12 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import {
-  DoneAll, VerifiedUser, Receipt, ExpandMore, Link, LocalActivity
+  DoneAll,
+  VerifiedUser,
+  Receipt,
+  ExpandMore,
+  Link,
+  LocalActivity,
 } from '@material-ui/icons';
 
 const getBlockExplorerUrl = (blockHash, blockchain, network) => {
@@ -101,7 +106,6 @@ export class SidetreeTransaction extends Component {
                       : `${moment(txn.transactionTimestamp * 1000).fromNow()}`
                   }
                 />
-               
               </ListItem>
 
               <ListItem>
@@ -115,7 +119,7 @@ export class SidetreeTransaction extends Component {
                   primary={`${blockchain} Block ${txn.transactionTime}`}
                   secondary={txn.transactionTimeHash}
                 />
-                 <ListItemSecondaryAction>
+                <ListItemSecondaryAction>
                   <IconButton
                     aria-label="Link"
                     onClick={() => {

@@ -152,6 +152,7 @@ export class SidetreeAnchorFile extends Component {
 SidetreeAnchorFile.propTypes = {
   anchorFileHash: PropTypes.string.isRequired,
   anchorFile: PropTypes.object.isRequired,
+  anchorFileBase: PropTypes.string,
   onClickUID: PropTypes.func,
   expanded: PropTypes.bool,
 };
