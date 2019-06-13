@@ -89,11 +89,10 @@ class Sidetree {
 
   // split up into files.
   registerServiceBusHandlers() {
-    this.serviceBus.on('element:sidetree:error', async ({ error, anchoredOperation, state }) => {
+    this.serviceBus.on('element:sidetree:error', async ({ error, details }) => {
       if (this.config.VERBOSITY > 0) {
-        console.warn('Operation rejected', error);
-        console.warn('Operation: ', anchoredOperation);
-        console.warn('State: ', state);
+        console.warn('Sidetree Error', error);
+        console.warn('Details: ', details);
       }
     });
 

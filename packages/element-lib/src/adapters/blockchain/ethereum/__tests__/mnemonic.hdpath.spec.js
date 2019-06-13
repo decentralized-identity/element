@@ -1,6 +1,6 @@
-const element = require('../../../../index');
+const element = require('../../../../../index');
 
-const config = require('../../../json/config.local.json');
+const config = require('../../../../json/config.local.json');
 
 describe('mnemonic.hdpath', () => {
   describe('supports multiple addresses from same mnemonic', () => {

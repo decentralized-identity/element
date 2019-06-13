@@ -28,6 +28,7 @@ let anchorFileHash;
 describe('LatePublishAttack', () => {
   beforeAll(async () => {
     sidetree = await getLocalSidetree('LatePublishAttack');
+    await sidetree.db.deleteDB();
     service = [
       {
         id: '#transmute.element.test',

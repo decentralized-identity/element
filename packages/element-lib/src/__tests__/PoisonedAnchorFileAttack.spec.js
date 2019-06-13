@@ -4,11 +4,7 @@ const getLocalSidetree = require('./__fixtures__/getLocalSidetree');
 
 jest.setTimeout(10 * 1000);
 
-const sleep = seconds => new Promise(r => setTimeout(r, seconds * 1000));
-
 let sidetree;
-let blockchain;
-let serviceBus;
 
 beforeAll(async () => {
   sidetree = await getLocalSidetree('PoisonedAnchorFileAttack');
@@ -16,21 +12,20 @@ beforeAll(async () => {
     fixtures.operationGenerator.createDID(fixtures.primaryKeypair, fixtures.recoveryKeypair),
   );
 
-  await sleep(1);
+  await sidetree.sleep(1);
 });
 
 afterAll(async () => {
-  await sleep(1);
   await sidetree.close();
 });
 
 describe('Poisoned Anchor File Attack', () => {
   it('survives small poison', async (done) => {
     // Insert poison
-    await blockchain.write('QmTJGHccriUtq3qf3bvAQUcDUHnBbHNJG2x2FYwYUecN43');
+    await sidetree.blockchain.write('QmTJGHccriUtq3qf3bvAQUcDUHnBbHNJG2x2FYwYUecN43');
 
     let count = 0;
-    serviceBus.on('element:sidetree:transaction:failing', () => {
+    sidetree.serviceBus.on('element:sidetree:transaction:failing', () => {
       count++;
       if (count === 1) {
         done();

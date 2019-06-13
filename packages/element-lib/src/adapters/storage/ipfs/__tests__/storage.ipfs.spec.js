@@ -1,10 +1,10 @@
-const element = require('../../../../index');
+const element = require('../../../../../index');
 
 const testObj = {
   hello: 'world',
 };
 
-const config = require('../../../json/config.local.json');
+const config = require('../../../../json/config.local.json');
 
 describe('storage.ipfs', () => {
   let storage;

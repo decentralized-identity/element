@@ -13,8 +13,7 @@ const reducer = async (state = {}, anchoredOperation, serviceBus) => {
     if (serviceBus) {
       serviceBus.emit('element:sidetree:error', {
         error: e,
-        anchoredOperation,
-        state,
+        details: anchoredOperation,
       });
     }
 

@@ -140,18 +140,18 @@ module.exports = async ({
         }
       }
     } catch (e) {
-      console.warn(e);
+      // console.warn(e);
       item.batchFile = null;
       hasProcessedBad = true;
     }
   }
 
   if (hasProcessedBad) {
-    console.warn(
-      'Removing Sidetree Transactions with bad batchFiles... make sure to update cache, so we can skip next time.',
-    );
-    // const badStreams = stream.filter(s => s.batchFile === null);
-    // console.log(badStreams);
+    if (serviceBus) {
+      serviceBus.emit('element:sidetree:error', {
+        error: 'Removing Sidetree Transactions with bad batchFiles...cache update opportunity.',
+      });
+    }
     stream = stream.filter(s => s.batchFile !== null);
   }
 

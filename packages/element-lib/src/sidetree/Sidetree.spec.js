@@ -6,7 +6,6 @@ const config = require('../json/config.local.json');
 
 jest.setTimeout(10 * 1000);
 
-
 let sidetree;
 
 beforeAll(async () => {
@@ -42,7 +41,6 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  await sleep(2);
   await sidetree.close();
 });
 
@@ -67,7 +65,7 @@ describe('Sidetree', () => {
       ),
     );
     // expire cache
-    await sleep(5);
+    await sidetree.sleep(5);
 
     let didDoc = await sidetree.resolve('did:elem:MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI');
     expect(didDoc.publicKey[0].publicKeyHex).toBe(fixtures.primaryKeypair2.publicKey);

@@ -9,7 +9,6 @@ let storage;
 let blockchain;
 
 describe('syncFromBlockNumber.withPoisonedBatchFiles', () => {
-  console.info('This test should log warnings.');
   beforeEach(async () => {
     blockchain = element.blockchain.ethereum.configure({
       hdPath: "m/44'/60'/0'/0/0",
