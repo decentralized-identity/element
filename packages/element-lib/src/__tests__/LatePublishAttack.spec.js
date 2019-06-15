@@ -66,7 +66,7 @@ describe('LatePublishAttack', () => {
       signature,
     };
 
-    const txn = await sidetree.saveOperationFromRequestBody(requestBody);
+    const txn = await sidetree.createTransactionFromRequests(requestBody);
     expect(txn.transactionTime).toBeDefined();
     tree = await sidetree.resolve();
     [didUniqueSuffix] = _.without(Object.keys(tree), 'transactionTime');
@@ -155,7 +155,7 @@ describe('LatePublishAttack', () => {
       payload: encodedPayload,
       signature,
     };
-    const txn = await sidetree.saveOperationFromRequestBody(requestBody);
+    const txn = await sidetree.createTransactionFromRequests(requestBody);
     expect(txn.transactionTime).toBeDefined();
   });
 

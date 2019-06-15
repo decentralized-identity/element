@@ -1,6 +1,6 @@
 const handlers = require('./handlers');
 
-const reducer = async (state = {}, anchoredOperation, serviceBus) => {
+const reducer = async (state = {}, anchoredOperation, sidetree) => {
   try {
     const { operation } = anchoredOperation.decodedOperation.header;
     // eslint-disable-next-line
@@ -10,8 +10,8 @@ const reducer = async (state = {}, anchoredOperation, serviceBus) => {
     }
     throw new Error('operation not supported');
   } catch (e) {
-    if (serviceBus) {
-      serviceBus.emit('element:sidetree:error', {
+    if (sidetree) {
+      sidetree.serviceBus.emit('element:sidetree:error', {
         error: e,
         details: anchoredOperation,
       });

@@ -8,7 +8,7 @@ let sidetree;
 
 beforeAll(async () => {
   sidetree = await getLocalSidetree('PoisonedAnchorFileAttack');
-  await sidetree.saveOperationFromRequestBody(
+  await sidetree.createTransactionFromRequests(
     fixtures.operationGenerator.createDID(fixtures.primaryKeypair, fixtures.recoveryKeypair),
   );
 

@@ -14,15 +14,17 @@ import { Ledger } from '../../../components/Ledger';
 import { Storage } from '../../../components/Storage';
 import { SidetreeOperation } from '../../../components/SidetreeOperation';
 
+import { getSidetree } from '../../../services/sidetree';
+
 class DAppElementOperationsPage extends Component {
-  componentWillMount() {
+  async componentWillMount() {
+    await getSidetree();
     if (this.props.match.params.uid) {
       this.props.getOperationsForUID(this.props.match.params.uid);
     } else {
       this.props.getOperationsForUID();
     }
   }
-
 
   render() {
     const { lightNode } = this.props;

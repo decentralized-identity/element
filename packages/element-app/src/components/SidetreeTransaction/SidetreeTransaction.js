@@ -53,13 +53,13 @@ export class SidetreeTransaction extends Component {
 
   render() {
     const {
-      txn, blockchain, network, anchorFileBase,
+      transaction, blockchain, network, anchorFileBase,
     } = this.props;
 
     const { expanded } = this.state;
 
-    const blochHashUrl = getBlockExplorerUrl(txn.transactionTimeHash, blockchain, network);
-    const ipfsUrl = getIpfsUrl(anchorFileBase, txn.anchorFileHash);
+    const blochHashUrl = getBlockExplorerUrl(transaction.transactionTimeHash, blockchain, network);
+    const ipfsUrl = getIpfsUrl(anchorFileBase, transaction.anchorFileHash);
     return (
       <ExpansionPanel expanded={expanded}>
         <ExpansionPanelSummary
@@ -76,14 +76,14 @@ export class SidetreeTransaction extends Component {
                 <VerifiedUser />
               </Avatar>
               <Typography style={{ paddingTop: '4px' }} variant={'subtitle1'}>
-                {'Anchor'}
+                {`${blockchain} Anchor`}
               </Typography>
             </Grid>
             <Grid item xs={12} sm={3}>
               <Typography style={{ paddingTop: '8px' }} variant={'subtitle2'}>{`${
-                !txn.transactionTimestamp
-                  ? `Transaction ${txn.transactionNumber}`
-                  : `${moment(txn.transactionTimestamp * 1000).fromNow()}`
+                !transaction.transactionTimestamp
+                  ? `Transaction ${transaction.transactionNumber}`
+                  : `${moment(transaction.transactionTimestamp * 1000).fromNow()}`
               }`}</Typography>
             </Grid>
           </Grid>
@@ -99,11 +99,11 @@ export class SidetreeTransaction extends Component {
                 </ListItemAvatar>
                 <ListItemText
                   style={{ wordBreak: 'break-all', marginRight: '2px' }}
-                  primary={`Transaction ${txn.transactionNumber}`}
+                  primary={`Transaction ${transaction.transactionNumber}`}
                   secondary={
-                    !txn.transactionTimestamp
+                    !transaction.transactionTimestamp
                       ? ''
-                      : `${moment(txn.transactionTimestamp * 1000).fromNow()}`
+                      : `${moment(transaction.transactionTimestamp * 1000).fromNow()}`
                   }
                 />
               </ListItem>
@@ -116,15 +116,15 @@ export class SidetreeTransaction extends Component {
                 </ListItemAvatar>
                 <ListItemText
                   style={{ wordBreak: 'break-all', marginRight: '2px' }}
-                  primary={`${blockchain} Block ${txn.transactionTime}`}
-                  secondary={txn.transactionTimeHash}
+                  primary={`Block ${transaction.transactionTime}`}
+                  secondary={transaction.transactionTimeHash}
                 />
                 <ListItemSecondaryAction>
                   <IconButton
                     aria-label="Link"
                     onClick={() => {
                       if (this.props.onClickTransactionTimeHash) {
-                        this.props.onClickTransactionTimeHash(txn.transactionTimeHash);
+                        this.props.onClickTransactionTimeHash(transaction.transactionTimeHash);
                       } else {
                         window.open(blochHashUrl);
                       }
@@ -144,7 +144,7 @@ export class SidetreeTransaction extends Component {
                 <ListItemText
                   style={{ wordBreak: 'break-all', marginRight: '2px' }}
                   primary="Anchor File Hash"
-                  secondary={txn.anchorFileHash}
+                  secondary={transaction.anchorFileHash}
                 />
                 <ListItemSecondaryAction>
                   <IconButton aria-label="Link" href={ipfsUrl} target="_blank">
@@ -161,7 +161,7 @@ export class SidetreeTransaction extends Component {
 }
 
 SidetreeTransaction.propTypes = {
-  txn: PropTypes.object.isRequired,
+  transaction: PropTypes.object.isRequired,
   blockchain: PropTypes.string.isRequired,
   network: PropTypes.string,
   expanded: PropTypes.bool,

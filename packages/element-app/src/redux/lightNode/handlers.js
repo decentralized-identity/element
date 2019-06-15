@@ -2,24 +2,27 @@ import { withHandlers } from 'recompose';
 
 import * as elementService from '../../services/element';
 
+import { sidetree } from '../../services/sidetree';
+
 export default withHandlers({
   getSidetreeTransactions: ({ set }) => async (args) => {
     set({ loading: true });
-    const txns = await elementService.getSidetreeTransactions(args);
-    set({ sidetreeTxns: txns, loading: false });
+    // await sidetree.resolve();
+    const record = await sidetree.getTransactions(args);
+    set({ sidetreeTxns: record, loading: false });
   },
 
   getSidetreeOperationsFromTransactionTimeHash: ({ set }) => async (transactionTimeHash) => {
     set({ loading: true });
-    const record = await elementService.getSidetreeOperationsFromTransactionTimeHash(
-      transactionTimeHash,
-    );
+    const record = await sidetree.getOperationsForTransaction(transactionTimeHash);
+    console.log(record);
     set({ sidetreeTxn: record, loading: false });
   },
 
   getOperationsForUID: ({ set }) => async (uid) => {
     set({ loading: true });
-    const record = await elementService.getOperationsForUID(uid);
+    await sidetree.resolve(`did:elem:${uid}`);
+    const record = await sidetree.getOperations(uid);
     set({ sidetreeOperations: record, loading: false });
   },
 

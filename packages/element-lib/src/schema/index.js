@@ -5,9 +5,16 @@ const { stringify } = JSON;
 const didDoc = require('./didDoc.json');
 const operationBindingModel = require('./operationBindingModel.json');
 
+const sidetreeTransaction = require('./sidetree/transaction.json');
+const sidetreeAnchorFile = require('./sidetree/anchorFile.json');
+const sidetreeBatchFile = require('./sidetree/batchFile.json');
+
 const schemas = {
   didDoc,
   operationBindingModel,
+  sidetreeTransaction,
+  sidetreeAnchorFile,
+  sidetreeBatchFile,
 };
 
 class SchemaValidator {

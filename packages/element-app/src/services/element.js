@@ -13,19 +13,6 @@ export const storage = element.storage.ipfs.configure({
   multiaddr: config.ELEMENT_IPFS_MULTIADDR,
 });
 
-// // eslint-disable-next-line
-// const getItem = id => JSON.parse(localStorage.getItem(id));
-
-// const setItem = (id, value) => {
-//   // eslint-disable-next-line
-//   localStorage.setItem(id, JSON.stringify(value));
-//   return value;
-// };
-
-// const cache = {
-//   getItem,
-//   setItem,
-// };
 
 export const createDefaultDIDPayload = (wallet) => {
   const keypair = Object.values(wallet.data.keys)[0];

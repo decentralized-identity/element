@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "$id": "#sidetree.batchFile",
+  "type": "object",
+  "properties": {
+    "operations": {
+      "type": "array",
+      "example": ["QmTT6BwuEeDgNs3ixQ2..."]
+    }
+  },
+  "required": ["operations"]
+}

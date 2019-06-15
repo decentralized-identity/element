@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "$id": "#sidetree.anchorFile",
+  "type": "object",
+  "properties": {
+    "merkleRoot": {
+      "type": "string",
+      "example": "2fd0f5e87f72d787235ee6c1673500c9929a2559edfcdf3637ba9ab05a827a16"
+    },
+    "batchFileHash": {
+      "type": "string",
+      "example": "QmTT6BwuEeDgNs3ixQ2G29izoPawSjAh8wT97uZek5BQVG"
+    },
+    "didUniqueSuffixes": {
+      "type": "array",
+      "example": ["MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI"]
+    }
+  },
+  "required": ["merkleRoot", "batchFileHash", "didUniqueSuffixes"]
+}

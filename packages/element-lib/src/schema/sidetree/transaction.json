@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "$id": "#sidetree.transaction",
+  "type": "object",
+  "properties": {
+    "transactionTime": {
+      "type": "number",
+      "example": "1123"
+    },
+    "transactionTimeHash": {
+      "type": "string",
+      "example": "0xc08ed2256d709e75bac33e826f42154828267e2c4fa2bac8e0127aa87c6c2df4"
+    },
+    "anchorFileHash": {
+      "type": "string",
+      "example": "QmTT6BwuEeDgNs3ixQ2G29izoPawSjAh8wT97uZek5BQVG"
+    },
+    "transactionTimestamp": {
+      "type": "number",
+      "example": "1560551749"
+    }
+  },
+  "required": ["transactionTime", "transactionTimeHash", "anchorFileHash"]
+}

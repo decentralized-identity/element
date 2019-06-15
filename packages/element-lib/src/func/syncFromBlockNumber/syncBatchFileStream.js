@@ -1,39 +1,14 @@
 const batchFileToOperations = require('../batchFileToOperations');
 
-module.exports = async ({
-  stream, storage, db, serviceBus,
-}) => {
+module.exports = async ({ stream, sidetree }) => {
   let hasProcessedBad = false;
   for (let txIndex = 0; txIndex < stream.length; txIndex++) {
     const item = stream[txIndex];
 
-    if (db) {
-      try {
-        // eslint-disable-next-line
-        let docs = await db.read(`element:sidetree:batchFile:${item.anchorFile.batchFileHash}`);
-        if (docs.length) {
-          const [record] = docs;
-          item.batchFile = record;
-          // console.log('loaded batchFile from cache.');
-        }
-      } catch (e) {
-        console.error('cache read error', e);
-      }
-    }
-
     try {
       if (!item.batchFile) {
         // eslint-disable-next-line
-        item.batchFile = await storage.read(item.anchorFile.batchFileHash);
-        if (serviceBus && item.batchFile) {
-          serviceBus.emit('element:sidetree:batchFile', {
-            transaction: item.transaction,
-            anchorFile: item.anchorFile,
-            batchFile: {
-              operations: batchFileToOperations(item.batchFile),
-            },
-          });
-        }
+        item.batchFile = await sidetree.getBatchFile(item.anchorFile.batchFileHash);
       }
     } catch (e) {
       // console.warn(e);
@@ -43,11 +18,10 @@ module.exports = async ({
   }
 
   if (hasProcessedBad) {
-    if (serviceBus) {
-      serviceBus.emit('element:sidetree:error', {
-        error: 'Removing Sidetree Transactions with bad batchFiles...cache update opportunity.',
-      });
-    }
+    // move this to the get command.
+    sidetree.serviceBus.emit('element:sidetree:error', {
+      error: 'Removing Sidetree Transactions with bad batchFiles...cache update opportunity.',
+    });
     //   eslint-disable-next-line
     stream = stream.filter(s => s.batchFile !== null);
   }

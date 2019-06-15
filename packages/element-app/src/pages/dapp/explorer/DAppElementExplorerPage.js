@@ -39,6 +39,9 @@ class DAppElementExplorerPage extends Component {
           </Grid>
           <Grid item xs={12}>
             <Ledger />
+            {/* TODO: add menu for filtering. */}
+            {/* eslint-disable-next-line */}
+            {/* ?since=36&transaction-time-hash=0x5e496d4d60b2abd6326ec64298ba9be0bfbb89b5d804f5383381ebb65e8aaf8f */}
           </Grid>
           <Grid item xs={12}>
             <Storage />

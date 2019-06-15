@@ -9,10 +9,7 @@ module.exports = async ({
   initialState,
   didUniqueSuffixes,
   reducer,
-  storage,
-  blockchain,
-  serviceBus,
-  db,
+  sidetree,
 }) => {
   // eslint-disable-next-line
   transactionTime = transactionTime || 0;
@@ -23,18 +20,13 @@ module.exports = async ({
 
   stream = await syncTransactionStream({
     transactionTime,
-    blockchain,
     stream,
-    db,
-    serviceBus,
+    sidetree,
   });
 
-  // broken...
   stream = await syncAnchorFileStream({
     stream,
-    storage,
-    db,
-    serviceBus,
+    sidetree,
   });
 
   if (didUniqueSuffixes) {
@@ -46,9 +38,7 @@ module.exports = async ({
 
   stream = await syncBatchFileStream({
     stream,
-    storage,
-    db,
-    serviceBus,
+    sidetree,
   });
 
   const anchoredOperations = [];
@@ -71,7 +61,7 @@ module.exports = async ({
   // eslint-disable-next-line
   for (const anchoredOperation of anchoredOperations) {
     // eslint-disable-next-line
-    updatedState = { ...(await reducer(updatedState, anchoredOperation, serviceBus)) };
+    updatedState = { ...(await reducer(updatedState, anchoredOperation, sidetree)) };
   }
 
   if (stream.length) {

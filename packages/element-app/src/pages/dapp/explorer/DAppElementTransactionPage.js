@@ -47,14 +47,14 @@ class DAppElementTransactionPage extends Component {
             ) : (
               <React.Fragment>
                 <SidetreeTransaction
-                  txn={sidetreeTxn.txn}
+                  transaction={sidetreeTxn.transaction}
                   blockchain={'Ethereum'}
                   network={'ropsten'}
                   expanded={true}
                 />
 
                 <SidetreeAnchorFile
-                  anchorFileHash={sidetreeTxn.txn.anchorFileHash}
+                  anchorFileHash={sidetreeTxn.transaction.anchorFileHash}
                   anchorFile={sidetreeTxn.anchorFile}
                   onClickUID={(uid) => {
                     this.props.history.push(`/dapp/operations/${uid}`);
