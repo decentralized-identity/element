@@ -11,6 +11,9 @@ module.exports = async ({
   reducer,
   sidetree,
 }) => {
+  if (!didUniqueSuffixes) {
+    throw new Error('synching all state is deprecated');
+  }
   // eslint-disable-next-line
   transactionTime = transactionTime || 0;
   // eslint-disable-next-line
@@ -44,19 +47,19 @@ module.exports = async ({
   const anchoredOperations = [];
 
   for (let txIndex = 0; txIndex < stream.length; txIndex++) {
-    const { transaction, anchorFile, batchFile } = stream[txIndex];
+    const { transaction, batchFile } = stream[txIndex];
     for (let opIndex = 0; opIndex < batchFile.operations.length; opIndex++) {
       const op = batchFile.operations[opIndex];
       anchoredOperations.push({
         ...op,
         transaction,
-        anchorFile,
-        batchFile,
       });
     }
   }
 
   let updatedState = { ...initialState };
+
+  console.log(anchoredOperations);
 
   // eslint-disable-next-line
   for (const anchoredOperation of anchoredOperations) {

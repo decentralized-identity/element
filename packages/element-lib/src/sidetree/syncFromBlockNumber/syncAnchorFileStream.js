@@ -7,7 +7,5 @@ module.exports = async ({ stream, sidetree }) => {
 
   // eslint-disable-next-line
   stream = stream.filter(s => s.anchorFile !== null);
-
-  console.log(stream);
   return stream;
 };

@@ -2,11 +2,21 @@ const handlers = require('./handlers');
 
 const reducer = async (state = {}, anchoredOperation, sidetree) => {
   try {
-    const { operation } = anchoredOperation.decodedOperation.header;
+    const { transaction, operation } = anchoredOperation;
+    const type = operation.decodedOperation.header.operation;
+    const operationHandler = handlers[type];
     // eslint-disable-next-line
-    if (handlers[operation]) {
+    if (operationHandler) {
       // eslint-disable-next-line
-      return await handlers[operation](state, anchoredOperation);
+      const nextState = await operationHandler(state, anchoredOperation);
+
+      // only persist valid operations.
+      sidetree.serviceBus.emit('element:sidetree:operation', {
+        transaction,
+        operation,
+      });
+
+      return nextState;
     }
     throw new Error('operation not supported');
   } catch (e) {

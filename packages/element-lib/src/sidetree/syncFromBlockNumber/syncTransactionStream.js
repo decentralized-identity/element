@@ -1,4 +1,8 @@
 module.exports = async ({ stream, sidetree }) => {
+  console.log('start here...');
+
+  // stream = await sidetree.getTransactions();
+  
   let docs = await sidetree.db.readCollection('element:sidetree:transaction');
   docs = docs.sort((a, b) => (a.transactionTime > b.transactionTime ? 1 : -1));
 
@@ -27,7 +31,7 @@ module.exports = async ({ stream, sidetree }) => {
     transaction: s,
   }));
   
-  console.log(stream);
+  // console.log(stream);
 
   return stream;
 };

@@ -17,7 +17,5 @@ module.exports = async ({ stream, sidetree }) => {
       },
     })),
   );
-
-  console.log(stream);
   return stream;
 };

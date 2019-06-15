@@ -10,16 +10,17 @@ const verifyOperationSignature = require('../../func/verifyOperationSignature');
 // https://github.com/decentralized-identity/sidetree-core/issues/112
 module.exports = async (state, anchoredOperation) => {
   // console.log("create", anchoredOperation);
+  const { transaction, operation } = anchoredOperation;
 
-  const didDoc = anchoredOperation.decodedOperationPayload;
+  const didDoc = operation.decodedOperationPayload;
 
-  const didUniqueSuffix = payloadToHash(anchoredOperation.decodedOperationPayload);
+  const didUniqueSuffix = payloadToHash(operation.decodedOperationPayload);
 
   if (state[didUniqueSuffix]) {
     throw new Error('DID Already Exists.');
   }
 
-  const { kid } = anchoredOperation.decodedOperation.header;
+  const { kid } = operation.decodedOperation.header;
 
   const signingKey = _.find(didDoc.publicKey, pubKey => pubKey.id === kid);
 
@@ -28,8 +29,8 @@ module.exports = async (state, anchoredOperation) => {
   }
 
   const isSignatureValid = await verifyOperationSignature({
-    encodedOperationPayload: anchoredOperation.decodedOperation.payload,
-    signature: anchoredOperation.decodedOperation.signature,
+    encodedOperationPayload: operation.decodedOperation.payload,
+    signature: operation.decodedOperation.signature,
     publicKey: signingKey.publicKeyHex,
   });
 
@@ -43,11 +44,11 @@ module.exports = async (state, anchoredOperation) => {
     ...state,
     [didUniqueSuffix]: {
       doc: {
-        ...anchoredOperation.decodedOperationPayload,
+        ...operation.decodedOperationPayload,
         id: config.didMethodName + didUniqueSuffix,
       },
       previousOperationHash,
-      lastTransactionTime: anchoredOperation.transaction.transactionTime,
+      lastTransactionTime: transaction.transactionTime,
     },
   };
 };

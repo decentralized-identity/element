@@ -7,7 +7,7 @@ const payloadToHash = require('../../func/payloadToHash');
 const verifyOperationSignature = require('../../func/verifyOperationSignature');
 
 module.exports = async (state, anchoredOperation) => {
-  // console.log("update", anchoredOperation);
+  const { transaction, operation } = anchoredOperation;
   if (state.deleted) {
     console.log('deleted, skipping');
     return state;
@@ -15,11 +15,7 @@ module.exports = async (state, anchoredOperation) => {
 
   const opName = 'recover';
 
-  const {
-    didUniqueSuffix,
-    previousOperationHash,
-    patch,
-  } = anchoredOperation.decodedOperationPayload;
+  const { didUniqueSuffix, previousOperationHash, patch } = operation.decodedOperationPayload;
 
   const uid = didUniqueSuffix;
 
@@ -29,7 +25,7 @@ module.exports = async (state, anchoredOperation) => {
 
   const preUpdateDidDoc = state[uid].doc;
 
-  const { kid } = anchoredOperation.decodedOperation.header;
+  const { kid } = operation.decodedOperation.header;
 
   const signingKey = _.find(preUpdateDidDoc.publicKey, pubKey => pubKey.id === kid);
 
@@ -51,8 +47,8 @@ module.exports = async (state, anchoredOperation) => {
   }
 
   const isSignatureValid = await verifyOperationSignature({
-    encodedOperationPayload: anchoredOperation.decodedOperation.payload,
-    signature: anchoredOperation.decodedOperation.signature,
+    encodedOperationPayload: operation.decodedOperation.payload,
+    signature: operation.decodedOperation.signature,
     publicKey: signingKey.publicKeyHex,
   });
 
@@ -64,7 +60,7 @@ module.exports = async (state, anchoredOperation) => {
 
   const updatedDoc = patch.reduce(applyReducer, preUpdateDidDoc);
 
-  const newPreviousOperationHash = payloadToHash(anchoredOperation.decodedOperationPayload);
+  const newPreviousOperationHash = payloadToHash(operation.decodedOperationPayload);
 
   return {
     ...state,
@@ -72,8 +68,7 @@ module.exports = async (state, anchoredOperation) => {
       ...state[uid],
       doc: updatedDoc,
       previousOperationHash: newPreviousOperationHash,
-      // TODO: clean this up, not a good idea.
-      lastTransactionTime: anchoredOperation.transaction.transactionTime,
+      lastTransactionTime: transaction.transactionTime,
     },
   };
 };

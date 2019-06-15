@@ -39,8 +39,6 @@ module.exports = (sidetree) => {
       didUniqueSuffixes: [uid],
     });
 
-    console.log(model);
-
     if (model[uid]) {
       // sidetree.serviceBus.emit(`element:sidetree:did:elem:${uid}`, {
       //   uid,

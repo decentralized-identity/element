@@ -20,6 +20,7 @@ class Sidetree {
     require('./getOperations')(this);
     require('./createTransactionFromRequests')(this);
     require('./resolve')(this);
+    require('./resolveBlocking')(this);
     this.sleep = seconds => new Promise(r => setTimeout(r, seconds * 1000));
   }
 

@@ -9,7 +9,6 @@ module.exports = (sidetree) => {
           || op.operation.decodedOperationPayload.didUniqueSuffix === didUniqueSuffix,
       );
     }
-
     return ops;
   };
 };
