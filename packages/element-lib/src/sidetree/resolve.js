@@ -1,51 +1,79 @@
-const moment = require('moment');
-const syncFromBlockNumber = require('./syncFromBlockNumber');
-
+const batchFileToOperations = require('../func/batchFileToOperations');
 const reducer = require('../reducer');
 
-module.exports = (sidetree) => {
-  //   eslint-disable-next-line
+module.exports = async (sidetree) => {
+  // eslint-disable-next-line
   sidetree.resolve = async did => {
-    const syncArgs = {
-      transactionTime: 0,
-      initialState: {},
-      reducer,
-      sidetree,
-    };
-
-    if (!did) {
-      return syncFromBlockNumber(syncArgs);
-    }
-
-    // TODO: add back.. for path parsing..
-    // const resolver = require('did-resolver');
+    let updatedState = {};
     const uid = did.split(':').pop();
 
-    // make this a method like getAnchorFile.
-    const docs = await sidetree.db.read(`element:sidetree:did:elem:${uid}`);
-
-    // did document cache hit
-    if (docs.length) {
-      const [record] = docs;
-      if (!moment().isAfter(record.expires)) {
-        return docs[0].doc;
-      }
-      //  catch expiration
+    const cachedRecord = await sidetree.db.read(`element:sidetree:did:elem:${uid}`);
+    if (cachedRecord.record) {
+      updatedState = cachedRecord.record;
     }
-    // did document cache miss / expired
-    // check for updates blocking on cache miss.
-    const model = await syncFromBlockNumber({
-      ...syncArgs,
-      didUniqueSuffixes: [uid],
+
+    const blockchainTime = await sidetree.blockchain.getBlockchainTime(
+      updatedState.lastTransactionTime || 0,
+    );
+    const transactions = await sidetree.getTransactions({
+      since: 0,
+      transactionTimeHash: blockchainTime.transactionTimeHash,
     });
 
-    if (model[uid]) {
-      // sidetree.serviceBus.emit(`element:sidetree:did:elem:${uid}`, {
-      //   uid,
-      //   record: model[uid],
-      // });
-      return model[uid].doc;
+    let items = transactions.map(transaction => ({
+      transaction,
+    }));
+
+    items = await Promise.all(
+      items.map(async item => ({
+        ...item,
+        anchorFile: await sidetree.getAnchorFile(item.transaction.anchorFileHash),
+      })),
+    );
+    items = items.filter(item => !!item.anchorFile);
+
+    // eslint-disable-next-line
+    items = items.filter(item => item.anchorFile.didUniqueSuffixes.includes(uid));
+
+    items = await Promise.all(
+      items.map(async item => ({
+        ...item,
+        batchFile: await sidetree.getBatchFile(item.anchorFile.batchFileHash),
+      })),
+    );
+    items = items.filter(item => !!item.batchFile);
+
+    items = items.map(item => ({
+      ...item,
+      batchFileOperations: batchFileToOperations(item.batchFile),
+    }));
+
+    // todo: better types here..
+    // flattened.
+    const anchoredOperations = [].concat(
+      ...items.map(item => item.batchFileOperations.map(operation => ({
+        operation,
+        transaction: item.transaction,
+      }))),
+    );
+
+    // eslint-disable-next-line
+    for (const anchoredOperation of anchoredOperations) {
+      // eslint-disable-next-line
+      updatedState = { ...(await reducer(updatedState, anchoredOperation, sidetree)) };
     }
+
+    const record = updatedState[uid];
+
+    if (record) {
+      await sidetree.db.write(`element:sidetree:did:elem:${uid}`, {
+        type: 'element:sidetree:did:documentRecord',
+        record,
+      });
+
+      return updatedState[uid].doc;
+    }
+
     return null;
   };
 };

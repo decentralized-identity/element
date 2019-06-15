@@ -20,7 +20,7 @@ class Sidetree {
     require('./getOperations')(this);
     require('./createTransactionFromRequests')(this);
     require('./resolve')(this);
-    require('./resolveBlocking')(this);
+    require('./sync')(this);
     this.sleep = seconds => new Promise(r => setTimeout(r, seconds * 1000));
   }
 
@@ -30,23 +30,6 @@ class Sidetree {
     await this.storage.close();
     await this.serviceBus.close();
     await this.db.close();
-  }
-
-  async getOperationsForTransaction(transactionTimeHash) {
-    const [transaction] = await this.getTransactions({
-      since: 0,
-      transactionTimeHash,
-      untilTransactionTimeHash: transactionTimeHash,
-    });
-    const anchorFile = await this.getAnchorFile(transaction.anchorFileHash);
-    console.log(anchorFile);
-    const batchFile = await this.getBatchFile(anchorFile.batchFileHash);
-    console.log(batchFile);
-    // return {
-    //   transaction,
-    //   anchorFile,
-    //   batchFile,
-    // };
   }
 }
 

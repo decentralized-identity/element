@@ -72,6 +72,4 @@ describe('sidetree.getTransactions', () => {
     // eslint-disable-next-line
     expect(txns[0]._rev).toBeDefined();
   });
-
-  
 });

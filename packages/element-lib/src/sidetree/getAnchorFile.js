@@ -26,10 +26,6 @@ module.exports = (sidetree) => {
         type: 'element:sidetree:anchorFile',
         ...anchorFile,
       });
-      // sidetree.serviceBus.emit('element:sidetree:anchorFile', {
-      //   anchorFileHash,
-      //   anchorFile,
-      // });
     } catch (e) {
       sidetree.serviceBus.emit('element:sidetree:error:badAnchorFileHash', {
         anchorFileHash,

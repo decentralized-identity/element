@@ -11,11 +11,21 @@ const reducer = async (state = {}, anchoredOperation, sidetree) => {
       const nextState = await operationHandler(state, anchoredOperation);
 
       // only persist valid operations.
-      sidetree.serviceBus.emit('element:sidetree:operation', {
-        transaction,
-        operation,
-      });
-
+      try {
+        await sidetree.db.write(`element:sidetree:operation:${operation.operationHash}`, {
+          type: 'element:sidetree:operation',
+          transaction,
+          operation,
+        });
+      } catch (e) {
+        if (e.status === 409) {
+          // Document update conflict
+          // Meaning we already have this operation.
+          // No OP
+        } else {
+          console.warn(e);
+        }
+      }
       return nextState;
     }
     throw new Error('operation not supported');

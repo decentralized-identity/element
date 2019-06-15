@@ -4,13 +4,14 @@ const fixtures = require('../__tests__/__fixtures__');
 jest.setTimeout(10 * 1000);
 
 let sidetree;
+// eslint-disable-next-line
 let txn1;
 // eslint-disable-next-line
 let txn2;
 let txns;
 
 beforeAll(async () => {
-  sidetree = await getLocalSidetree('sidetree.getTransactions');
+  sidetree = await getLocalSidetree('sidetree.createTransactionFromRequests');
 
   txn1 = await sidetree.createTransactionFromRequests(
     fixtures.operationGenerator.createDID(fixtures.primaryKeypair, fixtures.recoveryKeypair),

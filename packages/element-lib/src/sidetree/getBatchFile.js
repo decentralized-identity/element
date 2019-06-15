@@ -27,10 +27,6 @@ module.exports = (sidetree) => {
         type: 'element:sidetree:batchFile',
         ...batchFile,
       });
-      // sidetree.serviceBus.emit('element:sidetree:batchFile', {
-      //   batchFileHash,
-      //   batchFile,
-      // });
     } catch (e) {
       sidetree.serviceBus.emit('element:sidetree:error:badBatchFileHash', {
         batchFileHash,

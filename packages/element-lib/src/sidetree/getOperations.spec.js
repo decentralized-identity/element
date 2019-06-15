@@ -32,10 +32,10 @@ afterAll(async () => {
 describe('sidetree.getOperations', () => {
   it('should return operations', async () => {
     // process at least some ops
-    await sidetree.resolve();
+    await sidetree.resolve('did:elem:MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI');
     await sidetree.sleep(1);
     const ops = await sidetree.getOperations();
-    expect(ops.length).toBe(3);
+    expect(ops.length).toBe(2);
     const someOps = await sidetree.getOperations('MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI');
     expect(someOps.length).toBe(2);
   });
