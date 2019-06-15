@@ -43,33 +43,6 @@ class ElementPouchDB {
     }
   }
 
-  // remove
-  // async getAnchorFileFromBatchFileHash(batchFileHash) {
-  //   const { docs } = await this.db.find({
-  //     selector: { batchFileHash, type: 'element:sidetree:anchorFile' },
-  //   });
-  //   if (docs.length === 0) {
-  //     throw new Error(`no anchorFile exists yet for this batchFileHash: ${batchFileHash}`);
-  //   }
-  //   if (docs.length > 1) {
-  //     throw new Error(`more than one anchorFile exists for batchFileHash:${batchFileHash}`);
-  //   }
-  //   return docs[0];
-  // }
-
-  // async getTransactionFromAnchorFileHash(anchorFileHash) {
-  //   const { docs } = await this.db.find({
-  //     selector: { anchorFileHash, type: 'element:sidetree:transaction' },
-  //   });
-  //   if (docs.length === 0) {
-  //     throw new Error(`no transaction exists yet for this anchorFileHash: ${anchorFileHash}`);
-  //   }
-  //   if (docs.length > 1) {
-  //     throw new Error(`more than one transaction exists for anchorFileHash:${anchorFileHash}`);
-  //   }
-  //   return docs[0];
-  // }
-
   async readCollection(type) {
     const { docs } = await this.db.find({
       selector: { type },

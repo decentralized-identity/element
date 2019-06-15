@@ -1,15 +1,41 @@
+const moment = require('moment');
+const schema = require('../schema');
+
 module.exports = (sidetree) => {
-  // todo... pass sidetree (sidetree instance) to sync instead of db and bus.
-  // then use helper methods, like sidetree one.
   //   eslint-disable-next-line
   sidetree.getBatchFile = async batchFileHash => {
     const maybeCache = await sidetree.db.read(`element:sidetree:batchFile:${batchFileHash}`);
+    if (
+      maybeCache.consideredUnresolvableUntil
+      && !moment().isAfter(maybeCache.consideredUnresolvableUntil)
+    ) {
+      console.log(maybeCache);
+      return null;
+    }
     if (maybeCache.operations) {
       return maybeCache;
     }
-    const batchFile = await sidetree.storage.read(batchFileHash);
-    // todo: json schema validation here.
-    await sidetree.serviceBus.emit('element:sidetree:batchFile', { batchFileHash, batchFile });
+    let batchFile;
+    try {
+      batchFile = await sidetree.storage.read(batchFileHash);
+      const isValid = schema.validator.isValid(batchFile, schema.schemas.sidetreeBatchFile);
+      if (!isValid) {
+        throw new Error('batchFile is not valid json schema');
+      }
+
+      await sidetree.db.write(`element:sidetree:batchFile:${batchFileHash}`, {
+        type: 'element:sidetree:batchFile',
+        ...batchFile,
+      });
+      // sidetree.serviceBus.emit('element:sidetree:batchFile', {
+      //   batchFileHash,
+      //   batchFile,
+      // });
+    } catch (e) {
+      sidetree.serviceBus.emit('element:sidetree:error:badBatchFileHash', {
+        batchFileHash,
+      });
+    }
     return batchFile;
   };
 };

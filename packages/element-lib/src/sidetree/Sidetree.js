@@ -1,5 +1,3 @@
-
-
 const registerServiceBusHandlers = require('./serviceBus');
 
 class Sidetree {
@@ -12,6 +10,7 @@ class Sidetree {
     this.db = db;
     this.config = config || {
       CACHE_EXPIRES_SECONDS: 2,
+      BAD_STORAGE_HASH_DELAY_SECONDS: 10 * 60, // 10 minutes
       VERBOSITY: 0,
     };
     registerServiceBusHandlers(this);
@@ -25,10 +24,11 @@ class Sidetree {
   }
 
   async close() {
+    await this.sleep(1);
+    await this.blockchain.close();
+    await this.storage.close();
     await this.serviceBus.close();
     await this.db.close();
-    await this.blockchain.web3.currentProvider.engine.stop();
-    await this.sleep(2);
   }
 
   async getOperationsForTransaction(transactionTimeHash) {

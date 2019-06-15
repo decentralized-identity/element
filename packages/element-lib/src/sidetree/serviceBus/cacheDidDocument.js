@@ -4,6 +4,7 @@ const moment = require('moment');
 module.exports = (sidetree) => {
   sidetree.serviceBus.on('element:sidetree:did:elem', async ({ uid, record }) => {
     try {
+      console.log({ uid, record });
       await sidetree.db.write(`element:sidetree:did:elem:${uid}`, {
         record,
         expires: moment()

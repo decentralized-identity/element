@@ -1,19 +1,17 @@
 const ipfsClient = require('ipfs-http-client');
 
-const resolveValueOrNullInSeconds = (promise, seconds) => new Promise(async (resolve, reject) => {
-  const maybeNull = setTimeout(() => {
-    resolve(null);
-  }, seconds * 1000);
+// https://italonascimento.github.io/applying-a-timeout-to-your-promises/
+const resolveValueOrNullInSeconds = (promise, seconds) => {
+  const timeout = new Promise((resolve) => {
+    const id = setTimeout(() => {
+      clearTimeout(id);
+      resolve(null);
+    }, seconds * 1000);
+  });
 
-  try {
-    const value = await promise;
-    clearTimeout(maybeNull);
-    resolve(value);
-  } catch (e) {
-    clearTimeout(maybeNull);
-    reject(e);
-  }
-});
+  // Returns a race between our timeout and the passed in promise
+  return Promise.race([promise, timeout]);
+};
 
 class IpfsStorage {
   constructor(multiaddr) {
@@ -26,6 +24,10 @@ class IpfsStorage {
     if (parts[1] === 'dns4') {
       this.ipfs = ipfsClient({ host: parts[2], port: parts[4], protocol: parts[5] });
     }
+  }
+
+  async close() {
+    return null || this;
   }
 
   async write(object) {

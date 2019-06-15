@@ -11,9 +11,9 @@ const reducer = async (state = {}, anchoredOperation, sidetree) => {
     throw new Error('operation not supported');
   } catch (e) {
     if (sidetree) {
-      sidetree.serviceBus.emit('element:sidetree:error', {
-        error: e,
-        details: anchoredOperation,
+      sidetree.serviceBus.emit('element:sidetree:error:badOperation', {
+        operation: anchoredOperation,
+        reason: e,
       });
     }
 

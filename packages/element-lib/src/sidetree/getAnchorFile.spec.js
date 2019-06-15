@@ -41,4 +41,19 @@ describe('sidetree.getAnchorFile', () => {
     // eslint-disable-next-line
     expect(anchorFile._rev).toBeDefined();
   });
+
+  // this test will cause jest to never exit.
+  // there is no way to cancel the ipfs promise.
+  // see https://github.com/ipfs/notes/issues/318
+  it.skip('marks anchor files as bad, so they are skipped', async () => {
+    const anchorFile = await sidetree.getAnchorFile(
+      'QmbwYyGmMitBp39R2PqyaLxwuQRvAzbLJSW8K97ZwhCBAD',
+    );
+    expect(anchorFile).toBeNull();
+    await sidetree.sleep(1);
+    const record = await sidetree.db.read(
+      'element:sidetree:anchorFile:QmbwYyGmMitBp39R2PqyaLxwuQRvAzbLJSW8K97ZwhCBAD',
+    );
+    expect(record.consideredUnresolvableUntil).toBeDefined();
+  });
 });

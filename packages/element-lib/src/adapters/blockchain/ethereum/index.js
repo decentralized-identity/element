@@ -69,6 +69,10 @@ class EthereumBlockchain {
     }
   }
 
+  async close() {
+    return this.web3.currentProvider.engine.stop();
+  }
+
   async createNewContract(fromAddress) {
     if (!fromAddress) {
       // eslint-disable-next-line
