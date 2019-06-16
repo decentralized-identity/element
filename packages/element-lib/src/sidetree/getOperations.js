@@ -9,6 +9,7 @@ module.exports = (sidetree) => {
           || op.operation.decodedOperationPayload.didUniqueSuffix === didUniqueSuffix,
       );
     }
-    return ops;
+    //   eslint-disable-next-line
+    return ops.sort((a, b) => a.transaction.transactionTime > b.transaction.transactionTime ? -1 : 1,);
   };
 };

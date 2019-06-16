@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 
 import { Paper, Typography } from '@material-ui/core';
 
-import { storage } from '../../services/element';
+import { sidetree } from '../../services/sidetree';
 
 export class Storage extends Component {
   state = {};
 
   async componentWillMount() {
-    const info = await storage.ipfs.version();
+    const info = await sidetree.storage.ipfs.version();
     this.setState({
       info,
     });

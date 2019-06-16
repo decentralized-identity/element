@@ -1,89 +1,29 @@
 import { withHandlers } from 'recompose';
 
-import * as elementService from '../../services/element';
-
 import config from '../../config';
 import { sidetree } from '../../services/sidetree';
 
 export default withHandlers({
-  getSidetreeTransactions: ({ set }) => async (args) => {
-    set({ loading: true });
-
-    let records = await sidetree.getTransactions(args);
-    if (!records.length) {
-      const all = await sidetree.blockchain.getTransactions(config.ELEMENT_START_BLOCK, 'latest');
-      const lastTransaction = all.pop();
-      await sidetree.sync({
-        fromTransactionTime: config.ELEMENT_START_BLOCK,
-        toTransactionTime: lastTransaction.transactionTime,
-      });
-      records = await sidetree.getTransactions(args);
-    }
-    set({ sidetreeTxns: records.reverse(), loading: false });
-  },
-
-  getSidetreeOperationsFromTransactionTimeHash: ({ set }) => async (transactionTimeHash) => {
-    set({ loading: true });
-    const summary = await sidetree.getTransactionSummary(transactionTimeHash);
-    set({ sidetreeTransactionSummary: summary, loading: false });
-  },
-
-  getOperationsForUID: ({ set }) => async (uid) => {
-    set({ loading: true });
-    const didDocumentForOperations = await sidetree.resolve(`did:elem:${uid}`);
-    const record = await sidetree.getOperations(uid);
-    set({ sidetreeOperations: record, didDocumentForOperations, loading: false });
-  },
-
-  getDefaultDID: ({ set }) => async (wallet) => {
-    const defaultDID = elementService.walletToDID(wallet);
-    set({ predictedDefaultDID: defaultDID });
-    const resolvedDefaultDID = await elementService.resolveDID(defaultDID);
-    if (resolvedDefaultDID) {
-      set({ defaultDID, resolvedDefaultDID });
-    } else {
-      set({ defaultDID: null, resolvedDefaultDID: null });
-    }
-  },
-  createDefaultDID: ({ snackbarMessage, set }) => async (wallet) => {
+  // eslint-disable-next-line
+  resolveDID: ({ didResolved, snackbarMessage, set }) => async did => {
     set({ resolving: true });
-
     try {
-      await elementService.createDefaultDID(wallet);
-      snackbarMessage({
-        snackbarMessage: {
-          message: 'Default DID Created... waiting to resolve.',
-          variant: 'info',
-          open: true,
-        },
-      });
-      const defaultDID = elementService.walletToDID(wallet);
-      set({ defaultDID });
-
-      setTimeout(async () => {
+      const doc = await sidetree.resolve(did);
+      if (doc) {
+        didResolved({ didDocument: doc });
         snackbarMessage({
           snackbarMessage: {
-            message: 'Resolving Default DID...',
-            variant: 'info',
-            open: true,
-          },
-        });
-        const resolvedDefaultDID = await elementService.resolveDID(defaultDID);
-        set({ resolvedDefaultDID, resolving: false });
-
-        snackbarMessage({
-          snackbarMessage: {
-            message: 'Resolved Default DID.',
+            message: `Resolved ${doc.id}`,
             variant: 'success',
             open: true,
           },
         });
-      }, 10 * 1000);
+      }
     } catch (e) {
       console.error(e);
       snackbarMessage({
         snackbarMessage: {
-          message: 'Operation failed.',
+          message: 'Could not resolve DID, make sure it is of the form did:elem:uid.',
           variant: 'error',
           open: true,
         },
@@ -93,15 +33,14 @@ export default withHandlers({
   },
   getAll: ({ snackbarMessage, set }) => async () => {
     set({ resolving: true });
-
     try {
       const all = await sidetree.blockchain.getTransactions(config.ELEMENT_START_BLOCK, 'latest');
       const lastTransaction = all.pop();
-
       await sidetree.sync({
         fromTransactionTime: config.ELEMENT_START_BLOCK,
         toTransactionTime: lastTransaction.transactionTime,
       });
+      // sidetree.db.readCollection should only be used in tests. this should be an exposed method.
       const records = await sidetree.db.readCollection('element:sidetree:did:documentRecord');
       // eslint-disable-next-line
       records.sort((a, b) => a.record.lastTransaction.transactionTime > b.record.lastTransaction.transactionTime
@@ -120,11 +59,97 @@ export default withHandlers({
     }
     set({ resolving: false });
   },
+  getSidetreeTransactions: ({ set }) => async (args) => {
+    set({ loading: true });
+    let records = await sidetree.getTransactions(args);
+    if (!records.length) {
+      const all = await sidetree.blockchain.getTransactions(config.ELEMENT_START_BLOCK, 'latest');
+      const lastTransaction = all.pop();
+      await sidetree.sync({
+        fromTransactionTime: config.ELEMENT_START_BLOCK,
+        toTransactionTime: lastTransaction.transactionTime,
+      });
+      records = await sidetree.getTransactions(args);
+    }
+    set({ sidetreeTxns: records.reverse(), loading: false });
+  },
+  getSidetreeOperationsFromTransactionTimeHash: ({ set }) => async (transactionTimeHash) => {
+    set({ loading: true });
+    const summary = await sidetree.getTransactionSummary(transactionTimeHash);
+    set({ sidetreeTransactionSummary: summary, loading: false });
+  },
+  getOperationsForDidUniqueSuffix: ({ set }) => async (uid) => {
+    set({ loading: true });
+    const didDocumentForOperations = await sidetree.resolve(`did:elem:${uid}`);
+    const record = await sidetree.getOperations(uid);
+    set({ sidetreeOperations: record, didDocumentForOperations, loading: false });
+  },
+  predictDID: ({ set, getMyDidUniqueSuffix }) => async () => {
+    const didUniqueSuffix = await getMyDidUniqueSuffix();
+    set({
+      predictedDID: `did:elem:${didUniqueSuffix}`,
+    });
+    const myDidDocument = await sidetree.resolve(`did:elem:${didUniqueSuffix}`);
+    set({ myDidDocument });
+    const record = await sidetree.getOperations(didUniqueSuffix);
+    set({ sidetreeOperations: record });
+  },
+  createDID: ({
+    snackbarMessage, createDIDRequest, getMyDidUniqueSuffix, set,
+  }) => async () => {
+    set({ resolving: true });
+    snackbarMessage({
+      snackbarMessage: {
+        message: 'Creating your DID will take a few minutes....',
+        variant: 'info',
+        open: true,
+      },
+    });
+    await sidetree.createTransactionFromRequests([await createDIDRequest()]);
+    snackbarMessage({
+      snackbarMessage: {
+        message: 'DID Created. Resolving....',
+        variant: 'info',
+        open: true,
+      },
+    });
+    const didUniqueSuffix = await getMyDidUniqueSuffix();
+    const myDidDocument = await sidetree.resolve(`did:elem:${didUniqueSuffix}`);
+    set({ myDidDocument });
+    snackbarMessage({
+      snackbarMessage: {
+        message: `Resolved did:elem:${didUniqueSuffix}`,
+        variant: 'success',
+        open: true,
+      },
+    });
+    set({ resolving: false });
+  },
 
-  addKeyToDIDDocument: ({ snackbarMessage, set }) => async (wallet, key) => {
+  addKeyToDIDDocument: ({
+    snackbarMessage,
+    getMyDidUniqueSuffix,
+    createAddKeyRequest,
+    set,
+  }) => async (key) => {
     set({ resolving: true });
     try {
-      await elementService.addKeyToDIDDocument(wallet, key);
+      snackbarMessage({
+        snackbarMessage: {
+          message: 'This may take a few minutes.',
+          variant: 'info',
+          open: true,
+        },
+      });
+      const didUniqueSuffix = await getMyDidUniqueSuffix();
+      let myDidDocument = await sidetree.resolve(`did:elem:${didUniqueSuffix}`);
+      const previousOperationHash = await sidetree.getPreviousOperationHash(didUniqueSuffix);
+      await sidetree.createTransactionFromRequests([
+        await createAddKeyRequest(key, myDidDocument, previousOperationHash),
+      ]);
+      await sidetree.sleep(2);
+      myDidDocument = await sidetree.resolve(`did:elem:${didUniqueSuffix}`);
+      set({ myDidDocument });
       snackbarMessage({
         snackbarMessage: {
           message: 'Key added.',
@@ -145,10 +170,30 @@ export default withHandlers({
     set({ resolving: false });
   },
 
-  removeKeyFromDIDDocument: ({ snackbarMessage, set }) => async (wallet, key) => {
+  removeKeyFromDIDDocument: ({
+    snackbarMessage,
+    getMyDidUniqueSuffix,
+    createRemoveKeyRequest,
+    set,
+  }) => async (key) => {
     set({ resolving: true });
     try {
-      await elementService.removeKeyFromDIDDocument(wallet, key);
+      snackbarMessage({
+        snackbarMessage: {
+          message: 'This may take a few minutes.',
+          variant: 'info',
+          open: true,
+        },
+      });
+      const didUniqueSuffix = await getMyDidUniqueSuffix();
+      const previousOperationHash = await sidetree.getPreviousOperationHash(didUniqueSuffix);
+      let myDidDocument = await sidetree.resolve(`did:elem:${didUniqueSuffix}`);
+      await sidetree.createTransactionFromRequests([
+        await createRemoveKeyRequest(key, myDidDocument, previousOperationHash),
+      ]);
+      await sidetree.sleep(10);
+      myDidDocument = await sidetree.resolve(`did:elem:${didUniqueSuffix}`);
+      set({ myDidDocument });
       snackbarMessage({
         snackbarMessage: {
           message: 'Key removed.',
@@ -161,33 +206,6 @@ export default withHandlers({
       snackbarMessage({
         snackbarMessage: {
           message: 'Could not remove key.',
-          variant: 'error',
-          open: true,
-        },
-      });
-    }
-    set({ resolving: false });
-  },
-
-  resolveDID: ({ didResolved, snackbarMessage, set }) => async (did) => {
-    set({ resolving: true });
-    try {
-      const doc = await sidetree.resolve(did);
-      if (doc) {
-        didResolved({ didDocument: doc });
-        snackbarMessage({
-          snackbarMessage: {
-            message: `Resolved ${doc.id}`,
-            variant: 'success',
-            open: true,
-          },
-        });
-      }
-    } catch (e) {
-      console.error(e);
-      snackbarMessage({
-        snackbarMessage: {
-          message: 'Could not resolve DID, make sure it is of the form did:elem:uid.',
           variant: 'error',
           open: true,
         },

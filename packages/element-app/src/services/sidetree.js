@@ -9,11 +9,7 @@ const db = new element.adapters.database.ElementPouchDBAdapter({
 });
 const serviceBus = new element.adapters.serviceBus.ElementNanoBusAdapter();
 const blockchain = element.blockchain.ethereum.configure({
-  // we use web3 from meta mask here.
-  // hdPath: "m/44'/60'/0'/0/0",
-  // mnemonic: config.mnemonic,
-  // providerUrl: config.web3ProviderUrl,
-  // when not defined, a new contract is created.
+  // META MASK
   anchorContractAddress: config.ELEMENT_CONTRACT_ADDRESS,
 });
 

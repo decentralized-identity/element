@@ -7,10 +7,11 @@ import {
   Code,
   Star,
   VpnKey,
-  // Fingerprint,
+  Fingerprint,
   Search,
   // Lock,
-  DeveloperBoard,
+  BarChart,
+  // DeveloperBoard,
   // CloudQueueOutlined,
   List,
 } from '@material-ui/icons';
@@ -37,11 +38,11 @@ const DrawerContent = ({ classes }) => (
     />
 
     <MenuSection
-      subheader={'Browser'}
+      subheader={'Browser Node'}
       items={[
         {
           label: 'My DID',
-          icon: <DeveloperBoard />,
+          icon: <Fingerprint />,
           link: '/dapp/did/profile',
         },
         {
@@ -51,7 +52,7 @@ const DrawerContent = ({ classes }) => (
         },
         {
           label: 'Explorer',
-          icon: <Search />,
+          icon: <BarChart />,
           link: '/dapp/explore',
         },
         {

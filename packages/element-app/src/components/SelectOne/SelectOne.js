@@ -76,7 +76,11 @@ function Placeholder(props) {
 }
 
 function ValueContainer(props) {
-  return <div className={props.selectProps.classes.valueContainer}>{props.children}</div>;
+  return (
+    <div className={`${props.selectProps.classes.valueContainer} force-color-valueContainer`}>
+      {props.children}
+    </div>
+  );
 }
 
 ValueContainer.propTypes = {

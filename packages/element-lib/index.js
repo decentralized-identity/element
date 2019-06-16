@@ -9,6 +9,7 @@ const adapters = require('./src/adapters');
 const { blockchain, storage } = adapters;
 
 const Sidetree = require('./src/sidetree');
+const op = require('./src/sidetree/op');
 const MnemonicKeySystem = require('./src/crypto/MnemonicKeySystem');
 
 module.exports = {
@@ -19,6 +20,7 @@ module.exports = {
   storage,
   schema,
   adapters,
+  op,
   Sidetree,
   MnemonicKeySystem,
 };

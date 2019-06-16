@@ -24,3 +24,8 @@ a:visited {
 /* div {
   word-break: break-all;
 } */
+
+
+div.force-color-valueContainer > div {
+  color: white;
+}

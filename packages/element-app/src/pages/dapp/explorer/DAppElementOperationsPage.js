@@ -16,9 +16,9 @@ import { DIDDocument } from '../../../components/DIDDocument';
 class DAppElementOperationsPage extends Component {
   async componentWillMount() {
     if (this.props.match.params.uid) {
-      this.props.getOperationsForUID(this.props.match.params.uid);
+      this.props.getOperationsForDidUniqueSuffix(this.props.match.params.uid);
     } else {
-      this.props.getOperationsForUID();
+      this.props.getOperationsForDidUniqueSuffix();
     }
   }
 
@@ -27,7 +27,7 @@ class DAppElementOperationsPage extends Component {
     const { sidetreeOperations, didDocumentForOperations, loading } = lightNode;
 
     const content = () => {
-      if (loading || !sidetreeOperations) {
+      if (loading || !sidetreeOperations || !didDocumentForOperations) {
         return <LinearProgress color="primary" variant="query" />;
       }
       return (
@@ -74,7 +74,7 @@ class DAppElementOperationsPage extends Component {
 
 DAppElementOperationsPage.propTypes = {
   lightNode: PropTypes.object.isRequired,
-  getOperationsForUID: PropTypes.func.isRequired,
+  getOperationsForDidUniqueSuffix: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired,
   snackbarMessage: PropTypes.func.isRequired,
 };

@@ -7,13 +7,13 @@ import { compose } from 'recompose';
 import { Typography, Grid, LinearProgress } from '@material-ui/core';
 import { Pages } from '../../../components/index';
 
-import wallet from '../../../redux/wallet';
-import ligthNode from '../../../redux/lightNode';
+import lightNode from '../../../redux/lightNode';
 
 import { DIDDocument } from '../../../components/DIDDocument';
 
 import { CreateDefaultDID } from '../../../components/CreateDefaultDID';
 import { DIDDocumentEditorBar } from '../../../components/DIDDocumentEditorBar';
+import { SidetreeOperation } from '../../../components/SidetreeOperation';
 
 class LightNodeMyDIDPage extends Component {
   componentWillMount() {
@@ -22,7 +22,7 @@ class LightNodeMyDIDPage extends Component {
       alert('You must create and unlock a wallet to test sidetree.');
       this.props.history.push('/wallet');
     } else {
-      this.props.getDefaultDID(this.props.wallet);
+      this.props.predictDID(this.props.wallet);
     }
   }
 
@@ -30,56 +30,61 @@ class LightNodeMyDIDPage extends Component {
     const {
       lightNode,
       wallet,
-      createDefaultDID,
+      createDID,
       snackbarMessage,
       addKeyToDIDDocument,
       removeKeyFromDIDDocument,
     } = this.props;
-    const { resolvedDefaultDID, resolving, predictedDefaultDID } = lightNode;
+    const {
+      myDidDocument, resolving, predictedDID, sidetreeOperations,
+    } = lightNode;
 
     const view = () => {
       if (!this.props.wallet.data || !this.props.wallet.data.keys) {
         return <LinearProgress color="primary" variant="query" />;
       }
-      if (resolvedDefaultDID) {
+      if (myDidDocument) {
         return (
-          <DIDDocument
-            didDocument={resolvedDefaultDID}
-            editor={
-              <DIDDocumentEditorBar
-                didDocument={resolvedDefaultDID}
-                keys={wallet.data.keys}
-                handleAddKey={(key) => {
-                  addKeyToDIDDocument(wallet, key);
-                }}
-                handleRemoveKey={(key) => {
-                  removeKeyFromDIDDocument(wallet, key);
+          <React.Fragment>
+            <Grid item xs={12}>
+              <Typography variant="h5">My DID Document</Typography>
+              <br />
+            </Grid>
+
+            <Grid item xs={12}>
+              <DIDDocument
+                didDocument={myDidDocument}
+                editor={
+                  <DIDDocumentEditorBar
+                    didDocument={myDidDocument}
+                    keys={wallet.data.keys}
+                    handleAddKey={addKeyToDIDDocument}
+                    handleRemoveKey={removeKeyFromDIDDocument}
+                  />
+                }
+                onCopyToClipboard={() => {
+                  snackbarMessage({
+                    snackbarMessage: {
+                      message: 'Copied to clipboard.',
+                      variant: 'success',
+                      open: true,
+                    },
+                  });
                 }}
               />
-            }
-            onCopyToClipboard={() => {
-              snackbarMessage({
-                snackbarMessage: {
-                  message: 'Copied to clipboard.',
-                  variant: 'success',
-                  open: true,
-                },
-              });
-            }}
-          />
+            </Grid>
+          </React.Fragment>
         );
       }
 
       return (
         <React.Fragment>
-          <Typography variant="h5">Your DID will be: {predictedDefaultDID}</Typography>
-          <Typography variant="h6">You have not created a default DID yet.</Typography>
+          <Typography variant="h6">Your DID will be:</Typography>
           <br />
-          <CreateDefaultDID
-            createDefaultDID={createDefaultDID}
-            wallet={wallet}
-            resolving={resolving}
-          />
+          <Typography variant="h5">{predictedDID}</Typography>
+
+          <br />
+          <CreateDefaultDID createDID={createDID} wallet={wallet} resolving={resolving} />
         </React.Fragment>
       );
     };
@@ -90,6 +95,18 @@ class LightNodeMyDIDPage extends Component {
           <Grid item xs={12}>
             {view()}
           </Grid>
+          {sidetreeOperations && (
+            <React.Fragment>
+              <Grid item xs={12}>
+                <Typography variant="h5">My Operations</Typography>
+              </Grid>
+              {sidetreeOperations.map(op => (
+                <Grid item xs={12} key={op.operation.operationHash}>
+                  <SidetreeOperation operation={op} expanded={false} />
+                </Grid>
+              ))}
+            </React.Fragment>
+          )}
         </Grid>
       </Pages.WithNavigation>
     );
@@ -99,9 +116,10 @@ class LightNodeMyDIDPage extends Component {
 LightNodeMyDIDPage.propTypes = {
   wallet: PropTypes.object.isRequired,
   lightNode: PropTypes.object.isRequired,
-  getDefaultDID: PropTypes.func.isRequired,
+  predictDID: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired,
-  createDefaultDID: PropTypes.func.isRequired,
+  createDID: PropTypes.func.isRequired,
+  getOperationsForDidUniqueSuffix: PropTypes.func.isRequired,
   snackbarMessage: PropTypes.func.isRequired,
   addKeyToDIDDocument: PropTypes.func.isRequired,
   removeKeyFromDIDDocument: PropTypes.func.isRequired,
@@ -110,8 +128,7 @@ LightNodeMyDIDPage.propTypes = {
 
 const ConnectedPage = compose(
   withRouter,
-  wallet.container,
-  ligthNode.container,
+  lightNode.container,
 )(LightNodeMyDIDPage);
 
 export { ConnectedPage as LightNodeMyDIDPage };

@@ -5,7 +5,7 @@ import { LinearProgress, Button } from '@material-ui/core';
 
 export class CreateDefaultDID extends Component {
   handleCreate = () => {
-    this.props.createDefaultDID(this.props.wallet);
+    this.props.createDID(this.props.wallet);
   };
 
   render() {
@@ -23,7 +23,7 @@ export class CreateDefaultDID extends Component {
           variant={'contained'}
           color={'secondary'}
         >
-          Create Default DID
+          Create DID
         </Button>
       </React.Fragment>
     );
@@ -32,6 +32,6 @@ export class CreateDefaultDID extends Component {
 
 CreateDefaultDID.propTypes = {
   wallet: PropTypes.object.isRequired,
-  createDefaultDID: PropTypes.func.isRequired,
+  createDID: PropTypes.func.isRequired,
   resolving: PropTypes.any.isRequired,
 };
