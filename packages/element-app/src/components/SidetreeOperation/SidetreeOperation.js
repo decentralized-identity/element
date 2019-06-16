@@ -51,7 +51,7 @@ class SidetreeOperation extends Component {
     const { operation, classes } = this.props;
     const { expanded } = this.state;
 
-    const { alg, kid } = operation.decodedOperation.header;
+    const { alg, kid } = operation.operation.decodedOperation.header;
 
     return (
       <ExpansionPanel expanded={expanded} className={classes.expansion}>
@@ -71,7 +71,7 @@ class SidetreeOperation extends Component {
               <Typography
                 style={{ paddingTop: '4px' }}
                 variant={'subtitle1'}
-              >{`${operation.decodedOperation.header.operation.toUpperCase()} ${'Operation'}`}</Typography>
+              >{`${operation.operation.decodedOperation.header.operation.toUpperCase()} ${'Operation'}`}</Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography
@@ -91,7 +91,7 @@ class SidetreeOperation extends Component {
               </ListItemAvatar>
               <ListItemText
                 style={{ wordBreak: 'break-all', marginRight: '2px' }}
-                primary={operation.decodedOperation.header.operation}
+                primary={operation.operation.decodedOperation.header.operation}
                 secondary={`${alg} ${kid}`}
               />
             </ListItem>
@@ -105,7 +105,7 @@ class SidetreeOperation extends Component {
               <ListItemText
                 style={{ wordBreak: 'break-all', marginRight: '2px' }}
                 primary={'Signature'}
-                secondary={`${operation.decodedOperation.signature}`}
+                secondary={`${operation.operation.decodedOperation.signature}`}
               />
             </ListItem>
           </List>
@@ -117,7 +117,7 @@ class SidetreeOperation extends Component {
             readOnly
             wrapEnabled={true}
             name="payloadViewer"
-            value={JSON.stringify(operation.decodedOperationPayload, null, 2)}
+            value={JSON.stringify(operation.operation.decodedOperationPayload, null, 2)}
             editorProps={{ $blockScrolling: true }}
           />
         </ExpansionPanelDetails>

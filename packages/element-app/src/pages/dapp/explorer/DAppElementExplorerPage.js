@@ -37,13 +37,13 @@ class DAppElementExplorerPage extends Component {
               Element Explorer
             </Typography>
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} sm={9}>
             <Ledger />
             {/* TODO: add menu for filtering. */}
             {/* eslint-disable-next-line */}
             {/* ?since=36&transaction-time-hash=0x5e496d4d60b2abd6326ec64298ba9be0bfbb89b5d804f5383381ebb65e8aaf8f */}
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} sm={3}>
             <Storage />
           </Grid>
 
@@ -52,10 +52,10 @@ class DAppElementExplorerPage extends Component {
               <LinearProgress color="primary" variant="query" />
             </Grid>
           ) : (
-            sidetreeTxns.map(txn => (
-              <Grid item xs={12} key={txn.transactionNumber}>
+            sidetreeTxns.map(transaction => (
+              <Grid item xs={12} key={transaction.transactionNumber}>
                 <SidetreeTransaction
-                  txn={txn}
+                  transaction={transaction}
                   blockchain={'Ethereum'}
                   network={'ropsten'}
                   onClickTransactionTimeHash={(transactionTimeHash) => {

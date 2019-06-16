@@ -23,6 +23,7 @@ import {
   ExpandMore,
   Link,
   LocalActivity,
+  Forward,
 } from '@material-ui/icons';
 
 const getBlockExplorerUrl = (blockHash, blockchain, network) => {
@@ -37,7 +38,7 @@ const getIpfsUrl = (anchorFileBase, anchorFileHash) => {
   if (anchorFileBase) {
     return `${anchorFileBase}/${anchorFileHash}`;
   }
-  return `https://ipfs.io/ipfs/${anchorFileHash}`;
+  return `https://ipfs.infura.io:5001/api/v0/cat?arg=${anchorFileHash}`;
 };
 
 export class SidetreeTransaction extends Component {
@@ -106,6 +107,18 @@ export class SidetreeTransaction extends Component {
                       : `${moment(transaction.transactionTimestamp * 1000).fromNow()}`
                   }
                 />
+                {this.props.onClickTransactionTimeHash && (
+                  <ListItemSecondaryAction>
+                    <IconButton
+                      aria-label="Link"
+                      onClick={() => {
+                        this.props.onClickTransactionTimeHash(transaction.transactionTimeHash);
+                      }}
+                    >
+                      <Forward />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                )}
               </ListItem>
 
               <ListItem>
@@ -123,11 +136,7 @@ export class SidetreeTransaction extends Component {
                   <IconButton
                     aria-label="Link"
                     onClick={() => {
-                      if (this.props.onClickTransactionTimeHash) {
-                        this.props.onClickTransactionTimeHash(transaction.transactionTimeHash);
-                      } else {
-                        window.open(blochHashUrl);
-                      }
+                      window.open(blochHashUrl);
                     }}
                   >
                     <Link />

@@ -63,7 +63,7 @@ const DrawerContent = ({ classes }) => (
     />
     <Divider />
 
-    <MenuSection
+    {/* <MenuSection
       subheader={'Server'}
       items={[
         {
@@ -83,7 +83,7 @@ const DrawerContent = ({ classes }) => (
         },
       ]}
     />
-    <Divider />
+    <Divider /> */}
     <MenuSection
       items={[
         {

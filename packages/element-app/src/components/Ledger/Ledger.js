@@ -7,12 +7,20 @@ import config from '../../config';
 export class Ledger extends Component {
   state = {};
 
-  async componentWillMount() {
+  async componentDidMount() {
     if (!window.web3) {
       // eslint-disable-next-line
       alert('MetaMask is required to use this demo, please use the LATEST VERSION.');
     } else {
-      window.web3.eth.getAccounts((err, accounts) => {
+      setTimeout(() => {
+        window.web3.eth.net.getNetworkType().then((networkVersion) => {
+          this.setState({
+            networkVersion,
+          });
+        });
+      }, 0.5 * 1000);
+
+      window.web3.eth.getAccounts(async (err, accounts) => {
         if (err) {
           console.error(err);
           return;
@@ -22,14 +30,8 @@ export class Ledger extends Component {
           alert('MetaMask is required to use this demo, please use the LATEST VERSION.');
           return;
         }
-        window.web3.eth.getBalance(accounts[0], async (err, balance) => {
-          if (!err) {
-            this.setState({
-              account: accounts[0],
-              balance: balance.toNumber ? balance.toNumber() : balance,
-              networkVersion: window.web3.currentProvider.networkVersion,
-            });
-          }
+        this.setState({
+          account: accounts[0],
         });
       });
     }
@@ -38,16 +40,11 @@ export class Ledger extends Component {
   render() {
     return (
       <Paper className="Ledger" style={{ padding: '8px', wordBreak: 'break-all' }}>
-        <Typography variant={'h5'}>Ledger</Typography>
+        <Typography variant={'h5'}>Ethereum</Typography>
         <Typography>Network: {this.state.networkVersion}</Typography>
-        <Typography>Account: {this.state.account}</Typography>
-        <Typography>Balance: {this.state.balance}</Typography>
         <Typography>Contract: {config.ELEMENT_CONTRACT_ADDRESS}</Typography>
         <Typography>Start Block: {config.ELEMENT_START_BLOCK}</Typography>
-
-        {this.props.operationCount && (
-          <Typography>Operations: {this.props.operationCount}</Typography>
-        )}
+        <Typography>Your Account: {this.state.account}</Typography>
       </Paper>
     );
   }

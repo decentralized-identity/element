@@ -26,7 +26,7 @@ class DAppElementTransactionPage extends Component {
 
   render() {
     const { lightNode } = this.props;
-    const { sidetreeTxn } = lightNode;
+    const { sidetreeTransactionSummary } = lightNode;
     return (
       <Pages.WithNavigation>
         <Grid container spacing={24}>
@@ -42,20 +42,20 @@ class DAppElementTransactionPage extends Component {
             <Storage />
           </Grid>
           <Grid item xs={12}>
-            {!sidetreeTxn ? (
+            {!sidetreeTransactionSummary ? (
               <LinearProgress color="primary" variant="query" />
             ) : (
               <React.Fragment>
                 <SidetreeTransaction
-                  transaction={sidetreeTxn.transaction}
+                  transaction={sidetreeTransactionSummary.transaction}
                   blockchain={'Ethereum'}
                   network={'ropsten'}
                   expanded={true}
                 />
 
                 <SidetreeAnchorFile
-                  anchorFileHash={sidetreeTxn.transaction.anchorFileHash}
-                  anchorFile={sidetreeTxn.anchorFile}
+                  anchorFileHash={sidetreeTransactionSummary.transaction.anchorFileHash}
+                  anchorFile={sidetreeTransactionSummary.anchorFile}
                   onClickUID={(uid) => {
                     this.props.history.push(`/dapp/operations/${uid}`);
                   }}
@@ -63,9 +63,9 @@ class DAppElementTransactionPage extends Component {
                 />
 
                 <SidetreeBatchFile
-                  batchFileHash={sidetreeTxn.anchorFile.batchFileHash}
-                  batchFile={sidetreeTxn.batchFile}
-                  operations={sidetreeTxn.operations}
+                  batchFileHash={sidetreeTransactionSummary.anchorFile.batchFileHash}
+                  batchFile={sidetreeTransactionSummary.batchFile}
+                  operations={sidetreeTransactionSummary.operations}
                   // onClickUID={(uid) => {
                   //   this.props.history.push(`/operations/${uid}`);
                   // }}

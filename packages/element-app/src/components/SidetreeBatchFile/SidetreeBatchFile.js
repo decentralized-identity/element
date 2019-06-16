@@ -59,7 +59,7 @@ export class SidetreeBatchFile extends Component {
         </ExpansionPanelSummary>
         <ExpansionPanelDetails style={{ flexDirection: 'column' }}>
           {operations.map(op => (
-            <React.Fragment key={op.operationHash}>
+            <React.Fragment key={op.operation.operationHash}>
               <SidetreeOperation operation={op} expanded={true} />
             </React.Fragment>
           ))}

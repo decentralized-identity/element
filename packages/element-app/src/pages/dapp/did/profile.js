@@ -4,7 +4,7 @@ import { withRouter } from 'react-router';
 
 import { compose } from 'recompose';
 
-import { Typography, Grid } from '@material-ui/core';
+import { Typography, Grid, LinearProgress } from '@material-ui/core';
 import { Pages } from '../../../components/index';
 
 import wallet from '../../../redux/wallet';
@@ -15,17 +15,15 @@ import { DIDDocument } from '../../../components/DIDDocument';
 import { CreateDefaultDID } from '../../../components/CreateDefaultDID';
 import { DIDDocumentEditorBar } from '../../../components/DIDDocumentEditorBar';
 
-import { Ledger } from '../../../components/Ledger';
-import { Storage } from '../../../components/Storage';
-
 class LightNodeMyDIDPage extends Component {
-  async componentDidMount() {
+  componentWillMount() {
     if (!this.props.wallet.data || !this.props.wallet.data.keys) {
       //   eslint-disable-next-line
       alert('You must create and unlock a wallet to test sidetree.');
       this.props.history.push('/wallet');
+    } else {
+      this.props.getDefaultDID(this.props.wallet);
     }
-    this.props.getDefaultDID(this.props.wallet);
   }
 
   render() {
@@ -40,6 +38,9 @@ class LightNodeMyDIDPage extends Component {
     const { resolvedDefaultDID, resolving, predictedDefaultDID } = lightNode;
 
     const view = () => {
+      if (!this.props.wallet.data || !this.props.wallet.data.keys) {
+        return <LinearProgress color="primary" variant="query" />;
+      }
       if (resolvedDefaultDID) {
         return (
           <DIDDocument
@@ -85,15 +86,7 @@ class LightNodeMyDIDPage extends Component {
 
     return (
       <Pages.WithNavigation>
-        {' '}
         <Grid container spacing={24}>
-          <Grid item xs={12} sm={6}>
-            <Ledger />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Storage />
-          </Grid>
-
           <Grid item xs={12}>
             {view()}
           </Grid>

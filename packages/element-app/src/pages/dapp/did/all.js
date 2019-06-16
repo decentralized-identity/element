@@ -36,8 +36,7 @@ class LightNodeViewAllDIDPage extends Component {
                 <DIDListItem
                   record={dr.record}
                   onClick={(item) => {
-                    console.log(item);
-                    this.props.history.push(`/dapp/resolver/${item.doc.id}`);
+                    this.props.history.push(`/dapp/transactions/${item.lastTransaction.transactionTimeHash}`);
                   }}
                 />
               </div>

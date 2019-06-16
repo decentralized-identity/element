@@ -8,23 +8,31 @@ import { sidetree } from '../../services/sidetree';
 export default withHandlers({
   getSidetreeTransactions: ({ set }) => async (args) => {
     set({ loading: true });
-    // await sidetree.resolve();
-    const record = await sidetree.getTransactions(args);
-    set({ sidetreeTxns: record, loading: false });
+
+    let records = await sidetree.getTransactions(args);
+    if (!records.length) {
+      const all = await sidetree.blockchain.getTransactions(config.ELEMENT_START_BLOCK, 'latest');
+      const lastTransaction = all.pop();
+      await sidetree.sync({
+        fromTransactionTime: config.ELEMENT_START_BLOCK,
+        toTransactionTime: lastTransaction.transactionTime,
+      });
+      records = await sidetree.getTransactions(args);
+    }
+    set({ sidetreeTxns: records.reverse(), loading: false });
   },
 
   getSidetreeOperationsFromTransactionTimeHash: ({ set }) => async (transactionTimeHash) => {
     set({ loading: true });
-    const record = await sidetree.getOperationsForTransaction(transactionTimeHash);
-    console.log(record);
-    set({ sidetreeTxn: record, loading: false });
+    const summary = await sidetree.getTransactionSummary(transactionTimeHash);
+    set({ sidetreeTransactionSummary: summary, loading: false });
   },
 
   getOperationsForUID: ({ set }) => async (uid) => {
     set({ loading: true });
-    await sidetree.resolve(`did:elem:${uid}`);
+    const didDocumentForOperations = await sidetree.resolve(`did:elem:${uid}`);
     const record = await sidetree.getOperations(uid);
-    set({ sidetreeOperations: record, loading: false });
+    set({ sidetreeOperations: record, didDocumentForOperations, loading: false });
   },
 
   getDefaultDID: ({ set }) => async (wallet) => {
@@ -100,13 +108,6 @@ export default withHandlers({
         ? -1
         : 1);
       set({ documentRecords: records, resolving: false });
-      snackbarMessage({
-        snackbarMessage: {
-          message: 'Resolved all sidetree documents.',
-          variant: 'success',
-          open: true,
-        },
-      });
     } catch (e) {
       console.error(e);
       snackbarMessage({

@@ -19,7 +19,7 @@ export class Storage extends Component {
 
     return (
       <Paper className="Storage" style={{ padding: '8px', wordBreak: 'break-all' }}>
-        <Typography variant={'h5'}>Storage</Typography>
+        <Typography variant={'h5'}>IPFS</Typography>
         {info === undefined ? (
           <Typography variant={'h6'}>Loading...</Typography>
         ) : (
