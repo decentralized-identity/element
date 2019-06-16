@@ -62,7 +62,7 @@ class App extends React.Component {
                   render={() => <Pages.DAppDIDResolverPage />}
                 />
 
-                <Route
+                {/* <Route
                   exact
                   path="/server/resolver"
                   render={() => <Pages.FullNodeResolverPage />}
@@ -76,21 +76,11 @@ class App extends React.Component {
                   exact
                   path="/server/did/all"
                   render={() => <Pages.FullNodeViewAllDIDPAge />}
-                />
+                /> */}
 
                 <Route exact path="/credits" render={() => <Pages.Credits />} />
 
                 <Route path="*" render={() => <Pages.NotFound />} />
-                {/* <Route exact path="/wallet" render={() => <Pages.Wallet />} />
-                <Route exact path="/light-node" render={() => <Pages.LightNode />} />
-                <Route exact path="/dapp" render={() => <Pages.LightNode />} />
-                <Route exact path="/full-node" render={() => <Pages.FullNode />} />
-                 <Route path="/sign/:base64EncodedJsonLd" render={() => <Pages.Sign />} />
-                <Route path="/verify/:base64EncodedJsonLd" render={() => <Pages.Verify />} />
-                <Route path="/encrypt/:base64EncodedJsonLd" render={() => <Pages.Encrypt />} />
-                <Route path="/decrypt/:base64EncodedJsonLd" render={() => <Pages.Decrypt />} />
-
-                */}
               </TrackedSwitch>
             </ConnectedRouter>
           </PersistGate>

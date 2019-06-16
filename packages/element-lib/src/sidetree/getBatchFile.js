@@ -1,5 +1,6 @@
 const moment = require('moment');
 const schema = require('../schema');
+const batchFileToOperations = require('../func/batchFileToOperations');
 
 module.exports = (sidetree) => {
   //   eslint-disable-next-line
@@ -21,6 +22,9 @@ module.exports = (sidetree) => {
       if (!isValid) {
         throw new Error('batchFile is not valid json schema');
       }
+
+      // validate before submitting.
+      batchFileToOperations(batchFile);
 
       await sidetree.db.write(`element:sidetree:batchFile:${batchFileHash}`, {
         type: 'element:sidetree:batchFile',

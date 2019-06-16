@@ -11,7 +11,7 @@ import { Pages } from '../../../components/index';
 import wallet from '../../../redux/wallet';
 import ligthNode from '../../../redux/lightNode';
 
-import { ElementDIDWithTransactions } from '../../../components/ElementDIDWithTransactions';
+import { DIDListItem } from '../../../components/DIDListItem';
 
 class LightNodeViewAllDIDPage extends Component {
   componentWillMount() {
@@ -19,35 +19,29 @@ class LightNodeViewAllDIDPage extends Component {
   }
 
   render() {
-    const { tree } = this.props.lightNode;
-
+    const { resolving, documentRecords } = this.props.lightNode;
     return (
       <Pages.WithNavigation>
-        {!tree ? (
+        {resolving || !documentRecords ? (
           <LinearProgress color="primary" variant="query" />
         ) : (
           <div>
             <Typography variant="h6">DID List</Typography>
             <br />
+            <Typography variant="body1">{'Only displaying local data.'}</Typography>
+            <br />
 
-            {Object.values(tree).map(record => (!record.doc ? (
-              undefined
-            ) : (
-                <div key={record.doc.id}>
-                  <ElementDIDWithTransactions
-                    record={record}
-                    onCopyToClipboard={(item) => {
-                      this.props.snackbarMessage({
-                        snackbarMessage: {
-                          message: `Copied : ${item.substring(0, 32)} ...`,
-                          variant: 'success',
-                          open: true,
-                        },
-                      });
-                    }}
-                  />
-                </div>
-            )))}
+            {documentRecords.map(dr => (
+              <div key={dr.record.doc.id} style={{ marginBottom: '8px' }}>
+                <DIDListItem
+                  record={dr.record}
+                  onClick={(item) => {
+                    console.log(item);
+                    this.props.history.push(`/dapp/resolver/${item.doc.id}`);
+                  }}
+                />
+              </div>
+            ))}
           </div>
         )}
       </Pages.WithNavigation>
@@ -60,6 +54,7 @@ LightNodeViewAllDIDPage.propTypes = {
   resolveDID: PropTypes.func.isRequired,
   snackbarMessage: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired,
+  history: PropTypes.any.isRequired,
   getAll: PropTypes.func.isRequired,
 };
 

@@ -8,13 +8,13 @@ module.exports = async (sidetree) => {
     const didUniqueSuffix = did.split(':').pop();
 
     const cachedRecord = await sidetree.db.read(`element:sidetree:did:elem:${didUniqueSuffix}`);
+    let lastTransactionTime = 0;
     if (cachedRecord.record) {
       updatedState = cachedRecord.record;
+      lastTransactionTime = updatedState.lastTransaction.transactionTime;
     }
 
-    const blockchainTime = await sidetree.blockchain.getBlockchainTime(
-      updatedState.lastTransactionTime || 0,
-    );
+    const blockchainTime = await sidetree.blockchain.getBlockchainTime(lastTransactionTime);
     const transactions = await sidetree.getTransactions({
       since: 0,
       transactionTimeHash: blockchainTime.transactionTimeHash,
@@ -33,7 +33,12 @@ module.exports = async (sidetree) => {
     items = items.filter(item => !!item.anchorFile);
 
     // eslint-disable-next-line
-    items = items.filter(item => item.anchorFile.didUniqueSuffixes.includes(didUniqueSuffix));
+    items = items.filter(item => {
+      if (item.anchorFile.didUniqueSuffixes) {
+        return item.anchorFile.didUniqueSuffixes.includes(didUniqueSuffix);
+      }
+      return true;
+    });
 
     items = await Promise.all(
       items.map(async item => ({

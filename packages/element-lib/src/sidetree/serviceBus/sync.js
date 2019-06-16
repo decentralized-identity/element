@@ -85,29 +85,32 @@ module.exports = (sidetree) => {
           operation: op.operation,
         })),
       );
-      
-      await Promise.all(
-        anchorFile.didUniqueSuffixes.map(async (uid) => {
-          let updatedState = {};
-          const cachedRecord = await sidetree.db.read(`element:sidetree:did:elem:${uid}`);
-          if (cachedRecord.record) {
-            updatedState = cachedRecord.record;
-          }
-          // eslint-disable-next-line
-          for (const anchoredOperation of anchoredOperations) {
-            // eslint-disable-next-line
-            updatedState = { ...(await reducer(updatedState, anchoredOperation, sidetree)) };
-          }
 
-          const record = updatedState[uid];
-          if (record) {
-            await sidetree.db.write(`element:sidetree:did:elem:${uid}`, {
-              type: 'element:sidetree:did:documentRecord',
-              record,
-            });
-          }
-        }),
-      );
+      // handle breaking protocol change.
+      if (anchorFile.didUniqueSuffixes) {
+        await Promise.all(
+          anchorFile.didUniqueSuffixes.map(async (uid) => {
+            let updatedState = {};
+            const cachedRecord = await sidetree.db.read(`element:sidetree:did:elem:${uid}`);
+            if (cachedRecord.record) {
+              updatedState = cachedRecord.record;
+            }
+            // eslint-disable-next-line
+            for (const anchoredOperation of anchoredOperations) {
+              // eslint-disable-next-line
+              updatedState = { ...(await reducer(updatedState, anchoredOperation, sidetree)) };
+            }
+
+            const record = updatedState[uid];
+            if (record) {
+              await sidetree.db.write(`element:sidetree:did:elem:${uid}`, {
+                type: 'element:sidetree:did:documentRecord',
+                record,
+              });
+            }
+          }),
+        );
+      }
 
       if (transaction.transactionTime === toTransactionTime) {
         sidetree.serviceBus.emit('element:sidetree:sync:stop', {

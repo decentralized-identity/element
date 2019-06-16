@@ -2,6 +2,7 @@ import { withHandlers } from 'recompose';
 
 import * as elementService from '../../services/element';
 
+import config from '../../config';
 import { sidetree } from '../../services/sidetree';
 
 export default withHandlers({
@@ -86,12 +87,22 @@ export default withHandlers({
     set({ resolving: true });
 
     try {
-      const model = await elementService.syncAll();
+      const all = await sidetree.blockchain.getTransactions(config.ELEMENT_START_BLOCK, 'latest');
+      const lastTransaction = all.pop();
 
-      set({ tree: model });
+      await sidetree.sync({
+        fromTransactionTime: config.ELEMENT_START_BLOCK,
+        toTransactionTime: lastTransaction.transactionTime,
+      });
+      const records = await sidetree.db.readCollection('element:sidetree:did:documentRecord');
+      // eslint-disable-next-line
+      records.sort((a, b) => a.record.lastTransaction.transactionTime > b.record.lastTransaction.transactionTime
+        ? -1
+        : 1);
+      set({ documentRecords: records, resolving: false });
       snackbarMessage({
         snackbarMessage: {
-          message: 'Resolved sidetree.',
+          message: 'Resolved all sidetree documents.',
           variant: 'success',
           open: true,
         },
@@ -100,7 +111,7 @@ export default withHandlers({
       console.error(e);
       snackbarMessage({
         snackbarMessage: {
-          message: 'Could not resolve sidetree.',
+          message: 'Could not resolve all sidetree documents.',
           variant: 'error',
           open: true,
         },
@@ -160,7 +171,7 @@ export default withHandlers({
   resolveDID: ({ didResolved, snackbarMessage, set }) => async (did) => {
     set({ resolving: true });
     try {
-      const doc = await elementService.resolveDID(did);
+      const doc = await sidetree.resolve(did);
       if (doc) {
         didResolved({ didDocument: doc });
         snackbarMessage({

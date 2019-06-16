@@ -65,6 +65,7 @@ DIDDocumentHeader.propTypes = {
   classes: PropTypes.object.isRequired,
   did: PropTypes.string.isRequired,
   onCopyToClipboard: PropTypes.func.isRequired,
+  
 };
 
 const MaterialUIDIDDocument = withStyles(styles)(DIDDocumentHeader);

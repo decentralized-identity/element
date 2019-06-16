@@ -48,7 +48,7 @@ module.exports = async (state, anchoredOperation) => {
         id: config.didMethodName + didUniqueSuffix,
       },
       previousOperationHash,
-      lastTransactionTime: transaction.transactionTime,
+      lastTransaction: transaction,
     },
   };
 };
