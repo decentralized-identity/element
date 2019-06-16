@@ -9,7 +9,7 @@ let didUniqueSuffix;
 const alice = { name: 'alice', type: 'actor' };
 
 beforeAll(async () => {
-  sidetree = await getLocalSidetree('SingleUserCRUD');
+  sidetree = await getLocalSidetree('CRUD.One');
   alice.mks = new element.MnemonicKeySystem(
     'category copy escape scan type news bird awake affair base mansion favorite',
   );

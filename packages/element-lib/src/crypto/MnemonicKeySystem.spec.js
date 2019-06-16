@@ -3,7 +3,7 @@ const MnemonicKeySystem = require('./MnemonicKeySystem');
 describe('MnemonicKeySystem', () => {
   it('generateMnemonic()', async () => {
     const mnemonic = MnemonicKeySystem.generateMnemonic();
-    console.log(mnemonic);
+    // console.log(mnemonic);
     expect(mnemonic).toBeDefined();
   });
 

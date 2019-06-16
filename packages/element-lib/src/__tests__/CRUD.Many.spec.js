@@ -9,7 +9,7 @@ const element = require('../../index');
 let sidetree;
 
 beforeAll(async () => {
-  sidetree = await getLocalSidetree('SingleUserCRUD');
+  sidetree = await getLocalSidetree('CRUD.Many');
 });
 
 afterAll(async () => {
