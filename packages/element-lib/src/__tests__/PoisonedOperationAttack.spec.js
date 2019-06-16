@@ -47,7 +47,9 @@ describe('Poisoned Operation Attack', () => {
       count++;
 
       if (count === 1) {
-        expect(operation.operationHash).toBe('xcn-0vw4B0M2JKbNXYfsePO3mUnpuGtnLo86MBybbO4');
+        expect(operation.operation.operationHash).toBe(
+          'xcn-0vw4B0M2JKbNXYfsePO3mUnpuGtnLo86MBybbO4',
+        );
         done();
       }
     });

@@ -21,7 +21,16 @@ class Sidetree {
     require('./createTransactionFromRequests')(this);
     require('./resolve')(this);
     require('./sync')(this);
+    this.op = require('./op');
     this.sleep = seconds => new Promise(r => setTimeout(r, seconds * 1000));
+  }
+
+  async getPreviousOperationHash(didUniqueSuffix) {
+    const cachedRecord = await this.db.read(`element:sidetree:did:elem:${didUniqueSuffix}`);
+    if (cachedRecord) {
+      return cachedRecord.record.previousOperationHash;
+    }
+    return null;
   }
 
   async close() {

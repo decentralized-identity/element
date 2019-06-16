@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const element = require('../../index');
 
 const {
@@ -10,14 +9,13 @@ const {
   // eslint-disable-next-line
 } = require('./__fixtures__');
 
-jest.setTimeout(10 * 1000);
+jest.setTimeout(20 * 1000);
 const sleep = seconds => new Promise(r => setTimeout(r, seconds * 1000));
 
 const getLocalSidetree = require('./__fixtures__/getLocalSidetree');
 const fixtureStorage = require('./__fixtures__').storage;
 
 let sidetree;
-let tree;
 let service;
 let didUniqueSuffix;
 let anchorFileHash;
@@ -68,8 +66,12 @@ describe('LatePublishAttack', () => {
 
     const txn = await sidetree.createTransactionFromRequests(requestBody);
     expect(txn.transactionTime).toBeDefined();
-    tree = await sidetree.resolve();
-    [didUniqueSuffix] = _.without(Object.keys(tree), 'transactionTime');
+    await sidetree.sync({
+      fromTransactionTime: 0,
+      toTransactionTime: txn.transactionTime,
+    });
+    const [docRecord] = await sidetree.db.readCollection('element:sidetree:did:documentRecord');
+    didUniqueSuffix = docRecord.record.previousOperationHash;
   });
 
   it('create attack payload', async () => {

@@ -85,8 +85,7 @@ module.exports = (sidetree) => {
           operation: op.operation,
         })),
       );
-
-      // todo: maybe sync global json state here.
+      
       await Promise.all(
         anchorFile.didUniqueSuffixes.map(async (uid) => {
           let updatedState = {};

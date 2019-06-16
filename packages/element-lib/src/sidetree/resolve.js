@@ -5,9 +5,9 @@ module.exports = async (sidetree) => {
   // eslint-disable-next-line
   sidetree.resolve = async did => {
     let updatedState = {};
-    const uid = did.split(':').pop();
+    const didUniqueSuffix = did.split(':').pop();
 
-    const cachedRecord = await sidetree.db.read(`element:sidetree:did:elem:${uid}`);
+    const cachedRecord = await sidetree.db.read(`element:sidetree:did:elem:${didUniqueSuffix}`);
     if (cachedRecord.record) {
       updatedState = cachedRecord.record;
     }
@@ -33,7 +33,7 @@ module.exports = async (sidetree) => {
     items = items.filter(item => !!item.anchorFile);
 
     // eslint-disable-next-line
-    items = items.filter(item => item.anchorFile.didUniqueSuffixes.includes(uid));
+    items = items.filter(item => item.anchorFile.didUniqueSuffixes.includes(didUniqueSuffix));
 
     items = await Promise.all(
       items.map(async item => ({
@@ -50,28 +50,34 @@ module.exports = async (sidetree) => {
 
     // todo: better types here..
     // flattened.
-    const anchoredOperations = [].concat(
+    items = [].concat(
       ...items.map(item => item.batchFileOperations.map(operation => ({
         operation,
         transaction: item.transaction,
       }))),
     );
 
+    // unlike sync, resolve will not have state for other didUniqueSuffix,
+    // they cannot be processed here.
+    items = items.filter(
+      item => item.operation.operationHash === didUniqueSuffix
+        || item.operation.decodedOperationPayload.didUniqueSuffix === didUniqueSuffix,
+    );
     // eslint-disable-next-line
-    for (const anchoredOperation of anchoredOperations) {
+    for (const anchoredOperation of items) {
       // eslint-disable-next-line
       updatedState = { ...(await reducer(updatedState, anchoredOperation, sidetree)) };
     }
 
-    const record = updatedState[uid];
+    const record = updatedState[didUniqueSuffix];
 
     if (record) {
-      await sidetree.db.write(`element:sidetree:did:elem:${uid}`, {
+      await sidetree.db.write(`element:sidetree:did:elem:${didUniqueSuffix}`, {
         type: 'element:sidetree:did:documentRecord',
         record,
       });
 
-      return updatedState[uid].doc;
+      return updatedState[didUniqueSuffix].doc;
     }
 
     return null;

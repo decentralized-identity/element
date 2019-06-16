@@ -8,7 +8,7 @@
       "properties": {
         "operation": {
           "type": "string",
-          "enum": ["create", "update", "delete"],
+          "enum": ["create", "recover", "update", "delete"],
           "example": "create"
         },
         "kid": {

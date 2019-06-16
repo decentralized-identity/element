@@ -18,7 +18,7 @@ module.exports = async (state, anchoredOperation) => {
   const uid = didUniqueSuffix;
 
   if (!state[uid]) {
-    throw new Error(`Cannot ${opName} a DID that does not exist.`);
+    throw new Error(`Cannot ${opName} a DID that does not exist. didUniqueSuffix: ${uid}`);
   }
 
   const preUpdateDidDoc = state[uid].doc;

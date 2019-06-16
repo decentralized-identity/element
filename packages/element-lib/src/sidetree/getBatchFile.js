@@ -9,7 +9,6 @@ module.exports = (sidetree) => {
       maybeCache.consideredUnresolvableUntil
       && !moment().isAfter(maybeCache.consideredUnresolvableUntil)
     ) {
-      console.log(maybeCache);
       return null;
     }
     if (maybeCache.operations) {
