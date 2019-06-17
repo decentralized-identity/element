@@ -1,21 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router';
-
-import { compose } from 'recompose';
 
 import { Typography, Grid, LinearProgress } from '@material-ui/core';
-import { Pages } from '../../../components/index';
+import { Pages } from '../../index';
 
-import lightNode from '../../../redux/lightNode';
+import { DIDDocument } from '../../DIDDocument';
 
-import { DIDDocument } from '../../../components/DIDDocument';
+import { CreateDefaultDID } from '../../CreateDefaultDID';
+import { DIDDocumentEditorBar } from '../../DIDDocumentEditorBar';
+import { SidetreeOperation } from '../../SidetreeOperation';
 
-import { CreateDefaultDID } from '../../../components/CreateDefaultDID';
-import { DIDDocumentEditorBar } from '../../../components/DIDDocumentEditorBar';
-import { SidetreeOperation } from '../../../components/SidetreeOperation';
-
-class LightNodeMyDIDPage extends Component {
+export class DIDProfilePage extends Component {
   componentWillMount() {
     if (!this.props.wallet.data || !this.props.wallet.data.keys) {
       //   eslint-disable-next-line
@@ -28,7 +23,7 @@ class LightNodeMyDIDPage extends Component {
 
   render() {
     const {
-      lightNode,
+      nodeStore,
       wallet,
       createDID,
       snackbarMessage,
@@ -37,7 +32,7 @@ class LightNodeMyDIDPage extends Component {
     } = this.props;
     const {
       myDidDocument, resolving, predictedDID, sidetreeOperations,
-    } = lightNode;
+    } = nodeStore;
 
     const view = () => {
       if (!this.props.wallet.data || !this.props.wallet.data.keys) {
@@ -113,9 +108,9 @@ class LightNodeMyDIDPage extends Component {
   }
 }
 
-LightNodeMyDIDPage.propTypes = {
+DIDProfilePage.propTypes = {
   wallet: PropTypes.object.isRequired,
-  lightNode: PropTypes.object.isRequired,
+  nodeStore: PropTypes.object.isRequired,
   predictDID: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired,
   createDID: PropTypes.func.isRequired,
@@ -126,11 +121,4 @@ LightNodeMyDIDPage.propTypes = {
   history: PropTypes.any.isRequired,
 };
 
-const ConnectedPage = compose(
-  withRouter,
-  lightNode.container,
-)(LightNodeMyDIDPage);
-
-export { ConnectedPage as LightNodeMyDIDPage };
-
-export default ConnectedPage;
+export default DIDProfilePage;

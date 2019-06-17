@@ -11,7 +11,7 @@ import {
   Search,
   // Lock,
   BarChart,
-  // DeveloperBoard,
+  DeveloperBoard,
   // CloudQueueOutlined,
   List,
 } from '@material-ui/icons';
@@ -64,27 +64,32 @@ const DrawerContent = ({ classes }) => (
     />
     <Divider />
 
-    {/* <MenuSection
-      subheader={'Server'}
+    <MenuSection
+      subheader={'Server Node'}
       items={[
         {
           label: 'My DID',
-          icon: <DeveloperBoard />,
+          icon: <Fingerprint />,
           link: '/server/did/profile',
         },
+        // {
+        //   label: 'DID Resolver',
+        //   icon: <Search />,
+        //   link: '/server/resolver',
+        // },
+        // {
+        //   label: 'DID List',
+        //   icon: <List />,
+        //   link: '/server/did/all',
+        // },
         {
-          label: 'DID Resolver',
-          icon: <Search />,
-          link: '/server/resolver',
-        },
-        {
-          label: 'DID List',
-          icon: <List />,
-          link: '/server/did/all',
+          label: 'Node Info',
+          icon: <DeveloperBoard />,
+          link: '/server/info',
         },
       ]}
     />
-    <Divider /> */}
+    <Divider />
     <MenuSection
       items={[
         {

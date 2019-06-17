@@ -6,19 +6,19 @@ import { compose } from 'recompose';
 
 import fullNode from '../../../redux/fullNode';
 
-import { DIDListPage } from '../../../components/Pages/DIDListPage';
+import { ServerNodeInfoPage } from '../../../components/Pages/ServerNodeInfoPage';
 
-class FullNodeDIDListPage extends Component {
+class FullNodeInfoPage extends Component {
   render() {
-    return <DIDListPage />;
+    return <ServerNodeInfoPage {...this.props} />;
   }
 }
 
 const ConnectedPage = compose(
   withRouter,
   fullNode.container,
-)(FullNodeDIDListPage);
+)(FullNodeInfoPage);
 
-export { ConnectedPage as FullNodeDIDListPage };
+export { ConnectedPage as FullNodeInfoPage };
 
 export default ConnectedPage;

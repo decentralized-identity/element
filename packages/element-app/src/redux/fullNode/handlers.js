@@ -9,6 +9,56 @@ const API_BASE = window.location.hostname === 'element-did.com'
   : 'http://localhost:5002/element-did/us-central1/main/api/v1';
 
 export default withHandlers({
+  predictDID: ({ set, getMyDidUniqueSuffix }) => async () => {
+    const didUniqueSuffix = await getMyDidUniqueSuffix();
+    const defaultDID = `did:elem:${didUniqueSuffix}`;
+    set({
+      predictedDID: defaultDID,
+    });
+    const { data } = await axios.get(`${API_BASE}/sidetree/${defaultDID}`);
+    // const myDidDocument = await sidetree.resolve(`did:elem:${didUniqueSuffix}`);
+    // set({ myDidDocument });
+    // const record = await sidetree.getOperations(didUniqueSuffix);
+    // set({ sidetreeOperations: record });
+  },
+  getOperationsForDidUniqueSuffix: ({ set }) => async (uid) => {
+    // set({ loading: true });
+    // const didDocumentForOperations = await sidetree.resolve(`did:elem:${uid}`);
+    // const record = await sidetree.getOperations(uid);
+    // set({ sidetreeOperations: record, didDocumentForOperations, loading: false });
+  },
+  createDID: ({
+    snackbarMessage, createDIDRequest, getMyDidUniqueSuffix, set,
+  }) => async () => {
+    // set({ resolving: true });
+    // snackbarMessage({
+    //   snackbarMessage: {
+    //     message: 'Creating your DID will take a few minutes....',
+    //     variant: 'info',
+    //     open: true,
+    //   },
+    // });
+    // await sidetree.createTransactionFromRequests([await createDIDRequest()]);
+    // snackbarMessage({
+    //   snackbarMessage: {
+    //     message: 'DID Created. Resolving....',
+    //     variant: 'info',
+    //     open: true,
+    //   },
+    // });
+    // const didUniqueSuffix = await getMyDidUniqueSuffix();
+    // const myDidDocument = await sidetree.resolve(`did:elem:${didUniqueSuffix}`);
+    // set({ myDidDocument });
+    // snackbarMessage({
+    //   snackbarMessage: {
+    //     message: `Resolved did:elem:${didUniqueSuffix}`,
+    //     variant: 'success',
+    //     open: true,
+    //   },
+    // });
+    // set({ resolving: false });
+  },
+
   getDefaultDID: ({ set }) => async (wallet) => {
     // set({ resolving: true });
     // const defaultDID = elementService.walletToDID(wallet);
@@ -23,10 +73,8 @@ export default withHandlers({
   },
   createDefaultDID: ({ snackbarMessage, set }) => async (wallet) => {
     // set({ resolving: true });
-
     // try {
     //   const payload = elementService.createDefaultDIDPayload(wallet);
-
     //   snackbarMessage({
     //     snackbarMessage: {
     //       message: 'Default DID Created... waiting to resolve.',
@@ -38,7 +86,6 @@ export default withHandlers({
     //   set({ defaultDID });
     //   const firstKey = Object.keys(wallet.data.keys)[0];
     //   const { privateKey } = wallet.data.keys[firstKey];
-
     //   const encodedPayload = element.func.encodeJson(payload);
     //   const signature = element.func.signEncodedPayload(encodedPayload, privateKey);
     //   const requestBody = {
@@ -58,7 +105,6 @@ export default withHandlers({
     //       open: true,
     //     },
     //   });
-
     //   setTimeout(async () => {
     //     snackbarMessage({
     //       snackbarMessage: {
@@ -67,7 +113,6 @@ export default withHandlers({
     //         open: true,
     //       },
     //     });
-
     //     const { data } = await axios.get(`${API_BASE}/sidetree/${defaultDID}`);
     //     set({ resolvedDefaultDID: data, resolving: false });
     //     snackbarMessage({
@@ -96,11 +141,9 @@ export default withHandlers({
     // try {
     //   // await elementService.addKeyToDIDDocument(wallet, key);
     //   const defaultDID = elementService.walletToDID(wallet);
-
     //   const { data } = await axios.get(`${API_BASE}/sidetree/${defaultDID}/record`);
     //   const record = data;
     //   const payload = elementService.addKeyPayload(record, key);
-
     //   const encodedPayload = element.func.encodeJson(payload);
     //   const firstKey = Object.keys(wallet.data.keys)[0];
     //   const { privateKey } = wallet.data.keys[firstKey];
@@ -130,7 +173,6 @@ export default withHandlers({
     //         open: true,
     //       },
     //     });
-
     //     const { data } = await axios.get(`${API_BASE}/sidetree/${defaultDID}`);
     //     set({ resolvedDefaultDID: data, resolving: false });
     //     snackbarMessage({
@@ -158,11 +200,9 @@ export default withHandlers({
     // try {
     //   // await elementService.addKeyToDIDDocument(wallet, key);
     //   const defaultDID = elementService.walletToDID(wallet);
-
     //   const { data } = await axios.get(`${API_BASE}/sidetree/${defaultDID}/record`);
     //   const record = data;
     //   const payload = elementService.removeKeyPayload(record, key);
-
     //   const encodedPayload = element.func.encodeJson(payload);
     //   const firstKey = Object.keys(wallet.data.keys)[0];
     //   const { privateKey } = wallet.data.keys[firstKey];
@@ -192,7 +232,6 @@ export default withHandlers({
     //         open: true,
     //       },
     //     });
-
     //     const { data } = await axios.get(`${API_BASE}/sidetree/${defaultDID}`);
     //     set({ resolvedDefaultDID: data, resolving: false });
     //     snackbarMessage({

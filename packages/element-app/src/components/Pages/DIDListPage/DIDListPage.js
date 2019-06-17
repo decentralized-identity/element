@@ -1,25 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router';
-
-import { compose } from 'recompose';
 
 import { Typography, LinearProgress } from '@material-ui/core';
 
-import { Pages } from '../../../components/index';
+import { Pages } from '../../index';
 
-import wallet from '../../../redux/wallet';
-import ligthNode from '../../../redux/lightNode';
+import { DIDListItem } from '../../DIDListItem';
 
-import { DIDListItem } from '../../../components/DIDListItem';
-
-class LightNodeViewAllDIDPage extends Component {
+export class DIDListPage extends Component {
   componentWillMount() {
     this.props.getAll();
   }
 
   render() {
-    const { resolving, documentRecords } = this.props.lightNode;
+    const { resolving, documentRecords } = this.props.nodeStore;
     return (
       <Pages.WithNavigation>
         {resolving || !documentRecords ? (
@@ -48,8 +42,8 @@ class LightNodeViewAllDIDPage extends Component {
   }
 }
 
-LightNodeViewAllDIDPage.propTypes = {
-  lightNode: PropTypes.object.isRequired,
+DIDListPage.propTypes = {
+  nodeStore: PropTypes.object.isRequired,
   resolveDID: PropTypes.func.isRequired,
   snackbarMessage: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired,
@@ -57,12 +51,4 @@ LightNodeViewAllDIDPage.propTypes = {
   getAll: PropTypes.func.isRequired,
 };
 
-const ConnectedPage = compose(
-  withRouter,
-  wallet.container,
-  ligthNode.container,
-)(LightNodeViewAllDIDPage);
-
-export { ConnectedPage as LightNodeViewAllDIDPage };
-
-export default ConnectedPage;
+export default DIDListPage;

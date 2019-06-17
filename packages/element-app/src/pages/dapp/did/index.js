@@ -1,2 +1,2 @@
-export * from './all';
-export * from './profile';
+export * from './LightNodeDIDListPage';
+export * from './LightNodeDIDProfilePage';

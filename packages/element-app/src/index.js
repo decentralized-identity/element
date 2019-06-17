@@ -49,17 +49,25 @@ class App extends React.Component {
                   render={() => <Pages.DAppElementOperationsPage />}
                 />
 
-                <Route exact path="/dapp/did/profile" render={() => <Pages.LightNodeMyDIDPage />} />
-                <Route exact path="/dapp/resolver" render={() => <Pages.DAppDIDResolverPage />} />
                 <Route
                   exact
-                  path="/dapp/did/all"
-                  render={() => <Pages.LightNodeViewAllDIDPage />}
+                  path="/dapp/did/profile"
+                  render={() => <Pages.LightNodeDIDProfilePage />}
                 />
+                <Route exact path="/dapp/resolver" render={() => <Pages.DAppDIDResolverPage />} />
+                <Route exact path="/dapp/did/all" render={() => <Pages.LightNodeDIDListPage />} />
                 <Route
                   exact
                   path="/dapp/resolver/:did"
                   render={() => <Pages.DAppDIDResolverPage />}
+                />
+
+                <Route exact path="/server/info" render={() => <Pages.FullNodeInfoPage />} />
+
+                <Route
+                  exact
+                  path="/server/did/profile"
+                  render={() => <Pages.FullNodeDIDProfilePage />}
                 />
 
                 {/* <Route
@@ -67,11 +75,7 @@ class App extends React.Component {
                   path="/server/resolver"
                   render={() => <Pages.FullNodeResolverPage />}
                 />
-                <Route
-                  exact
-                  path="/server/did/profile"
-                  render={() => <Pages.FullNodeMyDIDPage />}
-                />
+
                 <Route
                   exact
                   path="/server/did/all"
