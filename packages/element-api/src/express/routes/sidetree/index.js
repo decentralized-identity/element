@@ -1,5 +1,6 @@
 const express = require('express');
 const elementService = require('../../../lib/elementService');
+const { sidetree, getSidetree } = require('../../../services/sidetree');
 
 const router = express.Router();
 
@@ -47,31 +48,6 @@ router.get('/node', async (req, res, next) => {
 router.get('/batch', async (req, res, next) => {
   try {
     const result = await elementService.getCurrentBatch();
-    res.status(200).json(result);
-  } catch (e) {
-    next(e);
-  }
-});
-
-/**
- * @swagger
- *
- * paths:
- *   "/sidetree":
- *     get:
- *       description: Return sidetree from root.
- *       tags: [Sidetree]
- *       produces:
- *       - application/json
- *       responses:
- *         '200':
- *           description: All DID Documents and related model data
- *           schema:
- *              type: object
- */
-router.get('/', async (req, res, next) => {
-  try {
-    const result = await elementService.syncAll();
     res.status(200).json(result);
   } catch (e) {
     next(e);
@@ -135,13 +111,12 @@ router.post('/', async (req, res, next) => {
 router.get('/:did', async (req, res, next) => {
   try {
     const { did } = req.params;
-    const result = await elementService.resolve(did);
+    const result = await sidetree.resolve(did);
     res.status(200).json(result);
   } catch (e) {
     next(e);
   }
 });
-
 
 /**
  * @swagger
@@ -166,7 +141,7 @@ router.get('/:did', async (req, res, next) => {
 router.get('/:did/record', async (req, res, next) => {
   try {
     const { did } = req.params;
-    const result = await elementService.getRecord(did);
+    const result = await sidetree.db.read(`element:sidetree:${did}`);
     res.status(200).json(result);
   } catch (e) {
     next(e);

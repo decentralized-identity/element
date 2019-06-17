@@ -9,7 +9,6 @@ class Sidetree {
     this.serviceBus = serviceBus;
     this.db = db;
     this.config = config || {
-      CACHE_EXPIRES_SECONDS: 2,
       BAD_STORAGE_HASH_DELAY_SECONDS: 10 * 60, // 10 minutes
       VERBOSITY: 0,
     };
@@ -35,7 +34,6 @@ class Sidetree {
   }
 
   async close() {
-    await this.sleep(1);
     await this.blockchain.close();
     await this.storage.close();
     await this.serviceBus.close();

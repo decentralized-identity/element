@@ -1,0 +1,17 @@
+{
+  "name": "@transmute/element-adapter-firestore",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^24.8.0"
+  },
+  "dependencies": {
+    "firebase": "^6.2.0"
+  }
+}

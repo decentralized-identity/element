@@ -70,11 +70,13 @@ class App extends React.Component {
                   render={() => <Pages.FullNodeDIDProfilePage />}
                 />
 
-                {/* <Route
+                <Route
                   exact
                   path="/server/resolver"
                   render={() => <Pages.FullNodeResolverPage />}
                 />
+
+                {/*
 
                 <Route
                   exact

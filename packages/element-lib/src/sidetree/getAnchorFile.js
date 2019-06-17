@@ -6,12 +6,13 @@ module.exports = (sidetree) => {
   sidetree.getAnchorFile = async anchorFileHash => {
     const maybeCache = await sidetree.db.read(`element:sidetree:anchorFile:${anchorFileHash}`);
     if (
-      maybeCache.consideredUnresolvableUntil
+      maybeCache
+      && maybeCache.consideredUnresolvableUntil
       && !moment().isAfter(maybeCache.consideredUnresolvableUntil)
     ) {
       return null;
     }
-    if (maybeCache.batchFileHash) {
+    if (maybeCache && maybeCache.batchFileHash) {
       return maybeCache;
     }
     let anchorFile = null;

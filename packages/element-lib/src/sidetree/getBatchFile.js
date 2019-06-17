@@ -7,12 +7,13 @@ module.exports = (sidetree) => {
   sidetree.getBatchFile = async batchFileHash => {
     const maybeCache = await sidetree.db.read(`element:sidetree:batchFile:${batchFileHash}`);
     if (
-      maybeCache.consideredUnresolvableUntil
+      maybeCache
+      && maybeCache.consideredUnresolvableUntil
       && !moment().isAfter(maybeCache.consideredUnresolvableUntil)
     ) {
       return null;
     }
-    if (maybeCache.operations) {
+    if (maybeCache && maybeCache.operations) {
       return maybeCache;
     }
     let batchFile;

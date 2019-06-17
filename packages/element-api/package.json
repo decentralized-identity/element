@@ -8,7 +8,7 @@
     "lint": "eslint ./src",
     "contracts:migrate:dev": "./scripts/set-new-anchor-contract.sh",
     "create-local-runtimeconfig": "node ./scripts/create_runtimeconfig.js",
-    "test": "NODE_ENV='testing' jest --env node --runInBand --detectOpenHandles --forceExit",
+    "test": "NODE_ENV='testing' jest --env node --runInBand --forceExit",
     "coverage": "jest --coverage",
     "serve": "firebase serve --only functions",
     "shell": "firebase functions:shell --port=5002",
@@ -19,6 +19,7 @@
   "dependencies": {
     "@google-cloud/logging-winston": "^0.10.2",
     "@transmute/element-lib": "0.0.1-7",
+    "@transmute/element-adapter-firestore": "0.0.0",
     "base64url": "^3.0.1",
     "cors": "^2.8.5",
     "express": "^4.16.4",

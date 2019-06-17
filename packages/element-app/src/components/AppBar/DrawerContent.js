@@ -72,11 +72,11 @@ const DrawerContent = ({ classes }) => (
           icon: <Fingerprint />,
           link: '/server/did/profile',
         },
-        // {
-        //   label: 'DID Resolver',
-        //   icon: <Search />,
-        //   link: '/server/resolver',
-        // },
+        {
+          label: 'DID Resolver',
+          icon: <Search />,
+          link: '/server/resolver',
+        },
         // {
         //   label: 'DID List',
         //   icon: <List />,

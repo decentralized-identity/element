@@ -9,7 +9,7 @@ module.exports = async (sidetree) => {
 
     const cachedRecord = await sidetree.db.read(`element:sidetree:did:elem:${didUniqueSuffix}`);
     let lastTransactionTime = 0;
-    if (cachedRecord.record) {
+    if (cachedRecord && cachedRecord.record) {
       updatedState = cachedRecord.record;
       lastTransactionTime = updatedState.lastTransaction.transactionTime;
     }

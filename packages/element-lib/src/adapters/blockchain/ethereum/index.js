@@ -60,9 +60,6 @@ class EthereumBlockchain {
     if (contractAddress) {
       this.anchorContractAddress = contractAddress;
     } else {
-      // probably local, create a new contract.
-      // const defaultWeb3 = getDefaultWeb3();
-      // console.log(defaultWeb3)
       this.resolving = this.createNewContract().then(() => {
         this.anchorContract.setProvider(this.web3.currentProvider);
       });
@@ -70,7 +67,8 @@ class EthereumBlockchain {
   }
 
   async close() {
-    return this.web3.currentProvider.engine.stop();
+    await this.web3.currentProvider.engine.stop();
+    return new Promise(resolve => setTimeout(resolve, 2000));
   }
 
   async createNewContract(fromAddress) {

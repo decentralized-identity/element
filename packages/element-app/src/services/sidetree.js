@@ -19,7 +19,6 @@ export const sidetree = new element.Sidetree({
   serviceBus,
   db,
   config: {
-    CACHE_EXPIRES_SECONDS: 1 * 60, // 1 minute
     VERBOSITY: 1,
   },
 });
