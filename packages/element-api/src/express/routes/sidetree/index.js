@@ -1,6 +1,6 @@
 const express = require('express');
 const elementService = require('../../../lib/elementService');
-const { sidetree, getSidetree } = require('../../../services/sidetree');
+const { sidetree, getSidetree, getNodeInfo } = require('../../../services/sidetree');
 
 const router = express.Router();
 
@@ -22,7 +22,8 @@ const router = express.Router();
  */
 router.get('/node', async (req, res, next) => {
   try {
-    const result = await elementService.getNodeInfo();
+    await getSidetree();
+    const result = await getNodeInfo();
     res.status(200).json(result);
   } catch (e) {
     next(e);
@@ -47,6 +48,7 @@ router.get('/node', async (req, res, next) => {
  */
 router.get('/batch', async (req, res, next) => {
   try {
+    await getSidetree();
     const result = await elementService.getCurrentBatch();
     res.status(200).json(result);
   } catch (e) {
@@ -58,7 +60,33 @@ router.get('/batch', async (req, res, next) => {
  * @swagger
  *
  * paths:
- *   "/sidetree":
+ *   "/sidetree/docs":
+ *     get:
+ *       description: Return all sidetree did records.
+ *       tags: [Sidetree]
+ *       produces:
+ *       - application/json
+ *       responses:
+ *         '200':
+ *           description: All DID Documents and related model data
+ *           schema:
+ *              type: object
+ */
+router.get('/docs', async (req, res, next) => {
+  try {
+    await getSidetree();
+    const result = await sidetree.db.readCollection('element:sidetree:did:documentRecord');
+    res.status(200).json(result);
+  } catch (e) {
+    next(e);
+  }
+});
+
+/**
+ * @swagger
+ *
+ * paths:
+ *   "/sidetree/requests":
  *     post:
  *       description: Publish Sidetree Operation
  *       tags: [Sidetree]
@@ -76,11 +104,12 @@ router.get('/batch', async (req, res, next) => {
  *           schema:
  *              type: object
  */
-router.post('/', async (req, res, next) => {
+router.post('/requests', async (req, res, next) => {
   try {
+    await getSidetree();
     const { header, payload, signature } = req.body;
-    const result = await elementService.processRequest({ header, payload, signature });
-    res.status(200).json(result);
+    sidetree.batchRequests([{ header, payload, signature }]);
+    res.status(200).json({ ok: true });
   } catch (e) {
     next(e);
   }
@@ -110,6 +139,7 @@ router.post('/', async (req, res, next) => {
  */
 router.get('/:did', async (req, res, next) => {
   try {
+    await getSidetree();
     const { did } = req.params;
     const result = await sidetree.resolve(did);
     res.status(200).json(result);
@@ -140,9 +170,40 @@ router.get('/:did', async (req, res, next) => {
  */
 router.get('/:did/record', async (req, res, next) => {
   try {
+    await getSidetree();
     const { did } = req.params;
     const result = await sidetree.db.read(`element:sidetree:${did}`);
     res.status(200).json(result);
+  } catch (e) {
+    next(e);
+  }
+});
+
+/**
+ * @swagger
+ *
+ * paths:
+ *   "/sidetree/{did}/previousOperationHash":
+ *     get:
+ *       description: Return the previousOperationHash.
+ *       tags: [Sidetree]
+ *       produces:
+ *       - application/json
+ *       parameters:
+ *       - in: path
+ *         name: did
+ *         required: true
+ *         type: string
+ *       responses:
+ *         '200':
+ *           description: A Sidetree operation hash.
+ */
+router.get('/:did/previousOperationHash', async (req, res, next) => {
+  try {
+    await getSidetree();
+    const { did } = req.params;
+    const previousOperationHash = await sidetree.getPreviousOperationHash(did.split(':').pop());
+    res.status(200).json({ previousOperationHash });
   } catch (e) {
     next(e);
   }

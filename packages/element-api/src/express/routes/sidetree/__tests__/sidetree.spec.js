@@ -1,152 +1,102 @@
-// eslint-disable-next-line
 const request = require('supertest');
-
+const faker = require('faker');
 const element = require('@transmute/element-lib');
-
 const app = require('../../../../express/app');
 
-jest.setTimeout(5 * 1000);
+const { sidetree, getSidetree } = require('../../../../services/sidetree');
 
-const batchService = require('../../../../lib/batchService');
+let server;
+let res;
+let body;
 
-const sleep = seconds => new Promise((resolve) => {
-  setTimeout(resolve, seconds * 1000);
+// 2 minute timeout for end to end testnet
+jest.setTimeout(2 * 60 * 1000);
+
+beforeAll(async () => {
+  server = await request(app);
 });
 
+afterAll(async () => {});
+
 describe('sidetree', () => {
-  let server;
-  let uid;
-  let encodedCreatePayload;
-  let encodedPayload;
-  let previousOperationHash;
-
-  let firstKeypair;
-  let secondKeypair;
-
-  beforeAll(async () => {
-    firstKeypair = await element.func.createKeys();
-    secondKeypair = await element.func.createKeys();
-    server = await request(app);
+  it('node', async () => {
+    res = await server.get('/api/v1/sidetree/node').set('Accept', 'application/json');
+    body = await res.body;
+    expect(body.ipfs).toBeDefined();
+    expect(body.ethereum).toBeDefined();
+    expect(body.sidetree).toBeDefined();
   });
 
-  afterAll(async () => {
-    await batchService.teardown();
-    await sleep(1);
+  it('resolver', async () => {
+    res = await server
+      .get('/api/v1/sidetree/did:elem:2p-Etm96nYATm0CP4qZQEyIHhUj5hDDDSwbQhTbNstY')
+      .set('Accept', 'application/json');
+    body = await res.body;
+    expect(body.id).toBe('did:elem:2p-Etm96nYATm0CP4qZQEyIHhUj5hDDDSwbQhTbNstY');
   });
 
-  describe('POST /sidetree', () => {
-    it('supports create', async () => {
-      const payload = {
-        '@context': 'https://w3id.org/did/v1',
-        publicKey: [
-          {
-            id: '#key1',
-            type: 'Secp256k1VerificationKey2018',
-            publicKeyHex: firstKeypair.publicKey,
-          },
-        ],
-      };
-
-      uid = element.func.payloadToHash(payload);
-
-      encodedPayload = element.func.encodeJson(payload);
-      encodedCreatePayload = encodedPayload;
-      const signature = element.func.signEncodedPayload(encodedPayload, firstKeypair.privateKey);
-      const requestBody = {
-        header: {
-          operation: 'create',
-          kid: '#key1',
-          alg: 'ES256K',
-          proofOfWork: {},
-        },
-        payload: encodedPayload,
-        signature,
-      };
-
-      let res = await server
-        .post('/api/v1/sidetree')
-        .send(requestBody)
-        .set('Accept', 'application/json');
-
-      await sleep(2);
-
-      res = await server.get('/api/v1/sidetree').set('Accept', 'application/json');
-
-      // eslint-disable-next-line
-      expect(res.body[uid].previousOperationHash).toBe(element.func.payloadToHash(payload));
-      // eslint-disable-next-line
-      previousOperationHash = res.body[uid].previousOperationHash;
-    });
-
-    it('supports update', async () => {
-      const payload = {
-        did: `did:sidetree:${uid}`,
-        operationNumber: 1,
-        previousOperationHash,
-        patch: [
-          {
-            op: 'replace',
-            path: '/publicKey/1',
-            value: {
-              id: '#key2',
-              type: 'Secp256k1VerificationKey2018',
-              publicKeyHex: secondKeypair.publicKey,
-            },
-          },
-        ],
-      };
-
-      encodedPayload = element.func.encodeJson(payload);
-      const signature = element.func.signEncodedPayload(encodedPayload, firstKeypair.privateKey);
-      const requestBody = {
-        header: {
-          operation: 'update',
-          kid: '#key1',
-          alg: 'ES256K',
-          proofOfWork: {},
-        },
-        payload: encodedPayload,
-        signature,
-      };
-
-      let res = await server
-        .post('/api/v1/sidetree')
-        .send(requestBody)
-        .set('Accept', 'application/json');
-
-      await sleep(2);
-
-      res = await server.get('/api/v1/sidetree').set('Accept', 'application/json');
-
-      // eslint-disable-next-line
-      expect(res.body[uid].previousOperationHash).toBe(element.func.payloadToHash(payload));
-      // eslint-disable-next-line
-      previousOperationHash = res.body[uid].previousOperationHash;
-      // eslint-disable-next-line
-      expect(res.body[uid].doc.publicKey[1].publicKeyHex).toBe(secondKeypair.publicKey);
-    });
+  it('record', async () => {
+    res = await server
+      .get('/api/v1/sidetree/did:elem:2p-Etm96nYATm0CP4qZQEyIHhUj5hDDDSwbQhTbNstY/record')
+      .set('Accept', 'application/json');
+    body = await res.body;
+    expect(body.record.doc.id).toBe('did:elem:2p-Etm96nYATm0CP4qZQEyIHhUj5hDDDSwbQhTbNstY');
   });
 
-  describe('GET /sidetree/:did', () => {
-    it('resolve a doc by encoding payload', async () => {
-      const { body } = await server
-        .get(`/api/v1/sidetree/${encodedCreatePayload}`)
-        .set('Accept', 'application/json');
-      expect(body.id).toBe(`did:elem:${uid}`);
-    });
-
-    it('resolve a doc by did', async () => {
-      const { body } = await server
-        .get(`/api/v1/sidetree/did:elem:${uid}`)
-        .set('Accept', 'application/json');
-      expect(body.id).toBe(`did:elem:${uid}`);
-    });
+  it('previousOperationHash', async () => {
+    res = await server
+      .get(
+        '/api/v1/sidetree/did:elem:2p-Etm96nYATm0CP4qZQEyIHhUj5hDDDSwbQhTbNstY/previousOperationHash',
+      )
+      .set('Accept', 'application/json');
+    body = await res.body;
+    expect(body.previousOperationHash).toBeDefined();
   });
 
-  describe('GET /sidetree', () => {
-    it('should return the whole tree', async () => {
-      const { body } = await server.get('/api/v1/sidetree').set('Accept', 'application/json');
-      expect(body.transactionTime).toBeDefined();
+  it('docs', async () => {
+    res = await server.get('/api/v1/sidetree/docs').set('Accept', 'application/json');
+    body = await res.body;
+    expect(body.length).toBeDefined();
+  });
+
+  it.only('create', async () => {
+    // be careful not to start batching or you will get 2 transcations.
+    // await getSidetree();
+    const i = 0;
+    const mks = new element.MnemonicKeySystem(element.MnemonicKeySystem.generateMnemonic());
+    const didUniqueSuffix = sidetree.op.getDidUniqueSuffix({
+      primaryKey: mks.getKeyForPurpose('primary', 0),
+      recoveryPublicKey: mks.getKeyForPurpose('recovery', 0).publicKey,
     });
+    const actor = {
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      name: faker.name.findName(),
+      email: faker.internet.email(),
+      jobTitle: faker.name.jobTitle(),
+      sameAs: [
+        `https://www.facebook.com/${i}`,
+        `https://www.linkedin.com/${i}`,
+        `https://did.example.com/did:elem:${didUniqueSuffix}`,
+      ],
+      mks,
+      didUniqueSuffix,
+    };
+
+    const createReq = sidetree.op.create({
+      primaryKey: actor.mks.getKeyForPurpose('primary', 0),
+      recoveryPublicKey: actor.mks.getKeyForPurpose('recovery', 0).publicKey,
+    });
+
+    res = await server
+      .post('/api/v1/sidetree/requests')
+      .send(createReq)
+      .set('Accept', 'application/json');
+
+    body = await res.body;
+    expect(body.ok).toBe(true);
+    await sidetree.sleep(1.5 * 60); // 1.5 minutes
+    const didDoc = await sidetree.resolve(`did:elem:${didUniqueSuffix}`);
+    expect(didDoc.id).toBe(`did:elem:${didUniqueSuffix}`);
   });
 });

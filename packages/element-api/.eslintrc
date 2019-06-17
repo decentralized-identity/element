@@ -20,7 +20,7 @@
     "node/no-unpublished-require": [
       "error",
       {
-        "allowModules": ["jest-express"]
+        "allowModules": ["jest-express", "supertest", "faker"]
       }
     ]
   }
