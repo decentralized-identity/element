@@ -19,6 +19,13 @@ beforeAll(async () => {
 afterAll(async () => {});
 
 describe('sidetree', () => {
+
+  it.only('operations', async ()=>{
+    res = await server.get('/api/v1/sidetree/operations').set('Accept', 'application/json');
+    body = await res.body;
+    expect(body.length).toBeDefined();
+  })
+
   it('node', async () => {
     res = await server.get('/api/v1/sidetree/node').set('Accept', 'application/json');
     body = await res.body;
@@ -59,7 +66,7 @@ describe('sidetree', () => {
     expect(body.length).toBeDefined();
   });
 
-  it.only('create', async () => {
+  it('create', async () => {
     // be careful not to start batching or you will get 2 transcations.
     // await getSidetree();
     const i = 0;

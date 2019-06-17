@@ -56,7 +56,7 @@ class DIDDocument extends Component {
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <CopyToClipboard
-              text={didDocument.id}
+              text={`${window.location.origin}/server/resolver/${didDocument.id}`}
               key={'did'}
               onCopy={onCopyToClipboard}
               style={{ cursor: 'pointer' }}

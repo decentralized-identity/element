@@ -126,19 +126,19 @@ export class SidetreeAnchorFile extends Component {
                 />
               </ListItem>
 
-              {anchorFile.didUniqueSuffixes.map(uid => (
+              {anchorFile.didUniqueSuffixes.map(didUniqueSuffix => (
                 <Button
                   size={'small'}
                   variant={'outlined'}
                   style={{ marginTop: '4px' }}
-                  key={uid}
+                  key={didUniqueSuffix}
                   onClick={() => {
                     if (this.props.onClickUID) {
-                      this.props.onClickUID(uid);
+                      this.props.onClickUID(didUniqueSuffix);
                     }
                   }}
                 >
-                  {uid}
+                  {didUniqueSuffix}
                 </Button>
               ))}
             </List>

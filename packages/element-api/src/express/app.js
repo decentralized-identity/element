@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 
 // const morgan = require('morgan');
-// const winston = require('../../src/lib/winston');
+// const winston = require('../../src/services/winston');
 
 const swagger = require('../../src/express/swagger');
 

@@ -1,4 +1,4 @@
-const { functions } = require('./src/lib/firebase');
+const { functions } = require('./src/services/firebase');
 
 const app = require('./src/express/app');
 

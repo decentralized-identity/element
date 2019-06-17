@@ -1,5 +1,4 @@
 const express = require('express');
-const elementService = require('../../../lib/elementService');
 const { sidetree, getSidetree, getNodeInfo } = require('../../../services/sidetree');
 
 const router = express.Router();
@@ -24,32 +23,6 @@ router.get('/node', async (req, res, next) => {
   try {
     await getSidetree();
     const result = await getNodeInfo();
-    res.status(200).json(result);
-  } catch (e) {
-    next(e);
-  }
-});
-
-/**
- * @swagger
- *
- * paths:
- *   "/sidetree/batch":
- *     get:
- *       description: Return the current batch
- *       tags: [Sidetree]
- *       produces:
- *       - application/json
- *       responses:
- *         '200':
- *           description: A batch of operations to be anchored
- *           schema:
- *              type: object
- */
-router.get('/batch', async (req, res, next) => {
-  try {
-    await getSidetree();
-    const result = await elementService.getCurrentBatch();
     res.status(200).json(result);
   } catch (e) {
     next(e);
@@ -114,6 +87,82 @@ router.post('/requests', async (req, res, next) => {
     next(e);
   }
 });
+
+/**
+ * @swagger
+ *
+ * paths:
+ *   "/sidetree/transactions":
+ *     get:
+ *       description: Return sidetree transactions.
+ *       tags: [Sidetree]
+ *       produces:
+ *       - application/json
+ *       responses:
+ *         '200':
+ *           description: sidetree transactions.
+ */
+router.get('/transactions', async (req, res, next) => {
+  try {
+    await getSidetree();
+    const result = await sidetree.getTransactions(req.query);
+    res.status(200).json(result);
+  } catch (e) {
+    next(e);
+  }
+});
+
+/**
+ * @swagger
+ *
+ * paths:
+ *   "/sidetree/transaction/{transactionTimeHash}":
+ *     get:
+ *       description: Return summary of transactionTimeHash.
+ *       tags: [Sidetree]
+ *       produces:
+ *       - application/json
+ *       responses:
+ *         '200':
+ *           description: sidetree transaction summary.
+ */
+router.get('/transaction/:transactionTimeHash/summary', async (req, res, next) => {
+  try {
+    await getSidetree();
+    const { transactionTimeHash } = req.params;
+    const result = await sidetree.getTransactionSummary(transactionTimeHash);
+    res.status(200).json(result);
+  } catch (e) {
+    next(e);
+  }
+});
+
+/**
+ * @swagger
+ *
+ * paths:
+ *   "/sidetree/operations/{didUniqueSuffix}":
+ *     get:
+ *       description: Return all operations for a didUniqueSuffix.
+ *       tags: [Sidetree]
+ *       produces:
+ *       - application/json
+ *       responses:
+ *         '200':
+ *           description: sidetree operations.
+ */
+router.get('/operations/:didUniqueSuffix', async (req, res, next) => {
+  try {
+    await getSidetree();
+    const { didUniqueSuffix } = req.params;
+    const result = await sidetree.getOperations(didUniqueSuffix);
+    res.status(200).json(result);
+  } catch (e) {
+    next(e);
+  }
+});
+
+// BEWARE /sidetree/:did * MUST BE LAST.
 
 /**
  * @swagger

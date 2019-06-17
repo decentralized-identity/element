@@ -8,10 +8,8 @@ export class Ledger extends Component {
   state = {};
 
   async componentDidMount() {
-    if (!window.web3) {
+    if (window.web3) {
       // eslint-disable-next-line
-      alert('MetaMask is required to use this demo, please use the LATEST VERSION.');
-    } else {
       setTimeout(() => {
         window.web3.eth.net.getNetworkType().then((networkVersion) => {
           this.setState({
@@ -27,9 +25,9 @@ export class Ledger extends Component {
         }
         if (!accounts.length) {
           // eslint-disable-next-line
-          alert('MetaMask is required to use this demo, please use the LATEST VERSION.');
           return;
         }
+
         this.setState({
           account: accounts[0],
         });
@@ -51,7 +49,7 @@ export class Ledger extends Component {
 }
 
 Ledger.propTypes = {
-  operationCount: PropTypes.any,
+  sidetree: PropTypes.any,
 };
 
 export default Ledger;

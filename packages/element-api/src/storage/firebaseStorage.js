@@ -1,4 +1,4 @@
-const { db, teardown } = require('../lib/firebase');
+const { db, teardown } = require('../services/firebase');
 
 const read = async ({ collection, key }) => {
   if (key) {

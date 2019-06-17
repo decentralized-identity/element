@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import { Paper, Typography } from '@material-ui/core';
-
-import { sidetree } from '../../services/sidetree';
 
 export class Storage extends Component {
   state = {};
 
   async componentWillMount() {
-    const info = await sidetree.storage.ipfs.version();
-    this.setState({
-      info,
-    });
+    if (this.props.sidetree) {
+      const info = await this.props.sidetree.storage.ipfs.version();
+      this.setState({
+        info,
+      });
+    }
   }
 
   render() {
@@ -32,5 +33,9 @@ export class Storage extends Component {
     );
   }
 }
+
+Storage.propTypes = {
+  sidetree: PropTypes.any.isRequired,
+};
 
 export default Storage;

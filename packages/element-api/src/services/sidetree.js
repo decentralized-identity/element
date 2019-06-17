@@ -1,21 +1,15 @@
 const element = require('@transmute/element-lib');
-const ElementFirestoreAdapter = require('@transmute/element-adapter-firestore');
+const ElementFirestoreAdapter = require('./element-adapter-firestore');
 
 const { getBaseConfig } = require('../config');
 
 const config = getBaseConfig();
 
+const { firebaseAdmin } = require('./firebase');
+
 const db = new ElementFirestoreAdapter({
   name: 'element-pouchdb.element-app',
-  firebaseAppConfig: {
-    apiKey: 'AIzaSyB9W9Z5lk0CJKLKuZ5s6gcJ7i1IWZK5wrg',
-    authDomain: 'element-did.firebaseapp.com',
-    databaseURL: 'https://element-did.firebaseio.com',
-    projectId: 'element-did',
-    storageBucket: 'element-did.appspot.com',
-    messagingSenderId: '652808307972',
-    appId: '1:652808307972:web:0851286d6827d05c',
-  },
+  firebaseAdmin,
 });
 
 const serviceBus = new element.adapters.serviceBus.ElementNanoBusAdapter();
@@ -44,9 +38,12 @@ const sidetree = new element.Sidetree({
 });
 
 const getSidetree = async () => {
-  await db.signInAnonymously();
-  await blockchain.resolving;
-  await sidetree.startBatching();
+  if (!sidetree.batchInterval) {
+    // await db.signInAnonymously();
+    await blockchain.resolving;
+    await sidetree.startBatching();
+  }
+
   return sidetree;
 };
 

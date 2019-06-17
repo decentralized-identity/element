@@ -1,11 +1,10 @@
 import { withHandlers } from 'recompose';
 
 import config from '../../config';
-import { sidetree } from '../../services/sidetree';
 
 export default withHandlers({
   // eslint-disable-next-line
-  resolveDID: ({ didResolved, snackbarMessage, set }) => async did => {
+  resolveDID: ({ didResolved, sidetree, snackbarMessage, set }) => async did => {
     set({ resolving: true });
     try {
       const doc = await sidetree.resolve(did);
@@ -23,7 +22,7 @@ export default withHandlers({
       console.error(e);
       snackbarMessage({
         snackbarMessage: {
-          message: 'Could not resolve DID, make sure it is of the form did:elem:uid.',
+          message: 'Could not resolve DID, make sure it is of the form did:elem:didUniqueSuffix.',
           variant: 'error',
           open: true,
         },
@@ -31,7 +30,7 @@ export default withHandlers({
     }
     set({ resolving: false });
   },
-  getAll: ({ snackbarMessage, set }) => async () => {
+  getAll: ({ snackbarMessage, sidetree, set }) => async () => {
     set({ resolving: true });
     try {
       const all = await sidetree.blockchain.getTransactions(config.ELEMENT_START_BLOCK, 'latest');
@@ -59,7 +58,7 @@ export default withHandlers({
     }
     set({ resolving: false });
   },
-  getSidetreeTransactions: ({ set }) => async (args) => {
+  getSidetreeTransactions: ({ sidetree, set }) => async (args) => {
     set({ loading: true });
     let records = await sidetree.getTransactions(args);
     if (!records.length) {
@@ -73,18 +72,20 @@ export default withHandlers({
     }
     set({ sidetreeTxns: records.reverse(), loading: false });
   },
-  getSidetreeOperationsFromTransactionTimeHash: ({ set }) => async (transactionTimeHash) => {
+  getSidetreeOperationsFromTransactionTimeHash: ({
+    sidetree,
+    set,
+  }) => async (transactionTimeHash) => {
     set({ loading: true });
     const summary = await sidetree.getTransactionSummary(transactionTimeHash);
     set({ sidetreeTransactionSummary: summary, loading: false });
   },
-  getOperationsForDidUniqueSuffix: ({ set }) => async (uid) => {
+  getOperationsForDidUniqueSuffix: ({ sidetree, set }) => async (didUniqueSuffix) => {
     set({ loading: true });
-    const didDocumentForOperations = await sidetree.resolve(`did:elem:${uid}`);
-    const record = await sidetree.getOperations(uid);
-    set({ sidetreeOperations: record, didDocumentForOperations, loading: false });
+    const record = await sidetree.getOperations(didUniqueSuffix);
+    set({ sidetreeOperations: record, loading: false });
   },
-  predictDID: ({ set, getMyDidUniqueSuffix }) => async () => {
+  predictDID: ({ set, sidetree, getMyDidUniqueSuffix }) => async () => {
     const didUniqueSuffix = await getMyDidUniqueSuffix();
     set({
       predictedDID: `did:elem:${didUniqueSuffix}`,
@@ -95,7 +96,11 @@ export default withHandlers({
     set({ sidetreeOperations: record });
   },
   createDID: ({
-    snackbarMessage, createDIDRequest, getMyDidUniqueSuffix, set,
+    snackbarMessage,
+    sidetree,
+    createDIDRequest,
+    getMyDidUniqueSuffix,
+    set,
   }) => async () => {
     set({ resolving: true });
     snackbarMessage({
@@ -131,6 +136,7 @@ export default withHandlers({
     getMyDidUniqueSuffix,
     createAddKeyRequest,
     set,
+    sidetree,
   }) => async (key) => {
     set({ resolving: true });
     try {
@@ -175,6 +181,7 @@ export default withHandlers({
     getMyDidUniqueSuffix,
     createRemoveKeyRequest,
     set,
+    sidetree,
   }) => async (key) => {
     set({ resolving: true });
     try {
