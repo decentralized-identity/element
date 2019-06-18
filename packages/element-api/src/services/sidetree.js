@@ -39,7 +39,6 @@ const sidetree = new element.Sidetree({
 
 const getSidetree = async () => {
   if (!sidetree.batchInterval) {
-    // await db.signInAnonymously();
     await blockchain.resolving;
     await sidetree.startBatching();
   }

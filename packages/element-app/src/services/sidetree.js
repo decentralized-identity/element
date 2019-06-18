@@ -19,15 +19,18 @@ if (window.web3) {
 }
 
 export const initSidetree = async () => {
-  const sidetree = new element.Sidetree({
-    blockchain,
-    storage,
-    serviceBus,
-    db,
-    config: {
-      VERBOSITY: 1,
-    },
-  });
-  await blockchain.resolving;
-  return sidetree;
+  if (window.web3) {
+    const sidetree = new element.Sidetree({
+      blockchain,
+      storage,
+      serviceBus,
+      db,
+      config: {
+        VERBOSITY: 1,
+      },
+    });
+    await blockchain.resolving;
+    return sidetree;
+  }
+  return null;
 };

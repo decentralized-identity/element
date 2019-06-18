@@ -35,7 +35,7 @@ export class Storage extends Component {
 }
 
 Storage.propTypes = {
-  sidetree: PropTypes.any.isRequired,
+  sidetree: PropTypes.any,
 };
 
 export default Storage;

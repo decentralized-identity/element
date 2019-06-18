@@ -27,5 +27,5 @@ export class BrowserNodeInfoPage extends Component {
 }
 
 BrowserNodeInfoPage.propTypes = {
-  sidetree: PropTypes.any.isRequired,
+  sidetree: PropTypes.any,
 };
