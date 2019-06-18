@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@google-cloud/logging-winston": "^0.10.2",
-    "@transmute/element-lib": "0.0.1-7",
+    "@transmute/element-lib": "0.0.2-0",
     "base64url": "^3.0.1",
     "cors": "^2.8.5",
     "express": "^4.16.4",
@@ -41,7 +41,7 @@
     "eslint": "^5.10.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-jest": "^22.1.2",
+    "eslint-plugin-jest": "^22.6.4",
     "eslint-plugin-node": "^8.0.0",
     "eslint-plugin-security": "^1.4.0",
     "faker": "^4.1.0",

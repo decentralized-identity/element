@@ -40,7 +40,7 @@ const withMetaMask = (WrappedComponent) => {
     render() {
       const { sidetree } = this.state;
 
-      if (sidetree) {
+      if (sidetree || this.props.match.path === '/dapp/info') {
         return <WrappedComponent {...this.props} sidetree={sidetree} />;
       }
       return <div />;
