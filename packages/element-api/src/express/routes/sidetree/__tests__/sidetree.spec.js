@@ -3,7 +3,7 @@ const faker = require('faker');
 const element = require('@transmute/element-lib');
 const app = require('../../../../express/app');
 
-const { sidetree, getSidetree } = require('../../../../services/sidetree');
+const { sidetree } = require('../../../../services/sidetree');
 
 let server;
 let res;
@@ -19,15 +19,18 @@ beforeAll(async () => {
 afterAll(async () => {});
 
 describe('sidetree', () => {
-
-  it.only('operations', async ()=>{
-    res = await server.get('/api/v1/sidetree/operations').set('Accept', 'application/json');
+  it('operations', async () => {
+    res = await server
+      .get('/api/v1/sidetree/operations')
+      .set('Accept', 'application/json');
     body = await res.body;
     expect(body.length).toBeDefined();
-  })
+  });
 
   it('node', async () => {
-    res = await server.get('/api/v1/sidetree/node').set('Accept', 'application/json');
+    res = await server
+      .get('/api/v1/sidetree/node')
+      .set('Accept', 'application/json');
     body = await res.body;
     expect(body.ipfs).toBeDefined();
     expect(body.ethereum).toBeDefined();
@@ -36,18 +39,26 @@ describe('sidetree', () => {
 
   it('resolver', async () => {
     res = await server
-      .get('/api/v1/sidetree/did:elem:2p-Etm96nYATm0CP4qZQEyIHhUj5hDDDSwbQhTbNstY')
+      .get(
+        '/api/v1/sidetree/did:elem:2p-Etm96nYATm0CP4qZQEyIHhUj5hDDDSwbQhTbNstY',
+      )
       .set('Accept', 'application/json');
     body = await res.body;
-    expect(body.id).toBe('did:elem:2p-Etm96nYATm0CP4qZQEyIHhUj5hDDDSwbQhTbNstY');
+    expect(body.id).toBe(
+      'did:elem:2p-Etm96nYATm0CP4qZQEyIHhUj5hDDDSwbQhTbNstY',
+    );
   });
 
   it('record', async () => {
     res = await server
-      .get('/api/v1/sidetree/did:elem:2p-Etm96nYATm0CP4qZQEyIHhUj5hDDDSwbQhTbNstY/record')
+      .get(
+        '/api/v1/sidetree/did:elem:2p-Etm96nYATm0CP4qZQEyIHhUj5hDDDSwbQhTbNstY/record',
+      )
       .set('Accept', 'application/json');
     body = await res.body;
-    expect(body.record.doc.id).toBe('did:elem:2p-Etm96nYATm0CP4qZQEyIHhUj5hDDDSwbQhTbNstY');
+    expect(body.record.doc.id).toBe(
+      'did:elem:2p-Etm96nYATm0CP4qZQEyIHhUj5hDDDSwbQhTbNstY',
+    );
   });
 
   it('previousOperationHash', async () => {
@@ -61,7 +72,9 @@ describe('sidetree', () => {
   });
 
   it('docs', async () => {
-    res = await server.get('/api/v1/sidetree/docs').set('Accept', 'application/json');
+    res = await server
+      .get('/api/v1/sidetree/docs')
+      .set('Accept', 'application/json');
     body = await res.body;
     expect(body.length).toBeDefined();
   });
@@ -70,7 +83,9 @@ describe('sidetree', () => {
     // be careful not to start batching or you will get 2 transcations.
     // await getSidetree();
     const i = 0;
-    const mks = new element.MnemonicKeySystem(element.MnemonicKeySystem.generateMnemonic());
+    const mks = new element.MnemonicKeySystem(
+      element.MnemonicKeySystem.generateMnemonic(),
+    );
     const didUniqueSuffix = sidetree.op.getDidUniqueSuffix({
       primaryKey: mks.getKeyForPurpose('primary', 0),
       recoveryPublicKey: mks.getKeyForPurpose('recovery', 0).publicKey,

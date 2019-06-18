@@ -16,7 +16,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import {
-  DoneAll, VerifiedUser, Receipt, ExpandMore, Link, Fingerprint
+  DoneAll, VerifiedUser, Receipt, ExpandMore, Link, Fingerprint,
 } from '@material-ui/icons';
 
 const getIpfsUrl = (anchorFileBase, anchorFileHash) => {

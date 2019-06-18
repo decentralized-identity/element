@@ -6,6 +6,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "lint": "eslint ./src",
+    "lint:fix": "eslint ./src --fix",
     "contracts:migrate:dev": "./scripts/set-new-anchor-contract.sh",
     "create-local-runtimeconfig": "node ./scripts/create_runtimeconfig.js",
     "test": "NODE_ENV='testing' jest --env node --runInBand --forceExit",

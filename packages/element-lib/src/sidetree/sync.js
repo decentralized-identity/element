@@ -6,10 +6,6 @@ module.exports = async (sidetree) => {
       toTransactionTime,
     });
 
-    return new Promise((resolve) => {
-      sidetree.serviceBus.on('element:sidetree:sync:stop', () => {
-        resolve();
-      });
-    });
+    return new Promise(resolve => sidetree.serviceBus.on('element:sidetree:sync:stop', () => resolve()));
   };
 };

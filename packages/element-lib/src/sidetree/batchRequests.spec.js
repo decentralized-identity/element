@@ -2,23 +2,16 @@ const getLocalSidetree = require('../__tests__/__fixtures__/getLocalSidetree');
 const {
   generateActors,
   createByActorIndex,
-  updateByActorIndex,
   recoverByActorIndex,
-  deactivateByActorIndex,
-  assertCreateSucceeded,
-  assertUpdateSucceeded,
-  assertRecoverSucceeded,
-  assertDeactivateSucceeded,
 } = require('../__tests__/__fixtures__//sidetreeTestUtils');
 
 jest.setTimeout(30 * 1000);
 
 let sidetree;
-let actors = {};
 
 beforeEach(async () => {
   sidetree = await getLocalSidetree('batchRequests');
-  actors = generateActors(3);
+  generateActors(3);
 });
 
 afterEach(async () => {

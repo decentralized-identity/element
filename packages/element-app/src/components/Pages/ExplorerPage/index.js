@@ -1,1 +1,1 @@
-export * from './ExplorerPage'
+export * from './ExplorerPage';

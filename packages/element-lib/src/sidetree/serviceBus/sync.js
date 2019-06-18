@@ -19,7 +19,7 @@ module.exports = (sidetree) => {
         fromTransactionTime,
         toTransactionTime,
       );
-      transactions.map((transaction) => {
+      return transactions.map((transaction) => {
         const valid = schema.validator.isValid(transaction, schema.schemas.sidetreeTransaction);
         if (!valid) {
           return sidetree.serviceBus.emit('element:sidetree:error:badTransaction', { transaction });
@@ -48,6 +48,7 @@ module.exports = (sidetree) => {
           toTransactionTime,
         });
       }
+      return null;
     },
   );
 
@@ -64,6 +65,7 @@ module.exports = (sidetree) => {
           toTransactionTime,
         });
       }
+      return null;
     },
   );
 

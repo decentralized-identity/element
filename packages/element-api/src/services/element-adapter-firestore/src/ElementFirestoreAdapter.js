@@ -6,7 +6,7 @@ class ElementFirestoreAdapter {
   }
 
   async write(id, data) {
-    const result = await this.db
+    await this.db
       .collection('element-adapter')
       .doc(id)
       .set(data);
