@@ -90,7 +90,7 @@ export class DIDProfilePage extends Component {
           <Grid item xs={12}>
             {view()}
           </Grid>
-          {sidetreeOperations && sidetreeOperations.length && (
+          {sidetreeOperations && sidetreeOperations.length > 0 && (
             <React.Fragment>
               <Grid item xs={12}>
                 <Typography variant="h5">My Operations</Typography>
