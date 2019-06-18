@@ -19,18 +19,17 @@
   "dependencies": {
     "@google-cloud/logging-winston": "^0.10.2",
     "@transmute/element-lib": "0.0.1-7",
-    "@transmute/element-adapter-firestore": "0.0.0",
     "base64url": "^3.0.1",
     "cors": "^2.8.5",
     "express": "^4.16.4",
-    "firebase": "^5.7.3",
-    "firebase-admin": "~6.0.0",
-    "firebase-functions": "^2.1.0",
+    "firebase": "^6.2.0",
+    "firebase-admin": "^8.1.0",
+    "firebase-functions": "^3.0.1",
     "morgan": "^1.9.1",
     "swagger-jsdoc": "^3.2.6",
     "swagger-ui-express": "^4.0.2",
-    "winston": "^3.1.0",
-    "tar": ">=2.2.2"
+    "tar": ">=2.2.2",
+    "winston": "^3.1.0"
   },
   "private": true,
   "engines": {
