@@ -29,8 +29,13 @@ class Sidetree {
   }
 
   async getPreviousOperationHash(didUniqueSuffix) {
-    const cachedRecord = await this.db.read(`element:sidetree:did:elem:${didUniqueSuffix}`);
-    if (cachedRecord) {
+    let cachedRecord = await this.db.read(`element:sidetree:did:elem:${didUniqueSuffix}`);
+    // todo: implement retry logic.
+    if (cachedRecord && !cachedRecord.record) {
+      await this.sleep(1);
+      cachedRecord = await this.db.read(`element:sidetree:did:elem:${didUniqueSuffix}`);
+    }
+    if (cachedRecord && cachedRecord.record) {
       return cachedRecord.record.previousOperationHash;
     }
     return null;
