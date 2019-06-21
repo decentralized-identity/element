@@ -1,10 +1,3 @@
-const crypto = require('crypto');
-const jwt = require('jsonwebtoken');
-
-const {
-  generateKey,
-  // makeToken, encrypt, decrypt, verifyToken,
-} = require('./utils');
 const getLocalSidetree = require('../__fixtures__/getLocalSidetree');
 const element = require('../../../index');
 
@@ -37,7 +30,7 @@ const makeActor = (mnemonic) => {
 };
 
 const addRSAKey = async (actor) => {
-  const key = await generateKey();
+  const key = await protocol.generateKey();
   // eslint-disable-next-line
   actor.key = key;
   await sidetree.createTransactionFromRequests([

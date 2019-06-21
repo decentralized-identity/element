@@ -1,9 +1,37 @@
 const crypto = require('crypto');
 // eslint-disable-next-line
 const jwt = require('jsonwebtoken');
+// eslint-disable-next-line
+const { generateKeyPair } = require('crypto');
 
 const aud = 'https://element-did.com';
 const getAuthKey = didDoc => didDoc.publicKey.find(k => k.id === `${didDoc.id}#auth`);
+
+const generateKey = () => new Promise((resolve, reject) => {
+  generateKeyPair(
+    'rsa',
+    {
+      modulusLength: 4096,
+      publicKeyEncoding: {
+        type: 'spki',
+        format: 'pem',
+      },
+      privateKeyEncoding: {
+        type: 'pkcs8',
+        format: 'pem',
+        // cipher: 'aes-256-cbc',
+        // passphrase: 'top secret',
+      },
+    },
+    (err, publicKey, privateKey) => {
+      // Handle errors and use the generated key pair.
+      if (err) {
+        return reject(err);
+      }
+      return resolve({ publicKey, privateKey });
+    },
+  );
+});
 
 const createM0 = async ({
   resolve, initiatorDid, responderDid, initiatorPrivateKey,
@@ -214,6 +242,7 @@ const verifyM2 = async ({
 };
 
 module.exports = {
+  generateKey,
   createM0,
   createM1,
   createM2,
