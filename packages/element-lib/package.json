@@ -10,7 +10,7 @@
   "scripts": {
     "clean": "rm -rf element-pouchdb*",
     "ganache": ". ../../example.env && ganache-cli -i 133700 -m \"$ELEMENT_MNEMONIC\"",
-    "ipfs": "ipfs daemon",
+    "ipfs": "npx ipfs config Addresses.API /ip4/0.0.0.0/tcp/5001 && npx ipfs daemon",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
     "test": "jest --runInBand ",
@@ -51,7 +51,6 @@
     "pouchdb-find": "^7.0.0",
     "pouchdb-upsert": "^2.2.0",
     "secp256k1": "^3.6.2",
-    "tar": ">=2.2.2",
     "truffle-contract": "^4.0.17",
     "truffle-hdwallet-provider": "^1.0.5",
     "web3": "1.0.0-beta.36",
@@ -66,6 +65,8 @@
     "eslint-plugin-node": "^8.0.0",
     "eslint-plugin-security": "^1.4.0",
     "faker": "^4.1.0",
-    "jest": "^24.5.0"
+    "go-ipfs": "^0.4.21",
+    "jest": "^24.5.0",
+    "jsonwebtoken": "^8.5.1"
   }
 }

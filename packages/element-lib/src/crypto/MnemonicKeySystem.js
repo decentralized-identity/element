@@ -17,20 +17,19 @@ const publicKeyToAddress = (pubKey) => {
   return address;
 };
 
+// FIXME: purposeIndex
 const getPathForProofPurpose = (purpose, version) => {
   let purposeIndex = 0;
   switch (purpose) {
-    case 'recovery':
-      purposeIndex = 1;
-      break;
     case 'primary':
       purposeIndex = 1;
       break;
     case 'attestation':
-      purposeIndex = 1;
+      purposeIndex = 2;
       break;
     default:
     case 'root':
+    case 'recovery':
       purposeIndex = 0;
       break;
   }
