@@ -1,4 +1,4 @@
-const getLocalSidetree = require('../__fixtures__/getLocalSidetree');
+const getLocalSidetree = require('../../__tests__/__fixtures__/getLocalSidetree');
 const element = require('../../../index');
 
 const protocol = require('./rsa-jwt-needham-schroeder');
