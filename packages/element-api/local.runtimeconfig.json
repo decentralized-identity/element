@@ -1,0 +1,21 @@
+{
+  "element": {
+    "env": "local",
+    "commit": "local",
+    "ipfs": {
+      "multiaddr": "/ip4/127.0.0.1/tcp/5001"
+    },
+    "ethereum": {
+      "provider_url": "http://127.0.0.1:8545",
+      "mnemonic": "hazard pride garment scout search divide solution argue wait avoid title cave",
+      "anchor_contract_address": "0xbBaAFb70d2B266bcB1f27158F873B16FE7D64B2F",
+      "anchor_contract_start_block": "0"
+    },
+    "sidetree": {
+      "start_block": "0",
+      "max_batch_size": "10",
+      "batch_interval_in_seconds": 1,
+      "bad_storage_hash_delay_in_seconds": 3
+    }
+  }
+}
