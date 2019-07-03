@@ -71,23 +71,46 @@ class EthereumBlockchain {
     return new Promise(resolve => setTimeout(resolve, 2000));
   }
 
+  async retryWithLatestTransactionCount(someWeb3AsyncFun, options) {
+    try {
+      return await someWeb3AsyncFun(options);
+    } catch (e1) {
+      try {
+        return await someWeb3AsyncFun({
+          ...options,
+          nonce: await this.web3.eth.getTransactionCount(options.from, 'pending'),
+        });
+      } catch (e2) {
+        throw new Error(
+          `
+        Could not use someWeb3AsyncFun.
+        Most likely reason is invalid nonce.
+        See https://ethereum.stackexchange.com/questions/2527
+
+        ${e1}
+        ${e2}`,
+        );
+      }
+    }
+  }
+
   async createNewContract(fromAddress) {
     if (!fromAddress) {
       // eslint-disable-next-line
       [fromAddress] = await getAccounts(this.web3);
     }
-    const instance = await this.anchorContract.new({
+
+    const instance = await this.retryWithLatestTransactionCount(this.anchorContract.new, {
       from: fromAddress,
       // TODO: Bad hard coded value, use gasEstimate
       gas: 4712388,
     });
 
     this.anchorContractAddress = instance.address;
-    // console.log('update configs to use new contract address: ', this.anchorContractAddress);
     return instance;
   }
 
-  async getTransactions(fromBlock, toBlock) {
+  async getTransactions(fromBlock, toBlock, options) {
     const instance = await this.anchorContract.at(this.anchorContractAddress);
     const logs = await instance.getPastEvents('Anchor', {
       // TODO: add indexing here...
@@ -96,7 +119,9 @@ class EthereumBlockchain {
       toBlock: toBlock || 'latest',
     });
     const txns = logs.map(eventLogToSidetreeTransaction);
-
+    if (options && options.omitTimestamp) {
+      return txns;
+    }
     return extendSidetreeTransactionWithTimestamp(this, txns);
   }
 
@@ -130,13 +155,19 @@ class EthereumBlockchain {
   }
 
   async write(anchorFileHash) {
+    await this.resolving;
     const [from] = await getAccounts(this.web3);
     const instance = await this.anchorContract.at(this.anchorContractAddress);
     const bytes32EncodedHash = base58EncodedMultihashToBytes32(anchorFileHash);
-    const receipt = await instance.anchorHash(bytes32EncodedHash, {
-      from,
-    });
-    return eventLogToSidetreeTransaction(receipt.logs[0]);
+    try {
+      const receipt = await instance.anchorHash(bytes32EncodedHash, {
+        from,
+      });
+      return eventLogToSidetreeTransaction(receipt.logs[0]);
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
   }
 }
 

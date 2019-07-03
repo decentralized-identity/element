@@ -190,7 +190,7 @@ router.get('/:did', async (req, res, next) => {
   try {
     await getSidetree();
     const { did } = req.params;
-    const result = await sidetree.resolve(did);
+    const result = await sidetree.resolveWithRetry(did, 5);
     res.status(200).json(result);
   } catch (e) {
     next(e);

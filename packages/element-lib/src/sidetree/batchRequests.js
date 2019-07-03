@@ -14,7 +14,7 @@ module.exports = (sidetree) => {
     const currentBatch = await sidetree.db.read('element:sidetree:currentBatch');
     if (currentBatch && currentBatch.operations && currentBatch.operations.length) {
       currentBatch.operations = [...currentBatch.operations, ...operations];
-      currentBatch.operations = new Set(currentBatch.operations);
+      currentBatch.operations = Array.from(new Set(currentBatch.operations));
       return sidetree.db.write('element:sidetree:currentBatch', currentBatch);
     }
     return sidetree.db.write('element:sidetree:currentBatch', {

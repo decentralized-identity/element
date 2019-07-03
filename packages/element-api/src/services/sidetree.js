@@ -31,8 +31,8 @@ const sidetree = new element.Sidetree({
   serviceBus,
   db,
   config: {
-    BATCH_INTERVAL_SECONDS: 10,
-    BAD_STORAGE_HASH_DELAY_SECONDS: 30,
+    BATCH_INTERVAL_SECONDS: config.sidetree.batch_interval_in_seconds,
+    BAD_STORAGE_HASH_DELAY_SECONDS: config.sidetree.bad_storage_hash_delay_in_seconds,
     VERBOSITY: 1,
   },
 });

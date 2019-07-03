@@ -28,6 +28,19 @@ class Sidetree {
     this.sleep = seconds => new Promise(r => setTimeout(r, seconds * 1000));
   }
 
+  async resolveWithRetry(did, retryCap, timeoutSeconds) {
+    let didDoc = null;
+    let count = 0;
+    while (count < retryCap && didDoc === null) {
+      // eslint-disable-next-line
+      didDoc = await this.resolve(did);
+      count += 1;
+      // eslint-disable-next-line
+      await this.sleep(timeoutSeconds || 1);
+    }
+    return didDoc;
+  }
+
   async getPreviousOperationHash(didUniqueSuffix) {
     let cachedRecord = await this.db.read(`element:sidetree:did:elem:${didUniqueSuffix}`);
     // todo: implement retry logic.
