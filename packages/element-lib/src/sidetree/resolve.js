@@ -14,10 +14,30 @@ module.exports = async (sidetree) => {
       lastTransactionTime = updatedState.lastTransaction.transactionTime;
     }
 
-    const blockchainTime = await sidetree.blockchain.getBlockchainTime(lastTransactionTime);
+    let transactionTimeHash;
+    try {
+      const blockchainTime = await sidetree.blockchain.getBlockchainTime(lastTransactionTime);
+      // eslint-disable-next-line
+      transactionTimeHash = blockchainTime.transactionTimeHash;
+    } catch (e) {
+      const currentTime = await sidetree.blockchain.getCurrentTime();
+      if (currentTime.time < lastTransactionTime) {
+        // probably switched networks. we need to delete the cache,
+        // and reload from scratch.
+        await sidetree.db.write(`element:sidetree:did:elem:${didUniqueSuffix}`, {
+          type: 'element:sidetree:did:documentRecord',
+          networkChangeDetected: true,
+        });
+        lastTransactionTime = 0;
+        const blockchainTime = await sidetree.blockchain.getBlockchainTime(lastTransactionTime);
+        // eslint-disable-next-line
+        transactionTimeHash = blockchainTime.transactionTimeHash;
+      }
+    }
+
     const transactions = await sidetree.getTransactions({
       since: 0,
-      transactionTimeHash: blockchainTime.transactionTimeHash,
+      transactionTimeHash,
     });
 
     let items = transactions.map(transaction => ({

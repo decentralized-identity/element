@@ -3,14 +3,12 @@ const faker = require('faker');
 const element = require('@transmute/element-lib');
 const app = require('../../../../express/app');
 
-const { sidetree } = require('../../../../services/sidetree');
-
 let server;
 let res;
 let body;
+let didUniqueSuffix;
 
-// 2 minute timeout for end to end testnet
-jest.setTimeout(2 * 60 * 1000);
+jest.setTimeout(10 * 1000);
 
 beforeAll(async () => {
   server = await request(app);
@@ -19,74 +17,20 @@ beforeAll(async () => {
 afterAll(async () => {});
 
 describe('sidetree', () => {
-  it('operations', async () => {
-    res = await server
-      .get('/api/v1/sidetree/operations')
-      .set('Accept', 'application/json');
-    body = await res.body;
-    expect(body.length).toBeDefined();
-  });
-
   it('node', async () => {
-    res = await server
-      .get('/api/v1/sidetree/node')
-      .set('Accept', 'application/json');
+    res = await server.get('/api/v1/sidetree/node').set('Accept', 'application/json');
     body = await res.body;
     expect(body.ipfs).toBeDefined();
     expect(body.ethereum).toBeDefined();
     expect(body.sidetree).toBeDefined();
   });
 
-  it('resolver', async () => {
-    res = await server
-      .get(
-        '/api/v1/sidetree/did:elem:2p-Etm96nYATm0CP4qZQEyIHhUj5hDDDSwbQhTbNstY',
-      )
-      .set('Accept', 'application/json');
-    body = await res.body;
-    expect(body.id).toBe(
-      'did:elem:2p-Etm96nYATm0CP4qZQEyIHhUj5hDDDSwbQhTbNstY',
-    );
-  });
-
-  it('record', async () => {
-    res = await server
-      .get(
-        '/api/v1/sidetree/did:elem:2p-Etm96nYATm0CP4qZQEyIHhUj5hDDDSwbQhTbNstY/record',
-      )
-      .set('Accept', 'application/json');
-    body = await res.body;
-    expect(body.record.doc.id).toBe(
-      'did:elem:2p-Etm96nYATm0CP4qZQEyIHhUj5hDDDSwbQhTbNstY',
-    );
-  });
-
-  it('previousOperationHash', async () => {
-    res = await server
-      .get(
-        '/api/v1/sidetree/did:elem:2p-Etm96nYATm0CP4qZQEyIHhUj5hDDDSwbQhTbNstY/previousOperationHash',
-      )
-      .set('Accept', 'application/json');
-    body = await res.body;
-    expect(body.previousOperationHash).toBeDefined();
-  });
-
-  it('docs', async () => {
-    res = await server
-      .get('/api/v1/sidetree/docs')
-      .set('Accept', 'application/json');
-    body = await res.body;
-    expect(body.length).toBeDefined();
-  });
-
   it('create', async () => {
     // be careful not to start batching or you will get 2 transcations.
     // await getSidetree();
     const i = 0;
-    const mks = new element.MnemonicKeySystem(
-      element.MnemonicKeySystem.generateMnemonic(),
-    );
-    const didUniqueSuffix = sidetree.op.getDidUniqueSuffix({
+    const mks = new element.MnemonicKeySystem(element.MnemonicKeySystem.generateMnemonic());
+    didUniqueSuffix = element.op.getDidUniqueSuffix({
       primaryKey: mks.getKeyForPurpose('primary', 0),
       recoveryPublicKey: mks.getKeyForPurpose('recovery', 0).publicKey,
     });
@@ -105,7 +49,7 @@ describe('sidetree', () => {
       didUniqueSuffix,
     };
 
-    const createReq = sidetree.op.create({
+    const createReq = element.op.create({
       primaryKey: actor.mks.getKeyForPurpose('primary', 0),
       recoveryPublicKey: actor.mks.getKeyForPurpose('recovery', 0).publicKey,
     });
@@ -117,8 +61,43 @@ describe('sidetree', () => {
 
     body = await res.body;
     expect(body.ok).toBe(true);
-    await sidetree.sleep(1.5 * 60); // 1.5 minutes
-    const didDoc = await sidetree.resolve(`did:elem:${didUniqueSuffix}`);
-    expect(didDoc.id).toBe(`did:elem:${didUniqueSuffix}`);
+
+    await new Promise(resolve => setTimeout(resolve, 5 * 1000));
+  });
+
+  it('resolver', async () => {
+    res = await server
+      .get(`/api/v1/sidetree/did:elem:${didUniqueSuffix}`)
+      .set('Accept', 'application/json');
+    body = await res.body;
+    expect(body.id).toBe(`did:elem:${didUniqueSuffix}`);
+  });
+
+  it('record', async () => {
+    res = await server
+      .get(`/api/v1/sidetree/did:elem:${didUniqueSuffix}/record`)
+      .set('Accept', 'application/json');
+    body = await res.body;
+    expect(body.record.doc.id).toBe(`did:elem:${didUniqueSuffix}`);
+  });
+
+  it('previousOperationHash', async () => {
+    res = await server
+      .get(`/api/v1/sidetree/did:elem:${didUniqueSuffix}/previousOperationHash`)
+      .set('Accept', 'application/json');
+    body = await res.body;
+    expect(body.previousOperationHash).toBeDefined();
+  });
+
+  it('operations', async () => {
+    res = await server.get('/api/v1/sidetree/operations').set('Accept', 'application/json');
+    body = await res.body;
+    expect(body.length).toBeDefined();
+  });
+
+  it('docs', async () => {
+    res = await server.get('/api/v1/sidetree/docs').set('Accept', 'application/json');
+    body = await res.body;
+    expect(body.length).toBeDefined();
   });
 });
