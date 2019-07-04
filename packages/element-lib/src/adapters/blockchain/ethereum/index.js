@@ -67,6 +67,7 @@ class EthereumBlockchain {
   }
 
   async close() {
+    await this.resolving;
     await this.web3.currentProvider.engine.stop();
     return new Promise(resolve => setTimeout(resolve, 2000));
   }

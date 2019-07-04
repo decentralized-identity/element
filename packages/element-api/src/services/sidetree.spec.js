@@ -1,11 +1,9 @@
 const element = require('@transmute/element-lib');
-const { sidetree, getSidetree } = require('./sidetree');
+const sidetree = require('./sidetree');
 
 jest.setTimeout(20 * 1000);
 
-beforeAll(async () => {
-  await getSidetree();
-});
+beforeAll(async () => {});
 
 afterAll(async () => {
   await sidetree.close();

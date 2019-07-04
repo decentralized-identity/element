@@ -7,7 +7,7 @@ let server;
 let res;
 let actor;
 
-jest.setTimeout(10 * 1000);
+jest.setTimeout(20 * 1000);
 
 beforeAll(async () => {
   server = await request(app);
@@ -16,21 +16,44 @@ beforeAll(async () => {
 
 afterAll(async () => {});
 
-describe('requests', () => {
-  it('create', async () => {
+describe('sidetree', () => {
+  it('requests', async () => {
     const createReq = element.op.create({
       primaryKey: actor.mks.getKeyForPurpose('primary', 0),
       recoveryPublicKey: actor.mks.getKeyForPurpose('recovery', 0).publicKey,
     });
+
     res = await server
       .post('/api/v1/sidetree/requests')
       .send(createReq)
       .set('Accept', 'application/json');
-
     expect(res.body.ok).toBe(true);
-    await new Promise(resolve => setTimeout(resolve, 5 * 1000));
+    await new Promise(resolve => setTimeout(resolve, 2 * 1000));
     res = await server.get(`/api/v1/sidetree/${actor.did}`).set('Accept', 'application/json');
-    console.log(res.body);
     expect(res.body.id).toBe(actor.did);
+  });
+
+  it('record', async () => {
+    res = await server
+      .get(`/api/v1/sidetree/${actor.did}/record`)
+      .set('Accept', 'application/json');
+    expect(res.body.record.doc.id).toBe(actor.did);
+  });
+
+  it('previousOperationHash', async () => {
+    res = await server
+      .get(`/api/v1/sidetree/${actor.did}/previousOperationHash`)
+      .set('Accept', 'application/json');
+    expect(res.body.previousOperationHash).toBeDefined();
+  });
+
+  it('operations', async () => {
+    res = await server.get('/api/v1/sidetree/operations').set('Accept', 'application/json');
+    expect(res.body.length).toBeDefined();
+  });
+
+  it('docs', async () => {
+    res = await server.get('/api/v1/sidetree/docs').set('Accept', 'application/json');
+    expect(res.body.length).toBeDefined();
   });
 });

@@ -4,11 +4,12 @@ ganache_running() {
   nc -z localhost "$GANACHE_PORT" &>/dev/null
 }
 start_ganache() {
+  # 
   . ../../example.env
-  # cat "$ELEMENT_MNEMONIC"
-  npx ganache-cli -i 133700 -m "$ELEMENT_MNEMONIC" > /dev/null &
+  npx ganache-cli -i 133700 -m "$ELEMENT_MNEMONIC" > /dev/null 2>&1 &
   GANACHE_PID=$!
   sleep 2
+  npm run contracts:migrate:dev
 }
 
 if ganache_running; then
@@ -19,6 +20,5 @@ else
 fi
 
 # ./scripts/ganache/health_check.sh
-npm run contracts:migrate:dev
 
 exit 0

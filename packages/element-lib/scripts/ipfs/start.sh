@@ -5,10 +5,10 @@ ipfs_running() {
 }
 start_ipfs() {
   npx ipfs init > /dev/null 2>&1
+  # may need to change in future.
   # npx ipfs config Addresses.API /ip4/0.0.0.0/tcp/5001 
   npx ipfs daemon > /dev/null 2>&1 &
-  IPFS_PID=$!
-  sleep 1
+  # sleep 5
 }
 
 if ipfs_running; then

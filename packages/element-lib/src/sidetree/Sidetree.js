@@ -56,23 +56,25 @@ class Sidetree {
   }
 
   async startBatching() {
-    this.batchInterval = setInterval(async () => {
-      const currentBatch = await this.db.read('element:sidetree:currentBatch');
-      if (currentBatch && currentBatch.operations && currentBatch.operations.length) {
-        await this.db.write('element:sidetree:currentBatch', {
-          operations: [],
-        });
-        operationsToTransaction({
-          operations: currentBatch.operations,
-          storage: this.storage,
-          blockchain: this.blockchain,
-        }).then(() => {
-          this.serviceBus.emit('element:sidetree:batchSubmitted', {
-            batch: currentBatch,
+    if (!this.batchInterval) {
+      this.batchInterval = setInterval(async () => {
+        const currentBatch = await this.db.read('element:sidetree:currentBatch');
+        if (currentBatch && currentBatch.operations && currentBatch.operations.length) {
+          await this.db.write('element:sidetree:currentBatch', {
+            operations: [],
           });
-        });
-      }
-    }, this.config.BATCH_INTERVAL_SECONDS * 1000);
+          operationsToTransaction({
+            operations: currentBatch.operations,
+            storage: this.storage,
+            blockchain: this.blockchain,
+          }).then(() => {
+            this.serviceBus.emit('element:sidetree:batchSubmitted', {
+              batch: currentBatch,
+            });
+          });
+        }
+      }, this.config.BATCH_INTERVAL_SECONDS * 1000);
+    }
   }
 
   async stopBatching() {
