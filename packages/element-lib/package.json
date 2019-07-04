@@ -23,7 +23,7 @@
     "precoverage": "npm run services:start",
     "coverage": "jest --runInBand --coverage ",
     "postcoverage": "npm run clean && npm run services:stop",
-    "test:contracts": "truffle test",
+    "test:contracts": "npx truffle test",
     "pretest:contracts": "npm run services:start",
     "contracts:migrate:dev": "truffle migrate --network development --reset",
     "contracts:migrate:ropsten": "truffle migrate --network ropsten"
