@@ -12,7 +12,7 @@ Click below image for demo video.
 
 This is a lerna mono repo, see [packages](./packages) for all modules.
 
-See also [ion](https://github.com/decentralized-identity/ion), [sidetree-core](https://github.com/decentralized-identity/sidetree-core), [sidetree-ethereum](https://github.com/decentralized-identity/sidetree-ethereum), [sidetree-ipfs](https://github.com/decentralized-identity/sidetree-ipfs).
+See also [ion](https://github.com/decentralized-identity/ion), [sidetree](https://github.com/decentralized-identity/sidetree), [sidetree-ethereum](https://github.com/decentralized-identity/sidetree-ethereum).
 
 See [.travis.yml](./.travis.yml) for setup and test commands.
 

@@ -5,7 +5,6 @@ const app = require('../../../../express/app');
 
 let server;
 let res;
-let body;
 let didUniqueSuffix;
 
 jest.setTimeout(10 * 1000);
@@ -19,10 +18,10 @@ afterAll(async () => {});
 describe('sidetree', () => {
   it('node', async () => {
     res = await server.get('/api/v1/sidetree/node').set('Accept', 'application/json');
-    body = await res.body;
-    expect(body.ipfs).toBeDefined();
-    expect(body.ethereum).toBeDefined();
-    expect(body.sidetree).toBeDefined();
+
+    expect(res.body.ipfs).toBeDefined();
+    expect(res.body.ethereum).toBeDefined();
+    expect(res.body.sidetree).toBeDefined();
   });
 
   it('create', async () => {
@@ -59,8 +58,7 @@ describe('sidetree', () => {
       .send(createReq)
       .set('Accept', 'application/json');
 
-    body = await res.body;
-    expect(body.ok).toBe(true);
+    expect(res.body.ok).toBe(true);
 
     await new Promise(resolve => setTimeout(resolve, 5 * 1000));
   });
@@ -69,35 +67,35 @@ describe('sidetree', () => {
     res = await server
       .get(`/api/v1/sidetree/did:elem:${didUniqueSuffix}`)
       .set('Accept', 'application/json');
-    body = await res.body;
-    expect(body.id).toBe(`did:elem:${didUniqueSuffix}`);
+
+    expect(res.body.id).toBe(`did:elem:${didUniqueSuffix}`);
   });
 
   it('record', async () => {
     res = await server
       .get(`/api/v1/sidetree/did:elem:${didUniqueSuffix}/record`)
       .set('Accept', 'application/json');
-    body = await res.body;
-    expect(body.record.doc.id).toBe(`did:elem:${didUniqueSuffix}`);
+
+    expect(res.body.record.doc.id).toBe(`did:elem:${didUniqueSuffix}`);
   });
 
   it('previousOperationHash', async () => {
     res = await server
       .get(`/api/v1/sidetree/did:elem:${didUniqueSuffix}/previousOperationHash`)
       .set('Accept', 'application/json');
-    body = await res.body;
-    expect(body.previousOperationHash).toBeDefined();
+
+    expect(res.body.previousOperationHash).toBeDefined();
   });
 
   it('operations', async () => {
     res = await server.get('/api/v1/sidetree/operations').set('Accept', 'application/json');
-    body = await res.body;
-    expect(body.length).toBeDefined();
+
+    expect(res.body.length).toBeDefined();
   });
 
   it('docs', async () => {
     res = await server.get('/api/v1/sidetree/docs').set('Accept', 'application/json');
-    body = await res.body;
-    expect(body.length).toBeDefined();
+
+    expect(res.body.length).toBeDefined();
   });
 });

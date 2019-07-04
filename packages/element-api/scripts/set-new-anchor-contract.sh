@@ -1,4 +1,4 @@
-# make sure too lerna bootstrap first
+# make sure to lerna bootstrap first
 ADDRESS=$(cat ./node_modules/@transmute/element-lib/build/contracts/SimpleSidetreeAnchor.json| jq -r '.networks["133700"].address')
 
 echo 'changing local contract address to: ' $ADDRESS
