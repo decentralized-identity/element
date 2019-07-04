@@ -69,7 +69,7 @@ class EthereumBlockchain {
   async close() {
     await this.resolving;
     await this.web3.currentProvider.engine.stop();
-    return new Promise(resolve => setTimeout(resolve, 2000));
+    return new Promise(resolve => setTimeout(resolve, 1000));
   }
 
   async retryWithLatestTransactionCount(someWeb3AsyncFun, options) {
@@ -84,9 +84,12 @@ class EthereumBlockchain {
       } catch (e2) {
         throw new Error(
           `
-        Could not use ${someWeb3AsyncFun}.
+        Could not use someWeb3AsyncFun: ${someWeb3AsyncFun}.
         Most likely reason is invalid nonce.
         See https://ethereum.stackexchange.com/questions/2527
+
+        This interface uses web3, and cannot be parallelized. 
+        Consider using a different HD Path for each node / service / instance.
 
         ${e1}
         ${e2}`,
