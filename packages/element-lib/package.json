@@ -10,6 +10,7 @@
   "scripts": {
     "services:start": "./scripts/start_services.sh",
     "services:stop": "./scripts/stop_services.sh",
+    "services:healthcheck": "./scripts/healthcheck.sh",
     "ipfs:start": "./scripts/ipfs/start.sh",
     "ipfs:stop": "./scripts/ipfs/stop.sh",
     "ganache:start": "./scripts/ganache/start.sh",

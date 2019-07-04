@@ -18,6 +18,4 @@ else
     start_ipfs
 fi
 
-# ./scripts/ipfs/health_check.sh
-
 exit 0

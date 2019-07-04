@@ -6,6 +6,7 @@
     "postinstall": "lerna bootstrap",
     "services:start": "lerna run services:start --stream",
     "services:stop": "lerna run services:stop --stream",
+    "services:healthcheck": "lerna run services:healthcheck --stream",
     "lint": "lerna run lint --stream",
     "test": "lerna run test --stream",
     "coverage": "lerna run coverage --stream",

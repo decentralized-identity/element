@@ -10,6 +10,9 @@ install:
   - npm i
 
 script:
-  - npm run test:contracts
-  - npm run coverage
-  - npm run codecov
+  - npm run services:start
+  - npm run services:healthcheck
+  # - npm run test:contracts
+  # - npm run coverage
+  # - npm run codecov
+  - npm run services:stop

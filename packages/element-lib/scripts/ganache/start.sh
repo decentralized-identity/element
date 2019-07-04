@@ -20,6 +20,4 @@ else
     start_ganache
 fi
 
-# ./scripts/ganache/health_check.sh
-
 exit 0
