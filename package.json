@@ -12,7 +12,7 @@
     "test:contracts": "lerna run test:contracts --stream",
     "create-local-runtimeconfig": "lerna run create-local-runtimeconfig",
     "contracts:migrate:dev": "lerna run contracts:migrate:dev",
-    "pre:push": "npm run i && npm run lint && npm run test:contracts && npm run contracts:migrate:dev && lerna run coverage --stream",
+    "pre:push": "lerna bootstrap && npm run lint && npm run test:contracts && npm run contracts:migrate:dev && lerna run coverage --stream",
     "codecov": "codecov"
   },
   "devDependencies": {

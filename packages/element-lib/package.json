@@ -20,6 +20,7 @@
     "pretest": "npm run services:start",
     "test": "jest --runInBand ",
     "posttest": "npm run clean",
+    "precoverage": "npm run services:start",
     "coverage": "jest --runInBand --coverage ",
     "postcoverage": "npm run clean && npm run services:stop",
     "test:contracts": "truffle test",
