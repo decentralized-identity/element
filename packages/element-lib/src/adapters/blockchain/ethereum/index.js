@@ -83,7 +83,7 @@ class EthereumBlockchain {
       } catch (e2) {
         throw new Error(
           `
-        Could not use someWeb3AsyncFun.
+        Could not use ${someWeb3AsyncFun}.
         Most likely reason is invalid nonce.
         See https://ethereum.stackexchange.com/questions/2527
 
