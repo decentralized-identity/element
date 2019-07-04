@@ -23,6 +23,7 @@ class Sidetree {
     require('./batchRequests')(this);
     require('./resolve')(this);
     require('./sync')(this);
+    require('./getNodeInfo')(this);
     require('./getTransactionSummary')(this);
     this.op = require('./op');
     this.sleep = seconds => new Promise(r => setTimeout(r, seconds * 1000));
@@ -84,6 +85,7 @@ class Sidetree {
     await this.storage.close();
     await this.serviceBus.close();
     await this.db.close();
+    await this.sleep(1); // ^ some of these will not exit properly, best to sleep a bit here.
   }
 }
 

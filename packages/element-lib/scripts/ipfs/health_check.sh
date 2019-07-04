@@ -1,0 +1,1 @@
+curl -s http://localhost:5001/api/v0/id | jq

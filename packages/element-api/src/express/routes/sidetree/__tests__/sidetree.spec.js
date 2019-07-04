@@ -16,14 +16,6 @@ beforeAll(async () => {
 afterAll(async () => {});
 
 describe('sidetree', () => {
-  it('node', async () => {
-    res = await server.get('/api/v1/sidetree/node').set('Accept', 'application/json');
-
-    expect(res.body.ipfs).toBeDefined();
-    expect(res.body.ethereum).toBeDefined();
-    expect(res.body.sidetree).toBeDefined();
-  });
-
   it('create', async () => {
     // be careful not to start batching or you will get 2 transcations.
     // await getSidetree();
@@ -67,7 +59,6 @@ describe('sidetree', () => {
     res = await server
       .get(`/api/v1/sidetree/did:elem:${didUniqueSuffix}`)
       .set('Accept', 'application/json');
-
     expect(res.body.id).toBe(`did:elem:${didUniqueSuffix}`);
   });
 

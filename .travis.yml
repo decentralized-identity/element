@@ -6,24 +6,6 @@ cache:
   directories:
     - "node_modules"
 
-env:
-  - ELEMENT_IPFS_MULTIADDR="/ip4/127.0.0.1/tcp/5001" ELEMENT_PROVIDER="http://localhost:8545" ELEMENT_MNEUMONIC="hazard pride garment scout search divide solution argue wait avoid title cave"
-
-before_install:
-  # Install Ganache & Truffle
-  - npm i -g firebase-tools@6.1.1 ganache-cli@6.1.0 truffle@5.0.8
-  - ganache-cli -i 133700 -m "$ELEMENT_MNEUMONIC" &>/dev/null &
-  # Install IPFS
-  - wget "https://dist.ipfs.io/go-ipfs/v0.4.19/go-ipfs_v0.4.19_linux-amd64.tar.gz" -O /tmp/ipfs.tar.gz
-  - pushd . && cd $HOME/bin && tar -xzvf /tmp/ipfs.tar.gz && popd
-  - export PATH="$HOME/bin/go-ipfs:$PATH"
-  - ipfs init
-  - ipfs daemon &>/dev/null &
-  - sleep 10
-  - curl -s http://localhost:5001/api/v0/id | jq -r '.'
-  - curl -s -X POST --data '{"jsonrpc":"2.0","method":"eth_accounts","params":[],"id":0}' http://localhost:8545 | jq -r '.'
-  - curl -s -X POST --data '{"jsonrpc":"2.0","method":"eth_getBalance","params":["0x1e228837561e32a6ec1b16f0574d6a493edc8863", "latest"],"id":1}' http://localhost:8545 | jq -r '.'
-
 install:
   - npm i
   - npm run bootstrap

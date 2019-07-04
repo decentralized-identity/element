@@ -8,16 +8,22 @@
     "url": "git+https://github.com/decentralized-identity/element.git"
   },
   "scripts": {
+    "services:start": "./scripts/start_services.sh",
+    "services:stop": "./scripts/stop_services.sh",
+    "ipfs:start": "./scripts/ipfs/start.sh",
+    "ipfs:stop": "./scripts/ipfs/stop.sh",
+    "ganache:start": "./scripts/ganache/start.sh",
+    "ganache:stop": "./scripts/ganache/stop.sh",
     "clean": "rm -rf element-pouchdb*",
-    "ganache": ". ../../example.env && ganache-cli -i 133700 -m \"$ELEMENT_MNEMONIC\"",
-    "ipfs": "npx ipfs config Addresses.API /ip4/0.0.0.0/tcp/5001 && npx ipfs daemon",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
+    "pretest": "npm run services:start",
     "test": "jest --runInBand ",
     "posttest": "npm run clean",
     "coverage": "jest --runInBand --coverage ",
-    "postcoverage": "npm run clean",
+    "postcoverage": "npm run clean && npm run services:stop",
     "test:contracts": "truffle test",
+    "pretest:contracts": "npm run services:start",
     "contracts:migrate:dev": "truffle migrate --network development --reset",
     "contracts:migrate:ropsten": "truffle migrate --network ropsten"
   },
@@ -65,8 +71,10 @@
     "eslint-plugin-node": "^8.0.0",
     "eslint-plugin-security": "^1.4.0",
     "faker": "^4.1.0",
+    "ganache-cli": "^6.1.0",
     "go-ipfs": "^0.4.21",
     "jest": "^24.5.0",
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "^8.5.1",
+    "truffle": "^5.0.8"
   }
 }

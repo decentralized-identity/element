@@ -33,37 +33,17 @@ const sidetree = new element.Sidetree({
   config: {
     BATCH_INTERVAL_SECONDS: config.sidetree.batch_interval_in_seconds,
     BAD_STORAGE_HASH_DELAY_SECONDS: config.sidetree.bad_storage_hash_delay_in_seconds,
-    VERBOSITY: 1,
+    VERBOSITY: config.sidetree.verbosity,
   },
 });
 
-const getSidetree = async () => {
-  if (!sidetree.batchInterval) {
-    await blockchain.resolving;
-    await sidetree.startBatching();
-  }
+// const getSidetree = async () => {
+//   if (!sidetree.batchInterval) {
+//     await blockchain.resolving;
+//     await sidetree.startBatching();
+//   }
 
-  return sidetree;
-};
+//   return sidetree;
+// };
 
-const getNodeInfo = async () => {
-  // make sure we have a contract.
-  await sidetree.blockchain.resolving;
-  const accounts = await sidetree.blockchain.web3.eth.getAccounts();
-  const data = await sidetree.storage.ipfs.version();
-  return {
-    ipfs: data,
-    ethereum: {
-      anchor_contract_address: config.ethereum.anchor_contract_address,
-      anchor_contract_start_block: config.ethereum.anchor_contract_start_block,
-      accounts,
-    },
-    sidetree: config.sidetree,
-  };
-};
-
-module.exports = {
-  sidetree,
-  getSidetree,
-  getNodeInfo,
-};
+module.exports = sidetree;
