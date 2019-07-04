@@ -4,3 +4,4 @@ node_modules
 .firebase
 elem-cache
 attic
+*.log
