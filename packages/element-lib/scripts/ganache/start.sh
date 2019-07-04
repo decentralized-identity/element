@@ -1,10 +1,9 @@
 GANACHE_PORT=8545
 
 ganache_running() {
-  nc -z localhost "$GANACHE_PORT" &>/dev/null
+  nc -z localhost "$GANACHE_PORT"
 }
 start_ganache() {
-  # 
   . ../../example.env
   npx ganache-cli -i 133700 -m "$ELEMENT_MNEMONIC" > /dev/null 2>&1 &
   GANACHE_PID=$!

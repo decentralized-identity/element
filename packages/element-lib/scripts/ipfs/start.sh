@@ -1,7 +1,7 @@
 IPFS_PORT=5001
 
 ipfs_running() {
-  nc -z localhost "$IPFS_PORT" &>/dev/null
+  nc -z localhost "$IPFS_PORT"
 }
 start_ipfs() {
   npx ipfs init > /dev/null 2>&1
