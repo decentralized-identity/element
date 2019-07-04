@@ -6,13 +6,11 @@
     "postinstall": "lerna bootstrap",
     "services:start": "lerna run services:start --stream",
     "services:stop": "lerna run services:stop --stream",
-    "lint": "lerna run lint",
+    "lint": "lerna run lint --stream",
     "test": "lerna run test --stream",
-    "coverage": "lerna run coverage --ignore @transmute/element-api --stream",
+    "coverage": "lerna run coverage --stream",
     "test:contracts": "lerna run test:contracts --stream",
-    "create-local-runtimeconfig": "lerna run create-local-runtimeconfig",
-    "contracts:migrate:dev": "lerna run contracts:migrate:dev",
-    "pre:push": "lerna bootstrap && npm run lint && npm run test:contracts && npm run contracts:migrate:dev && lerna run coverage --stream",
+    "pre:push": "npm run lint",
     "codecov": "codecov"
   },
   "devDependencies": {
