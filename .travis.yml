@@ -8,9 +8,7 @@ install:
 script:
   - npm run services:start
   - npm run services:healthcheck
-  - curl -s http://localhost:5001/api/v0/id | jq -r '.'
-  - curl -s -X POST --data '{"jsonrpc":"2.0","method":"eth_getBalance","params":["0x1e228837561e32a6ec1b16f0574d6a493edc8863", "latest"],"id":1}' http://localhost:8545 | jq -r '.'
-  # - npm run test:contracts
-  # - npm run coverage
-  # - npm run codecov
+  - npm run test:contracts
+  - npm run coverage
+  - npm run codecov
   - npm run services:stop
