@@ -5,3 +5,5 @@ node_modules
 elem-cache
 attic
 *.log
+
+licenses
