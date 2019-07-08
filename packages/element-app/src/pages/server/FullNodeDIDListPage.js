@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 
 import { compose } from 'recompose';
@@ -13,6 +13,10 @@ class FullNodeDIDListPage extends Component {
     return <DIDListPage {...this.props} nodeStore={this.props.fullNode} />;
   }
 }
+
+FullNodeDIDListPage.propTypes = {
+  fullNode: PropTypes.object.isRequired,
+};
 
 const ConnectedPage = compose(
   withRouter,

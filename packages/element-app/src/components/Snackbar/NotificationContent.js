@@ -1,4 +1,4 @@
-// @flow
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import classNames from 'classnames';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
@@ -78,5 +78,12 @@ class NotificationContent extends Component {
     );
   }
 }
+
+NotificationContent.propTypes = {
+  classes: PropTypes.any.isRequired,
+  message: PropTypes.any.isRequired,
+  onClose: PropTypes.any.isRequired,
+  variant: PropTypes.any.isRequired,
+};
 
 export default withStyles(styles)(NotificationContent);

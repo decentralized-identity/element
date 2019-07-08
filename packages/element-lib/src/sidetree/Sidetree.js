@@ -23,9 +23,23 @@ class Sidetree {
     require('./batchRequests')(this);
     require('./resolve')(this);
     require('./sync')(this);
+    require('./getNodeInfo')(this);
     require('./getTransactionSummary')(this);
     this.op = require('./op');
     this.sleep = seconds => new Promise(r => setTimeout(r, seconds * 1000));
+  }
+
+  async resolveWithRetry(did, retryCap, timeoutSeconds) {
+    let didDoc = null;
+    let count = 0;
+    while (count < retryCap && didDoc === null) {
+      // eslint-disable-next-line
+      didDoc = await this.resolve(did);
+      count += 1;
+      // eslint-disable-next-line
+      await this.sleep(timeoutSeconds || 1);
+    }
+    return didDoc;
   }
 
   async getPreviousOperationHash(didUniqueSuffix) {
@@ -42,23 +56,25 @@ class Sidetree {
   }
 
   async startBatching() {
-    this.batchInterval = setInterval(async () => {
-      const currentBatch = await this.db.read('element:sidetree:currentBatch');
-      if (currentBatch && currentBatch.operations && currentBatch.operations.length) {
-        await this.db.write('element:sidetree:currentBatch', {
-          operations: [],
-        });
-        operationsToTransaction({
-          operations: currentBatch.operations,
-          storage: this.storage,
-          blockchain: this.blockchain,
-        }).then(() => {
-          this.serviceBus.emit('element:sidetree:batchSubmitted', {
-            batch: currentBatch,
+    if (!this.batchInterval) {
+      this.batchInterval = setInterval(async () => {
+        const currentBatch = await this.db.read('element:sidetree:currentBatch');
+        if (currentBatch && currentBatch.operations && currentBatch.operations.length) {
+          await this.db.write('element:sidetree:currentBatch', {
+            operations: [],
           });
-        });
-      }
-    }, this.config.BATCH_INTERVAL_SECONDS * 1000);
+          operationsToTransaction({
+            operations: currentBatch.operations,
+            storage: this.storage,
+            blockchain: this.blockchain,
+          }).then(() => {
+            this.serviceBus.emit('element:sidetree:batchSubmitted', {
+              batch: currentBatch,
+            });
+          });
+        }
+      }, this.config.BATCH_INTERVAL_SECONDS * 1000);
+    }
   }
 
   async stopBatching() {
@@ -71,6 +87,7 @@ class Sidetree {
     await this.storage.close();
     await this.serviceBus.close();
     await this.db.close();
+    await this.sleep(1); // ^ some of these will not exit properly, best to sleep a bit here.
   }
 }
 

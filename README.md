@@ -12,14 +12,45 @@ Click below image for demo video.
 
 This is a lerna mono repo, see [packages](./packages) for all modules.
 
-See also [ion](https://github.com/decentralized-identity/ion), [sidetree-core](https://github.com/decentralized-identity/sidetree-core), [sidetree-ethereum](https://github.com/decentralized-identity/sidetree-ethereum), [sidetree-ipfs](https://github.com/decentralized-identity/sidetree-ipfs).
+See also [ion](https://github.com/decentralized-identity/ion), [sidetree](https://github.com/decentralized-identity/sidetree), [sidetree-ethereum](https://github.com/decentralized-identity/sidetree-ethereum).
 
-See [.travis.yml](./.travis.yml) for setup and test commands.
+## Getting Started
+
+#### Clone the repo:
+
+```
+git clone git@github.com:decentralized-identity/element.git
+cd element
+```
+
+#### Install:
 
 ```
 npm i
-npm run bootstrap
+```
+
+#### Run smart contract tests:
+
+```
 npm run test:contracts
-npm run contracts:migrate:dev
+```
+
+#### Run lib, api and app tests:
+
+```
 npm run test
 ```
+
+#### Lint
+
+```
+npm run lint
+```
+
+#### Coverage
+
+```
+npm run coverage
+```
+
+See [.travis.yml](./.travis.yml) for setup and test commands for linux.

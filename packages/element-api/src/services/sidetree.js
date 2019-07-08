@@ -1,16 +1,23 @@
 const element = require('@transmute/element-lib');
 const ElementFirestoreAdapter = require('./element-adapter-firestore');
+const ElementMemoryAdapter = require('./element-adapter-memory');
 
 const { getBaseConfig } = require('../config');
 
 const config = getBaseConfig();
 
-const { firebaseAdmin } = require('./firebase');
+let db;
 
-const db = new ElementFirestoreAdapter({
-  name: 'element-pouchdb.element-app',
-  firebaseAdmin,
-});
+if (config.env === 'local') {
+  // eslint-disable-next-line
+  db = new ElementMemoryAdapter();
+} else {
+  db = new ElementFirestoreAdapter({
+    name: 'element-pouchdb.element-app',
+    // eslint-disable-next-line
+    firebaseAdmin: require('./firebase'),
+  });
+}
 
 const serviceBus = new element.adapters.serviceBus.ElementNanoBusAdapter();
 
@@ -31,39 +38,17 @@ const sidetree = new element.Sidetree({
   serviceBus,
   db,
   config: {
-    BATCH_INTERVAL_SECONDS: 10,
-    BAD_STORAGE_HASH_DELAY_SECONDS: 30,
-    VERBOSITY: 1,
+    BATCH_INTERVAL_SECONDS: parseInt(config.sidetree.batch_interval_in_seconds, 10),
+    BAD_STORAGE_HASH_DELAY_SECONDS: parseInt(config.sidetree.bad_storage_hash_delay_in_seconds, 10),
+    VERBOSITY: parseInt(config.sidetree.verbosity, 10),
   },
 });
 
-const getSidetree = async () => {
-  if (!sidetree.batchInterval) {
-    await blockchain.resolving;
-    await sidetree.startBatching();
-  }
+module.exports = sidetree;
 
-  return sidetree;
-};
-
-const getNodeInfo = async () => {
-  // make sure we have a contract.
-  await sidetree.blockchain.resolving;
-  const accounts = await sidetree.blockchain.web3.eth.getAccounts();
-  const data = await sidetree.storage.ipfs.version();
-  return {
-    ipfs: data,
-    ethereum: {
-      anchor_contract_address: config.ethereum.anchor_contract_address,
-      anchor_contract_start_block: config.ethereum.anchor_contract_start_block,
-      accounts,
-    },
-    sidetree: config.sidetree,
-  };
-};
-
-module.exports = {
-  sidetree,
-  getSidetree,
-  getNodeInfo,
-};
+// module.exports = {
+//   close: async () => {
+//     await blockchain.close();
+//     // console.log('killable');
+//   },
+// };

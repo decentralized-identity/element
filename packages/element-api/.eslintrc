@@ -17,6 +17,12 @@
   },
   "rules": {
     "node/no-unsupported-features/es-syntax": "off",
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "allowModules": ["faker"]
+      }
+    ],
     "node/no-unpublished-require": [
       "error",
       {

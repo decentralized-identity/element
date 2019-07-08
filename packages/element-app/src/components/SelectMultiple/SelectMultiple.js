@@ -25,9 +25,20 @@ function NoOptionsMessage(props) {
   );
 }
 
+NoOptionsMessage.propTypes = {
+  inputRef: PropTypes.any.isRequired,
+  selectProps: PropTypes.any.isRequired,
+  innerProps: PropTypes.any.isRequired,
+  children: PropTypes.any.isRequired,
+};
+
 function inputComponent({ inputRef, ...props }) {
   return <div ref={inputRef} {...props} />;
 }
+
+inputComponent.propTypes = {
+  inputRef: PropTypes.any.isRequired,
+};
 
 function Control(props) {
   return (
@@ -47,6 +58,13 @@ function Control(props) {
   );
 }
 
+Control.propTypes = {
+  selectProps: PropTypes.any.isRequired,
+  innerProps: PropTypes.any.isRequired,
+  children: PropTypes.any.isRequired,
+  innerRef: PropTypes.any.isRequired,
+};
+
 function Option(props) {
   return (
     <MenuItem
@@ -63,6 +81,15 @@ function Option(props) {
   );
 }
 
+Option.propTypes = {
+  selectProps: PropTypes.any.isRequired,
+  innerProps: PropTypes.any.isRequired,
+  children: PropTypes.any.isRequired,
+  innerRef: PropTypes.any.isRequired,
+  isFocused: PropTypes.any.isRequired,
+  isSelected: PropTypes.any.isRequired,
+};
+
 function Placeholder(props) {
   return (
     <Typography
@@ -74,6 +101,12 @@ function Placeholder(props) {
     </Typography>
   );
 }
+
+Placeholder.propTypes = {
+  selectProps: PropTypes.any.isRequired,
+  innerProps: PropTypes.any.isRequired,
+  children: PropTypes.any.isRequired,
+};
 
 function ValueContainer(props) {
   return <div className={props.selectProps.classes.valueContainer}>{props.children}</div>;
@@ -98,6 +131,14 @@ function MultiValue(props) {
   );
 }
 
+MultiValue.propTypes = {
+  selectProps: PropTypes.any.isRequired,
+  innerProps: PropTypes.any.isRequired,
+  children: PropTypes.any.isRequired,
+  removeProps: PropTypes.any.isRequired,
+  isFocused: PropTypes.any.isRequired,
+};
+
 function Menu(props) {
   return (
     <Paper square className={props.selectProps.classes.paper} {...props.innerProps}>
@@ -105,6 +146,12 @@ function Menu(props) {
     </Paper>
   );
 }
+
+Menu.propTypes = {
+  selectProps: PropTypes.any.isRequired,
+  innerProps: PropTypes.any.isRequired,
+  children: PropTypes.any.isRequired,
+};
 
 const components = {
   Control,

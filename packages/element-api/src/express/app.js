@@ -14,6 +14,7 @@ const onErrorResponse = require('../../src/express/onErrorResponse');
 // Automatically allow cross-origin requests
 app.use(cors({ origin: true }));
 app.use(express.json());
+app.set('sidetree', require('../services/sidetree'));
 
 // if (process.env.NODE_ENV !== 'testing') {
 //   app.use(morgan('combined', { stream: winston.stream }));

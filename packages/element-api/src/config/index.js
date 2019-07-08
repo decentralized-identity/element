@@ -1,7 +1,20 @@
 const functions = require('firebase-functions');
 
 const getBaseConfig = () => {
-  const config = functions.config();
+  let config;
+  switch (process.env.NODE_ENV) {
+    case 'testing':
+      // eslint-disable-next-line
+      config = require('../../local.runtimeconfig.json');
+      break;
+
+    case 'development':
+    case 'production':
+    default:
+      config = functions.config();
+      break;
+  }
+
   return config.element;
 };
 
