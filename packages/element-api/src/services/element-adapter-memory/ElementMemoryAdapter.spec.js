@@ -1,9 +1,9 @@
-const ElementPouchDBAdapter = require('./ElementMemoryAdapter');
+const ElementMemoryAdapter = require('./ElementMemoryAdapter');
 
 let db;
 
 beforeAll(async () => {
-  db = new ElementPouchDBAdapter();
+  db = new ElementMemoryAdapter();
   await db.deleteDB();
 });
 
@@ -11,7 +11,7 @@ afterAll(async () => {
   await db.close();
 });
 
-describe('ElementPouchDBAdapter', () => {
+describe('ElementMemoryAdapter', () => {
   const id = 'test:example:123';
 
   describe('write', () => {

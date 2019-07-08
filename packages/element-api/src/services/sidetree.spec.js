@@ -3,8 +3,6 @@ const sidetree = require('./sidetree');
 
 jest.setTimeout(20 * 1000);
 
-beforeAll(async () => {});
-
 afterAll(async () => {
   await sidetree.close();
 });
