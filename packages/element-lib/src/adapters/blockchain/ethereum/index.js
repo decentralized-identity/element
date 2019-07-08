@@ -72,30 +72,43 @@ class EthereumBlockchain {
     return new Promise(resolve => setTimeout(resolve, 1000));
   }
 
-  async retryWithLatestTransactionCount(someWeb3AsyncFun, options) {
+  async retryWithLatestTransactionCount(method, args, options, maxRetries = 5) {
+    let tryCount = 0;
+    const errors = [];
     try {
-      return await someWeb3AsyncFun(options);
-    } catch (e1) {
+      // eslint-disable-next-line
+      return await method(...args, {
+        ...options,
+        // eslint-disable-next-line
+      });
+    } catch (e) {
+      errors.push(`${e}`);
+      tryCount += 1;
+    }
+    while (tryCount < maxRetries) {
       try {
-        return await someWeb3AsyncFun({
+        // eslint-disable-next-line
+        return await method(...args, {
           ...options,
-          nonce: await this.web3.eth.getTransactionCount(options.from, 'pending'),
+          nonce:
+            // eslint-disable-next-line
+            (await this.web3.eth.getTransactionCount(options.from, 'pending')) + tryCount - 1,
         });
-      } catch (e2) {
-        throw new Error(
-          `
-        Could not use someWeb3AsyncFun: ${someWeb3AsyncFun}.
-        Most likely reason is invalid nonce.
-        See https://ethereum.stackexchange.com/questions/2527
-
-        This interface uses web3, and cannot be parallelized. 
-        Consider using a different HD Path for each node / service / instance.
-
-        ${e1}
-        ${e2}`,
-        );
+      } catch (e) {
+        errors.push(`${e}`);
+        tryCount += 1;
       }
     }
+    throw new Error(`
+      Could not use method: ${method}.
+      Most likely reason is invalid nonce.
+      See https://ethereum.stackexchange.com/questions/2527
+
+      This interface uses web3, and cannot be parallelized. 
+      Consider using a different HD Path for each node / service / instance.
+
+      ${JSON.stringify(errors, null, 2)}
+      `);
   }
 
   async createNewContract(fromAddress) {
@@ -104,7 +117,7 @@ class EthereumBlockchain {
       [fromAddress] = await getAccounts(this.web3);
     }
 
-    const instance = await this.retryWithLatestTransactionCount(this.anchorContract.new, {
+    const instance = await this.retryWithLatestTransactionCount(this.anchorContract.new, [], {
       from: fromAddress,
       // TODO: Bad hard coded value, use gasEstimate
       gas: 4712388,
@@ -164,9 +177,17 @@ class EthereumBlockchain {
     const instance = await this.anchorContract.at(this.anchorContractAddress);
     const bytes32EncodedHash = base58EncodedMultihashToBytes32(anchorFileHash);
     try {
-      const receipt = await instance.anchorHash(bytes32EncodedHash, {
-        from,
-      });
+      // const receipt = await instance.anchorHash(bytes32EncodedHash, {
+      //   from,
+      // });
+
+      const receipt = await this.retryWithLatestTransactionCount(
+        instance.anchorHash,
+        [bytes32EncodedHash],
+        {
+          from,
+        },
+      );
       return eventLogToSidetreeTransaction(receipt.logs[0]);
     } catch (e) {
       console.log(e);
