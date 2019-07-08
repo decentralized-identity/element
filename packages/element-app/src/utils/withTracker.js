@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import GoogleAnalytics from 'react-ga';
 import { withRouter } from 'react-router';
 
@@ -33,6 +34,10 @@ const withTracker = (WrappedComponent, options = {}) => {
     render() {
       return <WrappedComponent {...this.props} />;
     }
+  };
+
+  HOC.propTypes = {
+    location: PropTypes.object.isRequired,
   };
 
   return withRouter(HOC);

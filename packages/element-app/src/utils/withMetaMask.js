@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 
 import Web3 from 'web3';
@@ -45,6 +45,11 @@ const withMetaMask = (WrappedComponent) => {
       }
       return <div />;
     }
+  };
+
+  HOC.propTypes = {
+    history: PropTypes.any.isRequired,
+    match: PropTypes.any.isRequired,
   };
 
   return withRouter(HOC);
