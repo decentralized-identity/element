@@ -16,9 +16,31 @@ const getLocalSidetree = require('./__fixtures__/getLocalSidetree');
 const fixtureStorage = require('./__fixtures__').storage;
 
 let sidetree;
-let service;
 let didUniqueSuffix;
 let anchorFileHash;
+
+const didDocument = {
+  '@context': 'https://w3id.org/did/v1',
+  publicKey: [
+    {
+      id: '#primary',
+      type: 'Secp256k1VerificationKey2018',
+      publicKeyHex: primaryKeypair.publicKey,
+    },
+    {
+      id: '#recovery',
+      type: 'Secp256k1VerificationKey2018',
+      publicKeyHex: recoveryKeypair.publicKey,
+    },
+  ],
+  service: [
+    {
+      id: '#transmute.element.test',
+      type: 'Transmute.Element.Test',
+      serviceEndpoint: `http://vanity.example.com#${Math.random()}`,
+    },
+  ],
+};
 
 // Why Sidetree DIDs are non transferable.
 // we need randomness here, because obviously IPFS will have the published
@@ -27,32 +49,10 @@ describe('LatePublishAttack', () => {
   beforeAll(async () => {
     sidetree = await getLocalSidetree('LatePublishAttack');
     await sidetree.db.deleteDB();
-    service = [
-      {
-        id: '#transmute.element.test',
-        type: 'Transmute.Element.Test',
-        serviceEndpoint: `http://vanity.example.com#${Math.random()}`,
-      },
-    ];
   });
 
   it('create a did', async () => {
-    const encodedPayload = element.func.encodeJson({
-      '@context': 'https://w3id.org/did/v1',
-      publicKey: [
-        {
-          id: '#primary',
-          type: 'Secp256k1VerificationKey2018',
-          publicKeyHex: primaryKeypair.publicKey,
-        },
-        {
-          id: '#recovery',
-          type: 'Secp256k1VerificationKey2018',
-          publicKeyHex: recoveryKeypair.publicKey,
-        },
-      ],
-      service,
-    });
+    const encodedPayload = element.func.encodeJson(didDocument);
     const signature = element.func.signEncodedPayload(encodedPayload, primaryKeypair.privateKey);
     const requestBody = {
       header: {
@@ -63,14 +63,22 @@ describe('LatePublishAttack', () => {
       payload: encodedPayload,
       signature,
     };
-
     const txn = await sidetree.createTransactionFromRequests(requestBody);
     expect(txn.transactionTime).toBeDefined();
     await sidetree.sync({
       fromTransactionTime: 0,
       toTransactionTime: txn.transactionTime,
     });
-    const [docRecord] = await sidetree.db.readCollection('element:sidetree:did:documentRecord');
+    const type = 'element:sidetree:did:documentRecord';
+    const [docRecord] = await sidetree.db.readCollection(type);
+    expect(docRecord.type).toBe(type);
+    expect(docRecord.record).toBeDefined();
+    expect(docRecord.record.doc).toEqual({
+      ...didDocument,
+      id: docRecord.record.doc.id,
+    });
+    expect(docRecord.record.previousOperationHash).toBeDefined();
+    expect(docRecord.record.lastTransaction).toBeDefined();
     didUniqueSuffix = docRecord.record.previousOperationHash;
   });
 
