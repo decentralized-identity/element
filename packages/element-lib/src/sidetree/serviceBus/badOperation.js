@@ -9,7 +9,6 @@ module.exports = (sidetree) => {
         reason,
       );
       await sidetree.db.write(`element:sidetree:operation:${operation.operationHash}`, {
-        // eslint-disable-next-line
         consideredUnresolvableUntil: moment()
           .add(sidetree.config.BAD_STORAGE_HASH_DELAY_SECONDS, 'seconds')
           .toISOString(),

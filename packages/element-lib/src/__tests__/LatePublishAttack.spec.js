@@ -1,19 +1,17 @@
 const element = require('../../index');
-
 const {
   primaryKeypair,
   primaryKeypair2,
   secondaryKeypair,
   recoveryKeypair,
   recoveryKeypair2,
-  // eslint-disable-next-line
 } = require('./__fixtures__');
-
-jest.setTimeout(20 * 1000);
-const sleep = seconds => new Promise(r => setTimeout(r, seconds * 1000));
-
 const getLocalSidetree = require('./__fixtures__/getLocalSidetree');
 const fixtureStorage = require('./__fixtures__').storage;
+
+jest.setTimeout(20 * 1000);
+
+const sleep = seconds => new Promise(r => setTimeout(r, seconds * 1000));
 
 let sidetree;
 let didUniqueSuffix;
@@ -73,12 +71,12 @@ describe('LatePublishAttack', () => {
     const [docRecord] = await sidetree.db.readCollection(type);
     expect(docRecord.type).toBe(type);
     expect(docRecord.record).toBeDefined();
+    expect(docRecord.record.previousOperationHash).toBeDefined();
+    expect(docRecord.record.lastTransaction).toBeDefined();
     expect(docRecord.record.doc).toEqual({
       ...didDocument,
       id: docRecord.record.doc.id,
     });
-    expect(docRecord.record.previousOperationHash).toBeDefined();
-    expect(docRecord.record.lastTransaction).toBeDefined();
     didUniqueSuffix = docRecord.record.previousOperationHash;
   });
 
@@ -181,8 +179,8 @@ describe('LatePublishAttack', () => {
     // Now we publish our sneeky trick.
     const ourLateAnchorFile = await fixtureStorage.read(anchorFileHash);
     const ourLateBatchFile = await fixtureStorage.read(ourLateAnchorFile.batchFileHash);
-    sidetree.storage.write(ourLateAnchorFile);
-    sidetree.storage.write(ourLateBatchFile);
+    await sidetree.storage.write(ourLateAnchorFile);
+    await sidetree.storage.write(ourLateBatchFile);
   });
 
   it('observers can see the transfer never occured.', async () => {

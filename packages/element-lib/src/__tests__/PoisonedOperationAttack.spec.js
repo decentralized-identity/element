@@ -1,6 +1,5 @@
 const element = require('../../index');
 const fixtures = require('../__tests__/__fixtures__');
-
 const getLocalSidetree = require('./__fixtures__/getLocalSidetree');
 
 jest.setTimeout(10 * 1000);
