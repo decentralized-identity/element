@@ -19,7 +19,7 @@ class ElementPouchDB {
         index: { fields: ['type', 'anchorFileHash', 'operationHash', 'batchFileHash'] },
       });
     } catch (e) {
-      // no update conflict
+      console.warn(e);
     }
   }
 
@@ -27,7 +27,7 @@ class ElementPouchDB {
     try {
       return await this.db.upsert(id, () => data);
     } catch (e) {
-      console.log(e, id, data);
+      console.warn(e, id, data);
       return null;
     }
   }
@@ -37,7 +37,7 @@ class ElementPouchDB {
       const docs = await this.db.get(id);
       return docs;
     } catch (e) {
-      // console.log(e);
+      // console.warn(e, id);
       return [];
     }
   }
@@ -55,7 +55,7 @@ class ElementPouchDB {
         .allDocs()
         .then(result => Promise.all(result.rows.map(row => this.db.remove(row.id, row.value.rev))));
     } catch (e) {
-      console.log('error: ', e);
+      console.warn(e);
       return null;
     }
   }
