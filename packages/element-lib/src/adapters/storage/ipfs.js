@@ -26,9 +26,8 @@ class IpfsStorage {
     }
   }
 
-  // FIXME
-  async close() {
-    return null || this;
+  close() {
+    return this;
   }
 
   async write(object) {
