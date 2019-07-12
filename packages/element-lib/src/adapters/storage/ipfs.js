@@ -36,8 +36,8 @@ class IpfsStorage {
   }
 
   async read(cid) {
-    const [node] = await resolveValueOrNullInSeconds(this.ipfs.get(cid), 5);
     try {
+      const [node] = await resolveValueOrNullInSeconds(this.ipfs.get(cid), 5);
       return JSON.parse(node.content);
     } catch (e) {
       throw new Error(`Invalid JSON: https://ipfs.io/ipfs/${cid}`);
