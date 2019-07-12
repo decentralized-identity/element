@@ -1,13 +1,13 @@
 const element = require('../../../index');
+const config = require('../../json/config.local.json');
 
 const testObj = {
   hello: 'world',
 };
 
-const config = require('../../../../json/config.local.json');
-
 describe('storage.ipfs', () => {
   let storage;
+
   beforeAll(() => {
     storage = element.storage.ipfs.configure({
       multiaddr: config.ipfsApiMultiAddr,
