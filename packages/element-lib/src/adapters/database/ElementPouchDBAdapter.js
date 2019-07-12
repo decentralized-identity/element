@@ -1,6 +1,5 @@
 let PouchDB;
 
-// eslint-disable-next-line
 if (process.browser) {
   PouchDB = require('pouchdb').default;
   PouchDB.plugin(require('pouchdb-find').default);

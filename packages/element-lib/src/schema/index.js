@@ -1,10 +1,7 @@
+/* eslint-disable no-underscore-dangle */
 const { Validator } = require('jsonschema');
-
-const { stringify } = JSON;
-
 const didDoc = require('./didDoc.json');
 const operationBindingModel = require('./operationBindingModel.json');
-
 const sidetreeTransaction = require('./sidetree/transaction.json');
 const sidetreeAnchorFile = require('./sidetree/anchorFile.json');
 const sidetreeBatchFile = require('./sidetree/batchFile.json');
@@ -22,15 +19,12 @@ class SchemaValidator {
    * Instantiates a SchemaValidator instance
    */
   constructor() {
-    //   eslint-disable-next-line
     this._validator = new Validator();
     Object.keys(schemas).forEach((sk) => {
       const s = schemas[sk];
-      //   eslint-disable-next-line
       if (!s) {
         throw new Error(`No schema found for ${sk}`);
       }
-      //   eslint-disable-next-line
       this._validator.addSchema(s, s.$id);
     });
   }
@@ -42,7 +36,6 @@ class SchemaValidator {
    * @param s The schema to add
    */
   addSchema(s) {
-    //   eslint-disable-next-line
     this._validator.addSchema(s, s.$id);
   }
 
@@ -53,8 +46,7 @@ class SchemaValidator {
    * @returns The results of the validation
    */
   validate(instance, s, options) {
-    const jsonSchemaCompatibleObject = JSON.parse(stringify(instance));
-    //   eslint-disable-next-line
+    const jsonSchemaCompatibleObject = JSON.parse(JSON.stringify(instance));
     return this._validator.validate(jsonSchemaCompatibleObject, s, options);
   }
 
