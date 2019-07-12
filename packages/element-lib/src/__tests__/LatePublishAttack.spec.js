@@ -1,24 +1,44 @@
 const element = require('../../index');
-
 const {
   primaryKeypair,
   primaryKeypair2,
   secondaryKeypair,
   recoveryKeypair,
   recoveryKeypair2,
-  // eslint-disable-next-line
 } = require('./__fixtures__');
-
-jest.setTimeout(20 * 1000);
-const sleep = seconds => new Promise(r => setTimeout(r, seconds * 1000));
-
 const getLocalSidetree = require('./__fixtures__/getLocalSidetree');
 const fixtureStorage = require('./__fixtures__').storage;
 
+jest.setTimeout(20 * 1000);
+
+const sleep = seconds => new Promise(r => setTimeout(r, seconds * 1000));
+
 let sidetree;
-let service;
 let didUniqueSuffix;
 let anchorFileHash;
+
+const didDocument = {
+  '@context': 'https://w3id.org/did/v1',
+  publicKey: [
+    {
+      id: '#primary',
+      type: 'Secp256k1VerificationKey2018',
+      publicKeyHex: primaryKeypair.publicKey,
+    },
+    {
+      id: '#recovery',
+      type: 'Secp256k1VerificationKey2018',
+      publicKeyHex: recoveryKeypair.publicKey,
+    },
+  ],
+  service: [
+    {
+      id: '#transmute.element.test',
+      type: 'Transmute.Element.Test',
+      serviceEndpoint: `http://vanity.example.com#${Math.random()}`,
+    },
+  ],
+};
 
 // Why Sidetree DIDs are non transferable.
 // we need randomness here, because obviously IPFS will have the published
@@ -27,32 +47,10 @@ describe('LatePublishAttack', () => {
   beforeAll(async () => {
     sidetree = await getLocalSidetree('LatePublishAttack');
     await sidetree.db.deleteDB();
-    service = [
-      {
-        id: '#transmute.element.test',
-        type: 'Transmute.Element.Test',
-        serviceEndpoint: `http://vanity.example.com#${Math.random()}`,
-      },
-    ];
   });
 
   it('create a did', async () => {
-    const encodedPayload = element.func.encodeJson({
-      '@context': 'https://w3id.org/did/v1',
-      publicKey: [
-        {
-          id: '#primary',
-          type: 'Secp256k1VerificationKey2018',
-          publicKeyHex: primaryKeypair.publicKey,
-        },
-        {
-          id: '#recovery',
-          type: 'Secp256k1VerificationKey2018',
-          publicKeyHex: recoveryKeypair.publicKey,
-        },
-      ],
-      service,
-    });
+    const encodedPayload = element.func.encodeJson(didDocument);
     const signature = element.func.signEncodedPayload(encodedPayload, primaryKeypair.privateKey);
     const requestBody = {
       header: {
@@ -63,14 +61,22 @@ describe('LatePublishAttack', () => {
       payload: encodedPayload,
       signature,
     };
-
     const txn = await sidetree.createTransactionFromRequests(requestBody);
     expect(txn.transactionTime).toBeDefined();
     await sidetree.sync({
       fromTransactionTime: 0,
       toTransactionTime: txn.transactionTime,
     });
-    const [docRecord] = await sidetree.db.readCollection('element:sidetree:did:documentRecord');
+    const type = 'element:sidetree:did:documentRecord';
+    const [docRecord] = await sidetree.db.readCollection(type);
+    expect(docRecord.type).toBe(type);
+    expect(docRecord.record).toBeDefined();
+    expect(docRecord.record.previousOperationHash).toBeDefined();
+    expect(docRecord.record.lastTransaction).toBeDefined();
+    expect(docRecord.record.doc).toEqual({
+      ...didDocument,
+      id: docRecord.record.doc.id,
+    });
     didUniqueSuffix = docRecord.record.previousOperationHash;
   });
 
@@ -173,8 +179,8 @@ describe('LatePublishAttack', () => {
     // Now we publish our sneeky trick.
     const ourLateAnchorFile = await fixtureStorage.read(anchorFileHash);
     const ourLateBatchFile = await fixtureStorage.read(ourLateAnchorFile.batchFileHash);
-    sidetree.storage.write(ourLateAnchorFile);
-    sidetree.storage.write(ourLateBatchFile);
+    await sidetree.storage.write(ourLateAnchorFile);
+    await sidetree.storage.write(ourLateBatchFile);
   });
 
   it('observers can see the transfer never occured.', async () => {

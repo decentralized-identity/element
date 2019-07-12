@@ -1,7 +1,6 @@
 const nanobus = require('nanobus');
 
 class ElementNanoBusAdapter {
-  // default.
   constructor() {
     this.serviceBus = nanobus();
   }

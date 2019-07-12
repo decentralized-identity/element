@@ -26,8 +26,8 @@ class IpfsStorage {
     }
   }
 
-  async close() {
-    return null || this;
+  close() {
+    return this;
   }
 
   async write(object) {
@@ -36,16 +36,12 @@ class IpfsStorage {
   }
 
   async read(cid) {
-    const [node] = await resolveValueOrNullInSeconds(this.ipfs.get(cid), 5);
-    let parsed = {};
     try {
-      parsed = JSON.parse(node.content);
+      const [node] = await resolveValueOrNullInSeconds(this.ipfs.get(cid), 5);
+      return JSON.parse(node.content);
     } catch (e) {
-      // console.warn(e);
       throw new Error(`Invalid JSON: https://ipfs.io/ipfs/${cid}`);
     }
-
-    return parsed;
   }
 }
 

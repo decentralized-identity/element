@@ -9,7 +9,9 @@ start_ganache() {
   GANACHE_PID=$!
   sleep 2
   npm run contracts:migrate:dev
-  lerna run env:create:local --stream
+  cd ../../
+  npx lerna run env:create:local --stream
+  cd -
 }
 
 if ganache_running; then

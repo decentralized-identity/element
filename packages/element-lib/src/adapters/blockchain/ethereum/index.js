@@ -1,10 +1,8 @@
 const Web3 = require('web3');
 const HDWalletProvider = require('truffle-hdwallet-provider');
 const contract = require('truffle-contract');
-
 const bytes32EnodedMultihashToBase58EncodedMultihash = require('../../../func/bytes32EnodedMultihashToBase58EncodedMultihash');
 const base58EncodedMultihashToBytes32 = require('../../../func/base58EncodedMultihashToBytes32');
-
 const anchorContractArtifact = require('../../../../build/contracts/SimpleSidetreeAnchor.json');
 
 const getWeb3 = ({ mnemonic, hdPath, providerUrl }) => {
@@ -50,6 +48,7 @@ const getAccounts = web3 => new Promise((resolve, reject) => {
     resolve(accounts);
   });
 });
+
 class EthereumBlockchain {
   constructor(web3, contractAddress) {
     this.web3 = web3;
