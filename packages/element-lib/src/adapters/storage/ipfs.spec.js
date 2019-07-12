@@ -1,4 +1,4 @@
-const element = require('../../../../../index');
+const element = require('../../../index');
 
 const testObj = {
   hello: 'world',
