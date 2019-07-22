@@ -5,7 +5,7 @@
 node_modules
 
 coverage
-lib
+./lib
 esm5
 lib-esm
 esm2015
