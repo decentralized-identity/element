@@ -1,0 +1,1 @@
+export { MnemonicKeySystem } from './MnemonicKeySystem';
