@@ -1,0 +1,13 @@
+export const ENCRYPTED_WALLET =
+  // tslint:disable-next-line:max-line-length
+  'n8R2Fg-XnPPJkAq7S1hUQJZVBvBuRSecmcZrO6kIkG83nGS6i-A1fiOvXx5K_6auzj5znuQ0JMYcjtV-1WE93R4tg7KZSyZZCWtdhHt9X1FTB5VpwzaPvRUPTB-tvv84KIZkrhQa3QjmgESx48dc44gFqbJBQ2qUxREB7v3tut9-TnLzVGKF-2PKHhcoKXIuaVVLPauHT7BQQY_FQFBfS41wrxBTGnD2oj0GqMHPBaut8wMLRtUa5YiIAwIkK9klp8D0iJKMWAmx_f1XjxLXaIDRAypI1T5_hr1opkGoY8nGZNqVik3M2FasB-DCm5c5WZdrzG9wFIG4cbtupJjeN6C5UkqPBEjuKM1rXWr8qSjDIsAhpujQSXY5aLzlclyPapdFwabw4phco6rxuUOUcwLEpzvj0V6eneCLLMK31uU00PgmL3C9q6N5wd8tV0bbFVecCNXrBGBpoDh3_0e8Xg';
+export const PUBLIC_KEY =
+  '027560af3387d375e3342a6968179ef3c6d04f5d33b2b611cf326d4708badd7770';
+
+export const PRIVATE_KEY =
+  'ae1605b013c5f6adfeb994e1cbb0777382c317ff309e8cc5500126e4b2c2e19c';
+
+export const MNEMONIC =
+  'forest defy velvet cliff unaware reveal limb forum render major again hard';
+
+export const PASSWORD = 'M4hmkOpE23uz';
