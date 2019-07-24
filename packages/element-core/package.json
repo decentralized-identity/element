@@ -1,13 +1,12 @@
 {
-  "name": "@transmute/element-wallet-lib",
+  "name": "@transmute/element-core",
   "version": "0.0.0",
-  "description": "A library for managing keys used for sidetree decentralized identities.",
+  "description": "A TypeScript Library for Sidetree Ethereum Methods.",
   "keywords": [
     "sidetree",
     "did",
     "decentralized",
     "identity",
-    "wallet",
     "cryptography"
   ],
   "main": "./bundles/index.umd.js",
@@ -17,7 +16,7 @@
   "sideEffects": false,
   "repository": {
     "type": "git",
-    "url": "https://github.com/OR13/element-wallet-lib"
+    "url": "https://github.com/decentralized-identity/element"
   },
   "author": "Orie Steele <orie@transmute.industries>",
   "license": "Apache-2.0",

@@ -4,7 +4,7 @@
 
 ## Bug report
 
-- @transmute/element-wallet-lib version: _x.x.x_ (<!-- (run `npm list @transmute/element-wallet-lib` from a terminal/cmd prompt): -->)
+- @transmute/element-core version: _x.x.x_ (<!-- (run `npm list @transmute/element-core` from a terminal/cmd prompt): -->)
 - Affected browsers (and versions): _IE 10_
 
 ### Current behaviour
