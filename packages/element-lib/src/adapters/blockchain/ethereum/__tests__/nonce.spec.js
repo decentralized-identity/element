@@ -2,6 +2,7 @@ const element = require('../../../../../index');
 
 const config = require('../../../../json/config.local.json');
 
+jest.setTimeout(10 * 1000);
 it('can write from 2 services to 2 contracts', async () => {
   const blockchain1 = element.blockchain.ethereum.configure({
     hdPath: "m/44'/60'/0'/0/0",
