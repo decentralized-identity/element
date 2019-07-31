@@ -38,6 +38,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@transmute/element-core": "^0.0.0",
     "base64url": "^3.0.1",
     "bip39": "^2.5.0",
     "did-resolver": "0.0.6",

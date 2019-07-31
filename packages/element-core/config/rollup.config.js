@@ -104,6 +104,7 @@ const UMDconfig = {
       bip39: 'bip39',
       hdkey: 'hdkey',
       secp256k1: 'secp256k1',
+      '@transmute/did-wallet': 'didWallet',
     },
   },
   plugins: removeEmpty(

@@ -53,4 +53,12 @@ npm run lint
 npm run coverage
 ```
 
+#### Publishing
+
+If you have 2fa enabled for npm (and you should!).
+
+```
+NPM_CONFIG_OTP=123456 lerna publish
+```
+
 See [.travis.yml](./.travis.yml) for setup and test commands for linux.

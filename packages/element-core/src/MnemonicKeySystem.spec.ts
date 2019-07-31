@@ -1,7 +1,3 @@
-jest.mock('./environment.ts', () => ({
-  IS_DEV: true,
-  IS_PROD: false,
-}));
 import hdkey from 'hdkey';
 import { MnemonicKeySystem } from './MnemonicKeySystem';
 
