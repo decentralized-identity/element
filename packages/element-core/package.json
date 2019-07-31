@@ -28,7 +28,7 @@
   "scripts": {
     "cleanup": "shx rm -rf dist docs",
     "prebuild": "npm run cleanup && npm run verify",
-    "build": "tsc && tsc --target es2018 --outDir dist/esm2015 && rollup -c config/rollup.config.js && rollup -c config/rollup.config.js --environment NODE_ENV:production && node scripts/build",
+    "build": "tsc --project ./tsconfig.build.json && tsc --project ./tsconfig.build.json --target es2018 --outDir dist/esm2015 && rollup -c config/rollup.config.js && rollup -c config/rollup.config.js --environment NODE_ENV:production && node scripts/build",
     "postbuild": "npm run size",
     "docs": "typedoc -p . --theme minimal --target 'es6' --tsconfig ./tsconfig.json --exclude  'src/**/*.spec.ts,src/**/__fixtures__/*' --out docs src/",
     "test": "jest -c ./config/jest.config.js",
