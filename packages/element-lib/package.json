@@ -58,6 +58,8 @@
     "pouchdb": "^7.0.0",
     "pouchdb-find": "^7.0.0",
     "pouchdb-upsert": "^2.2.0",
+    "rxdb": "^8.2.1",
+    "rxjs": "^6.5.2",
     "secp256k1": "^3.6.2",
     "truffle-contract": "^4.0.17",
     "truffle-hdwallet-provider": "^1.0.5",
