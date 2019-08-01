@@ -21,7 +21,6 @@
   },
   "dependencies": {
     "@google-cloud/logging-winston": "^0.10.2",
-    "@transmute/element-core": "^0.0.0",
     "@transmute/element-lib": "^0.0.2-2",
     "base64url": "^3.0.1",
     "cors": "^2.8.5",

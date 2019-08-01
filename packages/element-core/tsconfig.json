@@ -24,6 +24,6 @@
     ]
   },
   "include": ["./src"],
-  // "exclude": ["src/**/*.spec.ts", "src/**/__fixtures__/*", "src/**/__tests__"],
+
   "compileOnSave": false
 }
