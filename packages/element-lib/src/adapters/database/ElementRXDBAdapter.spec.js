@@ -15,8 +15,6 @@ afterAll(async () => {
 });
 
 describe('ElementPouchDBAdapter', () => {
-  const id = 'test:example:123';
-
   it('constructor takes a db name', () => {
     expect(db.name).toBe(dbName);
   });

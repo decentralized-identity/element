@@ -1,57 +1,35 @@
 const RxDB = require('rxdb');
 
-let adapter;
-
-if (process.browser) {
-  RxDB.plugin(require('pouchdb-adapter-idb'));
-  adapter = 'idb';
-} else {
-  RxDB.plugin(require('pouchdb-adapter-leveldb'));
-  adapter = require('memdown');
-}
-
-// if (process.browser) {
-//   PouchDB = require('pouchdb').default;
-//   PouchDB.plugin(require('pouchdb-find').default);
-//   PouchDB.plugin(require('pouchdb-upsert'));
-// } else {
-//   PouchDB = require('pouchdb');
-//   PouchDB.plugin(require('pouchdb-find'));
-//   PouchDB.plugin(require('pouchdb-upsert'));
-// }
-
 class ElementRXDBAdapter {
   constructor({ name }) {
     this.name = name;
-    // try {
-    //   this.db.createIndex({
-    //     index: { fields: ['type', 'anchorFileHash', 'operationHash', 'batchFileHash'] },
-    //   });
-    // } catch (e) {
-    //   console.warn(e);
-    // }
+    if (process.browser) {
+      RxDB.plugin(require('pouchdb-adapter-idb'));
+      this.adapter = 'idb';
+    } else {
+      RxDB.plugin(require('pouchdb-adapter-leveldb'));
+      this.adapter = require('memdown');
+    }
   }
 
   async init() {
     this.db = await RxDB.create({
       name: this.name,
-      adapter,
+      adapter: this.adapter,
       multiInstance: false,
-      // schema: {
-      //   version: 1,
-      //   title: 'TODO',
-      //   type: 'object',
-      //   properties: {
-      //     type: {
-      //     },
-      //     anchorFileHash: {
-      //     },
-      //     operationHash: {
-      //     },
-      //     batchFileHash: {
-      //     },
-      //   },
-      // },
+    });
+    await this.db.collection({
+      name: 'todo',
+      schema: {
+        version: 0,
+        type: 'object',
+        properties: {
+          type: {},
+          anchorFileHash: {},
+          operationHash: {},
+          batchFileHash: {},
+        },
+      },
     });
   }
 
