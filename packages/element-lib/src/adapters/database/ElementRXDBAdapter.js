@@ -74,10 +74,13 @@ class ElementRXDBAdapter {
   }
 
   async deleteDB() {
+    if (!this.collection) {
+      await this.init();
+    }
     return this.collection.remove();
   }
 
-  close() {
+  async close() {
     return this;
   }
 }
