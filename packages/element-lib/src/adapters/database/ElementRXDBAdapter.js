@@ -2,7 +2,9 @@ const RxDB = require('rxdb');
 
 class ElementRXDBAdapter {
   constructor({ name }) {
-    this.name = name;
+    // RXDB name regex is quite restrictive, therefore we have to replace
+    // some special characters like "." and "-" with "_"
+    this.name = name.replace(/\.|-/g, '_');
     if (process.browser) {
       RxDB.plugin(require('pouchdb-adapter-idb'));
       this.adapter = 'idb';
