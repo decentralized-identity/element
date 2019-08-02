@@ -16,8 +16,8 @@ beforeAll(async () => {
     multiaddr: config.ipfs.multiaddr,
   });
 
-  const db = new element.adapters.database.ElementPouchDBAdapter({
-    name: 'element-pouchdb.close',
+  const db = new element.adapters.database.ElementRXDBAdapter({
+    name: 'element_pouchdb_close',
   });
 
   const serviceBus = new element.adapters.serviceBus.ElementNanoBusAdapter();
