@@ -5,14 +5,14 @@ module.exports = {
   pascalCase,
   normalizePackageName,
   getOutputFileName,
-}
+};
 
 /**
  *
  * @param {string} myStr
  */
 function camelCaseToDash(myStr) {
-  return myStr.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()
+  return myStr.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
 }
 
 /**
@@ -20,7 +20,7 @@ function camelCaseToDash(myStr) {
  * @param {string} myStr
  */
 function dashToCamelCase(myStr) {
-  return myStr.replace(/-([a-z])/g, (g) => g[1].toUpperCase())
+  return myStr.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
 }
 
 /**
@@ -28,7 +28,7 @@ function dashToCamelCase(myStr) {
  * @param {string} myStr
  */
 function toUpperCase(myStr) {
-  return `${myStr.charAt(0).toUpperCase()}${myStr.substr(1)}`
+  return `${myStr.charAt(0).toUpperCase()}${myStr.substr(1)}`;
 }
 
 /**
@@ -36,7 +36,7 @@ function toUpperCase(myStr) {
  * @param {string} myStr
  */
 function pascalCase(myStr) {
-  return toUpperCase(dashToCamelCase(myStr))
+  return toUpperCase(dashToCamelCase(myStr));
 }
 
 /**
@@ -44,9 +44,9 @@ function pascalCase(myStr) {
  * @param {string} rawPackageName
  */
 function normalizePackageName(rawPackageName) {
-  const scopeEnd = rawPackageName.indexOf('/') + 1
+  const scopeEnd = rawPackageName.indexOf('/') + 1;
 
-  return rawPackageName.substring(scopeEnd)
+  return rawPackageName.substring(scopeEnd);
 }
 
 /**
@@ -55,5 +55,5 @@ function normalizePackageName(rawPackageName) {
  * @param {boolean?} isProd
  */
 function getOutputFileName(fileName, isProd = false) {
-  return isProd ? fileName.replace(/\.js$/, '.min.js') : fileName
+  return isProd ? fileName.replace(/\.js$/, '.min.js') : fileName;
 }

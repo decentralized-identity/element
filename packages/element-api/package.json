@@ -3,6 +3,7 @@
   "version": "0.0.2-2",
   "description": "Node.js REST API For Element / Sidetree Ethereum",
   "author": "Orie Steele",
+  "private": true,
   "license": "Apache-2.0",
   "scripts": {
     "env:create:local": "node ./scripts/env_to_json_config.js local ../../example.env ./local.runtimeconfig.json && ./scripts/update_runtimeconfig_contract.sh ./local.runtimeconfig.json",
@@ -33,7 +34,6 @@
     "tar": ">=2.2.2",
     "winston": "^3.1.0"
   },
-  "private": true,
   "engines": {
     "node": "8"
   },
