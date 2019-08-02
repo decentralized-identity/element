@@ -18,12 +18,13 @@ class ElementRXDBAdapter {
       adapter: this.adapter,
       multiInstance: false,
     });
-    await this.db.collection({
+    this.collection = await this.db.collection({
       name: 'todo',
       schema: {
         version: 0,
         type: 'object',
         properties: {
+          id: {},
           type: {},
           anchorFileHash: {},
           operationHash: {},
@@ -33,24 +34,24 @@ class ElementRXDBAdapter {
     });
   }
 
-  // async write(id, data) {
-  //   try {
-  //     return await this.db.upsert(id, () => data);
-  //   } catch (e) {
-  //     console.warn(e, id, data);
-  //     return null;
-  //   }
-  // }
+  write(id, data) {
+    return this.collection
+      .upsert({
+        _id: id,
+        id,
+        ...data,
+      })
+      .then(doc => doc.toJSON());
+  }
 
-  // async read(id) {
-  //   try {
-  //     const docs = await this.db.get(id);
-  //     return docs;
-  //   } catch (e) {
-  //     // console.warn(e, id);
-  //     return [];
-  //   }
-  // }
+  async read(id) {
+    return this.collection
+      .findOne()
+      .where('_id')
+      .eq(id)
+      .exec()
+      .then(doc => doc.toJSON());
+  }
 
   // async readCollection(type) {
   //   const { docs } = await this.db.find({
