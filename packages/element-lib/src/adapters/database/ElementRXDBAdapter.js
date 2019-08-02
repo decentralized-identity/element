@@ -24,11 +24,21 @@ class ElementRXDBAdapter {
         version: 0,
         type: 'object',
         properties: {
-          id: {},
-          type: {},
-          anchorFileHash: {},
-          operationHash: {},
-          batchFileHash: {},
+          id: {
+            type: 'string',
+          },
+          type: {
+            type: 'string',
+          },
+          anchorFileHash: {
+            type: 'string',
+          },
+          operationHash: {
+            type: 'string',
+          },
+          batchFileHash: {
+            type: 'string',
+          },
         },
       },
     });
