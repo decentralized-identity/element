@@ -19,7 +19,7 @@ class ElementRXDBAdapter {
       multiInstance: false,
     });
     this.collection = await this.db.collection({
-      name: 'todo',
+      name: 'elementcollection',
       schema: {
         version: 0,
         type: 'object',
