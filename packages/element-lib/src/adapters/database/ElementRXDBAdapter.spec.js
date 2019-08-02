@@ -50,11 +50,11 @@ describe('ElementPouchDBAdapter', () => {
     });
   });
 
-  // describe.skip('readCollection', () => {
-  //   it('can read by type', async () => {
-  //     const record = await db.readCollection('test:example');
-  //     expect(record.length).toBe(1);
-  //     expect(record[0].data).toBe(456);
-  //   });
-  // });
+  describe('readCollection', () => {
+    it('can read by type', async () => {
+      const record = await db.readCollection('test:example');
+      expect(record.length).toBe(1);
+      expect(record[0].anchorFileHash).toBe(456);
+    });
+  });
 });

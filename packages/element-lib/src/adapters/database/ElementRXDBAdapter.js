@@ -53,12 +53,14 @@ class ElementRXDBAdapter {
       .then(doc => doc.toJSON());
   }
 
-  // async readCollection(type) {
-  //   const { docs } = await this.db.find({
-  //     selector: { type },
-  //   });
-  //   return docs;
-  // }
+  async readCollection(type) {
+    return this.collection
+      .find()
+      .where('type')
+      .eq(type)
+      .exec()
+      .then(arrayOfDocs => arrayOfDocs.map(doc => doc.toJSON()));
+  }
 
   // async deleteDB() {
   //   try {
