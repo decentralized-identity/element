@@ -63,16 +63,9 @@ class ElementRXDBAdapter {
       .then(arrayOfDocs => arrayOfDocs.map(doc => doc.toJSON()));
   }
 
-  // async deleteDB() {
-  //   try {
-  //     return await this.db
-  //       .allDocs()
-  //       .then(result => Promise.all(result.rows.map(row => this.db.remove(row.id, row.value.rev))));
-  //   } catch (e) {
-  //     console.warn(e);
-  //     return null;
-  //   }
-  // }
+  async deleteDB() {
+    return this.collection.remove();
+  }
 
   close() {
     return this;
