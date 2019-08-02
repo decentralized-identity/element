@@ -24,8 +24,14 @@ describe('ElementPouchDBAdapter', () => {
   const anchorFileHash1 = 'anchorFileHash1';
   const anchorFileHash2 = 'anchorFileHash2';
 
-  it('constructor takes a db name', () => {
-    expect(db.name).toBe(dbName);
+  describe('constructor', () => {
+    it('should set dbName', () => {
+      expect(db.name).toBe(dbName);
+    });
+
+    it('should set adapter', () => {
+      expect(db.adapter).toBeDefined();
+    });
   });
 
   describe('write', () => {
