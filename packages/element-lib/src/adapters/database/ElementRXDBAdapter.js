@@ -16,11 +16,14 @@ class ElementRXDBAdapter {
   }
 
   async _init() {
-    this.db = await RxDB.create({
-      name: this.name,
-      adapter: this.adapter,
-      multiInstance: false,
-    });
+    // Only create db if it doesnt exist already
+    if (!this.db) {
+      this.db = await RxDB.create({
+        name: this.name,
+        adapter: this.adapter,
+        multiInstance: false,
+      });
+    }
     this.collection = await this.db.collection({
       name: 'elementcollection',
       schema: {
