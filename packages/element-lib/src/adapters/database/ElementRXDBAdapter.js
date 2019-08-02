@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const RxDB = require('rxdb');
 
 class ElementRXDBAdapter {
@@ -14,7 +15,7 @@ class ElementRXDBAdapter {
     }
   }
 
-  async init() {
+  async _init() {
     this.db = await RxDB.create({
       name: this.name,
       adapter: this.adapter,
@@ -46,7 +47,10 @@ class ElementRXDBAdapter {
     });
   }
 
-  write(id, data) {
+  async write(id, data) {
+    if (!this.collection) {
+      await this._init();
+    }
     return this.collection
       .upsert({
         _id: id,
@@ -57,6 +61,9 @@ class ElementRXDBAdapter {
   }
 
   async read(id) {
+    if (!this.collection) {
+      await this._init();
+    }
     return this.collection
       .findOne()
       .where('_id')
@@ -67,6 +74,9 @@ class ElementRXDBAdapter {
   }
 
   async readCollection(type) {
+    if (!this.collection) {
+      await this._init();
+    }
     return this.collection
       .find()
       .where('type')
@@ -77,9 +87,11 @@ class ElementRXDBAdapter {
 
   async deleteDB() {
     if (!this.collection) {
-      await this.init();
+      await this._init();
     }
-    return this.collection.remove();
+    await this.collection.remove();
+    // Recreates an empty collection
+    await this._init();
   }
 
   async close() {
