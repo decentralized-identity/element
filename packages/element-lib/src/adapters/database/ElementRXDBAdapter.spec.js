@@ -85,7 +85,19 @@ describe('ElementPouchDBAdapter', () => {
 
     it('should return an empty array if no record has the given type', async () => {
       const record = await db.readCollection(type3);
-      expect(record).toBe([]);
+      expect(record).toEqual([]);
+    });
+  });
+
+  describe('deleteDB', () => {
+    it('should remove all records', async () => {
+      expect(await db.read(id1)).toBeDefined();
+      expect(await db.read(id2)).toBeDefined();
+      expect(await db.read(id3)).toBeDefined();
+      await db.deleteDB();
+      expect(await db.read(id1)).toBe(null);
+      expect(await db.read(id2)).toBe(null);
+      expect(await db.read(id3)).toBe(null);
     });
   });
 });
