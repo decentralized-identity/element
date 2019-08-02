@@ -61,4 +61,11 @@ If you have 2fa enabled for npm (and you should!).
 NPM_CONFIG_OTP=123456 lerna publish
 ```
 
+#### Testing Documentation
+
+```
+npm i -g http-server
+serve ./docs
+```
+
 See [.travis.yml](./.travis.yml) for setup and test commands for linux.
