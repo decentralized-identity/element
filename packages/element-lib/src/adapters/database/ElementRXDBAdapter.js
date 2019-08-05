@@ -86,7 +86,7 @@ class ElementRXDBAdapter {
       .eq(id)
       .exec()
       .then(doc => doc.toJSON())
-      .catch(() => null);
+      .catch(() => []);
   }
 
   async readCollection(type) {
