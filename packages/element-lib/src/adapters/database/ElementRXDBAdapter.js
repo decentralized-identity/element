@@ -54,6 +54,9 @@ class ElementRXDBAdapter {
           record: {},
           transaction: {},
           operation: {},
+          didUniqueSuffixes: {},
+          merkleRoot: {},
+          operations: {},
         },
       },
     });
