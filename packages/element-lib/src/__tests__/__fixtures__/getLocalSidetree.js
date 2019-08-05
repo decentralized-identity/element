@@ -6,7 +6,7 @@ module.exports = async (dbName) => {
     multiaddr: config.ipfsApiMultiAddr,
   });
 
-  const db = new element.adapters.database.ElementPouchDBAdapter({
+  const db = new element.adapters.database.ElementRXDBAdapter({
     name: `element-pouchdb.${dbName}`,
   });
 

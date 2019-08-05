@@ -17,8 +17,7 @@ module.exports = async (sidetree) => {
     let transactionTimeHash;
     try {
       const blockchainTime = await sidetree.blockchain.getBlockchainTime(lastTransactionTime);
-      // eslint-disable-next-line
-      transactionTimeHash = blockchainTime.transactionTimeHash;
+      ({ transactionTimeHash } = blockchainTime);
     } catch (e) {
       const currentTime = await sidetree.blockchain.getCurrentTime();
       if (currentTime.time < lastTransactionTime) {
