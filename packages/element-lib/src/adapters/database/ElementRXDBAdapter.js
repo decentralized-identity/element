@@ -58,6 +58,8 @@ class ElementRXDBAdapter {
           didUniqueSuffixes: {},
           merkleRoot: {},
           operations: {},
+          syncStartDateTime: {},
+          syncStopDateTime: {},
         },
       },
     });
