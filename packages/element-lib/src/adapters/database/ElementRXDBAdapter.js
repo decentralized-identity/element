@@ -16,16 +16,8 @@ class ElementRXDBAdapter {
     }
   }
 
-  async _init() {
-    // Only create db if it doesnt exist already
-    if (!this.db) {
-      this.db = await RxDB.create({
-        name: this.name,
-        adapter: this.adapter,
-        multiInstance: false,
-      });
-    }
-    this.collection = await this.db.collection({
+  async _createCollection() {
+    return this.db.collection({
       name: 'elementcollection',
       schema: {
         version: 0,
@@ -63,6 +55,16 @@ class ElementRXDBAdapter {
         },
       },
     });
+  }
+
+  async _init() {
+    // Only create db if it doesnt exist already
+    this.db = await RxDB.create({
+      name: this.name,
+      adapter: this.adapter,
+      multiInstance: false,
+    });
+    this.collection = await this._createCollection();
   }
 
   async write(id, data) {
@@ -109,7 +111,7 @@ class ElementRXDBAdapter {
     }
     await this.collection.remove();
     // Recreates an empty collection
-    await this._init();
+    this.collection = await this._createCollection();
   }
 
   async close() {

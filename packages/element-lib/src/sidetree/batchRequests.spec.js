@@ -10,7 +10,6 @@ jest.setTimeout(30 * 1000);
 let sidetree;
 
 beforeEach(async () => {
-  sidetree = await getLocalSidetree('batchRequests');
   generateActors(3);
 });
 
@@ -20,6 +19,7 @@ afterEach(async () => {
 
 describe('batchRequests', () => {
   it('can batch once..', async (done) => {
+    sidetree = await getLocalSidetree('batchRequestsOnce');
     expect.assertions(6);
     let currentBatch = await sidetree.db.read('element:sidetree:currentBatch');
     expect(currentBatch.operations).toBeUndefined();
@@ -45,6 +45,7 @@ describe('batchRequests', () => {
   });
 
   it('can batch many times..', async (done) => {
+    sidetree = await getLocalSidetree('batchRequestsMany');
     expect.assertions(8);
     let batchCount = 0;
     let txns = await sidetree.getTransactions();
