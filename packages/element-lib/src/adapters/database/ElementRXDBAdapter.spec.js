@@ -7,7 +7,6 @@ beforeAll(async () => {
   db = new ElementRXDBAdapter({
     name: dbName,
   });
-  await db.init();
 });
 
 afterAll(async () => {
@@ -64,7 +63,7 @@ describe('ElementPouchDBAdapter', () => {
 
     it('should return null if record does not exist', async () => {
       const record = await db.read(id2);
-      expect(record).toBe(null);
+      expect(record).toEqual([]);
     });
   });
 
@@ -101,9 +100,9 @@ describe('ElementPouchDBAdapter', () => {
       expect(await db.read(id2)).toBeDefined();
       expect(await db.read(id3)).toBeDefined();
       await db.deleteDB();
-      expect(await db.read(id1)).toBe(null);
-      expect(await db.read(id2)).toBe(null);
-      expect(await db.read(id3)).toBe(null);
+      expect(await db.read(id1)).toEqual([]);
+      expect(await db.read(id2)).toEqual([]);
+      expect(await db.read(id3)).toEqual([]);
     });
   });
 });
