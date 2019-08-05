@@ -5,7 +5,8 @@ class ElementRXDBAdapter {
   constructor({ name }) {
     // RXDB name regex is quite restrictive, therefore we have to replace
     // some special characters like "." and "-" with "_"
-    this.name = name.replace(/\.|-/g, '_');
+    // and put all letters to lowercase
+    this.name = name.replace(/\.|-/g, '_').toLowerCase();
     if (process.browser) {
       RxDB.plugin(require('pouchdb-adapter-idb'));
       this.adapter = 'idb';
