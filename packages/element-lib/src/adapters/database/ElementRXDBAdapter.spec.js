@@ -61,7 +61,7 @@ describe('ElementPouchDBAdapter', () => {
       expect(record.type).toBe(type1);
     });
 
-    it('should return null if record does not exist', async () => {
+    it('should return an empty array if record does not exist', async () => {
       const record = await db.read(id2);
       expect(record).toEqual([]);
     });

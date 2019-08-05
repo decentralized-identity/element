@@ -17,7 +17,6 @@ module.exports = async (sidetree) => {
     let transactionTimeHash;
     try {
       const blockchainTime = await sidetree.blockchain.getBlockchainTime(lastTransactionTime);
-      // FIXME: why is this undefined?
       ({ transactionTimeHash } = blockchainTime);
     } catch (e) {
       const currentTime = await sidetree.blockchain.getCurrentTime();
