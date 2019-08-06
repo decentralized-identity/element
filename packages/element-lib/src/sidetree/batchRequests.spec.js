@@ -22,7 +22,7 @@ describe('batchRequests', () => {
     sidetree = await getLocalSidetree('batchRequestsOnce');
     expect.assertions(6);
     let currentBatch = await sidetree.db.read('element:sidetree:currentBatch');
-    expect(currentBatch.operations).toBeUndefined();
+    expect(currentBatch).toBe(null);
     const reqs = [createByActorIndex(0), createByActorIndex(1), createByActorIndex(2)];
     await sidetree.batchRequests(reqs);
     currentBatch = await sidetree.db.read('element:sidetree:currentBatch');
