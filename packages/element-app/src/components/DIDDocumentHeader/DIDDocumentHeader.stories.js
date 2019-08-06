@@ -1,9 +1,6 @@
 import React from 'react';
-
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-
-
 import { DIDDocumentHeader } from './DIDDocumentHeader';
 
 const didDocument = {
@@ -26,7 +23,7 @@ const didDocument = {
 };
 
 storiesOf('DID Document ', module).add('Header', () => (
-  <DIDDocumentHeader did={didDocument.id} onCopyToClipboard={(item)=>{
-    action('copied to clipboard: ')(item)
+  <DIDDocumentHeader did={didDocument.id} onCopyToClipboard={(item) => {
+    action('copied to clipboard: ')(item);
   }} />
 ));
