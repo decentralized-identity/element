@@ -11,9 +11,15 @@
   },
   "scripts": {
     "build": "react-scripts build",
+    "build-element-core": "cd ../element-core; npm run build; cd -",
+    "pretest": "npm run build-element-core",
+    "precoverage": "npm run build-element-core",
     "test": "npm run test:node && npm run test:react",
-    "test:react": "CI=true react-scripts test --env=jsdom --testPathIgnorePatterns=./src/Node",
-    "test:node": "CI=true react-scripts test --env=node --testPathIgnorePatterns=./src/React",
+    "test:react": "react-scripts test ---watchAll=false -env=jsdom --testPathIgnorePatterns=./src/Node",
+    "test:node": "react-scripts test ---watchAll=false -env=node --testPathIgnorePatterns=./src/React",
+    "coverage": "npm run coverage:node && npm run coverage:react",
+    "coverage:react": "react-scripts test --coverage --watchAll=false --env=jsdom --testPathIgnorePatterns=./src/Node",
+    "coverage:node": "react-scripts test --coverage --watchAll=false --env=node --testPathIgnorePatterns=./src/React",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
