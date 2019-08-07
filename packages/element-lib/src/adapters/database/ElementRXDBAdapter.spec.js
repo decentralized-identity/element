@@ -13,7 +13,7 @@ afterAll(async () => {
   await db.close();
 });
 
-describe('ElementPouchDBAdapter', () => {
+describe('ElementRXDBAdapter', () => {
   const id1 = 'id1';
   const id2 = 'id2';
   const id3 = 'id3';
@@ -61,9 +61,9 @@ describe('ElementPouchDBAdapter', () => {
       expect(record.type).toBe(type1);
     });
 
-    it('should return an empty array if record does not exist', async () => {
+    it('should return null if record does not exist', async () => {
       const record = await db.read(id2);
-      expect(record).toEqual([]);
+      expect(record).toBe(null);
     });
   });
 
@@ -100,9 +100,9 @@ describe('ElementPouchDBAdapter', () => {
       expect(await db.read(id2)).toBeDefined();
       expect(await db.read(id3)).toBeDefined();
       await db.deleteDB();
-      expect(await db.read(id1)).toEqual([]);
-      expect(await db.read(id2)).toEqual([]);
-      expect(await db.read(id3)).toEqual([]);
+      expect(await db.read(id1)).toBe(null);
+      expect(await db.read(id2)).toBe(null);
+      expect(await db.read(id3)).toBe(null);
     });
   });
 });

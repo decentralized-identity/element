@@ -37,8 +37,7 @@ class ElementPouchDB {
       const docs = await this.db.get(id);
       return docs;
     } catch (e) {
-      // console.warn(e, id);
-      return [];
+      return null;
     }
   }
 

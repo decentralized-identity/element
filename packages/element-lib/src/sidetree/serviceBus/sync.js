@@ -94,7 +94,7 @@ module.exports = (sidetree) => {
           anchorFile.didUniqueSuffixes.map(async (uid) => {
             let updatedState = {};
             const cachedRecord = await sidetree.db.read(`element:sidetree:did:elem:${uid}`);
-            if (cachedRecord.record) {
+            if (cachedRecord && cachedRecord.record) {
               updatedState = cachedRecord.record;
             }
             // eslint-disable-next-line
