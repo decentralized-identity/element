@@ -13,7 +13,7 @@ afterAll(async () => {
   await db.close();
 });
 
-describe('ElementPouchDBAdapter', () => {
+describe('ElementRXDBAdapter', () => {
   const id1 = 'id1';
   const id2 = 'id2';
   const id3 = 'id3';
