@@ -11,8 +11,9 @@
   },
   "scripts": {
     "build": "react-scripts build",
-    "pretest": "",
-    "precoverage": "",
+    "build-element-core": "cd ../element-core; npm run build; cd -",
+    "pretest": "npm run build-element-core",
+    "precoverage": "npm run build-element-core",
     "test": "npm run test:node && npm run test:react",
     "test:react": "react-scripts test ---watchAll=false -env=jsdom --testPathIgnorePatterns=./src/Node",
     "test:node": "react-scripts test ---watchAll=false -env=node --testPathIgnorePatterns=./src/React",
