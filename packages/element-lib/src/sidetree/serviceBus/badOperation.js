@@ -8,7 +8,7 @@ module.exports = (sidetree) => {
         //  operation,
         reason,
       );
-      await sidetree.db.write(`element:sidetree:operation:${operation.operationHash}`, {
+      await sidetree.db.write(`element:sidetree:operation:${operation.operation.operationHash}`, {
         consideredUnresolvableUntil: moment()
           .add(sidetree.config.BAD_STORAGE_HASH_DELAY_SECONDS, 'seconds')
           .toISOString(),
