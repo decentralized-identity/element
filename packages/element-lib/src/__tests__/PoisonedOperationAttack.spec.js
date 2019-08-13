@@ -40,18 +40,19 @@ afterAll(async () => {
 });
 
 describe('Poisoned Operation Attack', () => {
-  it('survives small poison', async (done) => {
+  it('should survives small poison', async (done) => {
     sidetree.serviceBus.on('element:sidetree:error:badOperation', async ({ operation }) => {
       expect(operation.operation.operationHash).toBe('xcn-0vw4B0M2JKbNXYfsePO3mUnpuGtnLo86MBybbO4');
       done();
     });
+    await sidetree.resolve('did:elem:xcn-0vw4B0M2JKbNXYfsePO3mUnpuGtnLo86MBybbO4');
+  });
 
-    const didDoc = await sidetree.resolve('did:elem:xcn-0vw4B0M2JKbNXYfsePO3mUnpuGtnLo86MBybbO4');
-    expect(didDoc).toBe(null);
+  it('should write a consideredUnresolvableUntil field in the operation', async () => {
     await sidetree.sleep(2);
-    const op = await sidetree.db.read(
+    const operation = await sidetree.db.read(
       'element:sidetree:operation:xcn-0vw4B0M2JKbNXYfsePO3mUnpuGtnLo86MBybbO4',
     );
-    expect(op.consideredUnresolvableUntil).toBeDefined();
+    expect(operation.consideredUnresolvableUntil).toBeDefined();
   });
 });
