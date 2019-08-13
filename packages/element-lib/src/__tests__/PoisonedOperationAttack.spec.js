@@ -41,16 +41,9 @@ afterAll(async () => {
 
 describe('Poisoned Operation Attack', () => {
   it('survives small poison', async (done) => {
-    let count = 0;
     sidetree.serviceBus.on('element:sidetree:error:badOperation', async ({ operation }) => {
-      count++;
-
-      if (count === 1) {
-        expect(operation.operation.operationHash).toBe(
-          'xcn-0vw4B0M2JKbNXYfsePO3mUnpuGtnLo86MBybbO4',
-        );
-        done();
-      }
+      expect(operation.operation.operationHash).toBe('xcn-0vw4B0M2JKbNXYfsePO3mUnpuGtnLo86MBybbO4');
+      done();
     });
 
     const didDoc = await sidetree.resolve('did:elem:xcn-0vw4B0M2JKbNXYfsePO3mUnpuGtnLo86MBybbO4');
