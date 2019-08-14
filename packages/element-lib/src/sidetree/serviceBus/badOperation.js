@@ -1,14 +1,9 @@
 const moment = require('moment');
 
 module.exports = (sidetree) => {
-  sidetree.serviceBus.on('element:sidetree:error:badOperation', async ({ operation, reason }) => {
+  sidetree.serviceBus.on('element:sidetree:error:badOperation', async ({ operation }) => {
     try {
-      console.log(
-        'bad operation: ',
-        //  operation,
-        reason,
-      );
-      await sidetree.db.write(`element:sidetree:operation:${operation.operationHash}`, {
+      await sidetree.db.write(`element:sidetree:operation:${operation.operation.operationHash}`, {
         consideredUnresolvableUntil: moment()
           .add(sidetree.config.BAD_STORAGE_HASH_DELAY_SECONDS, 'seconds')
           .toISOString(),
