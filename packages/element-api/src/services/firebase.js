@@ -12,8 +12,8 @@ const serviceAccountPath = path.resolve(
 );
 // eslint-disable-next-line security/detect-non-literal-fs-filename
 if (fs.existsSync(serviceAccountPath)) {
-  /* eslint-disable max-len */
-  // eslint-disable-next-line import/no-dynamic-require,global-require,security/detect-non-literal-require
+  // TODO
+  // eslint-disable-next-line
   serviceAccountKey = require(serviceAccountPath);
 }
 if (!firebaseAdmin.apps.length) {
@@ -35,7 +35,7 @@ const teardown = async () => {
 module.exports = {
   firebaseAdmin,
   authAdmin,
-  db,
-  functions: firebaseFunctions,
+  functions,
+  firestore,
   teardown
 };
