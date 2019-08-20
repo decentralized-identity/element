@@ -1,14 +1,14 @@
-const fs = require("fs");
-const path = require("path");
-const firebaseAdmin = require("firebase-admin");
-const functions = require("firebase-functions");
+const fs = require('fs');
+const path = require('path');
+const firebaseAdmin = require('firebase-admin');
+const functions = require('firebase-functions');
 // Required for side-effects
-require("firebase/firestore");
+require('firebase/firestore');
 
 let serviceAccountKey = false;
 const serviceAccountPath = path.resolve(
   __dirname,
-  "../../element-did-firebase-adminsdk.json"
+  '../../element-did-firebase-adminsdk.json',
 );
 // eslint-disable-next-line security/detect-non-literal-fs-filename
 if (fs.existsSync(serviceAccountPath)) {
@@ -21,7 +21,7 @@ if (!firebaseAdmin.apps.length) {
     credential: serviceAccountKey
       ? firebaseAdmin.credential.cert(serviceAccountKey)
       : firebaseAdmin.credential.applicationDefault(),
-    databaseURL: "https://element-did.firebaseio.com"
+    databaseURL: 'https://element-did.firebaseio.com',
   });
 }
 
@@ -37,5 +37,5 @@ module.exports = {
   authAdmin,
   functions,
   firestore,
-  teardown
+  teardown,
 };
