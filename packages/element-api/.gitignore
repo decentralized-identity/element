@@ -3,4 +3,4 @@ coverage
 *.runtimeconfig.json
 *.log
 
-*firebase-adminsdk-*
+*firebase-adminsdk*
