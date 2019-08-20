@@ -8,8 +8,8 @@ const config = getBaseConfig();
 
 let db;
 
-if (config.env === "local") {
-  // eslint-disable-next-line
+// TODO: verify everything works
+if (process.env.NODE_ENV === 'testing') {
   db = new ElementMemoryAdapter();
 } else {
   db = new ElementFirestoreAdapter({ firestore });
