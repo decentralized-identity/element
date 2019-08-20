@@ -47,10 +47,3 @@ const sidetree = new element.Sidetree({
 });
 
 module.exports = sidetree;
-
-// module.exports = {
-//   close: async () => {
-//     await blockchain.close();
-//     // console.log('killable');
-//   },
-// };
