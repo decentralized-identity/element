@@ -5,11 +5,8 @@ const reducer = async (state = {}, anchoredOperation, sidetree) => {
     const { transaction, operation } = anchoredOperation;
     const type = operation.decodedOperation.header.operation;
     const operationHandler = handlers[type];
-    // eslint-disable-next-line
     if (operationHandler) {
-      // eslint-disable-next-line
       const nextState = await operationHandler(state, anchoredOperation);
-
       // only persist valid operations.
       try {
         await sidetree.db.write(`element:sidetree:operation:${operation.operationHash}`, {

@@ -9,7 +9,6 @@ const verifyOperationSignature = require('../../func/verifyOperationSignature');
 // Spec Ambiguity....
 // https://github.com/decentralized-identity/sidetree-core/issues/112
 module.exports = async (state, anchoredOperation) => {
-  // console.log("create", anchoredOperation);
   const { transaction, operation } = anchoredOperation;
 
   const didDoc = operation.decodedOperationPayload;
