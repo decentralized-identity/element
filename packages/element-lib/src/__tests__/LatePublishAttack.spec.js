@@ -18,7 +18,7 @@ let didUniqueSuffix;
 let anchorFileHash;
 
 const didDocument = {
-  '@context': 'https://w3id.org/did/v0.11',
+  '@context': 'https://w3id.org/did/v1',
   publicKey: [
     {
       id: '#primary',
