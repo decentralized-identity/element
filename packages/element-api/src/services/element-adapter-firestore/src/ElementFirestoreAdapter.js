@@ -42,11 +42,6 @@ class ElementFirestoreAdapter {
         .delete()),
     );
   }
-
-  async close() {
-    // TODO
-    return this;
-  }
 }
 
 module.exports = ElementFirestoreAdapter;
