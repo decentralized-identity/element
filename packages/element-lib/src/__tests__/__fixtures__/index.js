@@ -14,7 +14,7 @@ const bobKeys = {
 };
 
 const createPayloadTemplate = {
-  '@context': 'https://w3id.org/did/v1',
+  '@context': 'https://w3id.org/did/v0.11',
   publicKey: [
     {
       id: '#key1',
@@ -108,7 +108,7 @@ const generateCreates = async (actorMap) => {
       type: 'create',
       kid: '#key1',
       payload: {
-        '@context': 'https://w3id.org/did/v1',
+        '@context': 'https://w3id.org/did/v0.11',
         publicKey: [
           {
             id: '#key1',

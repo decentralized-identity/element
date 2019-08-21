@@ -10,7 +10,7 @@ const {
 describe('operationsToTransaction', () => {
   it('should batch and anchor operations to blockchain', async () => {
     const encodedPayload = element.func.encodeJson({
-      '@context': 'https://w3id.org/did/v1',
+      '@context': 'https://w3id.org/did/v0.11',
       publicKey: [
         {
           id: '#primary',

@@ -5,7 +5,7 @@ describe('element.func.requestBodyToEncodedOperation', () => {
   it('encodes a client request as an operation', async () => {
     const keys = await element.func.createKeys();
     const payload = {
-      '@context': 'https://w3id.org/did/v1',
+      '@context': 'https://w3id.org/did/v0.11',
       publicKey: [
         {
           id: '#key1',

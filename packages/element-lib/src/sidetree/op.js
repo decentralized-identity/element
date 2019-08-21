@@ -2,7 +2,7 @@ const func = require('../func');
 
 const create = ({ primaryKey, recoveryPublicKey }) => {
   const encodedPayload = func.encodeJson({
-    '@context': 'https://w3id.org/did/v1',
+    '@context': 'https://w3id.org/did/v0.11',
     publicKey: [
       {
         id: '#primary',
@@ -113,7 +113,7 @@ const deactivate = ({ didUniqueSuffix, recoveryPrivateKey }) => {
 };
 
 const getDidUniqueSuffix = ({ primaryKey, recoveryPublicKey }) => func.payloadToHash({
-  '@context': 'https://w3id.org/did/v1',
+  '@context': 'https://w3id.org/did/v0.11',
   publicKey: [
     {
       id: '#primary',

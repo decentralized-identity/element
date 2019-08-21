@@ -16,7 +16,7 @@ beforeAll(async () => {
 
   // bad operation ( no keys create! ) / but valid encoding
   const encodedPayload = element.func.encodeJson({
-    '@context': 'https://w3id.org/did/v1',
+    '@context': 'https://w3id.org/did/v0.11',
     publicKey: [],
   });
   const signature = element.func.signEncodedPayload(

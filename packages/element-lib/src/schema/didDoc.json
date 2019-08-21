@@ -5,8 +5,8 @@
   "properties": {
     "@context": {
       "type": "string",
-      "example": "https://w3id.org/did/v1",
-      "enum": ["https://w3id.org/did/v1"]
+      "example": "https://w3id.org/did/v0.11",
+      "enum": ["https://w3id.org/did/v0.11"]
     },
     "id": {
       "type": "string",
