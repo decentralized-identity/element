@@ -1,6 +1,6 @@
 class ElementFirestoreAdapter {
   constructor({ firestore }) {
-    this.db = firestore();
+    this.db = firestore;
   }
 
   async write(id, data) {
