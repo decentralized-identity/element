@@ -63,7 +63,7 @@ class DisplayPlayloadDialog extends React.Component {
                 this.setState({
                   type: 'create',
                   jsonData: {
-                    '@context': 'https://w3id.org/did/v1',
+                    '@context': 'https://w3id.org/did/v0.11',
                     publicKey: [
                       {
                         id: '#key1',

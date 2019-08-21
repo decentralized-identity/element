@@ -1,8 +1,6 @@
 class ElementFirestoreAdapter {
-  constructor({ name, firebaseAdmin }) {
-    this.dbName = name;
-    this.firebase = firebaseAdmin;
-    this.db = firebaseAdmin.firestore();
+  constructor({ firestore }) {
+    this.db = firestore;
   }
 
   async write(id, data) {
@@ -43,10 +41,6 @@ class ElementFirestoreAdapter {
         .doc(doc.id)
         .delete()),
     );
-  }
-
-  async close() {
-    this.firebase.app('[DEFAULT]').delete();
   }
 }
 

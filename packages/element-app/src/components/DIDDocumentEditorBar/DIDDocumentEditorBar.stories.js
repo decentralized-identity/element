@@ -6,7 +6,7 @@ import { action } from '@storybook/addon-actions';
 import { DIDDocumentEditorBar } from './DIDDocumentEditorBar';
 
 const didDocument = {
-  '@context': 'https://w3id.org/did/v1',
+  '@context': 'https://w3id.org/did/v0.11',
   publicKey: [
     {
       id: '#key1',

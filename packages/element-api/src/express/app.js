@@ -16,10 +16,6 @@ app.use(cors({ origin: true }));
 app.use(express.json());
 app.set('sidetree', require('../services/sidetree'));
 
-// if (process.env.NODE_ENV !== 'testing') {
-//   app.use(morgan('combined', { stream: winston.stream }));
-// }
-
 app.options('*', cors({ origin: true }));
 
 app.use('/api/v1/', require('../../src/express/routes/index'));
@@ -29,7 +25,9 @@ app.use(onErrorResponse);
 
 if (process.env.NODE_ENV === 'development') {
   // eslint-disable-next-line
-  console.log('\n🔥 API DOCS: http://localhost:5002/element-did/us-central1/main/docs\n');
+  console.log(
+    '\n🔥 API DOCS: http://localhost:5002/element-did/us-central1/main/docs\n',
+  );
 }
 
 // must go last.
