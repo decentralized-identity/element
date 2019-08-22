@@ -18,6 +18,7 @@ module.exports = async (sidetree) => {
     try {
       blockchainTime = await sidetree.blockchain.getBlockchainTime(lastTransactionTime);
     } catch (e) {
+      console.warn('Network switch happened here with error', e);
       // probably switched networks. we need to delete the cache and reload from scratch.
       blockchainTime = await sidetree.blockchain.getBlockchainTime(0);
     }
