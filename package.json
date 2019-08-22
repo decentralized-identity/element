@@ -29,5 +29,8 @@
       "pre-push": "npm run lint",
       "commit-msg": "commitlint --config config/commitlint.config.js -E HUSKY_GIT_PARAMS"
     }
+  },
+  "engines": {
+    "node": ">=10.0 <12.0"
   }
 }

@@ -82,5 +82,8 @@
     "jest": "^24.5.0",
     "jsonwebtoken": "^8.5.1",
     "truffle": "^5.0.8"
+  },
+  "engines": {
+    "node": ">=10.0 <12.0"
   }
 }
