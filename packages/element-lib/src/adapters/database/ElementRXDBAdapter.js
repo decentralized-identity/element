@@ -38,7 +38,6 @@ class ElementRXDBAdapter {
           batchFileHash: {
             type: 'string',
           },
-          networkChangeDetected: {},
           transactionTime: {},
           transactionTimeHash: {},
           transactionNumber: {},
