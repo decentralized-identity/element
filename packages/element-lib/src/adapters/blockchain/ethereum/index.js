@@ -75,10 +75,8 @@ class EthereumBlockchain {
     let tryCount = 0;
     const errors = [];
     try {
-      // eslint-disable-next-line
-      return await method(...args, {
+      return method(...args, {
         ...options,
-        // eslint-disable-next-line
       });
     } catch (e) {
       errors.push(`${e}`);
@@ -86,8 +84,7 @@ class EthereumBlockchain {
     }
     while (tryCount < maxRetries) {
       try {
-        // eslint-disable-next-line
-        return await method(...args, {
+        return method(...args, {
           ...options,
           nonce:
             // eslint-disable-next-line
@@ -176,10 +173,6 @@ class EthereumBlockchain {
     const instance = await this.anchorContract.at(this.anchorContractAddress);
     const bytes32EncodedHash = base58EncodedMultihashToBytes32(anchorFileHash);
     try {
-      // const receipt = await instance.anchorHash(bytes32EncodedHash, {
-      //   from,
-      // });
-
       const receipt = await this.retryWithLatestTransactionCount(
         instance.anchorHash,
         [bytes32EncodedHash],
