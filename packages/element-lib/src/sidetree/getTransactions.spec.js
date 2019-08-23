@@ -68,4 +68,15 @@ describe('sidetree.getTransactions', () => {
     // eslint-disable-next-line
     expect(txns[0]._rev).toBeDefined();
   });
+
+  it('should return transactions transactionTimeHash', async () => {
+    txns = await sidetree.getTransactions({
+      transactionTimeHash: txn1.transactionTimeHash,
+    });
+    expect(txns.length).toBe(2);
+    txns = await sidetree.getTransactions({
+      transactionTimeHash: txn2.transactionTimeHash,
+    });
+    expect(txns.length).toBe(1);
+  });
 });
