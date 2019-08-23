@@ -8,29 +8,24 @@ module.exports = (sidetree) => {
     const {
       since, transactionTimeHash, count, cacheOnly,
     } = args;
-    if (transactionTimeHash) {
-      const blockchainTime = await sidetree.blockchain.getBlockchainTime(transactionTimeHash);
-      start = blockchainTime.time;
-      // if (count) does not work because count = 0 is a valid argument but evaluates as false
-      if (count !== undefined) {
-        end = blockchainTime.time + count;
-      }
-    }
     if (cacheOnly) {
       transactions = await sidetree.db.readCollection('element:sidetree:transaction');
     } else {
+      if (transactionTimeHash) {
+        const blockchainTime = await sidetree.blockchain.getBlockchainTime(transactionTimeHash);
+        start = blockchainTime.time;
+        // if (count) does not work because count = 0 is a valid argument but evaluates as false
+        if (count !== undefined) {
+          end = start + count;
+        }
+      }
       transactions = await sidetree.blockchain.getTransactions(start, end);
-      await Promise.all(
-        transactions.map(async (transaction) => {
-          await sidetree.db.write(
-            `element:sidetree:transaction:${transaction.transactionTimeHash}`,
-            {
-              type: 'element:sidetree:transaction',
-              ...transaction,
-            },
-          );
-        }),
-      );
+      // Update the cache
+      const cachedTransactionsPromises = transactions.map(transaction => sidetree.db.write(`element:sidetree:transaction:${transaction.transactionTimeHash}`, {
+        type: 'element:sidetree:transaction',
+        ...transaction,
+      }));
+      await Promise.all(cachedTransactionsPromises);
     }
     transactions = transactions.filter(txn => txn.transactionNumber >= (since || 0));
 
