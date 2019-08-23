@@ -8,27 +8,11 @@ module.exports = async (sidetree) => {
     const didUniqueSuffix = did.split(':').pop();
 
     const cachedRecord = await sidetree.db.read(`element:sidetree:did:elem:${didUniqueSuffix}`);
-    let lastTransactionTime = 0;
     if (cachedRecord && cachedRecord.record) {
       updatedState = cachedRecord.record;
-      lastTransactionTime = updatedState.lastTransaction.transactionTime;
     }
 
-    let blockchainTime;
-    try {
-      blockchainTime = await sidetree.blockchain.getBlockchainTime(lastTransactionTime);
-    } catch (e) {
-      console.warn('Network switch happened here with error', e);
-      // probably switched networks. we need to delete the cache and reload from scratch.
-      blockchainTime = await sidetree.blockchain.getBlockchainTime(0);
-    }
-    // TODO: transactionTimeHash does not seem to be defined in blockchainTime
-    const { transactionTimeHash } = blockchainTime;
-
-    const transactions = await sidetree.getTransactions({
-      since: 0,
-      transactionTimeHash,
-    });
+    const transactions = await sidetree.getTransactions();
 
     let items = transactions.map(transaction => ({
       transaction,
