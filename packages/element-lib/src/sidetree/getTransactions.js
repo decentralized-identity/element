@@ -1,5 +1,5 @@
 module.exports = (sidetree) => {
-  //   eslint-disable-next-line
+  // eslint-disable-next-line
   sidetree.getTransactions = async args => {
     let transactions;
     let start = 0;
@@ -9,13 +9,22 @@ module.exports = (sidetree) => {
       transactions = await sidetree.blockchain.getTransactions(start, end);
     } else {
       const {
-        since, transactionTimeHash, count, cacheOnly,
+        since, transactionTimeHash, count, cacheOnly, fromTransactionTime,
       } = args;
 
-      if (count) {
+      if (fromTransactionTime) {
+        start = fromTransactionTime;
+        if (count !== undefined) {
+          end = fromTransactionTime + count;
+        }
+      }
+
+      if (transactionTimeHash) {
         const blockchainTime = await sidetree.blockchain.getBlockchainTime(transactionTimeHash);
         start = blockchainTime.time;
-        end = blockchainTime.time + count;
+        if (count !== undefined) {
+          end = blockchainTime.time + count;
+        }
       }
       if (cacheOnly) {
         transactions = await sidetree.db.readCollection('element:sidetree:transaction');
