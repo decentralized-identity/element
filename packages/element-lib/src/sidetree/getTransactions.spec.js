@@ -38,14 +38,12 @@ describe('sidetree.getTransactions', () => {
   it('should return transactions count', async () => {
     txns = await sidetree.getTransactions({
       since: 0,
-      transactionTimeHash: txn1.transactionTimeHash,
       count: 1,
     });
     expect(txns.length).toBe(2);
 
     txns = await sidetree.getTransactions({
       since: 1,
-      transactionTimeHash: txn1.transactionTimeHash,
       count: 1,
     });
     expect(txns.length).toBe(1);
@@ -54,12 +52,10 @@ describe('sidetree.getTransactions', () => {
   it('should return transactions since', async () => {
     txns = await sidetree.getTransactions({
       since: 0,
-      transactionTimeHash: txn1.transactionTimeHash,
     });
     expect(txns.length).toBe(2);
     txns = await sidetree.getTransactions({
       since: 1,
-      transactionTimeHash: txn1.transactionTimeHash,
     });
     expect(txns.length).toBe(1);
   });

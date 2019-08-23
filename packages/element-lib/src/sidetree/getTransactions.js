@@ -9,19 +9,13 @@ module.exports = (sidetree) => {
       transactions = await sidetree.blockchain.getTransactions(start, end);
     } else {
       const {
-        since, transactionTimeHash, count, cacheOnly, fromTransactionTime,
+        since, transactionTimeHash, count, cacheOnly,
       } = args;
-
-      if (fromTransactionTime) {
-        start = fromTransactionTime;
-        if (count !== undefined) {
-          end = fromTransactionTime + count;
-        }
-      }
 
       if (transactionTimeHash) {
         const blockchainTime = await sidetree.blockchain.getBlockchainTime(transactionTimeHash);
         start = blockchainTime.time;
+        // if (count) does not work because count = 0 is a valid argument but evaluates as false
         if (count !== undefined) {
           end = blockchainTime.time + count;
         }
