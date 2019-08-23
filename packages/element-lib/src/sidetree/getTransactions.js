@@ -1,7 +1,6 @@
 module.exports = (sidetree) => {
   // eslint-disable-next-line
-  sidetree.getTransactions = async () => {
-    const args = this.arguments || {};
+  sidetree.getTransactions = async (args = {}) => {
     let transactions;
     let start = 0;
     let end = 'latest';
