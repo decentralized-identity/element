@@ -11,8 +11,13 @@ module.exports = async (sidetree) => {
     if (cachedRecord && cachedRecord.record) {
       updatedState = cachedRecord.record;
     }
-
-    const transactions = await sidetree.getTransactions({ omitTimestamp: true });
+    const transactionTime = updatedState.lastTransaction
+      ? updatedState.lastTransaction.transactionTime
+      : null;
+    const transactions = await sidetree.getTransactions({
+      transactionTime,
+      omitTimestamp: true,
+    });
 
     let items = transactions.map(transaction => ({
       transaction,
