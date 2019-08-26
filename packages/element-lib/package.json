@@ -45,7 +45,7 @@
     "fast-json-patch": "^2.0.7",
     "hdkey": "^1.1.1",
     "ipfs-api": "^26.1.2",
-    "ipfs-http-client": "^30.1.1",
+    "ipfs-http-client": "^33.1.1",
     "ipfs-unixfs": "^0.1.16",
     "ipld-dag-pb": "^0.15.3",
     "jsonschema": "^1.2.4",
