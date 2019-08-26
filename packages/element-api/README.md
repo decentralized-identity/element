@@ -28,11 +28,3 @@ firebase functions:config:set element.sidetree.batch_interval_in_seconds='10'
 firebase functions:config:unset element.ethereum.mneumonic
 
 ```
-
-#### Scripts
-
-Switching to a new local contract.
-
-```
-./scripts/set-new-anchor-contract.sh
-```
