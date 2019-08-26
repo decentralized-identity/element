@@ -6,11 +6,14 @@ module.exports = (sidetree) => {
     let end = 'latest';
 
     const {
-      since, transactionTimeHash, count, cacheOnly, omitTimestamp,
+      since, transactionTimeHash, transactionTime, count, cacheOnly, omitTimestamp,
     } = args;
     if (cacheOnly) {
       transactions = await sidetree.db.readCollection('element:sidetree:transaction');
     } else {
+      if (transactionTime) {
+        start = transactionTime;
+      }
       if (transactionTimeHash) {
         const blockchainTime = await sidetree.blockchain.getBlockchainTime(transactionTimeHash);
         start = blockchainTime.time;
