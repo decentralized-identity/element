@@ -75,7 +75,8 @@ class EthereumBlockchain {
     let tryCount = 0;
     const errors = [];
     try {
-      return method(...args, {
+      // eslint-disable-next-line
+      return await method(...args, {
         ...options,
       });
     } catch (e) {
