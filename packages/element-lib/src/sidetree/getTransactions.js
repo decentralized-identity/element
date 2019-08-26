@@ -17,10 +17,10 @@ module.exports = (sidetree) => {
       if (transactionTimeHash) {
         const blockchainTime = await sidetree.blockchain.getBlockchainTime(transactionTimeHash);
         start = blockchainTime.time;
-        // if (count) does not work because count = 0 is a valid argument but evaluates as false
-        if (count !== undefined) {
-          end = start + count;
-        }
+      }
+      // if (count) does not work because count = 0 is a valid argument but evaluates as false
+      if (count !== undefined) {
+        end = start + count;
       }
       transactions = await sidetree.blockchain.getTransactions(start, end, { omitTimestamp });
       // Update the cache
