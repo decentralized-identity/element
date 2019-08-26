@@ -10,22 +10,19 @@ Firebase Cloud Functions for Element DID
 firebase functions:config:set element.env=production
 firebase functions:config:set element.commit=$(git log -1 --format="%H")
 
+### Ethereum
 
 firebase functions:config:set element.ethereum.mnemonic='hazard pride garment scout search divide solution argue wait avoid title cave'
-
-firebase functions:config:set element.ethereum.provider_url='http://localhost:8545'
-
-firebase functions:config:set element.ipfs.multiaddr='/ip4/127.0.0.1/tcp/5001'
-
+firebase functions:config:set element.ethereum.provider_url='https://ropsten.infura.io/v3/<API_KEY>'
 firebase functions:config:set element.ethereum.anchor_contract_address='0xD49Da2b7C0A15f6ac5A856f026D68A9B9848D96f'
 
-firebase functions:config:set element.ethereum.anchor_contract_address=$(cat ./node_modules/@transmute/element-lib/build/contracts/SimpleSidetreeAnchor.json| jq -r '.networks["133700"].address')
+### Sidetree
 
-firebase functions:config:unset element.ethereum.mneumonic
-
-
+firebase functions:config:set element.ipfs.multiaddr='/dns4/ipfs.infura.io/tcp/5001/https'
 firebase functions:config:set element.sidetree.max_batch_size='10'
 firebase functions:config:set element.sidetree.batch_interval_in_seconds='10'
+
+firebase functions:config:unset element.ethereum.mneumonic
 
 ```
 
