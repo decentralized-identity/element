@@ -6,7 +6,7 @@ module.exports = (sidetree) => {
     let end = 'latest';
 
     const {
-      since, transactionTimeHash, count, cacheOnly,
+      since, transactionTimeHash, count, cacheOnly, omitTimestamp,
     } = args;
     if (cacheOnly) {
       transactions = await sidetree.db.readCollection('element:sidetree:transaction');
@@ -19,7 +19,7 @@ module.exports = (sidetree) => {
           end = start + count;
         }
       }
-      transactions = await sidetree.blockchain.getTransactions(start, end);
+      transactions = await sidetree.blockchain.getTransactions(start, end, { omitTimestamp });
       // Update the cache
       const cachedTransactionsPromises = transactions.map(transaction => sidetree.db.write(`element:sidetree:transaction:${transaction.transactionTimeHash}`, {
         type: 'element:sidetree:transaction',

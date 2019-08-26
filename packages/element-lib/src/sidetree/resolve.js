@@ -12,7 +12,7 @@ module.exports = async (sidetree) => {
       updatedState = cachedRecord.record;
     }
 
-    const transactions = await sidetree.getTransactions();
+    const transactions = await sidetree.getTransactions({ omitTimestamp: true });
 
     let items = transactions.map(transaction => ({
       transaction,
