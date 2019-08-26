@@ -19,6 +19,26 @@ describe('sidetree.resolve', () => {
       fixtures.operationGenerator.createDID(fixtures.primaryKeypair, fixtures.recoveryKeypair),
     );
   });
+
+  it('cache / db are not populated', async () => {
+    const dbTxns = await sidetree.db.readCollection('element:sidetree:transaction');
+    expect(dbTxns.length).toBe(0);
+    const dbAnchorFiles = await sidetree.db.readCollection('element:sidetree:anchorFile');
+    expect(dbAnchorFiles.length).toBe(0);
+    const dbBatchFiles = await sidetree.db.readCollection('element:sidetree:batchFile');
+    expect(dbBatchFiles.length).toBe(0);
+    const dbOps = await sidetree.db.readCollection('element:sidetree:operation');
+    expect(dbOps.length).toBe(0);
+    const record = await sidetree.db.read(
+      'element:sidetree:did:elem:MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI',
+    );
+    expect(record).toBe(null);
+    const didDocumentRecords = await sidetree.db.readCollection(
+      'element:sidetree:did:documentRecord',
+    );
+    expect(didDocumentRecords.length).toBe(0);
+  });
+
   // 1600ms lag time...
   it('on first resolve', async () => {
     const didDoc = await sidetree.resolve('did:elem:MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI');
