@@ -3,13 +3,10 @@ const requestBodyToEncodedOperation = require('../func/requestBodyToEncodedOpera
 module.exports = (sidetree) => {
   //   eslint-disable-next-line
   sidetree.batchRequests = async requests => {
-    if (!Array.isArray(requests)) {
-      //   eslint-disable-next-line
-      requests = [requests];
-    }
+    const newRequests = Array.isArray(requests) ? requests : [requests];
     // todo: json schema validation of request bodies.
     // todo: signature validation
-    const operations = requests.map(requestBody => requestBodyToEncodedOperation(requestBody));
+    const operations = newRequests.map(requestBody => requestBodyToEncodedOperation(requestBody));
     const currentBatch = await sidetree.db.read('element:sidetree:currentBatch');
     sidetree.startBatching();
     if (currentBatch && currentBatch.operations && currentBatch.operations.length) {
