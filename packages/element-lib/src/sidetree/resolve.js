@@ -4,35 +4,33 @@ const reducer = require('../reducer');
 module.exports = async (sidetree) => {
   // eslint-disable-next-line
   sidetree.resolve = async did => {
-    let updatedState = {};
     const didUniqueSuffix = did.split(':').pop();
 
-    const cachedRecord = await sidetree.db.read(`element:sidetree:did:elem:${didUniqueSuffix}`);
-    if (cachedRecord && cachedRecord.record) {
-      updatedState = cachedRecord.record;
-    }
-    const transactionTime = updatedState.lastTransaction
-      ? updatedState.lastTransaction.transactionTime
-      : null;
+    const cacheHit = await sidetree.db.read(`element:sidetree:did:elem:${didUniqueSuffix}`);
+    // A record has two keys:
+    // - lastTransaction: the last known ethereum transaction for this DID.
+    // - doc: contains the did document associated with the did at the time of lastTransaction
+    const cachedRecord = cacheHit && cacheHit.record ? cacheHit.record : {};
+    const lastTransactionTime = cachedRecord.lastTransaction
+      ? cachedRecord.lastTransaction.transactionTime
+      : 0;
+    // Only get transactions after transactionTime to avoid reprocessing the cached information
     const transactions = await sidetree.getTransactions({
       transactionTime,
       omitTimestamp: true,
     });
 
-    let items = transactions.map(transaction => ({
-      transaction,
-    }));
-
-    items = await Promise.all(
-      items.map(async item => ({
+    let items = transactions
+      .map(transaction => ({ transaction }))
+      .map(async item => ({
         ...item,
         anchorFile: await sidetree.getAnchorFile(item.transaction.anchorFileHash),
-      })),
-    );
-    items = items.filter(item => !!item.anchorFile);
+      }));
+    items = await Promise.all(items);
 
-    // eslint-disable-next-line
-    items = items.filter(item => {
+    items = items.filter(item => Boolean(item.anchorFile));
+
+    items = items.filter((item) => {
       if (item.anchorFile.didUniqueSuffixes) {
         return item.anchorFile.didUniqueSuffixes.includes(didUniqueSuffix);
       }
@@ -45,7 +43,7 @@ module.exports = async (sidetree) => {
         batchFile: await sidetree.getBatchFile(item.anchorFile.batchFileHash),
       })),
     );
-    items = items.filter(item => !!item.batchFile);
+    items = items.filter(item => Boolean(item.batchFile));
 
     items = items.map(item => ({
       ...item,
@@ -61,16 +59,26 @@ module.exports = async (sidetree) => {
       }))),
     );
 
+    // TODO: Do that before
     // unlike sync, resolve will not have state for other didUniqueSuffix,
     // they cannot be processed here.
     items = items.filter(
       item => item.operation.operationHash === didUniqueSuffix
         || item.operation.decodedOperationPayload.didUniqueSuffix === didUniqueSuffix,
     );
+
+    let updatedState;
+    if (Object.keys(cachedRecord).length === 0) {
+      updatedState = {};
+    } else {
+      updatedState = {
+        [didUniqueSuffix]: cachedRecord,
+      };
+    }
     // eslint-disable-next-line
     for (const anchoredOperation of items) {
       // eslint-disable-next-line
-      updatedState = { ...(await reducer(updatedState, anchoredOperation, sidetree)) };
+      updatedState = await reducer(updatedState, anchoredOperation, sidetree);
     }
 
     const record = updatedState[didUniqueSuffix];
@@ -81,7 +89,7 @@ module.exports = async (sidetree) => {
         record,
       });
 
-      return updatedState[didUniqueSuffix].doc;
+      return record.doc;
     }
 
     return null;
