@@ -16,7 +16,7 @@ module.exports = async (sidetree) => {
       : 0;
     // Only get transactions after transactionTime to avoid reprocessing the cached information
     const transactions = await sidetree.getTransactions({
-      transactionTime,
+      transactionTime: lastTransactionTime + 1,
       omitTimestamp: true,
     });
 
