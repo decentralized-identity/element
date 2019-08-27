@@ -49,7 +49,6 @@
     "ipfs-unixfs": "^0.1.16",
     "ipld-dag-pb": "^0.15.3",
     "jsonschema": "^1.2.4",
-    "lodash": "^4.17.11",
     "memdown": "^4.1.0",
     "merkle-tools": "^1.4.0",
     "moment": "^2.24.0",
