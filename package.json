@@ -3,7 +3,7 @@
   "license": "Apache-2.0",
   "private": true,
   "scripts": {
-    "postinstall": "lerna bootstrap",
+    "postinstall": "lerna bootstrap --loglevel silly",
     "services:start": "lerna run services:start --stream",
     "services:stop": "lerna run services:stop --stream",
     "services:healthcheck": "lerna run services:healthcheck --stream",
