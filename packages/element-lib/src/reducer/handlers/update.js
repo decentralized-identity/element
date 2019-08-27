@@ -1,6 +1,4 @@
-const _ = require('lodash');
 const jsonpatch = require('fast-json-patch');
-
 const verifyOperationSignature = require('../../func/verifyOperationSignature');
 const payloadToHash = require('../../func/payloadToHash');
 
@@ -24,7 +22,7 @@ module.exports = async (state, anchoredOperation) => {
 
   const { kid } = operation.decodedOperation.header;
 
-  const signingKey = _.find(preUpdateDidDoc.publicKey, pubKey => pubKey.id === kid);
+  const signingKey = preUpdateDidDoc.publicKey.find(pubKey => pubKey.id === kid);
 
   if (state[uid].previousOperationHash !== previousOperationHash) {
     throw new Error('previousOperationHash is not correct, update invalid');

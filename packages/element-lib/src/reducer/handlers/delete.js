@@ -1,7 +1,5 @@
-const _ = require('lodash');
 const { applyReducer } = require('fast-json-patch');
 const verifyOperationSignature = require('../../func/verifyOperationSignature');
-
 const payloadToHash = require('../../func/payloadToHash');
 
 module.exports = async (state, anchoredOperation) => {
@@ -25,7 +23,7 @@ module.exports = async (state, anchoredOperation) => {
 
   const { kid } = operation.decodedOperation.header;
 
-  const signingKey = _.find(preUpdateDidDoc.publicKey, pubKey => pubKey.id === kid);
+  const signingKey = preUpdateDidDoc.publicKey.find(pubKey => pubKey.id === kid);
 
   if (!signingKey) {
     throw new Error(`Cannot find kid in doc, ${opName} invalid.`);

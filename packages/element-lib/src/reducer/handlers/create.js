@@ -1,9 +1,5 @@
-const _ = require('lodash');
-
 const config = require('../../json/config.json');
-
 const payloadToHash = require('../../func/payloadToHash');
-
 const verifyOperationSignature = require('../../func/verifyOperationSignature');
 
 // Spec Ambiguity....
@@ -21,7 +17,7 @@ module.exports = async (state, anchoredOperation) => {
 
   const { kid } = operation.decodedOperation.header;
 
-  const signingKey = _.find(didDoc.publicKey, pubKey => pubKey.id === kid);
+  const signingKey = didDoc.publicKey.find(pubKey => pubKey.id === kid);
 
   if (!signingKey) {
     throw new Error('DID MUST contain the key used to sign its create operation');
