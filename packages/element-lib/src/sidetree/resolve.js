@@ -67,6 +67,19 @@ module.exports = async (sidetree) => {
         || item.operation.decodedOperationPayload.didUniqueSuffix === didUniqueSuffix,
     );
 
+    // Attach transactionTimestamp to the transactionObject so that it can be used in the UI
+    items = await Promise.all(
+      items.map(async item => ({
+        ...item,
+        transaction: {
+          ...item.transaction,
+          transactionTimestamp: (await sidetree.blockchain.getBlockchainTime(
+            item.transaction.transactionTime,
+          )).timestamp,
+        },
+      })),
+    );
+
     let updatedState;
     if (Object.keys(cachedRecord).length === 0) {
       updatedState = {};
