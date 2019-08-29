@@ -207,7 +207,7 @@ router.get('/operations/:didUniqueSuffix', async (req, res, next) => {
 router.get('/:did', async (req, res, next) => {
   try {
     const { did } = req.params;
-    const result = await req.app.get('sidetree').resolveWithRetry(did, 5);
+    const result = await req.app.get('sidetree').resolveWithRetry(did, 2);
     res.status(200).json(result);
   } catch (e) {
     next(e);

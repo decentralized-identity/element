@@ -1,5 +1,3 @@
-const _ = require('lodash');
-
 const element = require('../../../index');
 const operationGenerator = require('./operationGenerator');
 
@@ -103,7 +101,7 @@ const generateActor = () => {
 
 const generateCreates = async (actorMap) => {
   const operations = [];
-  _.values(actorMap).forEach(async (actor) => {
+  Object.values(actorMap).forEach(async (actor) => {
     const operation = await element.func.payloadToOperation({
       type: 'create',
       kid: '#key1',
@@ -128,7 +126,7 @@ const generateCreates = async (actorMap) => {
 
 const generateUpdate1 = async (actorMap) => {
   const operations = [];
-  _.values(actorMap).forEach(async (actor) => {
+  Object.values(actorMap).forEach(async (actor) => {
     const keypair = element.func.createKeys();
     const operation = await element.func.payloadToOperation({
       type: 'update',
