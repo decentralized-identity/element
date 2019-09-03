@@ -180,6 +180,8 @@ export default withHandlers({
     set({ resolving: true });
     try {
       const { data } = await axios.get(`${API_BASE}/sidetree/docs`);
+      const getTransactionTime = record => record.record.lastTransaction.transactionTime;
+      data.sort((a, b) => getTransactionTime(b) - getTransactionTime(a));
       set({ documentRecords: data });
       snackbarMessage({
         snackbarMessage: {
