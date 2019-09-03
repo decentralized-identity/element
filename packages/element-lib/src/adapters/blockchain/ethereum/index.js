@@ -142,7 +142,14 @@ class EthereumBlockchain {
   }
 
   async getBlockchainTime(blockHashOrBlockNumber) {
-    const block = await this.web3.eth.getBlock(blockHashOrBlockNumber);
+    const block = await new Promise((resolve, reject) => {
+      this.web3.eth.getBlock(blockHashOrBlockNumber, (err, data) => {
+        if (err) {
+          return reject(err);
+        }
+        return resolve(data);
+      });
+    });
     const unPrefixedBlockhash = block.hash.replace('0x', '');
     return {
       time: block.number,
