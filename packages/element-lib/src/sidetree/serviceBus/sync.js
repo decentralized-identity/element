@@ -61,7 +61,6 @@ module.exports = (sidetree) => {
           transaction,
           anchorFile,
           batchFile,
-
           toTransactionTime,
         });
       }

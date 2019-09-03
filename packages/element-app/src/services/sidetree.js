@@ -4,8 +4,8 @@ import config from '../config';
 const storage = element.storage.ipfs.configure({
   multiaddr: config.ELEMENT_IPFS_MULTIADDR,
 });
-const db = new element.adapters.database.ElementPouchDBAdapter({
-  name: 'element-pouchdb.element-app',
+const db = new element.adapters.database.ElementRXDBAdapter({
+  name: 'element-rxdb.element-app',
 });
 const serviceBus = new element.adapters.serviceBus.ElementNanoBusAdapter();
 
