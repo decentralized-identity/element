@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import React, { Component } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -5,11 +6,21 @@ import PropTypes from 'prop-types';
 import Notification from './Notification';
 
 class Snackbar extends Component {
+  _isMounted = false;
+
   state = {
     message: '',
     variant: '',
     open: false,
   };
+
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
 
   componentWillReceiveProps(nextProps) {
     if (!_.isEqual(nextProps, this.props) || !this.state.open) {
@@ -17,9 +28,11 @@ class Snackbar extends Component {
         ...nextProps.snackbar.snackbarMessage,
       });
       setTimeout(() => {
-        this.setState({
-          open: false,
-        });
+        if (this._isMounted) {
+          this.setState({
+            open: false,
+          });
+        }
       }, 3 * 1000);
     }
   }
