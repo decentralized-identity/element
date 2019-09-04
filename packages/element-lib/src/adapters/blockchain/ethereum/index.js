@@ -158,6 +158,7 @@ class EthereumBlockchain {
     };
   }
 
+  // TODO
   async getCurrentTime() {
     const block = await new Promise((resolve, reject) => {
       this.web3.eth.getBlock('latest', (err, data) => {
