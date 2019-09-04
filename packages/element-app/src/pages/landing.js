@@ -9,10 +9,6 @@ import {
   red,
   indigo,
   purple,
-  // amber,
-  // blue,
-  // yellow,
-  // blueGrey,
 } from '@material-ui/core/colors';
 
 import { AutoRotatingCarousel, Slide } from 'material-auto-rotating-carousel';
