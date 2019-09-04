@@ -41,10 +41,8 @@ export default withHandlers({
       });
       // sidetree.db.readCollection should only be used in tests. this should be an exposed method.
       const records = await sidetree.db.readCollection('element:sidetree:did:documentRecord');
-      // eslint-disable-next-line
-      records.sort((a, b) => a.record.lastTransaction.transactionTime > b.record.lastTransaction.transactionTime
-        ? -1
-        : 1);
+      const getTransactionTime = record => record.record.lastTransaction.transactionTime;
+      records.sort((a, b) => getTransactionTime(b) - getTransactionTime(a));
       set({ documentRecords: records, resolving: false });
     } catch (e) {
       console.error(e);
