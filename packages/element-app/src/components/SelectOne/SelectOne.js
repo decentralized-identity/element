@@ -104,7 +104,7 @@ function Placeholder(props) {
 
 Placeholder.propTypes = {
   selectProps: PropTypes.any.isRequired,
-  innerProps: PropTypes.any.isRequired,
+  innerProps: PropTypes.any,
   children: PropTypes.any.isRequired,
 };
 
