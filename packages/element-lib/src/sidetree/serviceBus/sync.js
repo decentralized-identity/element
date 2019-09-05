@@ -22,7 +22,6 @@ module.exports = (sidetree) => {
         if (!valid) {
           return sidetree.serviceBus.emit('element:sidetree:error:badTransaction', { transaction });
         }
-        // TODO: sync if not already synced
         return sidetree.syncTransaction({ transaction });
       });
       await Promise.all(transactionPromises);

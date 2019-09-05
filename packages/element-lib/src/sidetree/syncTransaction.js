@@ -26,7 +26,6 @@ module.exports = (sidetree) => {
 
     await Promise.all(cachedPromises);
 
-    // FIXME
     // handle breaking protocol change.
     if (anchorFile.didUniqueSuffixes) {
       await Promise.all(
