@@ -18,12 +18,10 @@ module.exports = (sidetree) => {
       return null;
     }
     const operations = batchFileToOperations(batchFile);
-    const anchoredOperations = operations.map(operation => ({ operation, transaction }));
-    // TODO: write if not written
-    const cachedPromises = anchoredOperations.map(async op => sidetree.db.write(`element:sidetree:operation:${op.operation.operationHash}`, {
+    const cachedPromises = operations.map(async operation => sidetree.db.write(`element:sidetree:operation:${operation.operationHash}`, {
       type: 'element:sidetree:operation',
-      transaction: op.transaction,
-      operation: op.operation,
+      transaction,
+      operation,
     }));
 
     await Promise.all(cachedPromises);
@@ -39,9 +37,10 @@ module.exports = (sidetree) => {
             updatedState = cachedRecord.record;
           }
           // eslint-disable-next-line
-          for (const anchoredOperation of anchoredOperations) {
+          for (const operation of operations) {
+            const anchoredOperation = ({ operation, transaction });
             // eslint-disable-next-line
-            updatedState = { ...(await reducer(updatedState, anchoredOperation, sidetree)) };
+            updatedState = { ...(await reducer(updatedState, anchoredOperation , sidetree)) };
           }
 
           const record = updatedState[uid];
