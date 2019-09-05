@@ -51,6 +51,7 @@ class ElementRXDBAdapter {
           operations: {},
           syncStartDateTime: {},
           syncStopDateTime: {},
+          lastTransactionTime: {},
         },
       },
     });
