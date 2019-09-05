@@ -78,11 +78,7 @@ router.post('/requests', async (req, res, next) => {
 router.get('/docs', async (req, res, next) => {
   try {
     const sidetree = req.app.get('sidetree');
-    const currentTime = await sidetree.blockchain.getCurrentTime();
-    const toTransactionTime = currentTime.time;
-    const lastSync = await sidetree.db.read('element:sidetree:sync');
-    const fromTransactionTime = lastSync.syncStopDateTime ? lastSync.lastTransactionTime : 0;
-    await sidetree.sync({ fromTransactionTime, toTransactionTime });
+    await sidetree.sync();
     const result = await sidetree.db.readCollection('element:sidetree:did:documentRecord');
     res.status(200).json(result);
   } catch (e) {
