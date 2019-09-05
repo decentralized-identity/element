@@ -7,7 +7,9 @@ module.exports = async (sidetree) => {
 
     if (!args) {
       const lastSync = await sidetree.db.read('element:sidetree:sync');
-      fromTransactionTime = lastSync.syncStopDateTime ? lastSync.lastTransactionTime : 0;
+      fromTransactionTime = lastSync && lastSync.syncStopDateTime
+        ? lastSync.lastTransactionTime
+        : 0;
       const currentTime = await sidetree.blockchain.getCurrentTime();
       toTransactionTime = currentTime.time;
     } else {
