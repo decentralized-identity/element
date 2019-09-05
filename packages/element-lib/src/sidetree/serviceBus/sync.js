@@ -15,7 +15,6 @@ module.exports = (sidetree) => {
         fromTransactionTime,
         toTransactionTime,
       );
-      console.log(transactions.length);
       const transactionPromises = transactions.map((transaction) => {
         const valid = schema.validator.isValid(transaction, schema.schemas.sidetreeTransaction);
         if (!valid) {
