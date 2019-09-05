@@ -15,6 +15,8 @@ module.exports = (sidetree) => {
         fromTransactionTime,
         toTransactionTime,
       );
+      // This is where we would add a load balancer if we ever consider using several workers
+      // to make the sync process faster
       const transactionPromises = transactions.map((transaction) => {
         const valid = schema.validator.isValid(transaction, schema.schemas.sidetreeTransaction);
         if (!valid) {
@@ -23,22 +25,16 @@ module.exports = (sidetree) => {
         // TODO: sync if not already synced
         return sidetree.syncTransaction({ transaction });
       });
-      // This is where we would add a load balancer if we ever consider use several workers
-      // to make the sync process faster
       await Promise.all(transactionPromises);
 
-      sidetree.serviceBus.emit('element:sidetree:sync:stop', {
-        syncStopDateTime: moment().toISOString(),
-        lastTransactionTime: toTransactionTime,
-      });
-    },
-  );
-
-  sidetree.serviceBus.on(
-    'element:sidetree:sync:stop',
-    async ({ syncStopDateTime, lastTransactionTime }) => {
+      const syncStopDateTime = moment().toISOString();
+      const lastTransactionTime = toTransactionTime;
       await sidetree.db.write('element:sidetree:sync', {
         type: 'element:sidetree:sync',
+        syncStopDateTime,
+        lastTransactionTime,
+      });
+      sidetree.serviceBus.emit('element:sidetree:sync:stop', {
         syncStopDateTime,
         lastTransactionTime,
       });
