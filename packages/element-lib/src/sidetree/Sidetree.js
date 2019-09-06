@@ -23,6 +23,7 @@ class Sidetree {
     require('./batchRequests')(this);
     require('./resolve')(this);
     require('./sync')(this);
+    require('./syncTransaction')(this);
     require('./getNodeInfo')(this);
     require('./getTransactionSummary')(this);
     this.op = require('./op');
