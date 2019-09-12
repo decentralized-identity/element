@@ -38,6 +38,15 @@ class ElementRXDBAdapter {
           batchFileHash: {
             type: 'string',
           },
+          ipfsHash: {
+            type: 'string',
+          },
+          ipfsData: {
+            type: 'object',
+          },
+          persisted: {
+            type: 'boolean',
+          },
           transactionTime: {},
           transactionTimeHash: {},
           transactionNumber: {},
