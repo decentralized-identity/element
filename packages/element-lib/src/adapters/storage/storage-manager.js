@@ -87,10 +87,10 @@ class StorageManager {
     try {
       const data = await this.db.read(`ipfs:${cid}`);
       if (data.persisted) {
-        return data;
+        return data.ipfsData;
       }
       console.warn('Data returned from manager, but not persisted...', data);
-      return data;
+      return data.ipfsData;
     } catch (e) {
       throw new Error(`Invalid JSON: https://ipfs.io/ipfs/${cid}`);
     }

@@ -20,7 +20,6 @@ jest.setTimeout(20 * 1000);
 describe('StorageManager', () => {
   let storage;
   let db;
-  let manager;
 
   beforeAll(() => {
     storage = element.storage.ipfs.configure({
@@ -29,11 +28,11 @@ describe('StorageManager', () => {
     db = new element.adapters.database.ElementRXDBAdapter({
       name: 'storage-manager',
     });
-    manager = new StorageManager(db, storage);
   });
 
   describe('constructor', () => {
     it('should create a manager instance', async () => {
+      const manager = new StorageManager(db, storage, { autoPersist: false });
       expect(manager.storage.ipfs).toBeDefined();
       expect(manager.db).toBeDefined();
     });
@@ -41,6 +40,7 @@ describe('StorageManager', () => {
 
   describe('smart write', () => {
     it('should should use db and storage', async () => {
+      const manager = new StorageManager(db, storage, { autoPersist: false });
       const cid = await manager.write(anchorFile);
       expect(cid).toBe('QmXRoAeyBTKA3N8D4NLR6wtEes4iwzeMien78cZy2YP3ba');
       const record = await manager.db.read(`ipfs:${cid}`);
@@ -51,6 +51,7 @@ describe('StorageManager', () => {
     });
 
     it('can persist from db manually', async () => {
+      const manager = new StorageManager(db, storage, { autoPersist: false });
       let count = 0;
       const fakeStorage = {
         write: async (data) => {
@@ -76,7 +77,7 @@ describe('StorageManager', () => {
       expect(allUnPersisted2.length).toBe(1);
 
       // can read without persistence
-      const obj = await storage.read('Qma4AeAHhwkFJNHGZ59KpShSmCbnT2JUSCNjffk3h5dm3f');
+      const obj = await manager.read('Qma4AeAHhwkFJNHGZ59KpShSmCbnT2JUSCNjffk3h5dm3f');
       expect(obj).toEqual(anchorFile2);
 
       await mockedManager.retryAllNotPersisted();
@@ -96,6 +97,7 @@ describe('StorageManager', () => {
     });
 
     it('can persist from db autmatically', (done) => {
+      const manager = new StorageManager(db, storage, { autoPersist: true });
       let count = 0;
       const fakeStorage = {
         write: async (data) => {
