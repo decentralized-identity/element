@@ -15,7 +15,7 @@ const anchorFile2 = {
   didUniqueSuffixes: ['XRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI'],
 };
 
-jest.setTimeout(10 * 1000);
+jest.setTimeout(20 * 1000);
 
 describe('StorageManager', () => {
   let storage;
