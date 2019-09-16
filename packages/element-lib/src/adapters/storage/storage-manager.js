@@ -16,7 +16,7 @@ class StorageManager {
       }
       await this.retryAllNotPersisted();
       return true;
-    }, 1 * 1 * 1000);
+    }, 1 * 5 * 1000); // every 5 seconds
   }
 
   async getNotPersistedLength() {
@@ -94,6 +94,11 @@ class StorageManager {
     } catch (e) {
       throw new Error(`Invalid JSON: https://ipfs.io/ipfs/${cid}`);
     }
+  }
+
+  close() {
+    this.storage.close();
+    this.db.close();
   }
 }
 
