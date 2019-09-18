@@ -77,7 +77,6 @@ class EthereumBlockchain {
     let tryCount = 0;
     const errors = [];
     try {
-      // eslint-disable-next-line
       return await method(...args, {
         ...options,
       });
@@ -173,6 +172,7 @@ class EthereumBlockchain {
         [bytes32EncodedHash],
         {
           from,
+          gasPrice: '100000000000',
         },
       );
       return eventLogToSidetreeTransaction(receipt.logs[0]);

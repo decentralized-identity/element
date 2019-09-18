@@ -97,7 +97,6 @@ describe('StorageManager', () => {
     });
 
     it('can persist from db autmatically', (done) => {
-      const manager = new StorageManager(db, storage, { autoPersist: true });
       let count = 0;
       const fakeStorage = {
         write: async (data) => {
