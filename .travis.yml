@@ -6,9 +6,9 @@ install:
   - npm i
 
 script:
-  - npm run lint
   - npm run services:start
   - npm run services:healthcheck
+  - npm run lint
   - npm run test:contracts
   - npm run coverage
   - npm run codecov
