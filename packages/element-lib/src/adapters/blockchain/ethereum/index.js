@@ -172,6 +172,7 @@ class EthereumBlockchain {
         [bytes32EncodedHash],
         {
           from,
+          gasPrice: '100000000000',
         },
       );
       return eventLogToSidetreeTransaction(receipt.logs[0]);
