@@ -4,7 +4,7 @@ class StorageManager {
   constructor(db, storage, options) {
     this.db = db;
     this.storage = storage;
-    this.options = options || { autoPersist: false };
+    this.options = options || { autoPersist: false, retryIntervalSeconds: 5 };
   }
 
   retryUntilDone() {
@@ -16,7 +16,7 @@ class StorageManager {
       }
       await this.retryAllNotPersisted();
       return true;
-    }, 1 * 5 * 1000); // every 5 seconds
+    }, 1 * this.options.retryIntervalSeconds * 1000); // every 5 seconds
   }
 
   async getNotPersistedLength() {

@@ -32,7 +32,10 @@ describe('StorageManager', () => {
 
   describe('constructor', () => {
     it('should create a manager instance', async () => {
-      const manager = new StorageManager(db, storage, { autoPersist: false });
+      const manager = new StorageManager(db, storage, {
+        autoPersist: false,
+        retryIntervalSeconds: 4,
+      });
       expect(manager.storage.ipfs).toBeDefined();
       expect(manager.db).toBeDefined();
     });
@@ -40,7 +43,10 @@ describe('StorageManager', () => {
 
   describe('smart write', () => {
     it('should should use db and storage', async () => {
-      const manager = new StorageManager(db, storage, { autoPersist: false });
+      const manager = new StorageManager(db, storage, {
+        autoPersist: false,
+        retryIntervalSeconds: 4,
+      });
       const cid = await manager.write(anchorFile);
       expect(cid).toBe('QmXRoAeyBTKA3N8D4NLR6wtEes4iwzeMien78cZy2YP3ba');
       const record = await manager.db.read(`ipfs:${cid}`);
@@ -51,7 +57,10 @@ describe('StorageManager', () => {
     });
 
     it('can persist from db manually', async () => {
-      const manager = new StorageManager(db, storage, { autoPersist: false });
+      const manager = new StorageManager(db, storage, {
+        autoPersist: false,
+        retryIntervalSeconds: 4,
+      });
       let count = 0;
       const fakeStorage = {
         write: async (data) => {
@@ -109,7 +118,10 @@ describe('StorageManager', () => {
           throw new Error('Fake IPFS is down error');
         },
       };
-      const mockedManager = new StorageManager(db, fakeStorage, { autoPersist: true });
+      const mockedManager = new StorageManager(db, fakeStorage, {
+        autoPersist: true,
+        retryIntervalSeconds: 4,
+      });
       mockedManager.write(anchorFile2);
     });
 
