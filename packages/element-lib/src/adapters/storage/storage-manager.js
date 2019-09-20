@@ -61,12 +61,12 @@ class StorageManager {
       persisted: false,
     });
 
-    console.log('cacheWriteResult: ', cacheWriteResult);
+    // console.log('cacheWriteResult: ', cacheWriteResult);
 
     try {
       const cid = await this.storage.write(object);
 
-      if (cid !== key) {
+      if (cid !== key || cid !== cacheWriteResult.multihash) {
         throw new Error('CID is not valid.');
       }
 

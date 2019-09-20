@@ -33,7 +33,7 @@ module.exports = (sidetree) => {
         }));
         await Promise.all(cachedTransactionsPromises);
       } catch (e) {
-        console.log(e);
+        // console.log(e);
       }
     }
     transactions = transactions.filter(txn => txn.transactionNumber >= (since || 0));

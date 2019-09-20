@@ -52,7 +52,7 @@ router.get('/node', async (req, res, next) => {
 router.post('/requests', async (req, res, next) => {
   try {
     const { header, payload, signature } = req.body;
-    req.app.get('sidetree').batchRequests([{ header, payload, signature }]);
+    await req.app.get('sidetree').createTransactionFromRequests([{ header, payload, signature }]);
     res.status(200).json({ ok: true });
   } catch (e) {
     next(e);

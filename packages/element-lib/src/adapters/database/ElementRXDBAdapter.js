@@ -2,17 +2,20 @@
 const RxDB = require('rxdb');
 
 class ElementRXDBAdapter {
-  constructor({ name }) {
+  constructor({ name, remote }) {
     // RXDB name regex is quite restrictive, therefore we have to replace
     // some special characters like "." and "-" with "_"
     // and put all letters to lowercase
     this.name = name.replace(/\.|-/g, '_').toLowerCase();
+    // https://USERNAME:PASSWORD@INSTANCE.cloudantnosqldb.appdomain.cloud/DB/
+    this.remote = remote;
     if (process.browser) {
       RxDB.plugin(require('pouchdb-adapter-idb'));
       this.adapter = 'idb';
     } else {
-      RxDB.plugin(require('pouchdb-adapter-leveldb'));
-      this.adapter = require('memdown');
+      RxDB.plugin(require('pouchdb-adapter-memory'));
+      RxDB.plugin(require('pouchdb-adapter-http'));
+      this.adapter = 'memory';
     }
   }
 
@@ -38,10 +41,10 @@ class ElementRXDBAdapter {
           batchFileHash: {
             type: 'string',
           },
-          ipfsHash: {
+          multihash: {
             type: 'string',
           },
-          ipfsData: {
+          object: {
             type: 'object',
           },
           persisted: {
@@ -76,17 +79,51 @@ class ElementRXDBAdapter {
     this.collection = await this._createCollection();
   }
 
+  async awaitableSync() {
+    if (!this.collection) {
+      await this._init();
+    }
+    return new Promise((resolve, reject) => {
+      const rxReplicationState = this.collection.sync({
+        remote: this.remote,
+        waitForLeadership: true, // (optional) [default=true] to save performance, the sync starts on leader-instance only
+        direction: {
+          // direction (optional) to specify sync-directions
+          pull: true, // default=true
+          push: true, // default=true
+        },
+        options: {
+          // sync-options (optional) from https://pouchdb.com/api.html#replication
+          live: false,
+          retry: true,
+        },
+      });
+
+      rxReplicationState.complete$.subscribe((completed) => {
+        if (completed) {
+          resolve(completed);
+        }
+      });
+
+      rxReplicationState.error$.subscribe((error) => {
+        reject(error);
+      });
+    });
+  }
+
   async write(id, data) {
     if (!this.collection) {
       await this._init();
     }
-    return this.collection
+    const res = this.collection
       .upsert({
         _id: id,
         id,
         ...data,
       })
       .then(doc => doc.toJSON());
+
+    return res;
   }
 
   async read(id) {
