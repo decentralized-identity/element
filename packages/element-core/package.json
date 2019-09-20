@@ -47,11 +47,6 @@
     "package:preview": "npm pack --dry-run",
     "size": "node scripts/file-size ./dist/bundles/index.esm.min.js ./dist/bundles/index.umd.min.js"
   },
-  "config": {
-    "commitizen": {
-      "path": "cz-conventional-changelog"
-    }
-  },
   "peerDependencies": {
     "tslib": ">=1.9.0",
     "crypto": "1.0.1",
@@ -83,7 +78,6 @@
     "cross-var": "1.1.0",
     "cz-conventional-changelog": "2.1.0",
     "gzip-size": "5.0.0",
-    "husky": "1.3.0",
     "jest": "23.6.0",
     "jest-watch-typeahead": "0.2.0",
     "json5": "2.1.0",
