@@ -23,12 +23,18 @@ module.exports = (sidetree) => {
         end = start + count;
       }
       transactions = await sidetree.blockchain.getTransactions(start, end, { omitTimestamp });
-      // Update the cache
-      const cachedTransactionsPromises = transactions.map(transaction => sidetree.db.write(`element:sidetree:transaction:${transaction.transactionTimeHash}`, {
-        type: 'element:sidetree:transaction',
-        ...transaction,
-      }));
-      await Promise.all(cachedTransactionsPromises);
+
+      // this is very likely to fail always after the first run...
+      try {
+        // Update the cache
+        const cachedTransactionsPromises = transactions.map(transaction => sidetree.db.write(`element:sidetree:transaction:${transaction.transactionTimeHash}`, {
+          type: 'element:sidetree:transaction',
+          ...transaction,
+        }));
+        await Promise.all(cachedTransactionsPromises);
+      } catch (e) {
+        console.log(e);
+      }
     }
     transactions = transactions.filter(txn => txn.transactionNumber >= (since || 0));
 
