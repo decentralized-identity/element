@@ -27,7 +27,7 @@ class StorageManager {
   }
 
   async retryAllNotPersisted() {
-    const allUnPersisted = this.getNotPersisted();
+    const allUnPersisted = await this.getNotPersisted();
     await Promise.all(
       allUnPersisted.map(async (item) => {
         try {
