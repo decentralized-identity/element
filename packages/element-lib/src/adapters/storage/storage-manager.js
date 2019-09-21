@@ -21,9 +21,9 @@ class StorageManager {
   }
 
   async getNotPersisted() {
-    return this.db
-      .readCollection('element:sidetree:cas-cachable')
-      .filter(doc => doc.persisted === false);
+    return (await this.db.readCollection('element:sidetree:cas-cachable')).filter(
+      doc => doc.persisted === false,
+    );
   }
 
   async retryAllNotPersisted() {
