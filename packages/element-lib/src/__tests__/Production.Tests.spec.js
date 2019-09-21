@@ -13,6 +13,7 @@ const config = {
   couchdbRemote: process.env.ELEMENT_COUCHDB_REMOTE,
 };
 
+// These tests are for debuging syncing issues in production
 describe.skip('Production Tests', () => {
   const blockchain = element.blockchain.ethereum.configure({
     hdPath: "m/44'/60'/0'/0/0",
@@ -74,6 +75,7 @@ describe.skip('Production Tests', () => {
     });
   });
 
+  // TODO: Fix this code to test creation of a production DID End to End.
   // it('can create a transaction with the manager', async () => {
   //   const mnemonic = 'panda lion unfold live venue spice urban member march gift obvious gossip';
   //   const mks = new element.MnemonicKeySystem(mnemonic);
