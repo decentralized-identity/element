@@ -86,7 +86,7 @@ class ElementRXDBAdapter {
     return new Promise((resolve, reject) => {
       const rxReplicationState = this.collection.sync({
         remote: this.remote,
-        waitForLeadership: true, // (optional) [default=true] to save performance, the sync starts on leader-instance only
+        waitForLeadership: true,
         direction: {
           // direction (optional) to specify sync-directions
           pull: true, // default=true
