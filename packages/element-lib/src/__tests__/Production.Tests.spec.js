@@ -13,29 +13,28 @@ const config = {
   couchdbRemote: process.env.ELEMENT_COUCHDB_REMOTE,
 };
 
-const blockchain = element.blockchain.ethereum.configure({
-  hdPath: "m/44'/60'/0'/0/0",
-  mnemonic: config.mnemonic,
-  providerUrl: config.web3ProviderUrl,
-  // when not defined, a new contract is created.
-  anchorContractAddress: config.anchorContractAddress,
-});
+describe.skip('Production Tests', () => {
+  const blockchain = element.blockchain.ethereum.configure({
+    hdPath: "m/44'/60'/0'/0/0",
+    mnemonic: config.mnemonic,
+    providerUrl: config.web3ProviderUrl,
+    // when not defined, a new contract is created.
+    anchorContractAddress: config.anchorContractAddress,
+  });
 
-const storage = element.storage.ipfs.configure({
-  multiaddr: config.ipfsApiMultiAddr,
-});
+  const storage = element.storage.ipfs.configure({
+    multiaddr: config.ipfsApiMultiAddr,
+  });
 
-const db = new element.adapters.database.ElementRXDBAdapterWithRemoteSync({
-  name: 'production-tests',
-  remote: config.couchdbRemote,
-});
+  const db = new element.adapters.database.ElementRXDBAdapterWithRemoteSync({
+    name: 'production-tests',
+    remote: config.couchdbRemote,
+  });
 
-const manager = new element.adapters.storage.StorageManager(db, storage, {
-  autoPersist: true,
-  retryIntervalSeconds: 1,
-});
-
-describe('Production Tests', () => {
+  const manager = new element.adapters.storage.StorageManager(db, storage, {
+    autoPersist: true,
+    retryIntervalSeconds: 1,
+  });
   describe('blockchain', () => {
     it('should have 2 transactions in window', async () => {
       await blockchain.resolving;
