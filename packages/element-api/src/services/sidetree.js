@@ -1,21 +1,27 @@
 const element = require('@transmute/element-lib');
+const { firestore } = require('./firebase');
+const ElementFirestoreAdapter = require('./element-adapter-firestore');
 
 const { getBaseConfig } = require('../config');
 
 const config = getBaseConfig();
 
 let storage;
-
-const db = new element.adapters.database.ElementRXDBAdapter({
-  name: 'element-did.rxdb.api',
-  remote: config.couchDbRemote,
-});
+let db;
 
 if (process.env.NODE_ENV === 'testing') {
+  db = new element.adapters.database.ElementRXDBAdapter({
+    name: 'element-did.rxdb.api',
+    remote: config.couchDbRemote,
+  });
+
   storage = element.storage.ipfs.configure({
     multiaddr: config.ipfs.multiaddr,
   });
 } else {
+  db = new ElementFirestoreAdapter({
+    firestore,
+  });
   storage = new element.adapters.storage.StorageManager(
     db,
     element.storage.ipfs.configure({

@@ -9,7 +9,7 @@ class StorageManager {
 
   retryUntilDone() {
     this.interval = setInterval(async () => {
-      const pendingCount = await this.getNotPersistedLength();
+      const pendingCount = (await this.getNotPersisted()).length;
       if (pendingCount === 0) {
         clearInterval(this.interval);
         return false;
@@ -20,18 +20,14 @@ class StorageManager {
     }, 1 * this.options.retryIntervalSeconds * 1000); // every 5 seconds
   }
 
-  async getNotPersistedLength() {
-    return this.db.collection
-      .find({ type: { $eq: 'element:sidetree:cas-cachable' }, persisted: { $eq: false } })
-      .exec()
-      .then(arrayOfDocs => arrayOfDocs.map(doc => doc.toJSON())).length;
+  async getNotPersisted() {
+    return this.db
+      .readCollection('element:sidetree:cas-cachable')
+      .filter(doc => doc.persisted === false);
   }
 
   async retryAllNotPersisted() {
-    const allUnPersisted = await this.db.collection
-      .find({ type: { $eq: 'element:sidetree:cas-cachable' }, persisted: { $eq: false } })
-      .exec()
-      .then(arrayOfDocs => arrayOfDocs.map(doc => doc.toJSON()));
+    const allUnPersisted = this.getNotPersisted();
     await Promise.all(
       allUnPersisted.map(async (item) => {
         try {
