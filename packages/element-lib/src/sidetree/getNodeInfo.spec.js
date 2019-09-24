@@ -18,10 +18,9 @@ describe('sidetree.getNodeInfo', () => {
     expect(info.ipfs.version).toBeDefined();
     expect(info.ipfs.commit).toBeDefined();
     expect(info.ipfs.repo).toBeDefined();
-    expect(info.ethereum).toEqual({
-      anchor_contract_address: '0x7C922E2DF8A55F3C27D67AC2cdCcE2fb0BBE8b7B',
-      accounts: ['0x1E228837561e32a6eC1b16f0574D6A493Edc8863'],
-    });
+
+    expect(info.ethereum.anchor_contract_address).toBeDefined();
+    expect(info.ethereum.accounts).toBeDefined();
     expect(info.sidetree).toEqual({
       BATCH_INTERVAL_SECONDS: 3,
       BAD_STORAGE_HASH_DELAY_SECONDS: 600,
