@@ -7,6 +7,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "env:create:local": "node ./scripts/env_to_json_config.js local ../../example.env ./local.runtimeconfig.json && ./scripts/update_runtimeconfig_contract.sh ./local.runtimeconfig.json",
+    "env:create:prod": "node ./scripts/env_to_json_config.js local ../../.env ./.runtimeconfig.json",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
     "pretest": "cd ../../ && npm run services:start && cd -",
@@ -20,7 +21,7 @@
   },
   "dependencies": {
     "@google-cloud/logging-winston": "^0.10.2",
-    "@transmute/element-lib": "^0.1.1",
+    "@transmute/element-lib": "^0.1.2",
     "base64url": "^3.0.1",
     "cors": "^2.8.5",
     "express": "^4.16.4",
@@ -45,6 +46,7 @@
     "eslint-plugin-node": "^8.0.0",
     "eslint-plugin-security": "^1.4.0",
     "faker": "^4.1.0",
+    "firebase-tools": "^7.3.2",
     "jest": "^23.6.0",
     "supertest": "^4.0.2"
   },

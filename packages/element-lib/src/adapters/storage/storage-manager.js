@@ -4,44 +4,41 @@ class StorageManager {
   constructor(db, storage, options) {
     this.db = db;
     this.storage = storage;
-    this.options = options || { autoPersist: false };
+    this.options = options || { autoPersist: false, retryIntervalSeconds: 5 };
   }
 
   retryUntilDone() {
     this.interval = setInterval(async () => {
-      const pendingCount = await this.getNotPersistedLength();
+      const pendingCount = (await this.getNotPersisted()).length;
       if (pendingCount === 0) {
         clearInterval(this.interval);
         return false;
       }
       await this.retryAllNotPersisted();
+      await this.db.awaitableSync();
       return true;
-    }, 1 * 5 * 1000); // every 5 seconds
+    }, 1 * this.options.retryIntervalSeconds * 1000); // every 5 seconds
   }
 
-  async getNotPersistedLength() {
-    return this.db.collection
-      .find({ type: { $eq: 'ipfs:data' }, persisted: { $eq: false } })
-      .exec()
-      .then(arrayOfDocs => arrayOfDocs.map(doc => doc.toJSON())).length;
+  async getNotPersisted() {
+    return (await this.db.readCollection('element:sidetree:cas-cachable')).filter(
+      doc => doc.persisted === false,
+    );
   }
 
   async retryAllNotPersisted() {
-    const allUnPersisted = await this.db.collection
-      .find({ type: { $eq: 'ipfs:data' }, persisted: { $eq: false } })
-      .exec()
-      .then(arrayOfDocs => arrayOfDocs.map(doc => doc.toJSON()));
+    const allUnPersisted = await this.getNotPersisted();
     await Promise.all(
       allUnPersisted.map(async (item) => {
         try {
-          const cid = await this.storage.write(item.ipfsData);
-          if (cid !== item.ipfsHash) {
+          const cid = await this.storage.write(item.object);
+          if (cid !== item.multihash) {
             throw new Error('CID is not valid.');
           }
           await this.db.write(item.id, {
-            type: 'ipfs:data',
-            ipfsHash: item.ipfsHash,
-            ipfsData: item.ipfsData,
+            type: 'element:sidetree:cas-cachable',
+            multihash: item.multihash,
+            object: item.object,
             persisted: true,
           });
         } catch (e) {
@@ -53,24 +50,26 @@ class StorageManager {
 
   async write(object) {
     const key = await objectToMultihash(object);
-    await this.db.write(`ipfs:${key}`, {
-      type: 'ipfs:data',
-      ipfsHash: key,
-      ipfsData: object,
+    const cacheWriteResult = await this.db.write(`element:sidetree:cas-cachable:${key}`, {
+      type: 'element:sidetree:cas-cachable',
+      multihash: key,
+      object,
       persisted: false,
     });
+
+    // console.log('cacheWriteResult: ', cacheWriteResult);
 
     try {
       const cid = await this.storage.write(object);
 
-      if (cid !== key) {
+      if (cid !== key || cid !== cacheWriteResult.multihash) {
         throw new Error('CID is not valid.');
       }
 
-      await this.db.write(`ipfs:${key}`, {
-        type: 'ipfs:data',
-        ipfsHash: key,
-        ipfsData: object,
+      await this.db.write(`element:sidetree:cas-cachable:${key}`, {
+        type: 'element:sidetree:cas-cachable',
+        multihash: key,
+        object,
         persisted: true,
       });
     } catch (e) {
@@ -85,14 +84,26 @@ class StorageManager {
 
   async read(cid) {
     try {
-      const data = await this.db.read(`ipfs:${cid}`);
+      const data = await this.db.read(`element:sidetree:cas-cachable:${cid}`);
+      if (data === null) {
+        const fromStorage = await this.storage.read(cid);
+        if (fromStorage) {
+          await this.db.write(`element:sidetree:cas-cachable:${cid}`, {
+            type: 'element:sidetree:cas-cachable',
+            multihash: cid,
+            object: fromStorage,
+            persisted: true,
+          });
+          return fromStorage;
+        }
+      }
       if (data.persisted) {
-        return data.ipfsData;
+        return data.object;
       }
       console.warn('Data returned from manager, but not persisted...', data);
-      return data.ipfsData;
+      return data.object;
     } catch (e) {
-      throw new Error(`Invalid JSON: https://ipfs.io/ipfs/${cid}`);
+      throw new Error('Could not read element:sidetree:cas-cachable');
     }
   }
 

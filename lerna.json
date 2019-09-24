@@ -1,7 +1,15 @@
 {
-  "packages": [
-    "packages/*"
-  ],
-  "version": "0.0.2-2",
-  "lerna": "2.11.0"
+  "version": "0.0.4",
+  "packages": ["packages/*"],
+  "command": {
+    "publish": {
+      "conventionalCommits": true,
+      "ignoreChanges": ["ignored-file", "*.md"],
+      "message": "chore(release): publish"
+    },
+    "bootstrap": {
+      "ignore": "component-*",
+      "npmClientArgs": ["--no-package-lock"]
+    }
+  }
 }
