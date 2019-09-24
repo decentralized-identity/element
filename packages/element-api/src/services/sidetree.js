@@ -12,7 +12,7 @@ let db;
 if (process.env.NODE_ENV === 'testing') {
   db = new element.adapters.database.ElementRXDBAdapter({
     name: 'element-did.rxdb.api',
-    remote: config.couchdbRemote,
+    remote: config.couchdb_remote,
   });
 
   storage = element.storage.ipfs.configure({
