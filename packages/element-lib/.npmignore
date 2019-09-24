@@ -4,3 +4,4 @@ __fixtures__
 coverage
 test
 *.spec.js
+*.snap
