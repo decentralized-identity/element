@@ -85,7 +85,8 @@ class StorageManager {
   async read(cid) {
     try {
       const data = await this.db.read(`element:sidetree:cas-cachable:${cid}`);
-      if (data === null) {
+      // maybe data was created on another node, try to read ipfs.
+      if (data === null || data === undefined) {
         const fromStorage = await this.storage.read(cid);
         if (fromStorage) {
           await this.db.write(`element:sidetree:cas-cachable:${cid}`, {
