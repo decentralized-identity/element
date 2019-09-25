@@ -10,7 +10,7 @@ const config = {
   web3ProviderUrl: process.env.ELEMENT_PROVIDER,
   ipfsApiMultiAddr: process.env.ELEMENT_IPFS_MULTIADDR,
   anchorContractAddress: process.env.ELEMENT_CONTRACT_ADDRESS,
-  couchdbRemote: process.env.ELEMENT_COUCHDB_REMOTE,
+  couchdb_remote: process.env.ELEMENT_COUCHDB_REMOTE,
 };
 
 // These tests are for debuging syncing issues in production
@@ -29,7 +29,7 @@ describe.skip('Production Tests', () => {
 
   const db = new element.adapters.database.ElementRXDBAdapterWithRemoteSync({
     name: 'production-tests',
-    remote: config.couchdbRemote,
+    remote: config.couchdb_remote,
   });
 
   const manager = new element.adapters.storage.StorageManager(db, storage, {

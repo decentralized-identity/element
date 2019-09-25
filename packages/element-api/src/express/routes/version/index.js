@@ -32,6 +32,7 @@ router.get('/', async (req, res, next) => {
     const result = {
       version: packageJson.version,
       commit,
+      message: '🤖',
     };
     res.status(200).json(result);
   } catch (e) {

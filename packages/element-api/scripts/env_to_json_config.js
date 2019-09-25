@@ -20,7 +20,7 @@ const config = {
   element: {
     commit: lastCommit,
     env: envAlias,
-    couchdbRemote: process.env.ELEMENT_COUCHDB_REMOTE,
+    couchdb_remote: process.env.ELEMENT_COUCHDB_REMOTE,
     ipfs: {
       multiaddr: process.env.ELEMENT_IPFS_MULTIADDR,
     },
