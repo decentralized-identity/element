@@ -1,6 +1,6 @@
 const Web3 = require('web3');
-const HDWalletProvider = require('truffle-hdwallet-provider');
-const contract = require('truffle-contract');
+const HDWalletProvider = require('@truffle/hdwallet-provider');
+const contract = require('@truffle/contract');
 const bytes32EnodedMultihashToBase58EncodedMultihash = require('../../../func/bytes32EnodedMultihashToBase58EncodedMultihash');
 const base58EncodedMultihashToBytes32 = require('../../../func/base58EncodedMultihashToBytes32');
 const anchorContractArtifact = require('../../../../build/contracts/SimpleSidetreeAnchor.json');
@@ -11,11 +11,9 @@ const getWeb3 = ({ mnemonic, hdPath, providerUrl }) => {
     // eslint-disable-next-line
     return window.web3;
   }
-
   const parts = hdPath.split('/');
   const accountIndex = parseInt(parts.pop(), 10);
   const hdPathWithoutAccountIndex = `${parts.join('/')}/`;
-
   const provider = new HDWalletProvider(
     mnemonic,
     providerUrl,

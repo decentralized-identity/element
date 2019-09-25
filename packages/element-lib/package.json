@@ -1,6 +1,6 @@
 {
   "name": "@transmute/element-lib",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Experimental Sidetree Protocol based DID Method `elem` with Ethereum and IPFS",
   "main": "index.js",
   "repository": {
@@ -62,8 +62,8 @@
     "rxdb": "^8.5.0",
     "rxjs": "^6.5.2",
     "secp256k1": "^3.6.2",
-    "truffle-contract": "^4.0.28",
-    "truffle-hdwallet-provider": "1.0.5",
+    "@truffle/contract": "4.0.32",
+    "@truffle/hdwallet-provider": "1.0.18",
     "web3": "1.2.1"
   },
   "devDependencies": {

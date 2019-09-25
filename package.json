@@ -3,7 +3,7 @@
   "license": "Apache-2.0",
   "private": true,
   "scripts": {
-    "clean": "npm -rf ./node_modules && lerna clean",
+    "clean": "lerna clean",
     "bootstrap": "lerna bootstrap",
     "postinstall": "lerna bootstrap",
     "services:start": "lerna run services:start --stream",
