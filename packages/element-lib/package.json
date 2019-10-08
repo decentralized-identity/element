@@ -63,7 +63,7 @@
     "rxjs": "^6.5.2",
     "secp256k1": "^3.6.2",
     "@truffle/contract": "4.0.32",
-    "@truffle/hdwallet-provider": "1.0.18",
+    "@truffle/hdwallet-provider": "1.0.20",
     "web3": "1.2.1"
   },
   "devDependencies": {
