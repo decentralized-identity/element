@@ -1,5 +1,4 @@
 const element = require('../../../../../index');
-
 const config = require('../../../../json/config.local.json');
 
 jest.setTimeout(10 * 1000);
