@@ -1,5 +1,4 @@
 const element = require('../../../../../index');
-
 const config = require('../../../../json/config.local.json');
 
 jest.setTimeout(10 * 1000);
@@ -11,6 +10,7 @@ it('can write from 2 services to 2 contracts', async () => {
     // when not defined, a new contract is created.
     // anchorContractAddress: config.anchorContractAddress,
   });
+  await blockchain1.resolving;
 
   const blockchain2 = element.blockchain.ethereum.configure({
     hdPath: "m/44'/60'/0'/0/0",
@@ -19,6 +19,7 @@ it('can write from 2 services to 2 contracts', async () => {
     // when not defined, a new contract is created.
     // anchorContractAddress: config.anchorContractAddress,
   });
+  await blockchain2.resolving;
 
   const txn1 = await blockchain1.write('Qmc9Asse4CvAuQJ77vMARRqLYTrL4ZzWK8BKb2FHRAYcuD');
   const txn2 = await blockchain1.write('Qmc9Asse4CvAuQJ77vMARRqLYTrL4ZzWK8BKb2FHRAYcuD');
