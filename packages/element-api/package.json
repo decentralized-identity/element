@@ -7,7 +7,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "env:create:local": "node ./scripts/env_to_json_config.js local ../../example.env ./local.runtimeconfig.json && ./scripts/update_runtimeconfig_contract.sh ./local.runtimeconfig.json",
-    "env:create:prod": "node ./scripts/env_to_json_config.js local ../../.env ./.runtimeconfig.json",
+    "env:create:prod": "node ./scripts/env_to_json_config.js production ../../example.env ./.runtimeconfig.json && cat ./.runtimeconfig.json",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
     "pretest": "cd ../../ && npm run services:start && cd -",
