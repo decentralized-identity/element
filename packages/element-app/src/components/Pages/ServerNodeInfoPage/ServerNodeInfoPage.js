@@ -1,17 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
 import { Grid, Button } from '@material-ui/core';
-
-// eslint-disable-next-line
-import brace from 'brace';
 import AceEditor from 'react-ace';
-
-// eslint-disable-next-line
-import 'brace/mode/json';
-// eslint-disable-next-line
-import 'brace/theme/mono_industrial';
-
 import { Pages } from '../../index';
 
 const SWAGGER_UI = process.env.REACT_APP_SWAGGER_URL;

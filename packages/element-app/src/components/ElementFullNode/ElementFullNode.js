@@ -1,23 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Typography, Button } from '@material-ui/core';
-
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
-// eslint-disable-next-line
-import brace from 'brace';
 import AceEditor from 'react-ace';
-
-// eslint-disable-next-line
-import 'brace/mode/json';
-// eslint-disable-next-line
-import 'brace/theme/github';
-
 import { DIDResolver } from '../index';
-
 import OperationDialog from './OperationDialog';
 
 const SWAGGER_UI = process.env.REACT_APP_SWAGGER_URL;
