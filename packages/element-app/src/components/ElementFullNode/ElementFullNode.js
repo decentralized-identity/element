@@ -20,9 +20,7 @@ import { DIDResolver } from '../index';
 
 import OperationDialog from './OperationDialog';
 
-const SWAGGER_UI = window.location.hostname === 'element-did.com'
-  ? 'https://element-did.com/api/docs'
-  : 'http://localhost:5002/element-did/us-central1/main/docs';
+const SWAGGER_UI = process.env.REACT_APP_SWAGGER_URL;
 
 class ElementFullNode extends Component {
   state = {
