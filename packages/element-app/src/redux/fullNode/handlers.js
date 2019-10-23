@@ -1,9 +1,7 @@
 import { withHandlers } from 'recompose';
 import axios from 'axios';
 
-const API_BASE = window.location.hostname === 'element-did.com'
-  ? 'https://element-did.com/api/v1'
-  : 'http://localhost:5002/element-did/us-central1/main/api/v1';
+const API_BASE = process.env.REACT_APP_API_URL;
 
 export default withHandlers({
   predictDID: ({ set, getMyDidUniqueSuffix }) => async () => {
