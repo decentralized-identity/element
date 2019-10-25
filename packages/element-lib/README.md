@@ -28,5 +28,5 @@ Now you can confirm your working changes to element work with your app before pu
 ##### Getting the Local Contract Address
 
 ```
-cat ./build/contracts/SimpleSidetreeAnchor.json| jq -r '.networks["133700"].address'
+cat ./SimpleSidetreeAnchor.json| jq -r '.networks["133700"].address'
 ```
