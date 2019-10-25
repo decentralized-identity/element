@@ -33,7 +33,6 @@
     "swagger-jsdoc": "^3.2.6",
     "swagger-ui-express": "^4.0.2",
     "tar": ">=2.2.2",
-    "websocket": "^1.0.30",
     "winston": "^3.1.0"
   },
   "engines": {
