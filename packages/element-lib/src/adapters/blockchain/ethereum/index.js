@@ -3,7 +3,7 @@ const HDWalletProvider = require('@truffle/hdwallet-provider');
 const contract = require('@truffle/contract');
 const bytes32EnodedMultihashToBase58EncodedMultihash = require('../../../func/bytes32EnodedMultihashToBase58EncodedMultihash');
 const base58EncodedMultihashToBytes32 = require('../../../func/base58EncodedMultihashToBytes32');
-const anchorContractArtifact = require('../../../../build/contracts/SimpleSidetreeAnchor.json');
+const anchorContractArtifact = require('../../../../SimpleSidetreeAnchor.json');
 
 const getWeb3 = ({ mnemonic, hdPath, providerUrl }) => {
   // eslint-disable-next-line
