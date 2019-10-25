@@ -2,7 +2,6 @@
 const fs = require('fs');
 const path = require('path');
 const firebaseAdmin = require('firebase-admin');
-const functions = require('firebase-functions');
 // Required for side-effects
 require('firebase/firestore');
 
@@ -11,6 +10,7 @@ const serviceAccountPath = path.resolve(
   __dirname,
   '../../element-did-firebase-adminsdk.json',
 );
+
 if (fs.existsSync(serviceAccountPath)) {
   serviceAccountKey = JSON.parse(fs.readFileSync(serviceAccountPath));
 }
@@ -23,17 +23,8 @@ if (!firebaseAdmin.apps.length) {
   });
 }
 
-const authAdmin = firebaseAdmin.auth();
 const firestore = firebaseAdmin.firestore();
 
-const teardown = async () => {
-  firebaseAdmin.app().delete();
-};
-
 module.exports = {
-  firebaseAdmin,
-  authAdmin,
-  functions,
   firestore,
-  teardown,
 };
