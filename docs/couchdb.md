@@ -1,6 +1,6 @@
 # Procedure to create a remote couchdb database
 
-In order to run element-api in production you will need to define a `ELEMENT_COUCHDB_REMOTE` in your `.env` file. Here is how you can obtain one for free (up to 1GB of data)
+In order to run element-api in production you will need to define a `ELEMENT_COUCHDB_REMOTE` in your `.env` file. There are plenty of ways to host a CouchDB instance (including using Docker) but here we will show how to do it on IBM cloud because it is free (up to 1GB of data)
 
 ## Registering an IBM Cloud account
 
