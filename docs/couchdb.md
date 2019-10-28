@@ -17,5 +17,13 @@ In order to run element-api in production you will need to define a `ELEMENT_COU
 - Name your instance (or keep the default value) and select "Use both legacy credentials and IAM" under authentication methods
 - Then hit "Create" button in the right pane
 - You should see your Cloudant resource in the Resource list, click on its name
-- Copy "External Endpoint (preferred)" that's your `ELEMENT_COUCHDB_REMOTE`
 - You can click on the "Launch Cloudant Dashboard" to see and manage your couchdb databases
+- Go to Databases and create new database called element-did
+
+## Creating a service credential
+
+- Go back to the resource page
+- On the left pane click on "Service credentials"
+- Click "New credential" and "Add"
+- Copy the value of "url" in the service credential file
+- Your value of `ELEMENT_COUCHDB_REMOTE` will be the url + `/element-did`
