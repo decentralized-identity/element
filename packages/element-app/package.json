@@ -41,6 +41,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:docker": "REACT_APP_ENV=docker react-scripts start",
     "build": "NODE_OPTIONS='--max-old-space-size=4096' react-scripts build",
     "deploy": "firebase deploy --only hosting",
     "test": "react-scripts test --no-watch",
