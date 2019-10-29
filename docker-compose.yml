@@ -14,7 +14,7 @@ services:
   element-api:
     container_name: element-api
     build: ./packages/element-api
-    command: npm run start:express
+    command: npm run start:docker
     ports:
       - '5002:5002'
     volumes:
