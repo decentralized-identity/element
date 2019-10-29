@@ -3,14 +3,12 @@ version: '3.7'
 services:
   element-app:
     container_name: element-app
-    build:
-      context: ./packages/element-app
-      dockerfile: Dockerfile
-    volumes:
-      - '.:/app'
-      - '/app/node_modules'
+    build: ./packages/element-app
     ports:
       - '3000:3000'
+    volumes:
+      - './packages/element-app:/app'
+      - '/app/node_modules'
 
   element-api:
     container_name: element-api
@@ -19,8 +17,6 @@ services:
     ports:
       - '5002:5002'
     volumes:
-      - .:/srv/element-api
-      - element-api_node_modules:/srv/element-api/node_modules
+      - './packages/element-api:/srv/api'
+      - '/srv/api/node_modules'
 
-volumes:
-  element-api_node_modules:

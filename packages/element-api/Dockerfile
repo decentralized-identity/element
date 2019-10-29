@@ -1,10 +1,10 @@
 FROM node:10.16
 
-RUN mkdir /srv/element-api && chown node:node /srv/element-api
+RUN mkdir /srv/api && chown node:node /srv/api
 
 USER node
 
-WORKDIR /srv/element-api
+WORKDIR /srv/api
 
 COPY --chown=node:node package.json package-lock.json ./
 
