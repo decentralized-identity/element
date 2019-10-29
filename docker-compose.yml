@@ -4,6 +4,7 @@ services:
   element-app:
     container_name: element-app
     build: ./packages/element-app
+    command: npm run start:docker
     ports:
       - '3000:3000'
     volumes:
