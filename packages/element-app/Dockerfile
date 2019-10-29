@@ -1,15 +1,7 @@
-# base image
 FROM node:10.16
 
-# set working directory
 WORKDIR /app
 
-# add `/app/node_modules/.bin` to $PATH
-ENV PATH /app/node_modules/.bin:$PATH
+COPY --chown=node:node package.json package-lock.json ./
 
-# install and cache app dependencies
-COPY package.json /app/package.json
-RUN npm install
-
-# start app
-CMD ["npm", "run", "start:docker"]
+RUN npm install --quiet
