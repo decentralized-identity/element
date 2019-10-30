@@ -50,6 +50,7 @@
     "eject": "react-scripts eject",
     "lint": "eslint --ext js src",
     "lint:fix": "eslint --ext js --fix src",
+    "serve": "serve -s build",
     "storybook": "start-storybook -s ./public -p 6006",
     "storybook:build": "rm -rf storybook-static/ && build-storybook && cp -r ./public/cys ./storybook-static/cys && cp -r ./public/svg ./storybook-static/svg",
     "storybook:deploy": "rm -rf ../../docs/storybook/ && cp -r storybook-static/ ../../docs/storybook/"
@@ -69,12 +70,13 @@
     "@storybook/addon-links": "^5.0.11",
     "@storybook/addons": "^5.0.11",
     "@storybook/react": "^5.0.11",
-    "firebase-tools": "^7.3.2",
     "babel-eslint": "^9.0.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jest": "^22.1.2",
     "eslint-plugin-react": "^7.14.2",
-    "gh-pages": "^2.0.1"
+    "firebase-tools": "^7.3.2",
+    "gh-pages": "^2.0.1",
+    "serve": "^11.2.0"
   }
 }
