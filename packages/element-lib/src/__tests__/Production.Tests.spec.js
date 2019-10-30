@@ -30,7 +30,8 @@ describe.skip('Production Tests', () => {
 
   const db = new element.adapters.database.ElementRXDBAdapter({
     name: 'production-tests',
-    remote: config.couchdb_remote,
+    // Use a test DB for the production tests
+    remote: config.couchdb_remote.replace('element-did', 'test-element-did'),
   });
 
   const manager = new element.adapters.storage.StorageManager(db, storage, {
