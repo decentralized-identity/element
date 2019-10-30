@@ -28,7 +28,7 @@ describe.skip('Production Tests', () => {
     multiaddr: config.ipfsApiMultiAddr,
   });
 
-  const db = new element.adapters.database.ElementRXDBAdapterWithRemoteSync({
+  const db = new element.adapters.database.ElementRXDBAdapter({
     name: 'production-tests',
     remote: config.couchdb_remote,
   });
