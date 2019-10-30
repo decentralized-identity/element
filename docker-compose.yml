@@ -20,8 +20,8 @@ services:
     ports:
       - '3000:3000'
     volumes:
-      - './packages/element-app:/app'
       - '/app/node_modules'
+      - '/app/build'
 
   element-api:
     build: ./packages/element-api
