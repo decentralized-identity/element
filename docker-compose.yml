@@ -2,7 +2,6 @@ version: '3.7'
 
 services:
   element-app:
-    container_name: element-app
     build: ./packages/element-app
     command: npm run start:docker
     ports:
@@ -12,7 +11,6 @@ services:
       - '/app/node_modules'
 
   element-api:
-    container_name: element-api
     build: ./packages/element-api
     command: npm run start:docker
     ports:
