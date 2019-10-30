@@ -51,7 +51,7 @@
     "eject": "react-scripts eject",
     "lint": "eslint --ext js src",
     "lint:fix": "eslint --ext js --fix src",
-    "serve": "serve -s build",
+    "serve": "serve -s build -l 3000",
     "storybook": "start-storybook -s ./public -p 6006",
     "storybook:build": "rm -rf storybook-static/ && build-storybook && cp -r ./public/cys ./storybook-static/cys && cp -r ./public/svg ./storybook-static/svg",
     "storybook:deploy": "rm -rf ../../docs/storybook/ && cp -r storybook-static/ ../../docs/storybook/"

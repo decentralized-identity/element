@@ -18,7 +18,7 @@ services:
       dockerfile: prod.Dockerfile
     command: npm run serve
     ports:
-      - '3000:5000'
+      - '3000:3000'
     volumes:
       - './packages/element-app:/app'
       - '/app/node_modules'
