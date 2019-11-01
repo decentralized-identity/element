@@ -1,5 +1,6 @@
 const dotenv = require('dotenv');
 const path = require('path');
+const fetch = require('node-fetch');
 
 const element = require('../../index');
 
@@ -27,9 +28,10 @@ describe.skip('Production Tests', () => {
     multiaddr: config.ipfsApiMultiAddr,
   });
 
-  const db = new element.adapters.database.ElementRXDBAdapterWithRemoteSync({
+  const db = new element.adapters.database.ElementRXDBAdapter({
     name: 'production-tests',
-    remote: config.couchdb_remote,
+    // Use a test DB for the production tests
+    remote: config.couchdb_remote.replace('element-did', 'test-element-did'),
   });
 
   const manager = new element.adapters.storage.StorageManager(db, storage, {
@@ -71,7 +73,23 @@ describe.skip('Production Tests', () => {
         'element:sidetree:cas-cachable:QmPyAucuooAEMbdw1uT8veXrLSfBjdNoTqfDRsnt5hrzbS',
       );
       expect(record2.persisted).toBe(true);
+    });
+
+    it('should sync data with the remote URL', async () => {
+      // Delete test remote DB to start fresh
+      await fetch(db.remote, { method: 'DELETE' }).then(res => res.json());
+      // Make sure record does not exist yet in the remote DB
+      const error = await fetch(`${db.remote}/element:sidetree:cas-cachable:QmPyAucuooAEMbdw1uT8veXrLSfBjdNoTqfDRsnt5hrzbS`)
+        .then(res => res.json());
+      expect(error).toBeDefined();
+      expect(error.error).toBe('not_found');
+      // Sync DB
       await manager.db.awaitableSync();
+      // Now record exists
+      const record = await fetch(`${db.remote}/element:sidetree:cas-cachable:QmPyAucuooAEMbdw1uT8veXrLSfBjdNoTqfDRsnt5hrzbS`)
+        .then(res => res.json());
+      expect(record).toBeDefined();
+      expect(record.id).toBe('element:sidetree:cas-cachable:QmPyAucuooAEMbdw1uT8veXrLSfBjdNoTqfDRsnt5hrzbS');
     });
   });
 
