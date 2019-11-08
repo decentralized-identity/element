@@ -36,8 +36,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@truffle/contract": "4.0.32",
-    "@truffle/hdwallet-provider": "^1.0.21",
+    "@truffle/contract": "^4.0.39",
+    "@truffle/hdwallet-provider": "^1.0.24",
     "base64url": "^3.0.1",
     "bip39": "^2.5.0",
     "did-resolver": "0.0.6",
