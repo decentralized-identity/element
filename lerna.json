@@ -8,8 +8,7 @@
       "message": "chore(release): publish"
     },
     "bootstrap": {
-      "ignore": "component-*",
-      "npmClientArgs": ["--no-package-lock"]
+      "ignore": "component-*"
     }
   }
 }
