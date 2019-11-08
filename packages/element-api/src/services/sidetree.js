@@ -9,7 +9,7 @@ const config = getBaseConfig();
 let storage;
 let db;
 
-if (process.env.NODE_ENV === 'testing' || process.env.EXPRESS) {
+if (process.env.NODE_ENV === 'testing' || process.env.DOCKER) {
   db = new element.adapters.database.ElementRXDBAdapter({
     name: 'element-did.rxdb.api',
     remote: config.couchdb_remote,

@@ -25,4 +25,3 @@ yarn-error.log*
 
 build
 storybook-static
-element-pouchdb*

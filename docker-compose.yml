@@ -1,0 +1,34 @@
+version: '3.7'
+
+services:
+
+  # TODO: https://github.com/decentralized-identity/element/issues/100
+  # element-app-dev:
+  #   build: ./packages/element-app
+  #   command: npm run start:docker
+  #   ports:
+  #     - '3000:3000'
+  #   volumes:
+  #     - './packages/element-app:/app'
+  #     - '/app/node_modules'
+
+  element-app-prod:
+    build:
+      context: ./packages/element-app
+      dockerfile: prod.Dockerfile
+    command: npm run serve
+    ports:
+      - '3000:3000'
+    volumes:
+      - '/app/node_modules'
+      - '/app/build'
+
+  element-api:
+    build: ./packages/element-api
+    command: npm run start:docker
+    ports:
+      - '5002:5002'
+    volumes:
+      - './packages/element-api:/srv/api'
+      - '/srv/api/node_modules'
+
