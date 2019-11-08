@@ -40,7 +40,7 @@
     "commit": "git-cz",
     "style": "npm run format -- --list-different && npm run lint",
     "style:fix": "npm run format:fix && npm run lint:fix",
-    "format": "prettier \"**/*.{ts,js,css,scss,sass,less,md}\"",
+    "format": "prettier \"**/*.{ts,js,css,scss,sass,less}\"",
     "format:fix": "npm run format -- --write",
     "lint": "tslint --project tsconfig.json --format codeFrame",
     "lint:fix": "npm run lint -- --fix",
