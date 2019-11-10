@@ -1,13 +1,13 @@
 {
   "name": "@transmute/element-modules",
-  "version": "0.0.0",
+  "version": "0.2.0",
   "private": true,
   "dependencies": {
+    "@transmute/element-core": "^0.2.0",
+    "bip39": "^3.0.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-scripts": "3.0.1",
-    "@transmute/element-core": "0.0.0",
-    "bip39": "^3.0.2"
+    "react-scripts": "3.0.1"
   },
   "scripts": {
     "build": "react-scripts build",

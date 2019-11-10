@@ -1,15 +1,19 @@
 {
-  "version": "0.0.4",
-  "packages": ["packages/*"],
+  "version": "0.2.0",
+  "packages": [
+    "packages/*"
+  ],
   "command": {
     "publish": {
       "conventionalCommits": true,
-      "ignoreChanges": ["ignored-file", "*.md"],
+      "ignoreChanges": [
+        "ignored-file",
+        "*.md"
+      ],
       "message": "chore(release): publish"
     },
     "bootstrap": {
-      "ignore": "component-*",
-      "npmClientArgs": ["--no-package-lock"]
+      "ignore": "component-*"
     }
   }
 }

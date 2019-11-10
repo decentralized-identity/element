@@ -1,6 +1,6 @@
 {
   "name": "@transmute/element-app",
-  "version": "0.0.2-3",
+  "version": "0.2.0",
   "private": true,
   "homepage": "https://element-did.com",
   "license": "Apache-2.0",
@@ -8,7 +8,7 @@
     "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.2",
     "@transmute/did-wallet": "0.0.0-3",
-    "@transmute/element-lib": "0.1.7",
+    "@transmute/element-lib": "^0.2.0",
     "axios": "^0.18.0",
     "base64url": "^3.0.1",
     "classnames": "^2.2.6",
@@ -38,7 +38,7 @@
     "redux-devtools-extension": "^2.13.7",
     "redux-persist": "^5.10.0",
     "redux-thunk": "^2.3.0",
-    "web3": "^1.0.0-beta.55"
+    "web3": "^1.2.2"
   },
   "scripts": {
     "start": "react-scripts start",
