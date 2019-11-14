@@ -11,14 +11,24 @@ module.exports = async (sidetree) => {
     // - lastTransaction: the last known ethereum transaction for this DID.
     // - doc: contains the did document associated with the did at the time of lastTransaction
     const cachedRecord = cacheHit && cacheHit.record ? cacheHit.record : {};
-    const lastTransactionTime = cachedRecord.lastTransaction
-      ? cachedRecord.lastTransaction.transactionTime
-      : 0;
     // Only get transactions after transactionTime to avoid reprocessing the cached information
+    let transactionTime;
+    if (cachedRecord.lastResolvedTransactionTime) {
+      transactionTime = cachedRecord.lastResolvedTransactionTime;
+    } else if (cachedRecord.lastTransaction) {
+      ({ transactionTime } = cachedRecord.lastTransaction);
+    } else {
+      transactionTime = 0;
+    }
     const transactions = await sidetree.getTransactions({
-      transactionTime: lastTransactionTime + 1,
+      transactionTime: transactionTime + 1,
       omitTimestamp: true,
     });
+
+    // No new transactions, we can skip everything else
+    if (transactions.length === 0) {
+      return cachedRecord.doc;
+    }
 
     let items = transactions
       .map(transaction => ({ transaction }))
@@ -95,11 +105,16 @@ module.exports = async (sidetree) => {
     }
 
     const record = updatedState[didUniqueSuffix];
+    const lastResolvedTransaction = transactions.pop();
+    const lastResolvedTransactionTime = lastResolvedTransaction.transactionTime;
 
     if (record) {
       await sidetree.db.write(`element:sidetree:did:elem:${didUniqueSuffix}`, {
         type: 'element:sidetree:did:documentRecord',
-        record,
+        record: {
+          ...record,
+          lastResolvedTransactionTime,
+        },
       });
 
       return record.doc;
