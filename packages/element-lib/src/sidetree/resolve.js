@@ -16,7 +16,7 @@ module.exports = async (sidetree) => {
     if (cachedRecord.lastResolvedTransactionTime) {
       transactionTime = cachedRecord.lastResolvedTransactionTime;
     } else if (cachedRecord.lastTransaction) {
-      transactionTime = 0;
+      ({ transactionTime } = cachedRecord.lastTransaction);
     } else {
       transactionTime = 0;
     }
