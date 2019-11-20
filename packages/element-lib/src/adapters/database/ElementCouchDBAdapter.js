@@ -48,9 +48,12 @@ class ElementCouchDBAdapter {
 
   async read(id) {
     await this.init();
-    const { data } = await this.couch.get(this.name, id);
-    console.log(data);
-    return data;
+    try {
+      const { data } = await this.couch.get(this.name, id);
+      return data;
+    } catch (e) {
+      return null;
+    }
   }
 
   async readCollection(type) {

@@ -53,19 +53,19 @@ describe('ElementCouchDBAdapter', () => {
     });
   });
 
-  // describe.skip('read', () => {
-  //   it('should return the record if it exists', async () => {
-  //     const record = await db.read(id1);
-  //     expect(record.id).toBe(id1);
-  //     expect(record.anchorFileHash).toBe(anchorFileHash2);
-  //     expect(record.type).toBe(type1);
-  //   });
+  describe('read', () => {
+    it('should return the record if it exists', async () => {
+      const record = await db.read(id1);
+      expect(record.id).toBe(id1);
+      expect(record.anchorFileHash).toBe(anchorFileHash2);
+      expect(record.type).toBe(type1);
+    });
 
-  //   it('should return null if record does not exist', async () => {
-  //     const record = await db.read(id2);
-  //     expect(record).toBe(null);
-  //   });
-  // });
+    it('should return null if record does not exist', async () => {
+      const record = await db.read(id2);
+      expect(record).toBe(null);
+    });
+  });
 
   // describe.skip('readCollection', () => {
   //   // beforeAll(async () => {
