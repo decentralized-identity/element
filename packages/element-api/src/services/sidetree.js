@@ -9,7 +9,17 @@ const config = getBaseConfig();
 let storage;
 let db;
 
-if (process.env.NODE_ENV === 'testing' || process.env.DOCKER) {
+if (process.env.DOCKER) {
+  db = new element.adapters.database.ElementCouchDBAdapter({
+    name: 'element',
+    remote: config.couchdb_remote,
+  });
+
+  storage = element.storage.ipfs.configure({
+    multiaddr: config.ipfs.multiaddr,
+  });
+}
+if (process.env.NODE_ENV === 'testing') {
   db = new element.adapters.database.ElementRXDBAdapter({
     name: 'element-did.rxdb.api',
     remote: config.couchdb_remote,

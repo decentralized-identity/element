@@ -14,7 +14,6 @@ const getBaseConfig = () => {
       config = functions.config();
       break;
   }
-
   return config.element;
 };
 
