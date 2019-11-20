@@ -18,8 +18,7 @@ if (process.env.DOCKER) {
   storage = element.storage.ipfs.configure({
     multiaddr: config.ipfs.multiaddr,
   });
-}
-if (process.env.NODE_ENV === 'testing') {
+} else if (process.env.NODE_ENV === 'testing') {
   db = new element.adapters.database.ElementRXDBAdapter({
     name: 'element-did.rxdb.api',
     remote: config.couchdb_remote,
