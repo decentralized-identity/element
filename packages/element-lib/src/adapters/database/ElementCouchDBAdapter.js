@@ -58,7 +58,10 @@ class ElementCouchDBAdapter {
 
   async readCollection(type) {
     await this.init();
-    console.log('TODO', type);
+    const mangoQuery = { selector: { type: { $eq: type } } };
+    const parameters = {};
+    const response = await this.couch.mango(this.name, mangoQuery, parameters);
+    return response.data.docs;
   }
 
   async reset() {

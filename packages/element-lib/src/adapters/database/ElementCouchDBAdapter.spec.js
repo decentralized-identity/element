@@ -67,32 +67,32 @@ describe('ElementCouchDBAdapter', () => {
     });
   });
 
-  // describe.skip('readCollection', () => {
-  //   // beforeAll(async () => {
-  //   //   // Create a new record with the same type
-  //   //   await db.write(id2, {
-  //   //     anchorFileHash: anchorFileHash1,
-  //   //     type: type1,
-  //   //   });
-  //   //   // Create a new record with a different type
-  //   //   await db.write(id3, {
-  //   //     anchorFileHash: anchorFileHash1,
-  //   //     type: type2,
-  //   //   });
-  //   // });
+  describe('readCollection', () => {
+    beforeAll(async () => {
+      // Create a new record with the same type
+      await db.write(id2, {
+        anchorFileHash: anchorFileHash1,
+        type: type1,
+      });
+      // Create a new record with a different type
+      await db.write(id3, {
+        anchorFileHash: anchorFileHash1,
+        type: type2,
+      });
+    });
 
-  //   it('should return only records of the given type', async () => {
-  //     const record = await db.readCollection(type1);
-  //     expect(record.length).toBe(2);
-  //     expect(record[0].id).toBe(id1);
-  //     expect(record[1].id).toBe(id2);
-  //   });
+    it('should return only records of the given type', async () => {
+      const record = await db.readCollection(type1);
+      expect(record.length).toBe(2);
+      expect(record[0].id).toBe(id1);
+      expect(record[1].id).toBe(id2);
+    });
 
-  //   it('should return an empty array if no record has the given type', async () => {
-  //     const record = await db.readCollection(type3);
-  //     expect(record).toEqual([]);
-  //   });
-  // });
+    it('should return an empty array if no record has the given type', async () => {
+      const record = await db.readCollection(type3);
+      expect(record).toEqual([]);
+    });
+  });
 
   // describe.skip('deleteDB', () => {
   //   it('should remove all records', async () => {
