@@ -94,15 +94,15 @@ describe('ElementCouchDBAdapter', () => {
     });
   });
 
-  // describe.skip('deleteDB', () => {
-  //   it('should remove all records', async () => {
-  //     expect(await db.read(id1)).toBeDefined();
-  //     expect(await db.read(id2)).toBeDefined();
-  //     expect(await db.read(id3)).toBeDefined();
-  //     await db.deleteDB();
-  //     expect(await db.read(id1)).toBe(null);
-  //     expect(await db.read(id2)).toBe(null);
-  //     expect(await db.read(id3)).toBe(null);
-  //   });
-  // });
+  describe('reset', () => {
+    it('should remove all records', async () => {
+      expect(await db.read(id1)).toBeDefined();
+      expect(await db.read(id2)).toBeDefined();
+      expect(await db.read(id3)).toBeDefined();
+      await db.reset();
+      expect(await db.read(id1)).toBe(null);
+      expect(await db.read(id2)).toBe(null);
+      expect(await db.read(id3)).toBe(null);
+    });
+  });
 });
