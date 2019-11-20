@@ -31,11 +31,19 @@ class ElementCouchDBAdapter {
   }
 
   async write(id, data) {
-    console.log(id, data, this.created);
     await this.init();
-    const res = await this.couch.insert(this.name, { _id: id, id, ...data });
-    console.log(res);
-    return res;
+    const payload = {
+      _id: id,
+      id,
+      ...data,
+    };
+    try {
+      await this.couch.insert(this.name, payload);
+    } catch (e) {
+      const { data: { _rev } } = await this.couch.get(this.name, id);
+      await this.couch.update(this.name, { _rev, ...payload });
+    }
+    return this.read(id);
   }
 
   async read(id) {

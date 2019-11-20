@@ -33,25 +33,25 @@ describe('ElementCouchDBAdapter', () => {
     });
   });
 
-  // describe('write', () => {
-  //   it('should create a record', async () => {
-  //     const record = await db.write(id1, {
-  //       anchorFileHash: anchorFileHash1,
-  //     });
-  //     expect(record.id).toBe(id1);
-  //     expect(record.anchorFileHash).toBe(anchorFileHash1);
-  //   });
+  describe('write', () => {
+    it('should create a record', async () => {
+      const record = await db.write(id1, {
+        anchorFileHash: anchorFileHash1,
+      });
+      expect(record.id).toBe(id1);
+      expect(record.anchorFileHash).toBe(anchorFileHash1);
+    });
 
-  //   it('overwrite the record if same id is specified', async () => {
-  //     const record = await db.write(id1, {
-  //       anchorFileHash: anchorFileHash2,
-  //       type: type1,
-  //     });
-  //     expect(record.id).toBe(id1);
-  //     expect(record.anchorFileHash).toBe(anchorFileHash2);
-  //     expect(record.type).toBe(type1);
-  //   });
-  // });
+    it('overwrite the record if same id is specified', async () => {
+      const record = await db.write(id1, {
+        anchorFileHash: anchorFileHash2,
+        type: type1,
+      });
+      expect(record.id).toBe(id1);
+      expect(record.anchorFileHash).toBe(anchorFileHash2);
+      expect(record.type).toBe(type1);
+    });
+  });
 
   // describe.skip('read', () => {
   //   it('should return the record if it exists', async () => {
