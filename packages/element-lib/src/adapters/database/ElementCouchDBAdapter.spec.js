@@ -1,14 +1,7 @@
 const ElementCouchDBAdapter = require('./ElementCouchDBAdapter');
 
-const ELEMENT_COUCHDB_REMOTE =
-  'https://4ae06840-a2d6-4d06-ab14-2eb50eeb3b74-bluemix:b7b586ba24a89e354c885384b861bb53cebbe6134427c6c650c5b8ec6fc9265f@4ae06840-a2d6-4d06-ab14-2eb50eeb3b74-bluemix.cloudantnosqldb.appdomain.cloud/element-did';
-
-const dbName = 'test';
-
-let db;
-
-
-describe('ElementCouchDBAdapter', () => {
+// Needs a prod cloudant URL to run
+describe.skip('ElementCouchDBAdapter', () => {
   const id1 = 'id1';
   const id2 = 'id2';
   const id3 = 'id3';
@@ -18,9 +11,21 @@ describe('ElementCouchDBAdapter', () => {
   const anchorFileHash1 = 'anchorFileHash1';
   const anchorFileHash2 = 'anchorFileHash2';
 
+  let db;
+  const dbName = 'test';
+
   beforeAll(async () => {
-    db = new ElementCouchDBAdapter({ name: dbName, remote: ELEMENT_COUCHDB_REMOTE });
+    const remote = process.env.ELEMENT_COUCHDB_REMOTE;
+
+    db = new ElementCouchDBAdapter({
+      name: dbName,
+      remote,
+    });
     await db.reset();
+  });
+
+  afterAll(async () => {
+    await db.close();
   });
 
   describe('constructor', () => {
