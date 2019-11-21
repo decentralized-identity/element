@@ -50,12 +50,13 @@ const syncTransaction = sidetree => async (transaction) => {
 };
 
 const sync = async (sidetree) => {
-  let transactions = await sidetree.blockchain.getTransactions(
+  const transactionsAlreadyProcessed = await sidetree.db.readCollection('transaction');
+  const processedSet = new Set(transactionsAlreadyProcessed.map(t => t.transactionNumber));
+  const transactions = await sidetree.blockchain.getTransactions(
     0,
     'latest',
     { omitTimestamp: true },
   );
-  transactions = transactions.slice(0, 100);
   const validTransactions = transactions
     .filter((transaction) => {
       const valid = schema.validator.isValid(transaction, schema.schemas.sidetreeTransaction);
@@ -64,14 +65,16 @@ const sync = async (sidetree) => {
       }
       return valid;
     });
-
-  return executeSequentially(syncTransaction(sidetree), validTransactions);
+  const unprocessedTransactions = validTransactions
+    .filter(transaction => !processedSet.has(transaction.transactionNumber));
+  const toProcess = unprocessedTransactions.slice(0, 50);
+  return executeSequentially(syncTransaction(sidetree), toProcess);
 };
 
 router.get('/sync', async (req, res, next) => {
   try {
     const sidetree = req.app.get('sidetree');
-    await sidetree.db.reset();
+    // await sidetree.db.reset();
     await sync(sidetree);
     res.status(200).send({ ok: true });
   } catch (e) {
