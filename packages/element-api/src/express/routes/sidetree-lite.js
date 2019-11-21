@@ -16,7 +16,7 @@ const executeSequentially = (f, array) => {
     }, Promise.resolve());
 };
 
-const syncTransaction = sidetree => async (transaction) => {
+const syncTransaction = async (sidetree, transaction) => {
   const { transactionNumber } = transaction;
   const anchorFile = await sidetree.storage.read(transaction.anchorFileHash);
   if (!schema.validator.isValid(anchorFile, schema.schemas.sidetreeAnchorFile)) {
@@ -42,11 +42,7 @@ const syncTransaction = sidetree => async (transaction) => {
     };
   });
   const writeOperationToCache = op => sidetree.db.write(`operation:${op.operationHash}`, op);
-  await executeSequentially(writeOperationToCache, operationsByDidUniqueSuffixes);
-  return sidetree.db.write(`transaction:${transaction.transactionNumber}`, {
-    type: 'transaction',
-    transactionNumber,
-  });
+  return executeSequentially(writeOperationToCache, operationsByDidUniqueSuffixes);
 };
 
 const sync = async (sidetree) => {
@@ -67,8 +63,16 @@ const sync = async (sidetree) => {
     });
   const unprocessedTransactions = validTransactions
     .filter(transaction => !processedSet.has(transaction.transactionNumber));
-  const toProcess = unprocessedTransactions.slice(0, 50);
-  return executeSequentially(syncTransaction(sidetree), toProcess);
+  const transactionQueue = unprocessedTransactions.slice(0, 20);
+  const syncAndWriteToCache = (transaction) => {
+    return syncTransaction(sidetree, transaction).then(() => {
+      return sidetree.db.write(`transaction:${transaction.transactionNumber}`, {
+        type: 'transaction',
+        transactionNumber: transaction.transactionNumber,
+      });
+    });
+  };
+  return executeSequentially(syncAndWriteToCache, transactionQueue);
 };
 
 router.get('/sync', async (req, res, next) => {
