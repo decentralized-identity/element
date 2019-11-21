@@ -1,8 +1,5 @@
 /* eslint-disable arrow-body-style */
-const express = require('express');
 const { schema, func } = require('@transmute/element-lib');
-
-const router = express.Router();
 
 // This function applies f, an async function, sequentially to an array of values
 // We need it because:
@@ -85,15 +82,6 @@ const sync = async (sidetree) => {
   return executeSequentially(syncAndWriteToCache, transactionQueue);
 };
 
-router.get('/sync', async (req, res, next) => {
-  try {
-    const sidetree = req.app.get('sidetree');
-    // await sidetree.db.reset();
-    await sync(sidetree);
-    res.status(200).send({ ok: true });
-  } catch (e) {
-    next(e);
-  }
-});
-
-module.exports = router;
+module.exports = {
+  sync,
+};
