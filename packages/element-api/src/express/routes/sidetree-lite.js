@@ -63,14 +63,24 @@ const sync = async (sidetree) => {
     });
   const unprocessedTransactions = validTransactions
     .filter(transaction => !processedSet.has(transaction.transactionNumber));
-  const transactionQueue = unprocessedTransactions.slice(0, 20);
+  const transactionQueue = unprocessedTransactions.slice(0, 100);
   const syncAndWriteToCache = (transaction) => {
-    return syncTransaction(sidetree, transaction).then(() => {
-      return sidetree.db.write(`transaction:${transaction.transactionNumber}`, {
-        type: 'transaction',
-        transactionNumber: transaction.transactionNumber,
+    return syncTransaction(sidetree, transaction)
+      .then(() => {
+        return sidetree.db.write(`transaction:${transaction.transactionNumber}`, {
+          type: 'transaction',
+          transactionNumber: transaction.transactionNumber,
+        });
+      }).catch((error) => {
+        console.log(error);
+        // https://stackoverflow.com/questions/18391212/is-it-not-possible-to-stringify-an-error-using-json-stringify
+        const stringifiedError = JSON.stringify(error, Object.getOwnPropertyNames(error));
+        return sidetree.db.write(`transaction:${transaction.transactionNumber}`, {
+          type: 'transaction',
+          transactionNumber: transaction.transactionNumber,
+          error: stringifiedError,
+        });
       });
-    });
   };
   return executeSequentially(syncAndWriteToCache, transactionQueue);
 };
