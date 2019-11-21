@@ -1,5 +1,6 @@
 /* eslint-disable arrow-body-style */
 const { schema, func } = require('@transmute/element-lib');
+const jsonpatch = require('fast-json-patch');
 
 // This function applies f, an async function, sequentially to an array of values
 // We need it because:
@@ -17,6 +18,7 @@ const syncTransaction = async (sidetree, transaction) => {
   const { transactionNumber } = transaction;
   const anchorFile = await sidetree.storage.read(transaction.anchorFileHash);
   if (!schema.validator.isValid(anchorFile, schema.schemas.sidetreeAnchorFile)) {
+    // TODO
     // console.warn('anchorFile not valid', anchorFile);
     return null;
   }
@@ -82,6 +84,35 @@ const sync = async (sidetree) => {
   return executeSequentially(syncAndWriteToCache, transactionQueue);
 };
 
+const reducer = (state = {}, operation) => {
+  const type = operation.decodedOperation.header.operation;
+  switch (type) {
+    case 'create':
+      return {
+        ...operation.decodedOperationPayload,
+        id: `did:elem:${func.payloadToHash(operation.decodedOperationPayload)}`,
+      };
+    case 'update':
+      return operation.decodedOperationPayload.patch.reduce(jsonpatch.applyReducer, state);
+    case 'recover':
+      return state;
+    case 'delete':
+      return state;
+    default:
+      throw new Error('Operation type not handled', operation);
+  }
+};
+
+const resolve = async (sidetree, did) => {
+  const didUniqueSuffix = did.split(':').pop();
+  const operations = await sidetree.db.readCollection(didUniqueSuffix);
+  operations.sort((op1, op2) => op1.transactionNumber > op2.transactionNumber);
+  // TODO operation validation
+  const didDocument = operations.reduce(reducer, {});
+  return didDocument;
+};
+
 module.exports = {
   sync,
+  resolve,
 };
