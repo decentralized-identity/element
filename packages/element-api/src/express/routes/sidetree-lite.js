@@ -17,6 +17,7 @@ const executeSequentially = (f, array) => {
 };
 
 const syncTransaction = sidetree => async (transaction) => {
+  const { transactionNumber } = transaction;
   const anchorFile = await sidetree.storage.read(transaction.anchorFileHash);
   if (!schema.validator.isValid(anchorFile, schema.schemas.sidetreeAnchorFile)) {
     // console.warn('anchorFile not valid', anchorFile);
@@ -33,7 +34,6 @@ const syncTransaction = sidetree => async (transaction) => {
     const didUniqueSuffix = decodedOperationPayload.didUniqueSuffix
       ? decodedOperationPayload.didUniqueSuffix
       : func.payloadToHash(decodedOperationPayload);
-    const { transactionNumber } = transaction;
     return {
       type: didUniqueSuffix,
       didUniqueSuffix,
@@ -41,8 +41,12 @@ const syncTransaction = sidetree => async (transaction) => {
       ...operation,
     };
   });
-  const writeOperationToCache = op => sidetree.db.write(op.operationHash, op);
-  return executeSequentially(writeOperationToCache, operationsByDidUniqueSuffixes);
+  const writeOperationToCache = op => sidetree.db.write(`operation:${op.operationHash}`, op);
+  await executeSequentially(writeOperationToCache, operationsByDidUniqueSuffixes);
+  return sidetree.db.write(`transaction:${transaction.transactionNumber}`, {
+    type: 'transaction',
+    transactionNumber,
+  });
 };
 
 const sync = async (sidetree) => {
@@ -51,8 +55,7 @@ const sync = async (sidetree) => {
     'latest',
     { omitTimestamp: true },
   );
-  console.log(transactions.length);
-  transactions = transactions.slice(30, 36);
+  transactions = transactions.slice(0, 100);
   const validTransactions = transactions
     .filter((transaction) => {
       const valid = schema.validator.isValid(transaction, schema.schemas.sidetreeTransaction);
