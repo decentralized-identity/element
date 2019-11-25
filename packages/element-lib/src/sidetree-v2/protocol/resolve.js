@@ -1,7 +1,6 @@
 /* eslint-disable arrow-body-style */
 const jsonpatch = require('fast-json-patch');
-// TODO
-const func = require('../../func');
+const { payloadToHash } = require('../utils');
 
 const reducer = (state = {}, operation) => {
   const type = operation.decodedOperation.header.operation;
@@ -9,7 +8,7 @@ const reducer = (state = {}, operation) => {
     case 'create':
       return {
         ...operation.decodedOperationPayload,
-        id: `did:elem:${func.payloadToHash(operation.decodedOperationPayload)}`,
+        id: `did:elem:${payloadToHash(operation.decodedOperationPayload)}`,
       };
     case 'update':
       return operation.decodedOperationPayload.patch.reduce(jsonpatch.applyReducer, state);

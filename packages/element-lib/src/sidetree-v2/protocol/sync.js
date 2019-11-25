@@ -1,7 +1,10 @@
 /* eslint-disable arrow-body-style */
-const func = require('../../func');
 const schema = require('../../schema');
-const { executeSequentially } = require('../utils');
+const {
+  executeSequentially,
+  payloadToHash,
+  batchFileToOperations,
+} = require('../utils');
 
 const syncTransaction = async (sidetree, transaction) => {
   const { transactionNumber } = transaction;
@@ -16,12 +19,12 @@ const syncTransaction = async (sidetree, transaction) => {
     // console.warn('batch file not valid', anchorFile);
     return null;
   }
-  const operations = func.batchFileToOperations(batchFile);
+  const operations = batchFileToOperations(batchFile);
   const operationsByDidUniqueSuffixes = operations.map((operation) => {
     const { decodedOperationPayload } = operation;
     const didUniqueSuffix = decodedOperationPayload.didUniqueSuffix
       ? decodedOperationPayload.didUniqueSuffix
-      : func.payloadToHash(decodedOperationPayload);
+      : payloadToHash(decodedOperationPayload);
     return {
       type: didUniqueSuffix,
       didUniqueSuffix,
