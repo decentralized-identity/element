@@ -1,5 +1,5 @@
 const MerkleTools = require('merkle-tools');
-const { encodeJson, decodeJson, getDidUniqueSuffix } = require('../func');
+const { encodeJson, getDidUniqueSuffix } = require('../func');
 
 // TODO deterministic stringify
 const create = sidetree => async (req) => {
@@ -13,12 +13,7 @@ const create = sidetree => async (req) => {
   const batchFileHash = await sidetree.storage.write(batchFile);
 
   // Write anchorFile to storage
-  const decodedOperations = requests.map(op => ({
-    ...op,
-    decodedPayload: decodeJson(op.payload),
-  }));
-  const didUniqueSuffixes = decodedOperations.map(getDidUniqueSuffix);
-
+  const didUniqueSuffixes = requests.map(getDidUniqueSuffix);
   const merkleTools = new MerkleTools({
     hashType: 'sha256', // optional, defaults to 'sha256'
   });
