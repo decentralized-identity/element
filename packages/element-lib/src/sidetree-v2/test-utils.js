@@ -7,7 +7,6 @@ const getTestSideTree = () => {
   });
 
   const storage = element.storage.ipfs.configure({
-    // multiaddr: '/dns4/ipfs.infura.io/tcp/5001/https',
     multiaddr: '/ip4/127.0.0.1/tcp/5001',
   });
 
