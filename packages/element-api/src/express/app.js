@@ -1,3 +1,4 @@
+/* eslint-disable global-require */
 const express = require('express');
 
 const cors = require('cors');
@@ -14,8 +15,12 @@ const onErrorResponse = require('../../src/express/onErrorResponse');
 // Automatically allow cross-origin requests
 app.use(cors({ origin: true }));
 app.use(express.json());
-app.set('sidetree', require('../services/sidetree'));
-app.set('sidetree-v2', require('../services/sidetree-v2'));
+if (process.env.NODE_ENV === 'testing') {
+  app.set('sidetree', require('../services/sidetree-test'));
+} else {
+  app.set('sidetree', require('../services/sidetree'));
+  app.set('sidetree-v2', require('../services/sidetree-v2'));
+}
 
 app.options('*', cors({ origin: true }));
 

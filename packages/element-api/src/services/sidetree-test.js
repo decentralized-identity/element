@@ -1,7 +1,4 @@
 const element = require('@transmute/element-lib');
-const { firestore } = require('./firebase');
-const ElementFirestoreAdapter = require('./element-adapter-firestore');
-
 const { getBaseConfig } = require('../config');
 
 const config = getBaseConfig();
@@ -13,19 +10,14 @@ const blockchain = element.blockchain.ethereum.configure({
   anchorContractAddress: config.ethereum.anchor_contract_address,
 });
 
-const db = new ElementFirestoreAdapter({
-  firestore,
+const db = new element.adapters.database.ElementRXDBAdapter({
+  name: 'element-did.rxdb.api',
+  remote: config.couchdb_remote,
 });
-const storage = new element.adapters.storage.StorageManager(
-  db,
-  element.storage.ipfs.configure({
-    multiaddr: config.ipfs.multiaddr,
-  }),
-  {
-    autoPersist: false,
-    retryIntervalSeconds: 5,
-  },
-);
+
+const storage = element.storage.ipfs.configure({
+  multiaddr: config.ipfs.multiaddr,
+});
 
 const serviceBus = new element.adapters.serviceBus.ElementNanoBusAdapter();
 
