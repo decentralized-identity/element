@@ -12,7 +12,7 @@ router.get('/sync', async (req, res, next) => {
   }
 });
 
-router.get('/resolve/:did', async (req, res, next) => {
+router.get('/:did', async (req, res, next) => {
   try {
     const sidetree = req.app.get('sidetree');
     const { did } = req.params;
