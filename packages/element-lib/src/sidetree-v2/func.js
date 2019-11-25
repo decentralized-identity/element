@@ -1,6 +1,7 @@
 /* eslint-disable arrow-body-style */
 const base64url = require('base64url');
 const crypto = require('crypto');
+// TODO: remove schema dependency
 const schema = require('../schema');
 
 // This function applies f, an async function, sequentially to an array of values
