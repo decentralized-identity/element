@@ -5,7 +5,6 @@ const { encodeJson, decodeJson, getDidUniqueSuffix } = require('../func');
 const create = sidetree => async (req) => {
   const requests = Array.isArray(req) ? req : [req];
   const operations = requests.map(encodeJson);
-  console.log({ operations });
 
   // Write batchFile to storage
   const batchFile = {

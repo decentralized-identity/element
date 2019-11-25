@@ -46,9 +46,7 @@ const getDidUniqueSuffix = (decodedOperation) => {
 const batchFileToOperations = batchFile => batchFile.operations.map((op) => {
   const decodedOperation = decodeJson(op);
   const operationHash = payloadToHash(decodedOperation.payload);
-  console.log(decodedOperation.payload);
   const decodedOperationPayload = decodeJson(decodedOperation.payload);
-  console.log(decodedOperationPayload);
   return {
     operationHash,
     decodedOperation,
