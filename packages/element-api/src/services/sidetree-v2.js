@@ -11,7 +11,7 @@ const blockchain = element.blockchain.ethereum.configure({
 });
 
 const db = new element.adapters.database.ElementCouchDBAdapter({
-  name: 'element-test',
+  name: 'element',
   remote: config.couchdb_remote,
 });
 
