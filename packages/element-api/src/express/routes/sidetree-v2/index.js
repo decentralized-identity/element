@@ -33,4 +33,16 @@ router.post('/', async (req, res, next) => {
   }
 });
 
+// TODO: add Swaggee doc
+// TODO: Use v2 prefix properly
+router.get('/operations/:didUniqueSuffix', async (req, res, next) => {
+  try {
+    const sidetree = req.app.get('sidetree-v2');
+    const { didUniqueSuffix } = req.params;
+    const result = await sidetree.getOperations(didUniqueSuffix);
+    res.status(200).json(result);
+  } catch (e) {
+    next(e);
+  }
+});
 module.exports = router;

@@ -10,16 +10,16 @@ export default withHandlers({
     set({
       predictedDID: defaultDID,
     });
-    let res = await axios.get(`${API_BASE}/sidetree/${defaultDID}`);
+    let res = await axios.get(`${API_BASE}/sidetree-v2/${defaultDID}`);
     set({ myDidDocument: res.data });
-    res = await axios.get(`${API_BASE}/sidetree/operations/${didUniqueSuffix}`);
+    res = await axios.get(`${API_BASE}/sidetree-v2/operations/${didUniqueSuffix}`);
     set({ sidetreeOperations: res.data });
   },
   getOperationsForDidUniqueSuffix: ({ set }) => async (didUniqueSuffix) => {
     set({ loading: true });
-    let res = await axios.get(`${API_BASE}/sidetree/did:elem:${didUniqueSuffix}`);
+    let res = await axios.get(`${API_BASE}/sidetree-v2/did:elem:${didUniqueSuffix}`);
     set({ didDocumentForOperations: res.data });
-    res = await axios.get(`${API_BASE}/sidetree/operations/${didUniqueSuffix}`);
+    res = await axios.get(`${API_BASE}/sidetree-v2/operations/${didUniqueSuffix}`);
     set({ sidetreeOperations: res.data, loading: false });
   },
   createDID: ({
@@ -30,7 +30,8 @@ export default withHandlers({
     set({ resolving: true });
 
     const createReq = await createDIDRequest();
-    await axios.post(`${API_BASE}/sidetree/requests`, createReq);
+    console.log(createReq);
+    await axios.post(`${API_BASE}/sidetree-v2`, createReq);
     snackbarMessage({
       snackbarMessage: {
         message: 'This will take a few minutes....',
@@ -203,7 +204,7 @@ export default withHandlers({
   resolveDID: ({ didResolved, snackbarMessage, set }) => async (did) => {
     set({ resolving: true });
     try {
-      const { data } = await axios.get(`${API_BASE}/sidetree/${did}`);
+      const { data } = await axios.get(`${API_BASE}/sidetree-v2/${did}`);
       didResolved({ didDocument: data });
       snackbarMessage({
         snackbarMessage: {

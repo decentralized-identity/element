@@ -31,6 +31,7 @@ class ElementCouchDBAdapter {
   }
 
   async write(id, data) {
+    console.log('write', id);
     await this.init();
     const payload = {
       _id: id,
@@ -47,6 +48,7 @@ class ElementCouchDBAdapter {
   }
 
   async read(id) {
+    console.log('read', id);
     await this.init();
     try {
       const { data } = await this.couch.get(this.name, id);

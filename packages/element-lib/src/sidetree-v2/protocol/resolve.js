@@ -2,7 +2,8 @@
 const jsonpatch = require('fast-json-patch');
 const { payloadToHash } = require('../func');
 
-const reducer = (state = {}, operation) => {
+const reducer = (state = {}, record) => {
+  const { operation } = record;
   const type = operation.decodedOperation.header.operation;
   switch (type) {
     case 'create':
@@ -24,9 +25,10 @@ const reducer = (state = {}, operation) => {
 const resolve = sidetree => async (did) => {
   const didUniqueSuffix = did.split(':').pop();
   const operations = await sidetree.db.readCollection(didUniqueSuffix);
-  operations.sort((op1, op2) => op1.transactionNumber > op2.transactionNumber);
+  // eslint-disable-next-line max-len
+  operations.sort((op1, op2) => op1.transaction.transactionNumber > op2.transaction.transactionNumber);
   // TODO operation validation
-  const didDocument = operations.reduce(reducer, {});
+  const didDocument = operations.reduce(reducer, null);
   return didDocument;
 };
 

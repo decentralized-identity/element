@@ -57,7 +57,6 @@ const batchFileToOperations = batchFile => batchFile.operations.map((op) => {
 });
 
 const syncTransaction = async (sidetree, transaction) => {
-  const { transactionNumber } = transaction;
   const anchorFile = await sidetree.storage.read(transaction.anchorFileHash);
   if (!schema.validator.isValid(anchorFile, schema.schemas.sidetreeAnchorFile)) {
     // TODO
@@ -78,11 +77,11 @@ const syncTransaction = async (sidetree, transaction) => {
     return {
       type: didUniqueSuffix,
       didUniqueSuffix,
-      transactionNumber,
-      ...operation,
+      transaction,
+      operation,
     };
   });
-  const writeOperationToCache = op => sidetree.db.write(`operation:${op.operationHash}`, op);
+  const writeOperationToCache = op => sidetree.db.write(`operation:${op.operation.operationHash}`, op);
   return executeSequentially(writeOperationToCache, operationsByDidUniqueSuffixes)
     .then(() => {
       return sidetree.db.write(`transaction:${transaction.transactionNumber}`, {

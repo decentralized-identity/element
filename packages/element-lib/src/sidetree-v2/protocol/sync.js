@@ -14,13 +14,14 @@ const sync = sidetree => async () => {
     'latest',
     { omitTimestamp: true },
   );
+  // await sidetree.db.reset();
   const transactionQueue = transactions
     // Only process valid transactions
     .filter(isTransactionValid)
     // Only process transactions that haven't been processed
     .filter(transaction => !processedSet.has(transaction.transactionNumber))
     // Only process the first 100 unprocessed transactions
-    .slice(0, 100);
+    .slice(550);
   return executeSequentially(t => syncTransaction(sidetree, t), transactionQueue);
 };
 
