@@ -1,18 +1,7 @@
 /* eslint-disable arrow-body-style */
 const func = require('../../func');
 const schema = require('../../schema');
-
-// This function applies f, an async function, sequentially to an array of values
-// We need it because:
-//   - Promise.all executes all promises at the same time instead of sequentially
-//   - for loop with await is very bad apparently
-// Adapted from: https://stackoverflow.com/questions/20100245/how-can-i-execute-array-of-promises-in-sequential-order
-const executeSequentially = (f, array) => {
-  return array
-    .reduce((promise, value) => {
-      return promise.then(() => f(value));
-    }, Promise.resolve());
-};
+const { executeSequentially } = require('../utils');
 
 const syncTransaction = async (sidetree, transaction) => {
   const { transactionNumber } = transaction;
@@ -41,7 +30,22 @@ const syncTransaction = async (sidetree, transaction) => {
     };
   });
   const writeOperationToCache = op => sidetree.db.write(`operation:${op.operationHash}`, op);
-  return executeSequentially(writeOperationToCache, operationsByDidUniqueSuffixes);
+  return executeSequentially(writeOperationToCache, operationsByDidUniqueSuffixes)
+    .then(() => {
+      return sidetree.db.write(`transaction:${transaction.transactionNumber}`, {
+        type: 'transaction',
+        transactionNumber: transaction.transactionNumber,
+      });
+    }).catch((error) => {
+      console.log(error);
+      // https://stackoverflow.com/questions/18391212/is-it-not-possible-to-stringify-an-error-using-json-stringify
+      const stringifiedError = JSON.stringify(error, Object.getOwnPropertyNames(error));
+      return sidetree.db.write(`transaction:${transaction.transactionNumber}`, {
+        type: 'transaction',
+        transactionNumber: transaction.transactionNumber,
+        error: stringifiedError,
+      });
+    });
 };
 
 const sync = sidetree => async () => {
@@ -63,25 +67,7 @@ const sync = sidetree => async () => {
   const unprocessedTransactions = validTransactions
     .filter(transaction => !processedSet.has(transaction.transactionNumber));
   const transactionQueue = unprocessedTransactions.slice(0, 100);
-  const syncAndWriteToCache = (transaction) => {
-    return syncTransaction(sidetree, transaction)
-      .then(() => {
-        return sidetree.db.write(`transaction:${transaction.transactionNumber}`, {
-          type: 'transaction',
-          transactionNumber: transaction.transactionNumber,
-        });
-      }).catch((error) => {
-        console.log(error);
-        // https://stackoverflow.com/questions/18391212/is-it-not-possible-to-stringify-an-error-using-json-stringify
-        const stringifiedError = JSON.stringify(error, Object.getOwnPropertyNames(error));
-        return sidetree.db.write(`transaction:${transaction.transactionNumber}`, {
-          type: 'transaction',
-          transactionNumber: transaction.transactionNumber,
-          error: stringifiedError,
-        });
-      });
-  };
-  return executeSequentially(syncAndWriteToCache, transactionQueue);
+  return executeSequentially(t => syncTransaction(sidetree, t), transactionQueue);
 };
 
 module.exports = sync;
