@@ -1,5 +1,5 @@
 const MerkleTools = require('merkle-tools');
-const { encodeJson, getDidUniqueSuffix } = require('../func');
+const { encodeJson, getDidUniqueSuffix, syncTransaction } = require('../func');
 
 // TODO deterministic stringify
 const create = sidetree => async (req) => {
@@ -29,7 +29,11 @@ const create = sidetree => async (req) => {
   const anchorFileHash = await sidetree.storage.write(anchorFile);
 
   // Anchor on ethereum
-  return sidetree.blockchain.write(anchorFileHash);
+  const transaction = await sidetree.blockchain.write(anchorFileHash);
+
+  // sync transaction to cache;
+  await syncTransaction(sidetree, transaction);
+  return transaction;
 };
 
 module.exports = create;
