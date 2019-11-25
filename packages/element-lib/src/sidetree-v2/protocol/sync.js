@@ -4,7 +4,7 @@ const {
   executeSequentially,
   payloadToHash,
   batchFileToOperations,
-} = require('../utils');
+} = require('../func');
 
 const syncTransaction = async (sidetree, transaction) => {
   const { transactionNumber } = transaction;

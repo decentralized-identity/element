@@ -1,6 +1,6 @@
 /* eslint-disable arrow-body-style */
 const jsonpatch = require('fast-json-patch');
-const { payloadToHash } = require('../utils');
+const { payloadToHash } = require('../func');
 
 const reducer = (state = {}, operation) => {
   const type = operation.decodedOperation.header.operation;

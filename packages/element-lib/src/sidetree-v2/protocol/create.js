@@ -1,5 +1,5 @@
 const MerkleTools = require('merkle-tools');
-const { encodeJson, decodeJson, getDidUniqueSuffix } = require('../utils');
+const { encodeJson, decodeJson, getDidUniqueSuffix } = require('../func');
 
 // TODO deterministic stringify
 const create = sidetree => async (req) => {
