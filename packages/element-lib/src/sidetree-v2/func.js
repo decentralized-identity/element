@@ -31,16 +31,17 @@ const payloadToHash = (payload) => {
   );
 };
 
-const getDidUniqueSuffix = (decodedOperation) => {
-  switch (decodedOperation.header.operation) {
+const getDidUniqueSuffix = (operation) => {
+  const decodedPayload = decodeJson(operation.payload);
+  switch (operation.header.operation) {
     case 'create':
-      return payloadToHash(decodedOperation.decodedPayload);
+      return payloadToHash(decodedPayload);
     case 'update':
     case 'recover':
     case 'delete':
-      return decodedOperation.decodedPayload.didUniqueSuffix;
+      return decodedPayload.didUniqueSuffix;
     default:
-      throw Error(`Cannot extract didUniqueSuffixe from: ${decodedOperation}`);
+      throw Error(`Cannot extract didUniqueSuffixe from: ${operation}`);
   }
 };
 
