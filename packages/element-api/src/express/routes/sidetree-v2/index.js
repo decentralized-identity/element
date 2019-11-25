@@ -23,4 +23,14 @@ router.get('/:did', async (req, res, next) => {
   }
 });
 
+router.post('/', async (req, res, next) => {
+  try {
+    const sidetree = req.app.get('sidetree');
+    const transaction = await sidetree.create(req.body);
+    res.status(200).send(transaction);
+  } catch (e) {
+    next(e);
+  }
+});
+
 module.exports = router;
