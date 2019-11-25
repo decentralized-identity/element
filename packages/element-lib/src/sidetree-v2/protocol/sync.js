@@ -1,26 +1,26 @@
-/* eslint-disable arrow-body-style */
-const schema = require('../../schema');
-const { executeSequentially, syncTransaction } = require('../func');
+const {
+  executeSequentially,
+  syncTransaction,
+  isTransactionValid,
+} = require('../func');
 
 const sync = sidetree => async () => {
+  // Get a set of transactions that have only been processed from cache
   const transactionsAlreadyProcessed = await sidetree.db.readCollection('transaction');
   const processedSet = new Set(transactionsAlreadyProcessed.map(t => t.transactionNumber));
+  // Get all transactions from the smart contract
   const transactions = await sidetree.blockchain.getTransactions(
     0,
     'latest',
     { omitTimestamp: true },
   );
-  const validTransactions = transactions
-    .filter((transaction) => {
-      const valid = schema.validator.isValid(transaction, schema.schemas.sidetreeTransaction);
-      if (!valid) {
-        console.warn('bad transaction', transaction);
-      }
-      return valid;
-    });
-  const unprocessedTransactions = validTransactions
-    .filter(transaction => !processedSet.has(transaction.transactionNumber));
-  const transactionQueue = unprocessedTransactions.slice(0, 100);
+  const transactionQueue = transactions
+    // Only process valid transactions
+    .filter(isTransactionValid)
+    // Only process transactions that haven't been processed
+    .filter(transaction => !processedSet.has(transaction.transactionNumber))
+    // Only process the first 100 unprocessed transactions
+    .slice(0, 100);
   return executeSequentially(t => syncTransaction(sidetree, t), transactionQueue);
 };
 

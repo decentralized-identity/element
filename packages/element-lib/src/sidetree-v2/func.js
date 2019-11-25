@@ -100,6 +100,14 @@ const syncTransaction = async (sidetree, transaction) => {
     });
 };
 
+const isTransactionValid = (transaction) => {
+  const valid = schema.validator.isValid(transaction, schema.schemas.sidetreeTransaction);
+  if (!valid) {
+    console.warn('bad transaction', transaction);
+  }
+  return valid;
+};
+
 
 module.exports = {
   executeSequentially,
@@ -109,4 +117,5 @@ module.exports = {
   getDidUniqueSuffix,
   batchFileToOperations,
   syncTransaction,
+  isTransactionValid,
 };
