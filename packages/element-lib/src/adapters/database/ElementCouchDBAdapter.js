@@ -43,7 +43,7 @@ class ElementCouchDBAdapter {
       const { data: { _rev } } = await this.couch.get(this.name, id);
       await this.couch.update(this.name, { _rev, ...payload });
     }
-    return this.read(id);
+    return true;
   }
 
   async read(id) {
