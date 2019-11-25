@@ -4,7 +4,6 @@ const { getTestSideTree, getCreatePayload } = require('../test-utils');
 const {
   batchFileToOperations,
   getDidUniqueSuffix,
-  syncTransaction,
   decodeJson,
 } = require('../func');
 
@@ -48,10 +47,7 @@ describe('create', () => {
 
   it('should write the operation to cache so that the did is instantly resolveable', async () => {
     const did = `did:elem:${didUniqueSuffix}`;
-    let didDocument = await resolve(sidetree)(did);
-    expect(didDocument).toEqual({});
-    await syncTransaction(sidetree, transaction);
-    didDocument = await resolve(sidetree)(did);
+    const didDocument = await resolve(sidetree)(did);
     const decodedPayload = decodeJson(createPayload.payload);
     expect(didDocument.id).toBe(did);
     expect(didDocument['@context']).toBe(decodedPayload['@context']);
