@@ -1,5 +1,5 @@
 const element = require('@transmute/element-lib');
-const sidetree = require('./sidetree');
+const sidetree = require('./sidetree-test');
 
 jest.setTimeout(20 * 1000);
 
