@@ -1,8 +1,19 @@
-const {
-  executeSequentially,
-  syncTransaction,
-  isTransactionValid,
-} = require('../func');
+const { executeSequentially, syncTransaction } = require('../func');
+
+const getFirstUnprocessedBlockNumber = (transactionsAlreadyProcessed) => {
+  const firstUnprocessedTransaction = transactionsAlreadyProcessed
+    .sort((t1, t2) => t1.transactionNumber - t2.transactionNumber)
+    .reduce(
+      (acc, t) => {
+        if (t.transactionNumber === acc.transactionNumber + 1) {
+          return t;
+        }
+        return acc;
+      },
+      { transactionNumber: -1, transactionTime: 0 },
+    );
+  return firstUnprocessedTransaction.transactionTime;
+};
 
 const sync = sidetree => async () => {
   // Get a set of transactions that have only been processed from cache
@@ -10,13 +21,11 @@ const sync = sidetree => async () => {
   const processedSet = new Set(transactionsAlreadyProcessed.map(t => t.transactionNumber));
   // Get all transactions from the smart contract
   const transactions = await sidetree.blockchain.getTransactions(
-    0,
+    getFirstUnprocessedBlockNumber(),
     'latest',
     { omitTimestamp: true },
   );
   const transactionQueue = transactions
-    // Only process valid transactions
-    .filter(isTransactionValid)
     // Only process transactions that haven't been processed
     .filter(transaction => !processedSet.has(transaction.transactionNumber))
     // Only process the first 100 unprocessed transactions
