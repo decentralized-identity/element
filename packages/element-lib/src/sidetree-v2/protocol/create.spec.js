@@ -5,6 +5,7 @@ const {
   batchFileToOperations,
   getDidUniqueSuffix,
   decodeJson,
+  syncTransaction,
 } = require('../func');
 
 const sidetree = getTestSideTree();
@@ -45,11 +46,17 @@ describe('create', () => {
     expect(operations[0].decodedOperation).toEqual(createPayload);
   });
 
-  it('should write the operation to cache so that the did is instantly resolveable', async () => {
+  it('should not return the did before sync is called', async () => {
+    const didDocument = await resolve(sidetree)(didUniqueSuffix);
+    expect(didDocument).toEqual(null);
+  });
+
+  it('should resolve the did when the observer synced the transaction', async () => {
+    await syncTransaction(sidetree, transaction);
+    const didDocument = await resolve(sidetree)(didUniqueSuffix);
     const did = `did:elem:${didUniqueSuffix}`;
-    const didDocument = await resolve(sidetree)(did);
-    const decodedPayload = decodeJson(createPayload.payload);
     expect(didDocument.id).toBe(did);
+    const decodedPayload = decodeJson(createPayload.payload);
     expect(didDocument['@context']).toBe(decodedPayload['@context']);
     expect(didDocument.publicKey).toEqual(decodedPayload.publicKey);
   });
