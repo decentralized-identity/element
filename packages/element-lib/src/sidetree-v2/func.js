@@ -56,16 +56,37 @@ const batchFileToOperations = batchFile => batchFile.operations.map((op) => {
   };
 });
 
+const isTransactionValid = (transaction) => {
+  const valid = schema.validator.isValid(transaction, schema.schemas.sidetreeTransaction);
+  if (!valid) {
+    throw new Error('transaction not valid', transaction);
+  }
+  return valid;
+};
+
+const isAnchorFileValid = (anchorFile) => {
+  const valid = schema.validator.isValid(anchorFile, schema.schemas.sidetreeAnchorFile);
+  if (!valid) {
+    throw new Error('anchorFile not valid', anchorFile);
+  }
+  return valid;
+};
+
+const isBatchFileValid = (batchFile) => {
+  const valid = schema.validator.isValid(batchFile, schema.schemas.sidetreeBatchFile)
+  if (!valid) {
+    throw new Error('batchFile not valid', batchFile);
+  }
+  return valid;
+};
+
 const syncTransaction = async (sidetree, transaction) => {
   try {
+    isTransactionValid(transaction);
     const anchorFile = await sidetree.storage.read(transaction.anchorFileHash);
-    if (!schema.validator.isValid(anchorFile, schema.schemas.sidetreeAnchorFile)) {
-      throw new Error('anchorFile not valid', anchorFile);
-    }
+    isAnchorFileValid(anchorFile);
     const batchFile = await sidetree.storage.read(anchorFile.batchFileHash);
-    if (!schema.validator.isValid(batchFile, schema.schemas.sidetreeBatchFile)) {
-      throw new Error('batchFile not valid', anchorFile);
-    }
+    isBatchFileValid(batchFile);
     const operations = batchFileToOperations(batchFile);
     const operationsByDidUniqueSuffixes = operations.map((operation) => {
       const didUniqueSuffix = getDidUniqueSuffix(operation.decodedOperation);
@@ -83,7 +104,7 @@ const syncTransaction = async (sidetree, transaction) => {
     ).then(() => {
       return sidetree.db.write(`transaction:${transaction.transactionNumber}`, {
         type: 'transaction',
-        transactionNumber: transaction.transactionNumber,
+        ...transaction,
       });
     });
   } catch (error) {
@@ -95,20 +116,11 @@ const syncTransaction = async (sidetree, transaction) => {
     );
     return sidetree.db.write(`transaction:${transaction.transactionNumber}`, {
       type: 'transaction',
-      transactionNumber: transaction.transactionNumber,
+      ...transaction,
       error: stringifiedError,
     });
   }
 };
-
-const isTransactionValid = (transaction) => {
-  const valid = schema.validator.isValid(transaction, schema.schemas.sidetreeTransaction);
-  if (!valid) {
-    console.warn('bad transaction', transaction);
-  }
-  return valid;
-};
-
 
 const signEncodedPayload = (encodedPayload, privateKeyHex) => {
   const toBeSigned = `.${encodedPayload}`;
