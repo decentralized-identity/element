@@ -20,8 +20,9 @@ const sync = sidetree => async () => {
   const transactionsAlreadyProcessed = await sidetree.db.readCollection('transaction');
   const processedSet = new Set(transactionsAlreadyProcessed.map(t => t.transactionNumber));
   // Get all transactions from the smart contract
+  const fromBlock = getFirstUnprocessedBlockNumber(transactionsAlreadyProcessed);
   const transactions = await sidetree.blockchain.getTransactions(
-    getFirstUnprocessedBlockNumber(),
+    fromBlock,
     'latest',
     { omitTimestamp: true },
   );
