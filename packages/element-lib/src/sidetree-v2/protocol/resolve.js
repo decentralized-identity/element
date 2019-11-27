@@ -25,8 +25,9 @@ const reducer = (state = {}, record) => {
 const resolve = sidetree => async (did) => {
   const didUniqueSuffix = did.split(':').pop();
   const operations = await sidetree.db.readCollection(didUniqueSuffix);
+  // TODO test that
   // eslint-disable-next-line max-len
-  operations.sort((op1, op2) => op1.transaction.transactionNumber > op2.transaction.transactionNumber);
+  operations.sort((op1, op2) => op1.transaction.transactionNumber - op2.transaction.transactionNumber);
   // TODO operation validation
   const didDocument = operations.reduce(reducer, null);
   return didDocument;
