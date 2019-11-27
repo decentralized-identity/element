@@ -57,48 +57,48 @@ const batchFileToOperations = batchFile => batchFile.operations.map((op) => {
 });
 
 const syncTransaction = async (sidetree, transaction) => {
-  const { transactionNumber } = transaction;
-  const anchorFile = await sidetree.storage.read(transaction.anchorFileHash);
-  if (!schema.validator.isValid(anchorFile, schema.schemas.sidetreeAnchorFile)) {
-    // TODO
-    // console.warn('anchorFile not valid', anchorFile);
-    return null;
-  }
-  const batchFile = await sidetree.storage.read(anchorFile.batchFileHash);
-  if (!schema.validator.isValid(batchFile, schema.schemas.sidetreeBatchFile)) {
-    // console.warn('batch file not valid', anchorFile);
-    return null;
-  }
-  const operations = batchFileToOperations(batchFile);
-  const operationsByDidUniqueSuffixes = operations.map((operation) => {
-    const { decodedOperationPayload } = operation;
-    const didUniqueSuffix = decodedOperationPayload.didUniqueSuffix
-      ? decodedOperationPayload.didUniqueSuffix
-      : payloadToHash(decodedOperationPayload);
-    return {
-      type: didUniqueSuffix,
-      didUniqueSuffix,
-      transactionNumber,
-      ...operation,
-    };
-  });
-  const writeOperationToCache = op => sidetree.db.write(`operation:${op.operationHash}`, op);
-  return executeSequentially(writeOperationToCache, operationsByDidUniqueSuffixes)
-    .then(() => {
+  try {
+    const anchorFile = await sidetree.storage.read(transaction.anchorFileHash);
+    if (!schema.validator.isValid(anchorFile, schema.schemas.sidetreeAnchorFile)) {
+      throw new Error('anchorFile not valid', anchorFile);
+    }
+    const batchFile = await sidetree.storage.read(anchorFile.batchFileHash);
+    if (!schema.validator.isValid(batchFile, schema.schemas.sidetreeBatchFile)) {
+      throw new Error('batchFile not valid', anchorFile);
+    }
+    const operations = batchFileToOperations(batchFile);
+    const operationsByDidUniqueSuffixes = operations.map((operation) => {
+      const didUniqueSuffix = getDidUniqueSuffix(operation.decodedOperation);
+      return {
+        type: didUniqueSuffix,
+        didUniqueSuffix,
+        transaction,
+        operation,
+      };
+    });
+    const writeOperationToCache = op => sidetree.db.write(`operation:${op.operation.operationHash}`, op);
+    return executeSequentially(
+      writeOperationToCache,
+      operationsByDidUniqueSuffixes,
+    ).then(() => {
       return sidetree.db.write(`transaction:${transaction.transactionNumber}`, {
         type: 'transaction',
         transactionNumber: transaction.transactionNumber,
-      });
-    }).catch((error) => {
-      console.log(error);
-      // https://stackoverflow.com/questions/18391212/is-it-not-possible-to-stringify-an-error-using-json-stringify
-      const stringifiedError = JSON.stringify(error, Object.getOwnPropertyNames(error));
-      return sidetree.db.write(`transaction:${transaction.transactionNumber}`, {
-        type: 'transaction',
-        transactionNumber: transaction.transactionNumber,
-        error: stringifiedError,
       });
     });
+  } catch (error) {
+    console.log(error);
+    // https://stackoverflow.com/questions/18391212/is-it-not-possible-to-stringify-an-error-using-json-stringify
+    const stringifiedError = JSON.stringify(
+      error,
+      Object.getOwnPropertyNames(error),
+    );
+    return sidetree.db.write(`transaction:${transaction.transactionNumber}`, {
+      type: 'transaction',
+      transactionNumber: transaction.transactionNumber,
+      error: stringifiedError,
+    });
+  }
 };
 
 const isTransactionValid = (transaction) => {
