@@ -15,4 +15,5 @@ module.exports = {
   decodeJson: require('./decodeJson'),
   encodeJson: require('./encodeJson'),
   requestBodyToEncodedOperation: require('./requestBodyToEncodedOperation'),
+  batchFileToOperations: require('./batchFileToOperations'),
 };

@@ -64,6 +64,10 @@ class ElementRXDBAdapter {
           syncStartDateTime: {},
           syncStopDateTime: {},
           lastTransactionTime: {},
+          error: {},
+          didUniqueSuffix: {},
+          decodedOperation: {},
+          decodedOperationPayload: {},
         },
       },
     });
