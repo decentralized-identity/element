@@ -56,59 +56,71 @@ const batchFileToOperations = batchFile => batchFile.operations.map((op) => {
   };
 });
 
-const syncTransaction = async (sidetree, transaction) => {
-  const { transactionNumber } = transaction;
-  const anchorFile = await sidetree.storage.read(transaction.anchorFileHash);
-  if (!schema.validator.isValid(anchorFile, schema.schemas.sidetreeAnchorFile)) {
-    // TODO
-    // console.warn('anchorFile not valid', anchorFile);
-    return null;
-  }
-  const batchFile = await sidetree.storage.read(anchorFile.batchFileHash);
-  if (!schema.validator.isValid(batchFile, schema.schemas.sidetreeBatchFile)) {
-    // console.warn('batch file not valid', anchorFile);
-    return null;
-  }
-  const operations = batchFileToOperations(batchFile);
-  const operationsByDidUniqueSuffixes = operations.map((operation) => {
-    const { decodedOperationPayload } = operation;
-    const didUniqueSuffix = decodedOperationPayload.didUniqueSuffix
-      ? decodedOperationPayload.didUniqueSuffix
-      : payloadToHash(decodedOperationPayload);
-    return {
-      type: didUniqueSuffix,
-      didUniqueSuffix,
-      transactionNumber,
-      ...operation,
-    };
-  });
-  const writeOperationToCache = op => sidetree.db.write(`operation:${op.operationHash}`, op);
-  return executeSequentially(writeOperationToCache, operationsByDidUniqueSuffixes)
-    .then(() => {
-      return sidetree.db.write(`transaction:${transaction.transactionNumber}`, {
-        type: 'transaction',
-        transactionNumber: transaction.transactionNumber,
-      });
-    }).catch((error) => {
-      console.log(error);
-      // https://stackoverflow.com/questions/18391212/is-it-not-possible-to-stringify-an-error-using-json-stringify
-      const stringifiedError = JSON.stringify(error, Object.getOwnPropertyNames(error));
-      return sidetree.db.write(`transaction:${transaction.transactionNumber}`, {
-        type: 'transaction',
-        transactionNumber: transaction.transactionNumber,
-        error: stringifiedError,
-      });
-    });
-};
-
 const isTransactionValid = (transaction) => {
   const valid = schema.validator.isValid(transaction, schema.schemas.sidetreeTransaction);
   if (!valid) {
-    console.warn('bad transaction', transaction);
+    throw new Error('transaction not valid', transaction);
   }
   return valid;
 };
 
+const isAnchorFileValid = (anchorFile) => {
+  const valid = schema.validator.isValid(anchorFile, schema.schemas.sidetreeAnchorFile);
+  if (!valid) {
+    throw new Error('anchorFile not valid', anchorFile);
+  }
+  return valid;
+};
+
+const isBatchFileValid = (batchFile) => {
+  const valid = schema.validator.isValid(batchFile, schema.schemas.sidetreeBatchFile);
+  if (!valid) {
+    throw new Error('batchFile not valid', batchFile);
+  }
+  return valid;
+};
+
+const syncTransaction = async (sidetree, transaction) => {
+  try {
+    isTransactionValid(transaction);
+    const anchorFile = await sidetree.storage.read(transaction.anchorFileHash);
+    isAnchorFileValid(anchorFile);
+    const batchFile = await sidetree.storage.read(anchorFile.batchFileHash);
+    isBatchFileValid(batchFile);
+    const operations = batchFileToOperations(batchFile);
+    const operationsByDidUniqueSuffixes = operations.map((operation) => {
+      const didUniqueSuffix = getDidUniqueSuffix(operation.decodedOperation);
+      return {
+        type: didUniqueSuffix,
+        didUniqueSuffix,
+        transaction,
+        operation,
+      };
+    });
+    const writeOperationToCache = op => sidetree.db.write(`operation:${op.operation.operationHash}`, op);
+    return executeSequentially(
+      writeOperationToCache,
+      operationsByDidUniqueSuffixes,
+    ).then(() => {
+      return sidetree.db.write(`transaction:${transaction.transactionNumber}`, {
+        type: 'transaction',
+        ...transaction,
+      });
+    });
+  } catch (error) {
+    console.log(error);
+    // https://stackoverflow.com/questions/18391212/is-it-not-possible-to-stringify-an-error-using-json-stringify
+    const stringifiedError = JSON.stringify(
+      error,
+      Object.getOwnPropertyNames(error),
+    );
+    return sidetree.db.write(`transaction:${transaction.transactionNumber}`, {
+      type: 'transaction',
+      ...transaction,
+      error: stringifiedError,
+    });
+  }
+};
 
 const signEncodedPayload = (encodedPayload, privateKeyHex) => {
   const toBeSigned = `.${encodedPayload}`;
@@ -122,6 +134,20 @@ const signEncodedPayload = (encodedPayload, privateKeyHex) => {
   return signature;
 };
 
+const verifyOperationSignature = async ({
+  encodedOperationPayload,
+  signature,
+  publicKey,
+}) => {
+  const toBeSigned = `.${encodedOperationPayload}`;
+  const hash = crypto
+    .createHash('sha256')
+    .update(Buffer.from(toBeSigned))
+    .digest();
+  const publicKeyBuffer = Buffer.from(publicKey, 'hex');
+  return secp256k1.verify(hash, base64url.toBuffer(signature), publicKeyBuffer);
+};
+
 
 module.exports = {
   executeSequentially,
@@ -133,4 +159,5 @@ module.exports = {
   syncTransaction,
   isTransactionValid,
   signEncodedPayload,
+  verifyOperationSignature,
 };

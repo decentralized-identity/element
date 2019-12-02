@@ -5,9 +5,14 @@ const {
   batchFileToOperations,
   getDidUniqueSuffix,
   decodeJson,
+  syncTransaction,
 } = require('../func');
+const element = require('../../../index');
 
 const sidetree = getTestSideTree();
+
+const mnemonic = element.MnemonicKeySystem.generateMnemonic();
+const mks = new element.MnemonicKeySystem(mnemonic);
 
 // TODO: Add support for writing multiple operations in the same transaction
 describe('create', () => {
@@ -18,7 +23,9 @@ describe('create', () => {
   let batchFile;
 
   beforeAll(async () => {
-    createPayload = await getCreatePayload();
+    const primaryKey = await mks.getKeyForPurpose('primary', 0);
+    const recoveryKey = await mks.getKeyForPurpose('recovery', 0);
+    createPayload = await getCreatePayload(primaryKey, recoveryKey);
     transaction = await create(sidetree)(createPayload);
   });
 
@@ -45,11 +52,17 @@ describe('create', () => {
     expect(operations[0].decodedOperation).toEqual(createPayload);
   });
 
-  it('should write the operation to cache so that the did is instantly resolveable', async () => {
+  it('should not return the did before sync is called', async () => {
+    const didDocument = await resolve(sidetree)(didUniqueSuffix);
+    expect(didDocument).not.toBeDefined();
+  });
+
+  it('should resolve the did when the observer synced the transaction', async () => {
+    await syncTransaction(sidetree, transaction);
+    const didDocument = await resolve(sidetree)(didUniqueSuffix);
     const did = `did:elem:${didUniqueSuffix}`;
-    const didDocument = await resolve(sidetree)(did);
-    const decodedPayload = decodeJson(createPayload.payload);
     expect(didDocument.id).toBe(did);
+    const decodedPayload = decodeJson(createPayload.payload);
     expect(didDocument['@context']).toBe(decodedPayload['@context']);
     expect(didDocument.publicKey).toEqual(decodedPayload.publicKey);
   });

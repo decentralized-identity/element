@@ -20,12 +20,7 @@ const getTestSideTree = () => {
   return new element.SidetreeV2({ db, storage, blockchain });
 };
 
-const getCreatePayload = async () => {
-  const mnemonic = element.MnemonicKeySystem.generateMnemonic();
-  const mks = new element.MnemonicKeySystem(mnemonic);
-  const primaryKey = await mks.getKeyForPurpose('primary', 0);
-  // TODO: add test without recovery key
-  const recoveryKey = await mks.getKeyForPurpose('recovery', 0);
+const getCreatePayload = async (primaryKey, recoveryKey) => {
   const encodedPayload = encodeJson({
     '@context': 'https://w3id.org/did/v1',
     publicKey: [
@@ -54,7 +49,23 @@ const getCreatePayload = async () => {
   return requestBody;
 };
 
+const getDeletePayload = async (didUniqueSuffix, recoveryPrivateKey, kid) => {
+  const encodedPayload = encodeJson({ didUniqueSuffix });
+  const signature = signEncodedPayload(encodedPayload, recoveryPrivateKey);
+  const requestBody = {
+    header: {
+      operation: 'delete',
+      kid,
+      alg: 'ES256K',
+    },
+    payload: encodedPayload,
+    signature,
+  };
+  return requestBody;
+};
+
 module.exports = {
   getTestSideTree,
   getCreatePayload,
+  getDeletePayload,
 };
