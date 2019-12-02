@@ -54,7 +54,7 @@ describe('create', () => {
 
   it('should not return the did before sync is called', async () => {
     const didDocument = await resolve(sidetree)(didUniqueSuffix);
-    expect(didDocument).toEqual(null);
+    expect(didDocument).not.toBeDefined();
   });
 
   it('should resolve the did when the observer synced the transaction', async () => {
