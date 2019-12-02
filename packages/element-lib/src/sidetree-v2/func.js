@@ -73,7 +73,7 @@ const isAnchorFileValid = (anchorFile) => {
 };
 
 const isBatchFileValid = (batchFile) => {
-  const valid = schema.validator.isValid(batchFile, schema.schemas.sidetreeBatchFile)
+  const valid = schema.validator.isValid(batchFile, schema.schemas.sidetreeBatchFile);
   if (!valid) {
     throw new Error('batchFile not valid', batchFile);
   }
