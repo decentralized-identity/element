@@ -16,7 +16,25 @@ const recover = (state, operation) => {
 };
 
 const deletE = async (state, operation) => {
-  return state;
+  // If no previous create operation, or already deleted
+  if (!state) {
+    return state;
+  }
+  const { kid } = operation.decodedOperation.header;
+  const signingKey = state.publicKey.find(pubKey => pubKey.id === kid);
+  if (!signingKey) {
+    return state;
+  }
+  const isSignatureValid = await verifyOperationSignature({
+    encodedOperationPayload: operation.decodedOperation.payload,
+    signature: operation.decodedOperation.signature,
+    publicKey: signingKey.publicKeyHex,
+  });
+
+  if (!isSignatureValid) {
+    return state;
+  }
+  return undefined;
 };
 
 const applyOperation = async (state, operation) => {

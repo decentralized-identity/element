@@ -134,6 +134,20 @@ const signEncodedPayload = (encodedPayload, privateKeyHex) => {
   return signature;
 };
 
+const verifyOperationSignature = async ({
+  encodedOperationPayload,
+  signature,
+  publicKey,
+}) => {
+  const toBeSigned = `.${encodedOperationPayload}`;
+  const hash = crypto
+    .createHash('sha256')
+    .update(Buffer.from(toBeSigned))
+    .digest();
+  const publicKeyBuffer = Buffer.from(publicKey, 'hex');
+  return secp256k1.verify(hash, base64url.toBuffer(signature), publicKeyBuffer);
+};
+
 
 module.exports = {
   executeSequentially,
@@ -145,4 +159,5 @@ module.exports = {
   syncTransaction,
   isTransactionValid,
   signEncodedPayload,
+  verifyOperationSignature,
 };
