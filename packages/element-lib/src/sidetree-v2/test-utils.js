@@ -49,7 +49,23 @@ const getCreatePayload = async (primaryKey, recoveryKey) => {
   return requestBody;
 };
 
+const getDeletePayload = async (didUniqueSuffix, recoveryPrivateKey, kid) => {
+  const encodedPayload = encodeJson({ didUniqueSuffix });
+  const signature = signEncodedPayload(encodedPayload, recoveryPrivateKey);
+  const requestBody = {
+    header: {
+      operation: 'delete',
+      kid,
+      alg: 'ES256K',
+    },
+    payload: encodedPayload,
+    signature,
+  };
+  return requestBody;
+};
+
 module.exports = {
   getTestSideTree,
   getCreatePayload,
+  getDeletePayload,
 };

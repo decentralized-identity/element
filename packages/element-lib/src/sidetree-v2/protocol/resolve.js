@@ -11,6 +11,7 @@ const update = (state, operation) => {
   return operation.decodedOperationPayload.patch.reduce(jsonpatch.applyReducer, state);
 };
 
+// eslint-disable-next-line no-unused-vars
 const recover = (state, operation) => {
   return state;
 };
