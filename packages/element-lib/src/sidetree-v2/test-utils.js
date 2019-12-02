@@ -20,12 +20,7 @@ const getTestSideTree = () => {
   return new element.SidetreeV2({ db, storage, blockchain });
 };
 
-const getCreatePayload = async () => {
-  const mnemonic = element.MnemonicKeySystem.generateMnemonic();
-  const mks = new element.MnemonicKeySystem(mnemonic);
-  const primaryKey = await mks.getKeyForPurpose('primary', 0);
-  // TODO: add test without recovery key
-  const recoveryKey = await mks.getKeyForPurpose('recovery', 0);
+const getCreatePayload = async (primaryKey, recoveryKey) => {
   const encodedPayload = encodeJson({
     '@context': 'https://w3id.org/did/v1',
     publicKey: [

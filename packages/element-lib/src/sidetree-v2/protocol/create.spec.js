@@ -7,8 +7,12 @@ const {
   decodeJson,
   syncTransaction,
 } = require('../func');
+const element = require('../../../index');
 
 const sidetree = getTestSideTree();
+
+const mnemonic = element.MnemonicKeySystem.generateMnemonic();
+const mks = new element.MnemonicKeySystem(mnemonic);
 
 // TODO: Add support for writing multiple operations in the same transaction
 describe('create', () => {
@@ -19,7 +23,9 @@ describe('create', () => {
   let batchFile;
 
   beforeAll(async () => {
-    createPayload = await getCreatePayload();
+    const primaryKey = await mks.getKeyForPurpose('primary', 0);
+    const recoveryKey = await mks.getKeyForPurpose('recovery', 0);
+    createPayload = await getCreatePayload(primaryKey, recoveryKey);
     transaction = await create(sidetree)(createPayload);
   });
 
