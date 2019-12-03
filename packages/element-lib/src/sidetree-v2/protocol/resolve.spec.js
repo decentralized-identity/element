@@ -9,15 +9,14 @@ const {
   getDeletePayload,
 } = require('../op');
 const { getDidUniqueSuffix, syncTransaction, decodeJson } = require('../func');
-const element = require('../../../index');
+const { MnemonicKeySystem } = require('../../../index');
 
 const sidetree = getTestSideTree();
 
 
 describe('resolve', () => {
   describe('create', () => {
-    const mnemonic = element.MnemonicKeySystem.generateMnemonic();
-    const mks = new element.MnemonicKeySystem(mnemonic);
+    const mks = new MnemonicKeySystem(MnemonicKeySystem.generateMnemonic());
     let createPayload;
     let createTransaction;
     let didUniqueSuffix;
@@ -71,8 +70,7 @@ describe('resolve', () => {
   });
 
   describe('update', () => {
-    const mnemonic = element.MnemonicKeySystem.generateMnemonic();
-    const mks = new element.MnemonicKeySystem(mnemonic);
+    const mks = new MnemonicKeySystem(MnemonicKeySystem.generateMnemonic());
     let primaryKey;
     let didUniqueSuffix;
     let lastOperation;
@@ -101,8 +99,7 @@ describe('resolve', () => {
   });
 
   describe('recover', () => {
-    const mnemonic = element.MnemonicKeySystem.generateMnemonic();
-    const mks = new element.MnemonicKeySystem(mnemonic);
+    const mks = new MnemonicKeySystem(MnemonicKeySystem.generateMnemonic());
     let primaryKey;
     let recoveryKey;
     let primaryKey2;
@@ -160,8 +157,7 @@ describe('resolve', () => {
   });
 
   describe('delete', () => {
-    const mnemonic = element.MnemonicKeySystem.generateMnemonic();
-    const mks = new element.MnemonicKeySystem(mnemonic);
+    const mks = new MnemonicKeySystem(MnemonicKeySystem.generateMnemonic());
     let deletePayload;
     let didUniqueSuffix;
     let primaryKey;
