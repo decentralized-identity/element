@@ -11,10 +11,29 @@ const update = (state, operation) => {
   return operation.decodedOperationPayload.patch.reduce(jsonpatch.applyReducer, state);
 };
 
-// TODO: implement recover
-// eslint-disable-next-line no-unused-vars
-const recover = (state, operation) => {
-  return state;
+const recover = async (state, operation) => {
+  // If no previous create operation, or deleted
+  if (!state) {
+    return state;
+  }
+  const { kid } = operation.decodedOperation.header;
+  const recoveryKey = state.publicKey.find(pubKey => pubKey.id === kid);
+  if (!recoveryKey) {
+    return state;
+  }
+  const isSignatureValid = await verifyOperationSignature({
+    encodedOperationPayload: operation.decodedOperation.payload,
+    signature: operation.decodedOperation.signature,
+    publicKey: recoveryKey.publicKeyHex,
+  });
+  if (!isSignatureValid) {
+    return state;
+  }
+  const { didUniqueSuffix, newDidDocument } = operation.decodedOperationPayload;
+  return {
+    ...newDidDocument,
+    id: `did:elem${didUniqueSuffix}`,
+  };
 };
 
 const deletE = async (state, operation) => {
@@ -32,7 +51,6 @@ const deletE = async (state, operation) => {
     signature: operation.decodedOperation.signature,
     publicKey: signingKey.publicKeyHex,
   });
-
   if (!isSignatureValid) {
     return state;
   }
