@@ -1,5 +1,4 @@
 /* eslint-disable arrow-body-style */
-const jsonpatch = require('fast-json-patch');
 const { payloadToHash, verifyOperationSignature } = require('../func');
 
 const create = (state, operation) => ({
@@ -19,7 +18,8 @@ const applyPatch = (didDocument, patch) => {
             ...currentState.publicKey,
             {
               ...publicKey,
-              controller: didDocument.id,
+              // FIXME: Need controller property to be compliant with the protocol
+              // controller: didDocument.id,
             },
           ],
         };
