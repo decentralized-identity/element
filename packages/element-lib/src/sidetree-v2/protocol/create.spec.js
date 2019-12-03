@@ -1,6 +1,10 @@
 const create = require('./create');
 const resolve = require('./resolve');
-const { getTestSideTree, getCreatePayload } = require('../test-utils');
+const {
+  getTestSideTree,
+  getDidDocumentModel,
+  getCreatePayload,
+} = require('../test-utils');
 const {
   batchFileToOperations,
   getDidUniqueSuffix,
@@ -25,7 +29,8 @@ describe('create', () => {
   beforeAll(async () => {
     const primaryKey = await mks.getKeyForPurpose('primary', 0);
     const recoveryKey = await mks.getKeyForPurpose('recovery', 0);
-    createPayload = await getCreatePayload(primaryKey, recoveryKey);
+    const didDocumentModel = getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
+    createPayload = await getCreatePayload(didDocumentModel, primaryKey);
     transaction = await create(sidetree)(createPayload);
   });
 

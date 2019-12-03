@@ -31,7 +31,8 @@ describe('resolve', () => {
 
   describe('after create', () => {
     beforeAll(async () => {
-      createPayload = await getCreatePayload(primaryKey, recoveryKey);
+      const didDocumentModel = getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
+      createPayload = await getCreatePayload(didDocumentModel, primaryKey);
       createTransaction = await create(sidetree)(createPayload);
       didUniqueSuffix = getDidUniqueSuffix(createPayload);
     });
@@ -86,7 +87,8 @@ describe('resolve', () => {
       const mks1 = new element.MnemonicKeySystem(mnemonic1);
       primaryKey1 = await mks1.getKeyForPurpose('primary', 0);
       recoveryKey1 = await mks1.getKeyForPurpose('recovery', 0);
-      const createPayload1 = await getCreatePayload(primaryKey1, recoveryKey1);
+      const didDocumentModel1 = getDidDocumentModel(primaryKey1.publicKey, recoveryKey1.publicKey);
+      const createPayload1 = await getCreatePayload(didDocumentModel1, primaryKey1);
       const createTransaction1 = await create(sidetree)(createPayload1);
       await syncTransaction(sidetree, createTransaction1);
       didUniqueSuffix1 = getDidUniqueSuffix(createPayload1);
@@ -94,8 +96,6 @@ describe('resolve', () => {
       const mks2 = new element.MnemonicKeySystem(mnemonic2);
       primaryKey2 = await mks2.getKeyForPurpose('primary', 0);
       recoveryKey2 = await mks2.getKeyForPurpose('recovery', 0);
-      // TODO
-      // didDocumentModel1 = getDidDocumentModel(primaryKey1.publicKey, recoveryKey1.publicKey);
       didDocumentModel2 = getDidDocumentModel(primaryKey2.publicKey, recoveryKey2.publicKey);
     });
 

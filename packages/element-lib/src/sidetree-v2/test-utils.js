@@ -36,8 +36,7 @@ const getDidDocumentModel = (primaryPublicKey, recoveryPublicKey) => ({
   ],
 });
 
-const getCreatePayload = async (primaryKey, recoveryKey) => {
-  const didDocumentModel = getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
+const getCreatePayload = async (didDocumentModel, primaryKey) => {
   const encodedPayload = encodeJson(didDocumentModel);
   const signature = signEncodedPayload(encodedPayload, primaryKey.privateKey);
   const requestBody = {
