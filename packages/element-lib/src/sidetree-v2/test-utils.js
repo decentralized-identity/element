@@ -20,27 +20,49 @@ const getTestSideTree = () => {
   return new element.SidetreeV2({ db, storage, blockchain });
 };
 
+const getDidDocumentModel = (primaryPublicKey, recoveryPublicKey) => ({
+  '@context': 'https://w3id.org/did/v1',
+  publicKey: [
+    {
+      id: '#primary',
+      type: 'Secp256k1VerificationKey2018',
+      publicKeyHex: primaryPublicKey,
+    },
+    {
+      id: '#recovery',
+      type: 'Secp256k1VerificationKey2018',
+      publicKeyHex: recoveryPublicKey,
+    },
+  ],
+});
+
 const getCreatePayload = async (primaryKey, recoveryKey) => {
-  const encodedPayload = encodeJson({
-    '@context': 'https://w3id.org/did/v1',
-    publicKey: [
-      {
-        id: '#primary',
-        type: 'Secp256k1VerificationKey2018',
-        publicKeyHex: primaryKey.publicKey,
-      },
-      {
-        id: '#recovery',
-        type: 'Secp256k1VerificationKey2018',
-        publicKeyHex: recoveryKey.publicKey,
-      },
-    ],
-  });
+  const didDocumentModel = getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
+  const encodedPayload = encodeJson(didDocumentModel);
   const signature = signEncodedPayload(encodedPayload, primaryKey.privateKey);
   const requestBody = {
     header: {
       operation: 'create',
       kid: '#primary',
+      alg: 'ES256K',
+    },
+    payload: encodedPayload,
+    signature,
+  };
+  return requestBody;
+};
+
+const getRecoverPayload = async (didUniqueSuffix, newDidDocument, recoveryPrivateKey, kid) => {
+  const payload = {
+    didUniqueSuffix,
+    newDidDocument,
+  };
+  const encodedPayload = encodeJson(payload);
+  const signature = signEncodedPayload(encodedPayload, recoveryPrivateKey);
+  const requestBody = {
+    header: {
+      operation: 'recover',
+      kid,
       alg: 'ES256K',
     },
     payload: encodedPayload,
@@ -66,6 +88,8 @@ const getDeletePayload = async (didUniqueSuffix, recoveryPrivateKey, kid) => {
 
 module.exports = {
   getTestSideTree,
+  getDidDocumentModel,
   getCreatePayload,
+  getRecoverPayload,
   getDeletePayload,
 };
