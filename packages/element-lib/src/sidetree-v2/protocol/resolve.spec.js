@@ -9,7 +9,13 @@ const {
   getRecoverPayload,
   getDeletePayload,
 } = require('../op');
-const { getDidUniqueSuffix, syncTransaction, decodeJson } = require('../func');
+const {
+  getDidUniqueSuffix,
+  syncTransaction,
+  encodeJson,
+  decodeJson,
+  signEncodedPayload,
+} = require('../func');
 const { MnemonicKeySystem } = require('../../../index');
 
 const sidetree = getTestSideTree();
@@ -107,6 +113,53 @@ describe('resolve', () => {
       expect(didDocument.publicKey).toHaveLength(2);
       expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey.publicKey);
       expect(didDocument.publicKey[1].publicKeyHex).toBe(recoveryKey.publicKey);
+    });
+
+    it('should support multiple patches', async () => {
+      const newKey2 = await mks.getKeyForPurpose('primary', 2);
+      const newKey3 = await mks.getKeyForPurpose('primary', 3);
+      const payload = {
+        didUniqueSuffix: lastOperation.didUniqueSuffix,
+        previousOperationHash: lastOperation.operation.operationHash,
+        patches: [
+          {
+            action: 'add-public-keys',
+            publicKeys: [
+              {
+                id: '#newKey2',
+                type: 'Secp256k1VerificationKey2018',
+                publicKeyHex: newKey2.publicKey,
+              },
+              {
+                id: '#newKey3',
+                type: 'Secp256k1VerificationKey2018',
+                publicKeyHex: newKey3.publicKey,
+              },
+            ],
+          }, {
+            action: 'remove-public-keys',
+            publicKeys: ['#primary'],
+          },
+        ],
+      };
+      const encodedPayload = encodeJson(payload);
+      const signature = signEncodedPayload(encodedPayload, primaryKey.privateKey);
+      const requestBody = {
+        header: {
+          operation: 'update',
+          kid: 'primary',
+          alg: 'ES256K',
+        },
+        payload: encodedPayload,
+        signature,
+      };
+      const transaction = await create(sidetree)(requestBody);
+      await syncTransaction(sidetree, transaction);
+      const didDocument = await resolve(sidetree)(didUniqueSuffix);
+      expect(didDocument.publicKey).toHaveLength(3);
+      expect(didDocument.publicKey[0].publicKeyHex).toBe(recoveryKey.publicKey);
+      expect(didDocument.publicKey[1].publicKeyHex).toBe(newKey2.publicKey);
+      expect(didDocument.publicKey[2].publicKeyHex).toBe(newKey3.publicKey);
     });
   });
 
