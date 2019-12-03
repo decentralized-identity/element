@@ -13,11 +13,11 @@ const element = require('../../../index');
 
 const sidetree = getTestSideTree();
 
-const mnemonic = element.MnemonicKeySystem.generateMnemonic();
-const mks = new element.MnemonicKeySystem(mnemonic);
 
 describe('resolve', () => {
   describe('create', () => {
+    const mnemonic = element.MnemonicKeySystem.generateMnemonic();
+    const mks = new element.MnemonicKeySystem(mnemonic);
     let createPayload;
     let createTransaction;
     let didUniqueSuffix;
@@ -71,78 +71,77 @@ describe('resolve', () => {
   });
 
   describe('update', () => {
-    let primaryKey1;
-    let didUniqueSuffix1;
+    const mnemonic = element.MnemonicKeySystem.generateMnemonic();
+    const mks = new element.MnemonicKeySystem(mnemonic);
+    let primaryKey;
+    let didUniqueSuffix;
     let lastOperation;
 
     beforeAll(async () => {
-      primaryKey1 = await mks.getKeyForPurpose('primary', 1);
-      const recoveryKey1 = await mks.getKeyForPurpose('recovery', 1);
-      const didDocumentModel = getDidDocumentModel(primaryKey1.publicKey, recoveryKey1.publicKey);
-      const createPayload1 = await getCreatePayload(didDocumentModel, primaryKey1);
-      didUniqueSuffix1 = getDidUniqueSuffix(createPayload1);
+      primaryKey = await mks.getKeyForPurpose('primary', 0);
+      const recoveryKey1 = await mks.getKeyForPurpose('recovery', 0);
+      const didDocumentModel = getDidDocumentModel(primaryKey.publicKey, recoveryKey1.publicKey);
+      const createPayload1 = await getCreatePayload(didDocumentModel, primaryKey);
+      didUniqueSuffix = getDidUniqueSuffix(createPayload1);
       const createTransaction1 = await create(sidetree)(createPayload1);
       await syncTransaction(sidetree, createTransaction1);
-      const operations = await sidetree.db.readCollection(didUniqueSuffix1);
+      const operations = await sidetree.db.readCollection(didUniqueSuffix);
       lastOperation = operations.pop();
     });
 
     it('should add a new key', async () => {
-      const newKey = await mks.getKeyForPurpose('primary', 2);
-      const payload = await getUpdatePayloadForAddingAKey(lastOperation, '#newKey', newKey.publicKey, primaryKey1.privateKey);
+      const newKey = await mks.getKeyForPurpose('primary', 1);
+      const payload = await getUpdatePayloadForAddingAKey(lastOperation, '#newKey', newKey.publicKey, primaryKey.privateKey);
       const transaction = await create(sidetree)(payload);
       await syncTransaction(sidetree, transaction);
-      const didDocument = await resolve(sidetree)(didUniqueSuffix1);
+      const didDocument = await resolve(sidetree)(didUniqueSuffix);
       expect(didDocument.publicKey).toHaveLength(3);
       expect(didDocument.publicKey[2].publicKeyHex).toBe(newKey.publicKey);
     });
   });
 
   describe('recover', () => {
-    let primaryKey1;
-    let recoveryKey1;
+    const mnemonic = element.MnemonicKeySystem.generateMnemonic();
+    const mks = new element.MnemonicKeySystem(mnemonic);
+    let primaryKey;
+    let recoveryKey;
     let primaryKey2;
     let recoveryKey2;
-    let didUniqueSuffix1;
+    let didUniqueSuffix;
     let didDocumentModel2;
 
     beforeAll(async () => {
-      // FIXME no mks
-      const mnemonic1 = element.MnemonicKeySystem.generateMnemonic();
-      const mks1 = new element.MnemonicKeySystem(mnemonic1);
-      primaryKey1 = await mks1.getKeyForPurpose('primary', 0);
-      recoveryKey1 = await mks1.getKeyForPurpose('recovery', 0);
-      const didDocumentModel1 = getDidDocumentModel(primaryKey1.publicKey, recoveryKey1.publicKey);
-      const createPayload1 = await getCreatePayload(didDocumentModel1, primaryKey1);
-      const createTransaction1 = await create(sidetree)(createPayload1);
-      await syncTransaction(sidetree, createTransaction1);
-      didUniqueSuffix1 = getDidUniqueSuffix(createPayload1);
-      const mnemonic2 = element.MnemonicKeySystem.generateMnemonic();
-      const mks2 = new element.MnemonicKeySystem(mnemonic2);
-      primaryKey2 = await mks2.getKeyForPurpose('primary', 0);
-      recoveryKey2 = await mks2.getKeyForPurpose('recovery', 0);
+      primaryKey = await mks.getKeyForPurpose('primary', 0);
+      recoveryKey = await mks.getKeyForPurpose('recovery', 0);
+      const didDocumentModel = getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
+      const createPayload = await getCreatePayload(didDocumentModel, primaryKey);
+      const createTransaction = await create(sidetree)(createPayload);
+      await syncTransaction(sidetree, createTransaction);
+      didUniqueSuffix = getDidUniqueSuffix(createPayload);
+      primaryKey2 = await mks.getKeyForPurpose('primary', 1);
+      recoveryKey2 = await mks.getKeyForPurpose('recovery', 1);
       didDocumentModel2 = getDidDocumentModel(primaryKey2.publicKey, recoveryKey2.publicKey);
     });
 
     it('should not work if specified kid does not exist in did document', async () => {
-      const invalidPayload = await getRecoverPayload(didUniqueSuffix1, didDocumentModel2, recoveryKey1.privateKey, '#recoveryy');
+      const invalidPayload = await getRecoverPayload(didUniqueSuffix, didDocumentModel2, recoveryKey.privateKey, '#recoveryy');
       const invalidTransaction = await create(sidetree)(invalidPayload);
       await syncTransaction(sidetree, invalidTransaction);
-      const didDocument = await resolve(sidetree)(didUniqueSuffix1);
-      expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey1.publicKey);
+      const didDocument = await resolve(sidetree)(didUniqueSuffix);
+      expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey.publicKey);
     });
 
     it('should not work if signature is not of the recovery key', async () => {
-      const invalidPayload = await getRecoverPayload(didUniqueSuffix1, didDocumentModel2, primaryKey1.privateKey, '#recovery');
+      const invalidPayload = await getRecoverPayload(didUniqueSuffix, didDocumentModel2, primaryKey.privateKey, '#recovery');
       const invalidTransaction = await create(sidetree)(invalidPayload);
       await syncTransaction(sidetree, invalidTransaction);
-      const didDocument = await resolve(sidetree)(didUniqueSuffix1);
-      expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey1.publicKey);
+      const didDocument = await resolve(sidetree)(didUniqueSuffix);
+      expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey.publicKey);
     });
 
     it('should not work if there is no corresponding create operation', async () => {
       const fakeDidUniqueSuffix = 'fakediduniquesuffix';
-      const invalidPayload = await getRecoverPayload(fakeDidUniqueSuffix, didDocumentModel2, recoveryKey1.privateKey, '#recovery');
+      const invalidPayload = await getRecoverPayload(fakeDidUniqueSuffix, didDocumentModel2, recoveryKey.privateKey, '#recovery');
       const invalidTransaction = await create(sidetree)(invalidPayload);
       await syncTransaction(sidetree, invalidTransaction);
       const didDocument = await resolve(sidetree)(fakeDidUniqueSuffix);
@@ -150,17 +149,19 @@ describe('resolve', () => {
     });
 
     it('should replace the did document with the one provided in the payload', async () => {
-      const payload = await getRecoverPayload(didUniqueSuffix1, didDocumentModel2, recoveryKey1.privateKey, '#recovery');
+      const payload = await getRecoverPayload(didUniqueSuffix, didDocumentModel2, recoveryKey.privateKey, '#recovery');
       const transaction = await create(sidetree)(payload);
       await syncTransaction(sidetree, transaction);
-      const didDocument = await resolve(sidetree)(didUniqueSuffix1);
+      const didDocument = await resolve(sidetree)(didUniqueSuffix);
       expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey2.publicKey);
       expect(didDocument.publicKey[1].publicKeyHex).toBe(recoveryKey2.publicKey);
-      expect(didDocument.id).toContain(didUniqueSuffix1);
+      expect(didDocument.id).toContain(didUniqueSuffix);
     });
   });
 
   describe('delete', () => {
+    const mnemonic = element.MnemonicKeySystem.generateMnemonic();
+    const mks = new element.MnemonicKeySystem(mnemonic);
     let deletePayload;
     let didUniqueSuffix;
     let primaryKey;
