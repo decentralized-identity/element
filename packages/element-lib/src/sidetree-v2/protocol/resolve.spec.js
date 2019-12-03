@@ -4,6 +4,7 @@ const { getTestSideTree } = require('../test-utils');
 const {
   getDidDocumentModel,
   getCreatePayload,
+  getUpdatePayloadForAddingAKey,
   getRecoverPayload,
   getDeletePayload,
 } = require('../op');
@@ -74,6 +75,36 @@ describe('resolve', () => {
     });
   });
 
+  // TODO scope
+  // TODO name + test names
+  describe('update', () => {
+    let primaryKey1;
+    let didUniqueSuffix1;
+    let lastOperation;
+
+    beforeAll(async () => {
+      primaryKey1 = await mks.getKeyForPurpose('primary', 1);
+      const recoveryKey1 = await mks.getKeyForPurpose('recovery', 1);
+      const didDocumentModel = getDidDocumentModel(primaryKey1.publicKey, recoveryKey1.publicKey);
+      const createPayload1 = await getCreatePayload(didDocumentModel, primaryKey1);
+      didUniqueSuffix1 = getDidUniqueSuffix(createPayload1);
+      const createTransaction1 = await create(sidetree)(createPayload1);
+      await syncTransaction(sidetree, createTransaction1);
+      const operations = await sidetree.db.readCollection(didUniqueSuffix1);
+      lastOperation = operations.pop();
+    });
+
+    it('should add a new key', async () => {
+      const newKey = await mks.getKeyForPurpose('primary', 2);
+      const payload = await getUpdatePayloadForAddingAKey(lastOperation, '#newKey', newKey.publicKey, primaryKey1.privateKey);
+      const transaction = await create(sidetree)(payload);
+      await syncTransaction(sidetree, transaction);
+      const didDocument = await resolve(sidetree)(didUniqueSuffix1);
+      expect(didDocument.publicKey).toHaveLength(3);
+      expect(didDocument.publicKey[2].publicKeyHex).toBe(newKey.publicKey);
+    });
+  });
+
   describe('recover', () => {
     let primaryKey1;
     let recoveryKey1;
@@ -83,6 +114,7 @@ describe('resolve', () => {
     let didDocumentModel2;
 
     beforeAll(async () => {
+      // FIXME no mks
       const mnemonic1 = element.MnemonicKeySystem.generateMnemonic();
       const mks1 = new element.MnemonicKeySystem(mnemonic1);
       primaryKey1 = await mks1.getKeyForPurpose('primary', 0);
