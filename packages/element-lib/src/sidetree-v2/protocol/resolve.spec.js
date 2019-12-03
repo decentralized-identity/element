@@ -1,12 +1,12 @@
 const create = require('./create');
 const resolve = require('./resolve');
+const { getTestSideTree } = require('../test-utils');
 const {
-  getTestSideTree,
   getDidDocumentModel,
   getCreatePayload,
   getRecoverPayload,
   getDeletePayload,
-} = require('../test-utils');
+} = require('../op');
 const { getDidUniqueSuffix, syncTransaction, decodeJson } = require('../func');
 const element = require('../../../index');
 

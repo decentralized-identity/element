@@ -1,10 +1,7 @@
 const create = require('./create');
 const resolve = require('./resolve');
-const {
-  getTestSideTree,
-  getDidDocumentModel,
-  getCreatePayload,
-} = require('../test-utils');
+const { getTestSideTree } = require('../test-utils');
+const { getDidDocumentModel, getCreatePayload } = require('../op');
 const {
   batchFileToOperations,
   getDidUniqueSuffix,
