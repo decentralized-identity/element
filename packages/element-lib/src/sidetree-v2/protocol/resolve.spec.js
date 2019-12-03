@@ -17,21 +17,16 @@ const mnemonic = element.MnemonicKeySystem.generateMnemonic();
 const mks = new element.MnemonicKeySystem(mnemonic);
 
 describe('resolve', () => {
-  let createPayload;
-  let createTransaction;
-  let didUniqueSuffix;
-  let deletePayload;
-  let deleteTransaction;
-  let primaryKey;
-  let recoveryKey;
-
-  beforeAll(async () => {
-    primaryKey = await mks.getKeyForPurpose('primary', 0);
-    recoveryKey = await mks.getKeyForPurpose('recovery', 0);
-  });
-
   describe('create', () => {
+    let createPayload;
+    let createTransaction;
+    let didUniqueSuffix;
+    let primaryKey;
+    let recoveryKey;
+
     beforeAll(async () => {
+      primaryKey = await mks.getKeyForPurpose('primary', 0);
+      recoveryKey = await mks.getKeyForPurpose('recovery', 0);
       const didDocumentModel = getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
       createPayload = await getCreatePayload(didDocumentModel, primaryKey);
       createTransaction = await create(sidetree)(createPayload);
@@ -75,7 +70,6 @@ describe('resolve', () => {
     });
   });
 
-  // TODO scope
   describe('update', () => {
     let primaryKey1;
     let didUniqueSuffix1;
@@ -167,6 +161,21 @@ describe('resolve', () => {
   });
 
   describe('delete', () => {
+    let deletePayload;
+    let didUniqueSuffix;
+    let primaryKey;
+    let recoveryKey;
+
+    beforeAll(async () => {
+      primaryKey = await mks.getKeyForPurpose('primary', 3);
+      recoveryKey = await mks.getKeyForPurpose('recovery', 3);
+      const didDocumentModel = getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
+      const createPayload = await getCreatePayload(didDocumentModel, primaryKey);
+      const createTransaction = await create(sidetree)(createPayload);
+      await syncTransaction(sidetree, createTransaction);
+      didUniqueSuffix = getDidUniqueSuffix(createPayload);
+    });
+
     it('should not work if specified kid does not exist in did document', async () => {
       const invalidDeletePayload = await getDeletePayload(didUniqueSuffix, recoveryKey.privateKey, '#recoveryy');
       const invalidDeleteTransaction = await create(sidetree)(invalidDeletePayload);
@@ -194,7 +203,7 @@ describe('resolve', () => {
 
     it('should delete a did document', async () => {
       deletePayload = await getDeletePayload(didUniqueSuffix, recoveryKey.privateKey, '#recovery');
-      deleteTransaction = await create(sidetree)(deletePayload);
+      const deleteTransaction = await create(sidetree)(deletePayload);
       await syncTransaction(sidetree, deleteTransaction);
       const didDocument = await resolve(sidetree)(didUniqueSuffix);
       expect(didDocument).not.toBeDefined();
