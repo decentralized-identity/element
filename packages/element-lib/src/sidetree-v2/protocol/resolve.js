@@ -31,7 +31,7 @@ const applyPatch = (didDocument, patch) => {
     return patch.publicKeys.reduce((currentState, publicKey) => {
       const existingKey = publicKeyMap.get(publicKey);
       // Deleting recovery key is NOT allowed.
-      if (existingKey !== undefined && existingKey.type !== '#recovery') {
+      if (existingKey !== undefined && existingKey.id !== '#recovery') {
         publicKeyMap.delete(publicKey);
         return {
           ...currentState,
