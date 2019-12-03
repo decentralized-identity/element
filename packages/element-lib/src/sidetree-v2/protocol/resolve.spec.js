@@ -5,6 +5,7 @@ const {
   getDidDocumentModel,
   getCreatePayload,
   getUpdatePayloadForAddingAKey,
+  getUpdatePayloadForRemovingAKey,
   getRecoverPayload,
   getDeletePayload,
 } = require('../op');
@@ -72,17 +73,18 @@ describe('resolve', () => {
   describe('update', () => {
     const mks = new MnemonicKeySystem(MnemonicKeySystem.generateMnemonic());
     let primaryKey;
+    let recoveryKey;
     let didUniqueSuffix;
     let lastOperation;
 
     beforeAll(async () => {
       primaryKey = await mks.getKeyForPurpose('primary', 0);
-      const recoveryKey1 = await mks.getKeyForPurpose('recovery', 0);
-      const didDocumentModel = getDidDocumentModel(primaryKey.publicKey, recoveryKey1.publicKey);
-      const createPayload1 = await getCreatePayload(didDocumentModel, primaryKey);
-      didUniqueSuffix = getDidUniqueSuffix(createPayload1);
-      const createTransaction1 = await create(sidetree)(createPayload1);
-      await syncTransaction(sidetree, createTransaction1);
+      recoveryKey = await mks.getKeyForPurpose('recovery', 0);
+      const didDocumentModel = getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
+      const createPayload = await getCreatePayload(didDocumentModel, primaryKey);
+      didUniqueSuffix = getDidUniqueSuffix(createPayload);
+      const createTransaction = await create(sidetree)(createPayload);
+      await syncTransaction(sidetree, createTransaction);
       const operations = await sidetree.db.readCollection(didUniqueSuffix);
       lastOperation = operations.pop();
     });
@@ -95,6 +97,16 @@ describe('resolve', () => {
       const didDocument = await resolve(sidetree)(didUniqueSuffix);
       expect(didDocument.publicKey).toHaveLength(3);
       expect(didDocument.publicKey[2].publicKeyHex).toBe(newKey.publicKey);
+    });
+
+    it('should remove a key', async () => {
+      const payload = await getUpdatePayloadForRemovingAKey(lastOperation, '#newKey', primaryKey.privateKey);
+      const transaction = await create(sidetree)(payload);
+      await syncTransaction(sidetree, transaction);
+      const didDocument = await resolve(sidetree)(didUniqueSuffix);
+      expect(didDocument.publicKey).toHaveLength(2);
+      expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey.publicKey);
+      expect(didDocument.publicKey[1].publicKeyHex).toBe(recoveryKey.publicKey);
     });
   });
 
@@ -164,8 +176,8 @@ describe('resolve', () => {
     let recoveryKey;
 
     beforeAll(async () => {
-      primaryKey = await mks.getKeyForPurpose('primary', 3);
-      recoveryKey = await mks.getKeyForPurpose('recovery', 3);
+      primaryKey = await mks.getKeyForPurpose('primary', 0);
+      recoveryKey = await mks.getKeyForPurpose('recovery', 0);
       const didDocumentModel = getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
       const createPayload = await getCreatePayload(didDocumentModel, primaryKey);
       const createTransaction = await create(sidetree)(createPayload);
