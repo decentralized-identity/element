@@ -2,7 +2,9 @@ const create = require('./create');
 const resolve = require('./resolve');
 const {
   getTestSideTree,
+  getDidDocumentModel,
   getCreatePayload,
+  getRecoverPayload,
   getDeletePayload,
 } = require('../test-utils');
 const { getDidUniqueSuffix, syncTransaction, decodeJson } = require('../func');
@@ -68,6 +70,68 @@ describe('resolve', () => {
       const didDocument = await resolve(sidetree)(didUniqueSuffix);
       const did = `did:elem:${didUniqueSuffix}`;
       expect(didDocument.id).toBe(did);
+    });
+  });
+
+  describe('recover', () => {
+    let primaryKey1;
+    let recoveryKey1;
+    let primaryKey2;
+    let recoveryKey2;
+    let didUniqueSuffix1;
+    let didDocumentModel2;
+
+    beforeAll(async () => {
+      const mnemonic1 = element.MnemonicKeySystem.generateMnemonic();
+      const mks1 = new element.MnemonicKeySystem(mnemonic1);
+      primaryKey1 = await mks1.getKeyForPurpose('primary', 0);
+      recoveryKey1 = await mks1.getKeyForPurpose('recovery', 0);
+      const createPayload1 = await getCreatePayload(primaryKey1, recoveryKey1);
+      const createTransaction1 = await create(sidetree)(createPayload1);
+      await syncTransaction(sidetree, createTransaction1);
+      didUniqueSuffix1 = getDidUniqueSuffix(createPayload1);
+      const mnemonic2 = element.MnemonicKeySystem.generateMnemonic();
+      const mks2 = new element.MnemonicKeySystem(mnemonic2);
+      primaryKey2 = await mks2.getKeyForPurpose('primary', 0);
+      recoveryKey2 = await mks2.getKeyForPurpose('recovery', 0);
+      // TODO
+      // didDocumentModel1 = getDidDocumentModel(primaryKey1.publicKey, recoveryKey1.publicKey);
+      didDocumentModel2 = getDidDocumentModel(primaryKey2.publicKey, recoveryKey2.publicKey);
+    });
+
+    it('should not work if specified kid does not exist in did document', async () => {
+      const invalidPayload = await getRecoverPayload(didUniqueSuffix1, didDocumentModel2, recoveryKey1.privateKey, '#recoveryy');
+      const invalidTransaction = await create(sidetree)(invalidPayload);
+      await syncTransaction(sidetree, invalidTransaction);
+      const didDocument = await resolve(sidetree)(didUniqueSuffix1);
+      expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey1.publicKey);
+    });
+
+    it('should not work if signature is not of the recovery key', async () => {
+      const invalidPayload = await getRecoverPayload(didUniqueSuffix1, didDocumentModel2, primaryKey1.privateKey, '#recovery');
+      const invalidTransaction = await create(sidetree)(invalidPayload);
+      await syncTransaction(sidetree, invalidTransaction);
+      const didDocument = await resolve(sidetree)(didUniqueSuffix1);
+      expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey1.publicKey);
+    });
+
+    it('should not work if there is no corresponding create operation', async () => {
+      const fakeDidUniqueSuffix = 'fakediduniquesuffix';
+      const invalidPayload = await getRecoverPayload(fakeDidUniqueSuffix, didDocumentModel2, recoveryKey1.privateKey, '#recovery');
+      const invalidTransaction = await create(sidetree)(invalidPayload);
+      await syncTransaction(sidetree, invalidTransaction);
+      const didDocument = await resolve(sidetree)(fakeDidUniqueSuffix);
+      expect(didDocument).not.toBeDefined();
+    });
+
+    it('should replace the did document with the one provided in the payload', async () => {
+      const payload = await getRecoverPayload(didUniqueSuffix1, didDocumentModel2, recoveryKey1.privateKey, '#recovery');
+      const transaction = await create(sidetree)(payload);
+      await syncTransaction(sidetree, transaction);
+      const didDocument = await resolve(sidetree)(didUniqueSuffix1);
+      expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey2.publicKey);
+      expect(didDocument.publicKey[1].publicKeyHex).toBe(recoveryKey2.publicKey);
+      expect(didDocument.id).toContain(didUniqueSuffix1);
     });
   });
 
