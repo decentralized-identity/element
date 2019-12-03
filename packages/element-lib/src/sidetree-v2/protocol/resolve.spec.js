@@ -87,7 +87,6 @@ describe('resolve', () => {
       const operations = await sidetree.db.readCollection(didUniqueSuffix);
       operations.sort((o1, o2) => o1.transaction.transactionTime - o2.transaction.transactionTime);
       const last = operations.pop();
-      console.log(last);
       return last;
     };
 
@@ -176,6 +175,16 @@ describe('resolve', () => {
       const payload = await getUpdatePayloadForRemovingAKey(lastOperation, '#recovery', primaryKey.privateKey);
       const transaction = await create(sidetree)(payload);
       await syncTransaction(sidetree, transaction);
+      const didDocument = await resolve(sidetree)(didUniqueSuffix);
+      expect(didDocument.publicKey).toHaveLength(3);
+      expect(didDocument.publicKey[0].publicKeyHex).toBe(recoveryKey.publicKey);
+    });
+
+    it('should do nothing if removing a key that does not exist', async () => {
+      const payload = await getUpdatePayloadForRemovingAKey(lastOperation, '#fakekid', primaryKey.privateKey);
+      const transaction = await create(sidetree)(payload);
+      await syncTransaction(sidetree, transaction);
+      lastOperation = await getLastOperation();
       const didDocument = await resolve(sidetree)(didUniqueSuffix);
       expect(didDocument.publicKey).toHaveLength(3);
       expect(didDocument.publicKey[0].publicKeyHex).toBe(recoveryKey.publicKey);
