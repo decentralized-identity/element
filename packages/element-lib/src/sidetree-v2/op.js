@@ -67,6 +67,33 @@ const getUpdatePayloadForAddingAKey = async (
   return requestBody;
 };
 
+const getUpdatePayloadForRemovingAKey = async (
+  previousOperation,
+  kid,
+  primaryPrivateKey,
+) => {
+  const payload = {
+    didUniqueSuffix: previousOperation.didUniqueSuffix,
+    previousOperationHash: previousOperation.operation.operationHash,
+    patches: [{
+      action: 'remove-public-keys',
+      publicKeys: [kid],
+    }],
+  };
+  const encodedPayload = encodeJson(payload);
+  const signature = signEncodedPayload(encodedPayload, primaryPrivateKey);
+  const requestBody = {
+    header: {
+      operation: 'update',
+      kid: 'primary',
+      alg: 'ES256K',
+    },
+    payload: encodedPayload,
+    signature,
+  };
+  return requestBody;
+};
+
 const getRecoverPayload = async (didUniqueSuffix, newDidDocument, recoveryPrivateKey, kid) => {
   const payload = {
     didUniqueSuffix,
@@ -105,6 +132,7 @@ module.exports = {
   getDidDocumentModel,
   getCreatePayload,
   getUpdatePayloadForAddingAKey,
+  getUpdatePayloadForRemovingAKey,
   getRecoverPayload,
   getDeletePayload,
 };

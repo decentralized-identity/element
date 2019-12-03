@@ -7,10 +7,9 @@ const create = (state, operation) => ({
 });
 
 const applyPatch = (didDocument, patch) => {
-  let newDidDocument = didDocument;
   if (patch.action === 'add-public-keys') {
     const publicKeySet = new Set(didDocument.publicKey.map(key => key.id));
-    newDidDocument = patch.publicKeys.reduce((currentState, publicKey) => {
+    return patch.publicKeys.reduce((currentState, publicKey) => {
       if (!publicKeySet.has(publicKey)) {
         return {
           ...currentState,
@@ -26,9 +25,23 @@ const applyPatch = (didDocument, patch) => {
       }
       return currentState;
     }, didDocument);
-    // Loop through all given public keys and add them if they don't exist already.
   }
-  return newDidDocument;
+  if (patch.action === 'remove-public-keys') {
+    const publicKeyMap = new Map(didDocument.publicKey.map(publicKey => [publicKey.id, publicKey]));
+    return patch.publicKeys.reduce((currentState, publicKey) => {
+      const existingKey = publicKeyMap.get(publicKey);
+      // Deleting recovery key is NOT allowed.
+      if (existingKey !== undefined && existingKey.type !== '#recovery') {
+        publicKeyMap.delete(publicKey);
+        return {
+          ...currentState,
+          publicKey: Array.from(publicKeyMap.values()),
+        };
+      }
+      return currentState;
+    }, didDocument);
+  }
+  return didDocument;
 };
 
 const update = (state, operation) => {
