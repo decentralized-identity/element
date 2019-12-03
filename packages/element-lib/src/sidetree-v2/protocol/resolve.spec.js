@@ -161,6 +161,15 @@ describe('resolve', () => {
       expect(didDocument.publicKey[1].publicKeyHex).toBe(newKey2.publicKey);
       expect(didDocument.publicKey[2].publicKeyHex).toBe(newKey3.publicKey);
     });
+
+    it('should fail if the patch is removing the recovery key', async () => {
+      const payload = await getUpdatePayloadForRemovingAKey(lastOperation, '#recovery', primaryKey.privateKey);
+      const transaction = await create(sidetree)(payload);
+      await syncTransaction(sidetree, transaction);
+      const didDocument = await resolve(sidetree)(didUniqueSuffix);
+      expect(didDocument.publicKey).toHaveLength(3);
+      expect(didDocument.publicKey[0].publicKeyHex).toBe(recoveryKey.publicKey);
+    });
   });
 
   describe('recover', () => {
