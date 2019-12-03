@@ -31,6 +31,42 @@ const getCreatePayload = async (didDocumentModel, primaryKey) => {
   return requestBody;
 };
 
+const getUpdatePayloadForAddingAKey = async (
+  previousOperation,
+  kid,
+  newPublicKey,
+  primaryPrivateKey,
+) => {
+  const payload = {
+    didUniqueSuffix: previousOperation.didUniqueSuffix,
+    previousOperationHash: previousOperation.operation.operationHash,
+    patches: [
+      {
+        action: 'add-public-keys',
+        publicKeys: [
+          {
+            id: kid,
+            type: 'Secp256k1VerificationKey2018',
+            publicKeyHex: newPublicKey,
+          },
+        ],
+      },
+    ],
+  };
+  const encodedPayload = encodeJson(payload);
+  const signature = signEncodedPayload(encodedPayload, primaryPrivateKey);
+  const requestBody = {
+    header: {
+      operation: 'update',
+      kid: 'primary',
+      alg: 'ES256K',
+    },
+    payload: encodedPayload,
+    signature,
+  };
+  return requestBody;
+};
+
 const getRecoverPayload = async (didUniqueSuffix, newDidDocument, recoveryPrivateKey, kid) => {
   const payload = {
     didUniqueSuffix,
@@ -68,6 +104,7 @@ const getDeletePayload = async (didUniqueSuffix, recoveryPrivateKey, kid) => {
 module.exports = {
   getDidDocumentModel,
   getCreatePayload,
+  getUpdatePayloadForAddingAKey,
   getRecoverPayload,
   getDeletePayload,
 };

@@ -7,8 +7,33 @@ const create = (state, operation) => ({
   id: `did:elem:${payloadToHash(operation.decodedOperationPayload)}`,
 });
 
+const applyPatch = (didDocument, patch) => {
+  let newDidDocument = didDocument;
+  if (patch.action === 'add-public-keys') {
+    const publicKeySet = new Set(didDocument.publicKey.map(key => key.id));
+    newDidDocument = patch.publicKeys.reduce((currentState, publicKey) => {
+      if (!publicKeySet.has(publicKey)) {
+        return {
+          ...currentState,
+          publicKey: [
+            ...currentState.publicKey,
+            {
+              ...publicKey,
+              controller: didDocument.id,
+            },
+          ],
+        };
+      }
+      return currentState;
+    }, didDocument);
+    // Loop through all given public keys and add them if they don't exist already.
+  }
+  return newDidDocument;
+};
+
 const update = (state, operation) => {
-  return operation.decodedOperationPayload.patch.reduce(jsonpatch.applyReducer, state);
+  const { decodedOperationPayload } = operation;
+  return decodedOperationPayload.patches.reduce(applyPatch, state);
 };
 
 const recover = async (state, operation) => {
