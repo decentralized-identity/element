@@ -30,7 +30,7 @@ describe('resolve', () => {
     recoveryKey = await mks.getKeyForPurpose('recovery', 0);
   });
 
-  describe('after create', () => {
+  describe('create', () => {
     beforeAll(async () => {
       const didDocumentModel = getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
       createPayload = await getCreatePayload(didDocumentModel, primaryKey);
@@ -76,7 +76,6 @@ describe('resolve', () => {
   });
 
   // TODO scope
-  // TODO name + test names
   describe('update', () => {
     let primaryKey1;
     let didUniqueSuffix1;
@@ -167,8 +166,8 @@ describe('resolve', () => {
     });
   });
 
-  describe('after delete', () => {
-    it('should not delete if specified kid does not exist in did document', async () => {
+  describe('delete', () => {
+    it('should not work if specified kid does not exist in did document', async () => {
       const invalidDeletePayload = await getDeletePayload(didUniqueSuffix, recoveryKey.privateKey, '#recoveryy');
       const invalidDeleteTransaction = await create(sidetree)(invalidDeletePayload);
       await syncTransaction(sidetree, invalidDeleteTransaction);
@@ -176,7 +175,7 @@ describe('resolve', () => {
       expect(didDocument.id).toBeDefined();
     });
 
-    it('should not delete if signature is not of the recovery key', async () => {
+    it('should not work if signature is not of the recovery key', async () => {
       const invalidDeletePayload = await getDeletePayload(didUniqueSuffix, primaryKey.privateKey, '#recovery');
       const invalidDeleteTransaction = await create(sidetree)(invalidDeletePayload);
       await syncTransaction(sidetree, invalidDeleteTransaction);
@@ -184,7 +183,7 @@ describe('resolve', () => {
       expect(didDocument.id).toBeDefined();
     });
 
-    it('should return null if there is no corresponding create operation', async () => {
+    it('should not work if there is no corresponding create operation', async () => {
       const fakeDidUniqueSuffix = 'fakediduniquesuffix';
       const invalidDeletePayload = await getDeletePayload(fakeDidUniqueSuffix, recoveryKey.privateKey, '#recovery');
       const invalidDeleteTransaction = await create(sidetree)(invalidDeletePayload);
