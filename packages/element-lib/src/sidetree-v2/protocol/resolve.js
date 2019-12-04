@@ -15,11 +15,7 @@ const applyPatch = (didDocument, patch) => {
           ...currentState,
           publicKey: [
             ...currentState.publicKey,
-            {
-              ...publicKey,
-              // FIXME: Need controller property to be compliant with the protocol
-              // controller: didDocument.id,
-            },
+            { ...publicKey },
           ],
         };
       }
