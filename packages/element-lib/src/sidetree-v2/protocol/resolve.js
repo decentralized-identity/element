@@ -1,5 +1,4 @@
 /* eslint-disable arrow-body-style */
-const jsonpatch = require('fast-json-patch');
 const { payloadToHash, verifyOperationSignature } = require('../func');
 
 const create = (state, operation) => ({
@@ -7,14 +6,68 @@ const create = (state, operation) => ({
   id: `did:elem:${payloadToHash(operation.decodedOperationPayload)}`,
 });
 
-const update = (state, operation) => {
-  return operation.decodedOperationPayload.patch.reduce(jsonpatch.applyReducer, state);
+const applyPatch = (didDocument, patch) => {
+  if (patch.action === 'add-public-keys') {
+    const publicKeySet = new Set(didDocument.publicKey.map(key => key.id));
+    return patch.publicKeys.reduce((currentState, publicKey) => {
+      if (!publicKeySet.has(publicKey)) {
+        return {
+          ...currentState,
+          publicKey: [
+            ...currentState.publicKey,
+            { ...publicKey },
+          ],
+        };
+      }
+      return currentState;
+    }, didDocument);
+  }
+  if (patch.action === 'remove-public-keys') {
+    const publicKeyMap = new Map(didDocument.publicKey.map(publicKey => [publicKey.id, publicKey]));
+    return patch.publicKeys.reduce((currentState, publicKey) => {
+      const existingKey = publicKeyMap.get(publicKey);
+      // Deleting recovery key is NOT allowed.
+      if (existingKey !== undefined && existingKey.id !== '#recovery') {
+        publicKeyMap.delete(publicKey);
+        return {
+          ...currentState,
+          publicKey: Array.from(publicKeyMap.values()),
+        };
+      }
+      return currentState;
+    }, didDocument);
+  }
+  return didDocument;
 };
 
-// TODO: implement recover
-// eslint-disable-next-line no-unused-vars
-const recover = (state, operation) => {
-  return state;
+const update = (state, operation) => {
+  const { decodedOperationPayload } = operation;
+  return decodedOperationPayload.patches.reduce(applyPatch, state);
+};
+
+const recover = async (state, operation) => {
+  // If no previous create operation, or deleted
+  if (!state) {
+    return state;
+  }
+  const { kid } = operation.decodedOperation.header;
+  const recoveryKey = state.publicKey.find(pubKey => pubKey.id === kid);
+  if (!recoveryKey) {
+    return state;
+  }
+  const isSignatureValid = await verifyOperationSignature({
+    encodedOperationPayload: operation.decodedOperation.payload,
+    signature: operation.decodedOperation.signature,
+    publicKey: recoveryKey.publicKeyHex,
+  });
+  if (!isSignatureValid) {
+    return state;
+  }
+  const { didUniqueSuffix, newDidDocument } = operation.decodedOperationPayload;
+  return {
+    ...newDidDocument,
+    id: `did:elem${didUniqueSuffix}`,
+  };
 };
 
 const deletE = async (state, operation) => {
@@ -32,7 +85,6 @@ const deletE = async (state, operation) => {
     signature: operation.decodedOperation.signature,
     publicKey: signingKey.publicKeyHex,
   });
-
   if (!isSignatureValid) {
     return state;
   }

@@ -1,5 +1,4 @@
 const element = require('../../index');
-const { encodeJson, signEncodedPayload } = require('./func');
 
 const getTestSideTree = () => {
   const db = new element.adapters.database.ElementRXDBAdapter({
@@ -20,52 +19,6 @@ const getTestSideTree = () => {
   return new element.SidetreeV2({ db, storage, blockchain });
 };
 
-const getCreatePayload = async (primaryKey, recoveryKey) => {
-  const encodedPayload = encodeJson({
-    '@context': 'https://w3id.org/did/v1',
-    publicKey: [
-      {
-        id: '#primary',
-        type: 'Secp256k1VerificationKey2018',
-        publicKeyHex: primaryKey.publicKey,
-      },
-      {
-        id: '#recovery',
-        type: 'Secp256k1VerificationKey2018',
-        publicKeyHex: recoveryKey.publicKey,
-      },
-    ],
-  });
-  const signature = signEncodedPayload(encodedPayload, primaryKey.privateKey);
-  const requestBody = {
-    header: {
-      operation: 'create',
-      kid: '#primary',
-      alg: 'ES256K',
-    },
-    payload: encodedPayload,
-    signature,
-  };
-  return requestBody;
-};
-
-const getDeletePayload = async (didUniqueSuffix, recoveryPrivateKey, kid) => {
-  const encodedPayload = encodeJson({ didUniqueSuffix });
-  const signature = signEncodedPayload(encodedPayload, recoveryPrivateKey);
-  const requestBody = {
-    header: {
-      operation: 'delete',
-      kid,
-      alg: 'ES256K',
-    },
-    payload: encodedPayload,
-    signature,
-  };
-  return requestBody;
-};
-
 module.exports = {
   getTestSideTree,
-  getCreatePayload,
-  getDeletePayload,
 };

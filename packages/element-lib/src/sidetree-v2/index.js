@@ -1,4 +1,5 @@
 const { resolve, sync, create } = require('./protocol');
+const op = require('./op');
 
 class Sidetree {
   constructor({ db, blockchain, storage }) {
@@ -8,6 +9,7 @@ class Sidetree {
     this.resolve = resolve(this);
     this.sync = sync(this);
     this.create = create(this);
+    this.op = op;
   }
 }
 
