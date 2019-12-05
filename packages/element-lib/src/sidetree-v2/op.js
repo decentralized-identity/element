@@ -33,7 +33,7 @@ const getCreatePayload = async (didDocumentModel, primaryKey) => {
 
 const getUpdatePayloadForAddingAKey = async (
   previousOperation,
-  kid,
+  newKid,
   newPublicKey,
   primaryPrivateKey,
 ) => {
@@ -45,7 +45,7 @@ const getUpdatePayloadForAddingAKey = async (
         action: 'add-public-keys',
         publicKeys: [
           {
-            id: kid,
+            id: newKid,
             type: 'Secp256k1VerificationKey2018',
             publicKeyHex: newPublicKey,
           },
@@ -94,7 +94,7 @@ const getUpdatePayloadForRemovingAKey = async (
   return requestBody;
 };
 
-const getRecoverPayload = async (didUniqueSuffix, newDidDocument, recoveryPrivateKey, kid) => {
+const getRecoverPayload = async (didUniqueSuffix, newDidDocument, recoveryPrivateKey) => {
   const payload = {
     didUniqueSuffix,
     newDidDocument,
@@ -104,7 +104,7 @@ const getRecoverPayload = async (didUniqueSuffix, newDidDocument, recoveryPrivat
   const requestBody = {
     header: {
       operation: 'recover',
-      kid,
+      kid: '#recovery',
       alg: 'ES256K',
     },
     payload: encodedPayload,
@@ -113,13 +113,13 @@ const getRecoverPayload = async (didUniqueSuffix, newDidDocument, recoveryPrivat
   return requestBody;
 };
 
-const getDeletePayload = async (didUniqueSuffix, recoveryPrivateKey, kid) => {
+const getDeletePayload = async (didUniqueSuffix, recoveryPrivateKey) => {
   const encodedPayload = encodeJson({ didUniqueSuffix });
   const signature = signEncodedPayload(encodedPayload, recoveryPrivateKey);
   const requestBody = {
     header: {
       operation: 'delete',
-      kid,
+      kid: '#recovery',
       alg: 'ES256K',
     },
     payload: encodedPayload,
