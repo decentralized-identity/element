@@ -23,19 +23,8 @@ const create = async (state, operation, lastValidOperation) => {
     throw new Error('cannot have another operation before a create operation');
   }
 
-  console.log(operation);
-  // const originalDidDocument = await Document.from(operation.encodedPayload, this.didMethodName, ProtocolParameters.hashAlgorithmInMultihashCode);
-  // const signingKey = Document.getPublicKey(originalDidDocument!, operation.signingKeyId);
-
-  // if (!signingKey) {
-  //   return false;
-  // }
-
-  // if (!(await operation.verifySignature(signingKey))) {
-  //   return false;
-  // }
-
-  // didDocumentReference.didDocument = originalDidDocument;
+  const originalDidDocument = operation.decodedOperationPayload;
+  await isSignatureValid(originalDidDocument, operation);
   return {
     ...operation.decodedOperationPayload,
     id: `did:elem:${payloadToHash(operation.decodedOperationPayload)}`,
