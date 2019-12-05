@@ -257,6 +257,24 @@ describe('resolve', () => {
       didDocumentModel2 = getDidDocumentModel(primaryKey2.publicKey, recoveryKey2.publicKey);
     });
 
+    it('should not work if specified kid does not exist in did document', async () => {
+      const recoverPayload = await getRecoverPayload(didUniqueSuffix, didDocumentModel2, recoveryKey.privateKey, '#recovery');
+      const invalidRecoverPayload = {
+        ...recoverPayload,
+        header: { ...recoverPayload.header, kid: '#primaryy' },
+      };
+      const didDocument = await getDidDocumentForPayload(invalidRecoverPayload, didUniqueSuffix);
+      expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey.publicKey);
+      expect(didDocument.publicKey[1].publicKeyHex).toBe(recoveryKey.publicKey);
+    });
+
+    it('should not work if signature is not valid', async () => {
+      const invalidRecoverPayload = await getRecoverPayload(didUniqueSuffix, didDocumentModel2, primaryKey.privateKey, '#recovery');
+      const didDocument = await getDidDocumentForPayload(invalidRecoverPayload, didUniqueSuffix);
+      expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey.publicKey);
+      expect(didDocument.publicKey[1].publicKeyHex).toBe(recoveryKey.publicKey);
+    });
+
     it('should not work if there is no corresponding create operation', async () => {
       const fakeDidUniqueSuffix = 'fakediduniquesuffix';
       const invalidPayload = await getRecoverPayload(fakeDidUniqueSuffix, didDocumentModel2, recoveryKey.privateKey, '#recovery');
