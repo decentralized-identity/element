@@ -130,7 +130,6 @@ const applyOperation = async (state, operation, lastValidOperation) => {
 const resolve = sidetree => async (did) => {
   const didUniqueSuffix = did.split(':').pop();
   const operations = await sidetree.db.readCollection(didUniqueSuffix);
-  // TODO test that
   // eslint-disable-next-line max-len
   operations.sort((op1, op2) => op1.transaction.transactionNumber - op2.transaction.transactionNumber);
   const createAndRecoverAndRevokeOperations = operations.filter((op) => {
