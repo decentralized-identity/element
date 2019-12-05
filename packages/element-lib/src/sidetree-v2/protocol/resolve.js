@@ -1,10 +1,36 @@
 /* eslint-disable arrow-body-style */
 const { payloadToHash, verifyOperationSignature } = require('../func');
 
-const create = (state, operation) => ({
-  ...operation.decodedOperationPayload,
-  id: `did:elem:${payloadToHash(operation.decodedOperationPayload)}`,
-});
+const isSignatureValid = async (didDocument, operation) => {
+  const { kid } = operation.decodedOperation.header;
+  const signingKey = didDocument.publicKey.find(pubKey => pubKey.id === kid);
+  if (!signingKey) {
+    throw new Error('signing key not found');
+  }
+
+  const valid = await verifyOperationSignature({
+    encodedOperationPayload: operation.decodedOperation.payload,
+    signature: operation.decodedOperation.signature,
+    publicKey: signingKey.publicKeyHex,
+  });
+  if (!valid) {
+    throw new Error('signature is not valid');
+  }
+};
+
+const create = async (state, operation, lastValidOperation) => {
+  const previousOperationHash = lastValidOperation && lastValidOperation.operation.operationHash;
+  if (previousOperationHash !== undefined || state) {
+    throw new Error('cannot have another operation before a create operation');
+  }
+
+  const originalDidDocument = operation.decodedOperationPayload;
+  await isSignatureValid(originalDidDocument, operation);
+  return {
+    ...operation.decodedOperationPayload,
+    id: `did:elem:${payloadToHash(operation.decodedOperationPayload)}`,
+  };
+};
 
 const applyPatch = (didDocument, patch) => {
   if (patch.action === 'add-public-keys') {
@@ -40,29 +66,26 @@ const applyPatch = (didDocument, patch) => {
   return didDocument;
 };
 
-const update = (state, operation) => {
+const update = async (state, operation, lastValidOperation) => {
+  const previousOperationHash = lastValidOperation.operation.operationHash;
+  if (previousOperationHash === undefined || state === undefined) {
+    throw new Error('no valid previous operation');
+  }
+
   const { decodedOperationPayload } = operation;
+  if (decodedOperationPayload.previousOperationHash !== previousOperationHash) {
+    throw new Error('previous operation hash should match the hash of the latest valid operation');
+  }
+
+  await isSignatureValid(state, operation);
   return decodedOperationPayload.patches.reduce(applyPatch, state);
 };
 
 const recover = async (state, operation) => {
-  // If no previous create operation, or deleted
   if (!state) {
-    return state;
+    throw new Error('no create operation');
   }
-  const { kid } = operation.decodedOperation.header;
-  const recoveryKey = state.publicKey.find(pubKey => pubKey.id === kid);
-  if (!recoveryKey) {
-    return state;
-  }
-  const isSignatureValid = await verifyOperationSignature({
-    encodedOperationPayload: operation.decodedOperation.payload,
-    signature: operation.decodedOperation.signature,
-    publicKey: recoveryKey.publicKeyHex,
-  });
-  if (!isSignatureValid) {
-    return state;
-  }
+  await isSignatureValid(state, operation);
   const { didUniqueSuffix, newDidDocument } = operation.decodedOperationPayload;
   return {
     ...newDidDocument,
@@ -71,53 +94,89 @@ const recover = async (state, operation) => {
 };
 
 const deletE = async (state, operation) => {
-  // If no previous create operation, or already deleted
   if (!state) {
-    return state;
+    throw new Error('no create operation');
   }
-  const { kid } = operation.decodedOperation.header;
-  const signingKey = state.publicKey.find(pubKey => pubKey.id === kid);
-  if (!signingKey) {
-    return state;
-  }
-  const isSignatureValid = await verifyOperationSignature({
-    encodedOperationPayload: operation.decodedOperation.payload,
-    signature: operation.decodedOperation.signature,
-    publicKey: signingKey.publicKeyHex,
-  });
-  if (!isSignatureValid) {
-    return state;
-  }
+  await isSignatureValid(state, operation);
   return undefined;
 };
 
-const applyOperation = async (state, operation) => {
+const applyOperation = async (state, operation, lastValidOperation) => {
   const type = operation.decodedOperation.header.operation;
-  switch (type) {
-    case 'create':
-      return create(state, operation);
-    case 'update':
-      return update(state, operation);
-    case 'recover':
-      return recover(state, operation);
-    case 'delete':
-      return deletE(state, operation);
-    default:
-      throw new Error('Operation type not handled', operation);
+  let newState = state;
+  try {
+    switch (type) {
+      case 'create':
+        newState = await create(state, operation, lastValidOperation);
+        break;
+      case 'update':
+        newState = await update(state, operation, lastValidOperation);
+        break;
+      case 'recover':
+        newState = await recover(state, operation);
+        break;
+      case 'delete':
+        newState = await deletE(state, operation);
+        break;
+      default:
+        console.warn('Operation type not handled', operation);
+    }
+    return { valid: true, newState };
+  } catch (e) {
+    return { valid: false, newState };
   }
 };
 
 const resolve = sidetree => async (did) => {
   const didUniqueSuffix = did.split(':').pop();
   const operations = await sidetree.db.readCollection(didUniqueSuffix);
-  // TODO test that
   // eslint-disable-next-line max-len
   operations.sort((op1, op2) => op1.transaction.transactionNumber - op2.transaction.transactionNumber);
-  // TODO operation validation
-  const didDocument = await operations
+  const createAndRecoverAndRevokeOperations = operations.filter((op) => {
+    const type = op.operation.decodedOperation.header.operation;
+    return ['create', 'recover', 'delete'].includes(type);
+  });
+  // Apply "full" operations first.
+  let lastValidFullOperation;
+  let didDocument = await createAndRecoverAndRevokeOperations
     .reduce((promise, operation) => {
-      return promise.then(acc => applyOperation(acc, operation.operation));
+      return promise.then(async (acc) => {
+        const { valid, newState } = await applyOperation(
+          acc, operation.operation, lastValidFullOperation,
+        );
+        if (valid) {
+          lastValidFullOperation = operation;
+        }
+        return newState;
+      });
     }, Promise.resolve(undefined));
+  // If no full operation found at all, the DID is not anchored.
+  if (lastValidFullOperation === undefined) {
+    return undefined;
+  }
+
+  // Get only update operations that came after the create or last recovery operation.
+  const lastFullOperationNumber = lastValidFullOperation.transaction.transactionNumber;
+  const updateOperations = operations.filter((op) => {
+    const type = op.operation.decodedOperation.header.operation;
+    return type === 'update' && op.transaction.transactionNumber > lastFullOperationNumber;
+  });
+
+  // Apply "update/delta" operations.
+  let lastValidOperation = lastValidFullOperation;
+  didDocument = await updateOperations
+    .reduce((promise, operation) => {
+      return promise.then(async (acc) => {
+        const { valid, newState } = await applyOperation(
+          acc, operation.operation, lastValidOperation,
+        );
+        if (valid) {
+          lastValidOperation = operation;
+        }
+        return newState;
+      });
+    }, Promise.resolve(didDocument));
+
   return didDocument;
 };
 

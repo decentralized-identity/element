@@ -15,7 +15,6 @@ const sidetree = getTestSideTree();
 const mnemonic = element.MnemonicKeySystem.generateMnemonic();
 const mks = new element.MnemonicKeySystem(mnemonic);
 
-// TODO: Add support for writing multiple operations in the same transaction
 describe('create', () => {
   let createPayload;
   let transaction;
