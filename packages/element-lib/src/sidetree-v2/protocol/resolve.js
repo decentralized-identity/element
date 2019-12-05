@@ -40,8 +40,30 @@ const applyPatch = (didDocument, patch) => {
   return didDocument;
 };
 
-const update = (state, operation) => {
+const update = async (state, operation, lastValidFullOperation) => {
+  const previousOperationHash = lastValidFullOperation.operation.operationHash;
+  if (previousOperationHash === undefined || state === undefined) {
+    throw new Error('no valid previous operation');
+  }
+
   const { decodedOperationPayload } = operation;
+  if (decodedOperationPayload.previousOperationHash !== previousOperationHash) {
+    throw new Error('previous operation hash should match the hash of the latest valid operation');
+  }
+
+  const signingKey = state.publicKey.find(pubKey => pubKey.id === '#primary');
+  if (!signingKey) {
+    throw new Error('signing key not found');
+  }
+
+  const isSignatureValid = await verifyOperationSignature({
+    encodedOperationPayload: operation.decodedOperation.payload,
+    signature: operation.decodedOperation.signature,
+    publicKey: signingKey.publicKeyHex,
+  });
+  if (!isSignatureValid) {
+    throw new Error('signature is not valid');
+  }
   return decodedOperationPayload.patches.reduce(applyPatch, state);
 };
 
@@ -89,7 +111,7 @@ const deletE = async (state, operation) => {
   return undefined;
 };
 
-const applyOperation = async (state, operation) => {
+const applyOperation = async (state, operation, lastValidFullOperation) => {
   const type = operation.decodedOperation.header.operation;
   let newState = state;
   try {
@@ -98,7 +120,7 @@ const applyOperation = async (state, operation) => {
         newState = await create(state, operation);
         break;
       case 'update':
-        newState = await update(state, operation);
+        newState = await update(state, operation, lastValidFullOperation);
         break;
       case 'recover':
         newState = await recover(state, operation);
@@ -121,7 +143,6 @@ const resolve = sidetree => async (did) => {
   // TODO test that
   // eslint-disable-next-line max-len
   operations.sort((op1, op2) => op1.transaction.transactionNumber - op2.transaction.transactionNumber);
-  // TODO operation validation
   const createAndRecoverAndRevokeOperations = operations.filter((op) => {
     const type = op.operation.decodedOperation.header.operation;
     return ['create', 'recover', 'delete'].includes(type);
@@ -131,6 +152,7 @@ const resolve = sidetree => async (did) => {
   let didDocument = await createAndRecoverAndRevokeOperations
     .reduce((promise, operation) => {
       return promise.then(async (acc) => {
+        // TODO operation validation
         const { valid, newState } = await applyOperation(acc, operation.operation);
         if (valid) {
           lastValidFullOperation = operation;
@@ -151,10 +173,16 @@ const resolve = sidetree => async (did) => {
   });
 
   // Apply "update/delta" operations.
+  let lastValidOperation = lastValidFullOperation;
   didDocument = await updateOperations
     .reduce((promise, operation) => {
       return promise.then(async (acc) => {
-        const { newState } = await applyOperation(acc, operation.operation);
+        const { valid, newState } = await applyOperation(
+          acc, operation.operation, lastValidOperation,
+        );
+        if (valid) {
+          lastValidOperation = operation;
+        }
         return newState;
       });
     }, Promise.resolve(didDocument));
