@@ -82,6 +82,7 @@ describe('resolve', () => {
     let recoveryKey;
     let didUniqueSuffix;
     let lastOperation;
+    let createPayload;
 
     const getLastOperation = async () => {
       const operations = await sidetree.db.readCollection(didUniqueSuffix);
@@ -94,7 +95,7 @@ describe('resolve', () => {
       primaryKey = await mks.getKeyForPurpose('primary', 0);
       recoveryKey = await mks.getKeyForPurpose('recovery', 0);
       const didDocumentModel = getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
-      const createPayload = await getCreatePayload(didDocumentModel, primaryKey);
+      createPayload = await getCreatePayload(didDocumentModel, primaryKey);
       didUniqueSuffix = getDidUniqueSuffix(createPayload);
       const createTransaction = await create(sidetree)(createPayload);
       await syncTransaction(sidetree, createTransaction);
@@ -185,6 +186,14 @@ describe('resolve', () => {
       const transaction = await create(sidetree)(payload);
       await syncTransaction(sidetree, transaction);
       lastOperation = await getLastOperation();
+      const didDocument = await resolve(sidetree)(didUniqueSuffix);
+      expect(didDocument.publicKey).toHaveLength(3);
+      expect(didDocument.publicKey[0].publicKeyHex).toBe(recoveryKey.publicKey);
+    });
+
+    it('should not process another create operation after update', async () => {
+      const createTransaction = await create(sidetree)(createPayload);
+      await syncTransaction(sidetree, createTransaction);
       const didDocument = await resolve(sidetree)(didUniqueSuffix);
       expect(didDocument.publicKey).toHaveLength(3);
       expect(didDocument.publicKey[0].publicKeyHex).toBe(recoveryKey.publicKey);
