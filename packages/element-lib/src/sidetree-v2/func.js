@@ -97,7 +97,7 @@ const syncTransaction = async (sidetree, transaction) => {
         operation,
       };
     });
-    const writeOperationToCache = op => sidetree.db.write(`operation:${op.operation.operationHash}`, op);
+    const writeOperationToCache = op => sidetree.db.write(`operation:${op.operation.operationHash}${Date.now()}`, op);
     return executeSequentially(
       writeOperationToCache,
       operationsByDidUniqueSuffixes,
