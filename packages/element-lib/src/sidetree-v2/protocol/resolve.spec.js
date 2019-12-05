@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 const create = require('./create');
 const resolve = require('./resolve');
 const { getTestSideTree } = require('../test-utils');
