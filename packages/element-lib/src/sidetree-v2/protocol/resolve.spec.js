@@ -172,7 +172,7 @@ describe('resolve', () => {
       expect(didDocument.publicKey[2].publicKeyHex).toBe(newKey3.publicKey);
     });
 
-    it('should fail if the patch is removing the recovery key', async () => {
+    it('should not process a patch removing the recovery key', async () => {
       const payload = await getUpdatePayloadForRemovingAKey(lastOperation, '#recovery', primaryKey.privateKey);
       const transaction = await create(sidetree)(payload);
       await syncTransaction(sidetree, transaction);
