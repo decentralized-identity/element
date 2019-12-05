@@ -122,16 +122,43 @@ const resolve = sidetree => async (did) => {
   // eslint-disable-next-line max-len
   operations.sort((op1, op2) => op1.transaction.transactionNumber - op2.transaction.transactionNumber);
   // TODO operation validation
-  const didDocument = await operations
+  const createAndRecoverAndRevokeOperations = operations.filter((op) => {
+    const type = op.operation.decodedOperation.header.operation;
+    return ['create', 'recover', 'delete'].includes(type);
+  });
+  // Apply "full" operations first.
+  let lastValidFullOperation;
+  let didDocument = await createAndRecoverAndRevokeOperations
     .reduce((promise, operation) => {
       return promise.then(async (acc) => {
-        // TODO: use valid
-
-        // eslint-disable-next-line no-unused-vars
         const { valid, newState } = await applyOperation(acc, operation.operation);
+        if (valid) {
+          lastValidFullOperation = operation;
+        }
         return newState;
       });
     }, Promise.resolve(undefined));
+  // If no full operation found at all, the DID is not anchored.
+  if (lastValidFullOperation === undefined) {
+    return undefined;
+  }
+
+  // Get only update operations that came after the create or last recovery operation.
+  const lastFullOperationNumber = lastValidFullOperation.transaction.transactionNumber;
+  const updateOperations = operations.filter((op) => {
+    const type = op.operation.decodedOperation.header.operation;
+    return type === 'update' && op.transaction.transactionNumber > lastFullOperationNumber;
+  });
+
+  // Apply "update/delta" operations.
+  didDocument = await updateOperations
+    .reduce((promise, operation) => {
+      return promise.then(async (acc) => {
+        const { newState } = await applyOperation(acc, operation.operation);
+        return newState;
+      });
+    }, Promise.resolve(didDocument));
+
   return didDocument;
 };
 
