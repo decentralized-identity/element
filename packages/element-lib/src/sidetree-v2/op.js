@@ -58,7 +58,7 @@ const getUpdatePayloadForAddingAKey = async (
   const requestBody = {
     header: {
       operation: 'update',
-      kid: 'primary',
+      kid: '#primary',
       alg: 'ES256K',
     },
     payload: encodedPayload,
@@ -85,7 +85,7 @@ const getUpdatePayloadForRemovingAKey = async (
   const requestBody = {
     header: {
       operation: 'update',
-      kid: 'primary',
+      kid: '#primary',
       alg: 'ES256K',
     },
     payload: encodedPayload,

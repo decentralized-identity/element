@@ -155,7 +155,7 @@ describe('resolve', () => {
       const requestBody = {
         header: {
           operation: 'update',
-          kid: 'primary',
+          kid: '#primary',
           alg: 'ES256K',
         },
         payload: encodedPayload,
