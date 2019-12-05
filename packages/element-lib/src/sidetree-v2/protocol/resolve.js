@@ -46,14 +46,13 @@ const update = (state, operation) => {
 };
 
 const recover = async (state, operation) => {
-  // If no previous create operation, or deleted
   if (!state) {
-    return state;
+    throw new Error('no create operation');
   }
   const { kid } = operation.decodedOperation.header;
   const recoveryKey = state.publicKey.find(pubKey => pubKey.id === kid);
   if (!recoveryKey) {
-    return state;
+    throw new Error('recovery key not found');
   }
   const isSignatureValid = await verifyOperationSignature({
     encodedOperationPayload: operation.decodedOperation.payload,
@@ -61,7 +60,7 @@ const recover = async (state, operation) => {
     publicKey: recoveryKey.publicKeyHex,
   });
   if (!isSignatureValid) {
-    return state;
+    throw new Error('signature is not valid');
   }
   const { didUniqueSuffix, newDidDocument } = operation.decodedOperationPayload;
   return {
@@ -71,14 +70,13 @@ const recover = async (state, operation) => {
 };
 
 const deletE = async (state, operation) => {
-  // If no previous create operation, or already deleted
   if (!state) {
-    return state;
+    throw new Error('no create operation');
   }
   const { kid } = operation.decodedOperation.header;
   const signingKey = state.publicKey.find(pubKey => pubKey.id === kid);
   if (!signingKey) {
-    return state;
+    throw new Error('signing key not found');
   }
   const isSignatureValid = await verifyOperationSignature({
     encodedOperationPayload: operation.decodedOperation.payload,
@@ -86,24 +84,34 @@ const deletE = async (state, operation) => {
     publicKey: signingKey.publicKeyHex,
   });
   if (!isSignatureValid) {
-    return state;
+    throw new Error('signature is not valid');
   }
   return undefined;
 };
 
 const applyOperation = async (state, operation) => {
   const type = operation.decodedOperation.header.operation;
-  switch (type) {
-    case 'create':
-      return create(state, operation);
-    case 'update':
-      return update(state, operation);
-    case 'recover':
-      return recover(state, operation);
-    case 'delete':
-      return deletE(state, operation);
-    default:
-      throw new Error('Operation type not handled', operation);
+  let newState = state;
+  try {
+    switch (type) {
+      case 'create':
+        newState = await create(state, operation);
+        break;
+      case 'update':
+        newState = await update(state, operation);
+        break;
+      case 'recover':
+        newState = await recover(state, operation);
+        break;
+      case 'delete':
+        newState = await deletE(state, operation);
+        break;
+      default:
+        console.warn('Operation type not handled', operation);
+    }
+    return { valid: true, newState };
+  } catch (e) {
+    return { valid: false, newState };
   }
 };
 
@@ -116,7 +124,13 @@ const resolve = sidetree => async (did) => {
   // TODO operation validation
   const didDocument = await operations
     .reduce((promise, operation) => {
-      return promise.then(acc => applyOperation(acc, operation.operation));
+      return promise.then(async (acc) => {
+        // TODO: use valid
+
+        // eslint-disable-next-line no-unused-vars
+        const { valid, newState } = await applyOperation(acc, operation.operation);
+        return newState;
+      });
     }, Promise.resolve(undefined));
   return didDocument;
 };
