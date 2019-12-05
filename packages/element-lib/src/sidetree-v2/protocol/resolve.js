@@ -133,7 +133,6 @@ const resolve = sidetree => async (did) => {
   let didDocument = await createAndRecoverAndRevokeOperations
     .reduce((promise, operation) => {
       return promise.then(async (acc) => {
-        // TODO operation validation
         const { valid, newState } = await applyOperation(acc, operation.operation);
         if (valid) {
           lastValidFullOperation = operation;
