@@ -119,6 +119,24 @@ describe('resolve', () => {
       lastOperation = await getLastOperation();
     });
 
+    it('should not work if specified kid does not exist in did document', async () => {
+      const newKey = await mks.getKeyForPurpose('primary', 1);
+      const updatePayload = await getUpdatePayloadForAddingAKey(lastOperation, '#newKey', newKey.publicKey, primaryKey.privateKey);
+      const invalidUpdatePayload = {
+        ...updatePayload,
+        header: { ...updatePayload.header, kid: '#primaryy' },
+      };
+      const didDocument = await getDidDocumentForPayload(invalidUpdatePayload, didUniqueSuffix);
+      expect(didDocument.publicKey).toHaveLength(2);
+    });
+
+    it('should not work if signature is not valid', async () => {
+      const newKey = await mks.getKeyForPurpose('primary', 1);
+      const invalidUpdatePayload = await getUpdatePayloadForAddingAKey(lastOperation, '#newKey', newKey.publicKey, recoveryKey.privateKey);
+      const didDocument = await getDidDocumentForPayload(invalidUpdatePayload, didUniqueSuffix);
+      expect(didDocument.publicKey).toHaveLength(2);
+    });
+
     it('should add a new key', async () => {
       const newKey = await mks.getKeyForPurpose('primary', 1);
       const payload = await getUpdatePayloadForAddingAKey(lastOperation, '#newKey', newKey.publicKey, primaryKey.privateKey);
