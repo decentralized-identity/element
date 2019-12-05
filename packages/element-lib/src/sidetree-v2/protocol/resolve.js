@@ -40,8 +40,8 @@ const applyPatch = (didDocument, patch) => {
   return didDocument;
 };
 
-const update = async (state, operation, lastValidFullOperation) => {
-  const previousOperationHash = lastValidFullOperation.operation.operationHash;
+const update = async (state, operation, lastValidOperation) => {
+  const previousOperationHash = lastValidOperation.operation.operationHash;
   if (previousOperationHash === undefined || state === undefined) {
     throw new Error('no valid previous operation');
   }
@@ -111,7 +111,7 @@ const deletE = async (state, operation) => {
   return undefined;
 };
 
-const applyOperation = async (state, operation, lastValidFullOperation) => {
+const applyOperation = async (state, operation, lastValidOperation) => {
   const type = operation.decodedOperation.header.operation;
   let newState = state;
   try {
@@ -120,7 +120,7 @@ const applyOperation = async (state, operation, lastValidFullOperation) => {
         newState = await create(state, operation);
         break;
       case 'update':
-        newState = await update(state, operation, lastValidFullOperation);
+        newState = await update(state, operation, lastValidOperation);
         break;
       case 'recover':
         newState = await recover(state, operation);
