@@ -1,10 +1,28 @@
 /* eslint-disable arrow-body-style */
 const { payloadToHash, verifyOperationSignature } = require('../func');
 
-const create = (state, operation) => ({
-  ...operation.decodedOperationPayload,
-  id: `did:elem:${payloadToHash(operation.decodedOperationPayload)}`,
-});
+const isSignatureValid = async (didDocument, operation) => {
+  const { kid } = operation.decodedOperation.header;
+  const signingKey = didDocument.publicKey.find(pubKey => pubKey.id === kid);
+  if (!signingKey) {
+    throw new Error('signing key not found');
+  }
+  const valid = await verifyOperationSignature({
+    encodedOperationPayload: operation.decodedOperation.payload,
+    signature: operation.decodedOperation.signature,
+    publicKey: signingKey.publicKeyHex,
+  });
+  if (!valid) {
+    throw new Error('signature is not valid');
+  }
+};
+
+const create = async (state, operation) => {
+  return {
+    ...operation.decodedOperationPayload,
+    id: `did:elem:${payloadToHash(operation.decodedOperationPayload)}`,
+  };
+};
 
 const applyPatch = (didDocument, patch) => {
   if (patch.action === 'add-public-keys') {
@@ -51,19 +69,6 @@ const update = async (state, operation, lastValidOperation) => {
     throw new Error('previous operation hash should match the hash of the latest valid operation');
   }
 
-  const signingKey = state.publicKey.find(pubKey => pubKey.id === '#primary');
-  if (!signingKey) {
-    throw new Error('signing key not found');
-  }
-
-  const isSignatureValid = await verifyOperationSignature({
-    encodedOperationPayload: operation.decodedOperation.payload,
-    signature: operation.decodedOperation.signature,
-    publicKey: signingKey.publicKeyHex,
-  });
-  if (!isSignatureValid) {
-    throw new Error('signature is not valid');
-  }
   return decodedOperationPayload.patches.reduce(applyPatch, state);
 };
 
@@ -71,19 +76,7 @@ const recover = async (state, operation) => {
   if (!state) {
     throw new Error('no create operation');
   }
-  const { kid } = operation.decodedOperation.header;
-  const recoveryKey = state.publicKey.find(pubKey => pubKey.id === kid);
-  if (!recoveryKey) {
-    throw new Error('recovery key not found');
-  }
-  const isSignatureValid = await verifyOperationSignature({
-    encodedOperationPayload: operation.decodedOperation.payload,
-    signature: operation.decodedOperation.signature,
-    publicKey: recoveryKey.publicKeyHex,
-  });
-  if (!isSignatureValid) {
-    throw new Error('signature is not valid');
-  }
+  await isSignatureValid(state, operation);
   const { didUniqueSuffix, newDidDocument } = operation.decodedOperationPayload;
   return {
     ...newDidDocument,
@@ -95,19 +88,7 @@ const deletE = async (state, operation) => {
   if (!state) {
     throw new Error('no create operation');
   }
-  const { kid } = operation.decodedOperation.header;
-  const signingKey = state.publicKey.find(pubKey => pubKey.id === kid);
-  if (!signingKey) {
-    throw new Error('signing key not found');
-  }
-  const isSignatureValid = await verifyOperationSignature({
-    encodedOperationPayload: operation.decodedOperation.payload,
-    signature: operation.decodedOperation.signature,
-    publicKey: signingKey.publicKeyHex,
-  });
-  if (!isSignatureValid) {
-    throw new Error('signature is not valid');
-  }
+  await isSignatureValid(state, operation);
   return undefined;
 };
 
