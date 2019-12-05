@@ -7,6 +7,7 @@ const isSignatureValid = async (didDocument, operation) => {
   if (!signingKey) {
     throw new Error('signing key not found');
   }
+
   const valid = await verifyOperationSignature({
     encodedOperationPayload: operation.decodedOperation.payload,
     signature: operation.decodedOperation.signature,

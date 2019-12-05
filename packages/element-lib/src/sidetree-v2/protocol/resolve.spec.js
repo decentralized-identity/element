@@ -20,6 +20,12 @@ const { MnemonicKeySystem } = require('../../../index');
 
 const sidetree = getTestSideTree();
 
+const getDidDocumentForPayload = async (payload, didUniqueSuffix) => {
+  const transaction = await create(sidetree)(payload);
+  await syncTransaction(sidetree, transaction);
+  const didDocument = await resolve(sidetree)(didUniqueSuffix);
+  return didDocument;
+};
 
 describe('resolve', () => {
   describe('create', () => {
@@ -29,19 +35,30 @@ describe('resolve', () => {
     let didUniqueSuffix;
     let primaryKey;
     let recoveryKey;
+    let didDocumentModel;
 
     beforeAll(async () => {
       primaryKey = await mks.getKeyForPurpose('primary', 0);
       recoveryKey = await mks.getKeyForPurpose('recovery', 0);
-      const didDocumentModel = getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
+      didDocumentModel = getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
       createPayload = await getCreatePayload(didDocumentModel, primaryKey);
       createTransaction = await create(sidetree)(createPayload);
       didUniqueSuffix = getDidUniqueSuffix(createPayload);
     });
 
-    it('cache should be empty', async () => {
-      const operations = await sidetree.db.readCollection(didUniqueSuffix);
-      expect(operations).toHaveLength(0);
+    it('should not work if specified kid does not exist in did document', async () => {
+      const invalidCreatePayload = {
+        ...createPayload,
+        header: { ...createPayload.header, kid: '#primaryy' },
+      };
+      const didDocument = await getDidDocumentForPayload(invalidCreatePayload, didUniqueSuffix);
+      expect(didDocument).not.toBeDefined();
+    });
+
+    it('should not work if signature is not valid', async () => {
+      const invalidCreatePayload = await getCreatePayload(didDocumentModel, recoveryKey);
+      const didDocument = await getDidDocumentForPayload(invalidCreatePayload, didUniqueSuffix);
+      expect(didDocument).not.toBeDefined();
     });
 
     it('should not be resolveable before sync', async () => {
@@ -61,7 +78,7 @@ describe('resolve', () => {
 
     it('should populate the cache', async () => {
       const operations = await sidetree.db.readCollection(didUniqueSuffix);
-      expect(operations).toHaveLength(1);
+      expect(operations.length >= 1).toBeTruthy();
       expect(operations[0].id).toBeDefined();
       expect(operations[0].type).toBeDefined();
       expect(operations[0].didUniqueSuffix).toBeDefined();
