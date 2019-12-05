@@ -69,6 +69,7 @@ const update = async (state, operation, lastValidOperation) => {
     throw new Error('previous operation hash should match the hash of the latest valid operation');
   }
 
+  await isSignatureValid(state, operation);
   return decodedOperationPayload.patches.reduce(applyPatch, state);
 };
 
