@@ -17,7 +17,25 @@ const isSignatureValid = async (didDocument, operation) => {
   }
 };
 
-const create = async (state, operation) => {
+const create = async (state, operation, lastValidOperation) => {
+  const previousOperationHash = lastValidOperation && lastValidOperation.operation.operationHash;
+  if (previousOperationHash !== undefined || state) {
+    throw new Error('cannot have another operation before a create operation');
+  }
+
+  console.log(operation);
+  // const originalDidDocument = await Document.from(operation.encodedPayload, this.didMethodName, ProtocolParameters.hashAlgorithmInMultihashCode);
+  // const signingKey = Document.getPublicKey(originalDidDocument!, operation.signingKeyId);
+
+  // if (!signingKey) {
+  //   return false;
+  // }
+
+  // if (!(await operation.verifySignature(signingKey))) {
+  //   return false;
+  // }
+
+  // didDocumentReference.didDocument = originalDidDocument;
   return {
     ...operation.decodedOperationPayload,
     id: `did:elem:${payloadToHash(operation.decodedOperationPayload)}`,
@@ -99,7 +117,7 @@ const applyOperation = async (state, operation, lastValidOperation) => {
   try {
     switch (type) {
       case 'create':
-        newState = await create(state, operation);
+        newState = await create(state, operation, lastValidOperation);
         break;
       case 'update':
         newState = await update(state, operation, lastValidOperation);
@@ -134,7 +152,9 @@ const resolve = sidetree => async (did) => {
   let didDocument = await createAndRecoverAndRevokeOperations
     .reduce((promise, operation) => {
       return promise.then(async (acc) => {
-        const { valid, newState } = await applyOperation(acc, operation.operation);
+        const { valid, newState } = await applyOperation(
+          acc, operation.operation, lastValidFullOperation,
+        );
         if (valid) {
           lastValidFullOperation = operation;
         }
