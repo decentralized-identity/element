@@ -2,6 +2,7 @@
 const base64url = require('base64url');
 const crypto = require('crypto');
 const secp256k1 = require('secp256k1');
+const multihashes = require('multihashes');
 // TODO: remove schema dependency
 const schema = require('../schema');
 
@@ -23,12 +24,15 @@ const decodeJson = encodedPayload => JSON.parse(base64url.decode(encodedPayload)
 
 const payloadToHash = (payload) => {
   const encodedPayload = encodeJson(payload);
-  return base64url.encode(
-    crypto
-      .createHash('sha256')
-      .update(base64url.toBuffer(encodedPayload))
-      .digest(),
-  );
+  const encodedOperationPayloadBuffer = Buffer.from(encodedPayload);
+  const hash = crypto
+    .createHash('sha256')
+    .update(encodedOperationPayloadBuffer)
+    .digest();
+  const hashAlgorithmName = multihashes.codes[18]; // 18 is code for sha256
+  const multihash = multihashes.encode(hash, hashAlgorithmName);
+  const encodedMultihash = base64url.encode(multihash);
+  return encodedMultihash;
 };
 
 const getDidUniqueSuffix = (operation) => {
