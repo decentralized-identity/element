@@ -16,19 +16,26 @@ const getDidDocumentModel = (primaryPublicKey, recoveryPublicKey) => ({
   ],
 });
 
-const getCreatePayload = async (didDocumentModel, primaryKey) => {
-  const encodedPayload = encodeJson(didDocumentModel);
-  const signature = signEncodedPayload(encodedPayload, primaryKey.privateKey);
-  const requestBody = {
-    header: {
-      operation: 'create',
-      kid: '#primary',
-      alg: 'ES256K',
-    },
+const makeSignedOperation = (header, payload, privateKey) => {
+  const encodedHeader = encodeJson(header);
+  const encodedPayload = encodeJson(payload);
+  const signature = signEncodedPayload(encodedHeader, encodedPayload, privateKey);
+  const operation = {
+    protected: encodedHeader,
     payload: encodedPayload,
     signature,
   };
-  return requestBody;
+  return operation;
+};
+
+const getCreatePayload = async (didDocumentModel, primaryKey) => {
+  // Create the encoded protected header.
+  const header = {
+    operation: 'create',
+    kid: '#primary',
+    alg: 'ES256K',
+  };
+  return makeSignedOperation(header, didDocumentModel, primaryKey.privateKey);
 };
 
 const getUpdatePayloadForAddingAKey = async (
@@ -53,18 +60,12 @@ const getUpdatePayloadForAddingAKey = async (
       },
     ],
   };
-  const encodedPayload = encodeJson(payload);
-  const signature = signEncodedPayload(encodedPayload, primaryPrivateKey);
-  const requestBody = {
-    header: {
-      operation: 'update',
-      kid: '#primary',
-      alg: 'ES256K',
-    },
-    payload: encodedPayload,
-    signature,
+  const header = {
+    operation: 'update',
+    kid: '#primary',
+    alg: 'ES256K',
   };
-  return requestBody;
+  return makeSignedOperation(header, payload, primaryPrivateKey);
 };
 
 const getUpdatePayloadForRemovingAKey = async (
@@ -80,18 +81,12 @@ const getUpdatePayloadForRemovingAKey = async (
       publicKeys: [kid],
     }],
   };
-  const encodedPayload = encodeJson(payload);
-  const signature = signEncodedPayload(encodedPayload, primaryPrivateKey);
-  const requestBody = {
-    header: {
-      operation: 'update',
-      kid: '#primary',
-      alg: 'ES256K',
-    },
-    payload: encodedPayload,
-    signature,
+  const header = {
+    operation: 'update',
+    kid: '#primary',
+    alg: 'ES256K',
   };
-  return requestBody;
+  return makeSignedOperation(header, payload, primaryPrivateKey);
 };
 
 const getRecoverPayload = async (didUniqueSuffix, newDidDocument, recoveryPrivateKey) => {
@@ -99,37 +94,27 @@ const getRecoverPayload = async (didUniqueSuffix, newDidDocument, recoveryPrivat
     didUniqueSuffix,
     newDidDocument,
   };
-  const encodedPayload = encodeJson(payload);
-  const signature = signEncodedPayload(encodedPayload, recoveryPrivateKey);
-  const requestBody = {
-    header: {
-      operation: 'recover',
-      kid: '#recovery',
-      alg: 'ES256K',
-    },
-    payload: encodedPayload,
-    signature,
+  const header = {
+    operation: 'recover',
+    kid: '#recovery',
+    alg: 'ES256K',
   };
-  return requestBody;
+  return makeSignedOperation(header, payload, recoveryPrivateKey);
 };
 
 const getDeletePayload = async (didUniqueSuffix, recoveryPrivateKey) => {
-  const encodedPayload = encodeJson({ didUniqueSuffix });
-  const signature = signEncodedPayload(encodedPayload, recoveryPrivateKey);
-  const requestBody = {
-    header: {
-      operation: 'delete',
-      kid: '#recovery',
-      alg: 'ES256K',
-    },
-    payload: encodedPayload,
-    signature,
+  const header = {
+    operation: 'delete',
+    kid: '#recovery',
+    alg: 'ES256K',
   };
-  return requestBody;
+  const payload = { didUniqueSuffix };
+  return makeSignedOperation(header, payload, recoveryPrivateKey);
 };
 
 module.exports = {
   getDidDocumentModel,
+  makeSignedOperation,
   getCreatePayload,
   getUpdatePayloadForAddingAKey,
   getUpdatePayloadForRemovingAKey,

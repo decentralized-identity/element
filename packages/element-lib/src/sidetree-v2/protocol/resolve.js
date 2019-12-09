@@ -2,17 +2,19 @@
 const { payloadToHash, verifyOperationSignature } = require('../func');
 
 const isSignatureValid = async (didDocument, operation) => {
-  const { kid } = operation.decodedOperation.header;
+  // TODO
+  const { kid } = operation.decodedHeader;
   const signingKey = didDocument.publicKey.find(pubKey => pubKey.id === kid);
   if (!signingKey) {
     throw new Error('signing key not found');
   }
 
-  const valid = await verifyOperationSignature({
-    encodedOperationPayload: operation.decodedOperation.payload,
-    signature: operation.decodedOperation.signature,
-    publicKey: signingKey.publicKeyHex,
-  });
+  const valid = await verifyOperationSignature(
+    operation.decodedOperation.protected,
+    operation.decodedOperation.payload,
+    operation.decodedOperation.signature,
+    signingKey.publicKeyHex,
+  );
   if (!valid) {
     throw new Error('signature is not valid');
   }
@@ -102,7 +104,8 @@ const deletE = async (state, operation) => {
 };
 
 const applyOperation = async (state, operation, lastValidOperation) => {
-  const type = operation.decodedOperation.header.operation;
+  // TODO
+  const type = operation.decodedHeader.operation;
   let newState = state;
   try {
     switch (type) {
@@ -133,7 +136,7 @@ const resolve = sidetree => async (did) => {
   // eslint-disable-next-line max-len
   operations.sort((op1, op2) => op1.transaction.transactionNumber - op2.transaction.transactionNumber);
   const createAndRecoverAndRevokeOperations = operations.filter((op) => {
-    const type = op.operation.decodedOperation.header.operation;
+    const type = op.operation.decodedHeader.operation;
     return ['create', 'recover', 'delete'].includes(type);
   });
   // Apply "full" operations first.
@@ -158,7 +161,7 @@ const resolve = sidetree => async (did) => {
   // Get only update operations that came after the create or last recovery operation.
   const lastFullOperationNumber = lastValidFullOperation.transaction.transactionNumber;
   const updateOperations = operations.filter((op) => {
-    const type = op.operation.decodedOperation.header.operation;
+    const type = op.operation.decodedHeader.operation;
     return type === 'update' && op.transaction.transactionNumber > lastFullOperationNumber;
   });
 

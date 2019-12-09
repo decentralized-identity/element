@@ -1,4 +1,5 @@
 const element = require('../../index');
+const { encodeJson, decodeJson } = require('./func');
 
 const getTestSideTree = () => {
   const db = new element.adapters.database.ElementRXDBAdapter({
@@ -19,6 +20,19 @@ const getTestSideTree = () => {
   return new element.SidetreeV2({ db, storage, blockchain });
 };
 
+const changeKid = (payload, newKid) => {
+  const header = decodeJson(payload.protected);
+  const newHeader = {
+    ...header,
+    kid: newKid,
+  };
+  return {
+    ...payload,
+    protected: encodeJson(newHeader),
+  };
+};
+
 module.exports = {
   getTestSideTree,
+  changeKid,
 };

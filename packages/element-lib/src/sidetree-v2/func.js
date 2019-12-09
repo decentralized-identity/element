@@ -2,6 +2,7 @@
 const base64url = require('base64url');
 const crypto = require('crypto');
 const secp256k1 = require('secp256k1');
+const multihashes = require('multihashes');
 // TODO: remove schema dependency
 const schema = require('../schema');
 
@@ -23,17 +24,21 @@ const decodeJson = encodedPayload => JSON.parse(base64url.decode(encodedPayload)
 
 const payloadToHash = (payload) => {
   const encodedPayload = encodeJson(payload);
-  return base64url.encode(
-    crypto
-      .createHash('sha256')
-      .update(base64url.toBuffer(encodedPayload))
-      .digest(),
-  );
+  const encodedOperationPayloadBuffer = Buffer.from(encodedPayload);
+  const hash = crypto
+    .createHash('sha256')
+    .update(encodedOperationPayloadBuffer)
+    .digest();
+  const hashAlgorithmName = multihashes.codes[18]; // 18 is code for sha256
+  const multihash = multihashes.encode(hash, hashAlgorithmName);
+  const encodedMultihash = base64url.encode(multihash);
+  return encodedMultihash;
 };
 
 const getDidUniqueSuffix = (operation) => {
   const decodedPayload = decodeJson(operation.payload);
-  switch (operation.header.operation) {
+  const header = decodeJson(operation.protected);
+  switch (header.operation) {
     case 'create':
       return payloadToHash(decodedPayload);
     case 'update':
@@ -49,10 +54,12 @@ const batchFileToOperations = batchFile => batchFile.operations.map((op) => {
   const decodedOperation = decodeJson(op);
   const operationHash = payloadToHash(decodedOperation.payload);
   const decodedOperationPayload = decodeJson(decodedOperation.payload);
+  const decodedHeader = decodeJson(decodedOperation.protected);
   return {
     operationHash,
     decodedOperation,
     decodedOperationPayload,
+    decodedHeader,
   };
 });
 
@@ -125,27 +132,29 @@ const syncTransaction = async (sidetree, transaction) => {
   }
 };
 
-const signEncodedPayload = (encodedPayload, privateKeyHex) => {
-  const toBeSigned = `.${encodedPayload}`;
+// TODO check is signatures are the same as sidetree's
+const signEncodedPayload = (encodedHeader, encodedPayload, privateKey) => {
+  const toBeSigned = `${encodedHeader}.${encodedPayload}`;
   const hash = crypto
     .createHash('sha256')
     .update(Buffer.from(toBeSigned))
     .digest();
-  const privateKeyBuffer = Buffer.from(privateKeyHex, 'hex');
+  const privateKeyBuffer = Buffer.from(privateKey, 'hex');
   const signatureObject = secp256k1.sign(hash, privateKeyBuffer);
   const signature = base64url.encode(signatureObject.signature);
   return signature;
 };
 
-const verifyOperationSignature = async ({
-  encodedOperationPayload,
+const verifyOperationSignature = (
+  encodedHeader,
+  encodedPayload,
   signature,
   publicKey,
-}) => {
-  const toBeSigned = `.${encodedOperationPayload}`;
+) => {
+  const toBeVerified = `${encodedHeader}.${encodedPayload}`;
   const hash = crypto
     .createHash('sha256')
-    .update(Buffer.from(toBeSigned))
+    .update(Buffer.from(toBeVerified))
     .digest();
   const publicKeyBuffer = Buffer.from(publicKey, 'hex');
   return secp256k1.verify(hash, base64url.toBuffer(signature), publicKeyBuffer);
