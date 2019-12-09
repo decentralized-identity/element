@@ -58,6 +58,17 @@ describe('resolve', () => {
       expect(didDocument).not.toBeDefined();
     });
 
+    it('should not work if payload is not a valid did document model', async () => {
+      const invalidDidDocumentModel = {
+        ...didDocumentModel,
+        '@context': undefined,
+      };
+      const header = decodeJson(createPayload.protected);
+      const invalidCreatePayload = makeSignedOperation(header, invalidDidDocumentModel, primaryKey.privateKey);
+      const didDocument = await getDidDocumentForPayload(invalidCreatePayload, didUniqueSuffix);
+      expect(didDocument).not.toBeDefined();
+    });
+
     it('should not be resolveable before sync', async () => {
       const didDocument = await resolve(sidetree)(didUniqueSuffix);
       expect(didDocument).not.toBeDefined();
@@ -258,6 +269,26 @@ describe('resolve', () => {
 
     it('should not work if signature is not valid', async () => {
       const invalidRecoverPayload = await getRecoverPayload(didUniqueSuffix, didDocumentModel2, primaryKey.privateKey);
+      const didDocument = await getDidDocumentForPayload(invalidRecoverPayload, didUniqueSuffix);
+      expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey.publicKey);
+      expect(didDocument.publicKey[1].publicKeyHex).toBe(recoveryKey.publicKey);
+    });
+
+    it('should not work if payload is not a valid did document model', async () => {
+      const invalidDidDocumentModel = {
+        ...didDocumentModel2,
+        '@context': undefined,
+      };
+      const payload = {
+        didUniqueSuffix,
+        newDidDocument: invalidDidDocumentModel,
+      };
+      const header = {
+        operation: 'recover',
+        kid: '#recovery',
+        alg: 'ES256K',
+      };
+      const invalidRecoverPayload = makeSignedOperation(header, payload, recoveryKey.privateKey);
       const didDocument = await getDidDocumentForPayload(invalidRecoverPayload, didUniqueSuffix);
       expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey.publicKey);
       expect(didDocument.publicKey[1].publicKeyHex).toBe(recoveryKey.publicKey);
