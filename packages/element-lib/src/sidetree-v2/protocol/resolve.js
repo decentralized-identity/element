@@ -2,7 +2,6 @@
 const { payloadToHash, verifyOperationSignature } = require('../func');
 
 const isSignatureValid = async (didDocument, operation) => {
-  // TODO
   const { kid } = operation.decodedHeader;
   const signingKey = didDocument.publicKey.find(pubKey => pubKey.id === kid);
   if (!signingKey) {
@@ -104,7 +103,6 @@ const deletE = async (state, operation) => {
 };
 
 const applyOperation = async (state, operation, lastValidOperation) => {
-  // TODO
   const type = operation.decodedHeader.operation;
   let newState = state;
   try {

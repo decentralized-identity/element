@@ -33,9 +33,18 @@ const isKeyValid = (key) => {
   return valid;
 };
 
+const isDidDocumentModelValid = (didDocumentModel) => {
+  const valid = schema.validator.isValid(didDocumentModel, schema.schemas.sidetreeDidDocumentModel);
+  if (!valid) {
+    throw new Error('did document model is not valid', didDocumentModel);
+  }
+  return valid;
+};
+
 module.exports = {
   isTransactionValid,
   isAnchorFileValid,
   isBatchFileValid,
   isKeyValid,
+  isDidDocumentModelValid,
 };
