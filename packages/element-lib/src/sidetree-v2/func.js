@@ -132,8 +132,10 @@ const syncTransaction = async (sidetree, transaction) => {
   }
 };
 
-const signEncodedPayload = (encodedPayload, privateKeyHex) => {
-  const toBeSigned = `.${encodedPayload}`;
+// TODO check signatures
+// TODO
+const signEncodedPayload = (encodedHeader, encodedPayload, privateKeyHex) => {
+  const toBeSigned = `${encodedHeader}.${encodedPayload}`;
   const hash = crypto
     .createHash('sha256')
     .update(Buffer.from(toBeSigned))
@@ -144,15 +146,17 @@ const signEncodedPayload = (encodedPayload, privateKeyHex) => {
   return signature;
 };
 
-const verifyOperationSignature = async ({
+// TODO refactor args
+const verifyOperationSignature = ({
+  encodedHeader,
   encodedOperationPayload,
   signature,
   publicKey,
 }) => {
-  const toBeSigned = `.${encodedOperationPayload}`;
+  const toBeVerified = `${encodedHeader}.${encodedOperationPayload}`;
   const hash = crypto
     .createHash('sha256')
-    .update(Buffer.from(toBeSigned))
+    .update(Buffer.from(toBeVerified))
     .digest();
   const publicKeyBuffer = Buffer.from(publicKey, 'hex');
   return secp256k1.verify(hash, base64url.toBuffer(signature), publicKeyBuffer);
