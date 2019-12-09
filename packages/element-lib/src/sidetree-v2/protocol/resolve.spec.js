@@ -4,6 +4,7 @@ const resolve = require('./resolve');
 const { getTestSideTree, changeKid } = require('../test-utils');
 const {
   getDidDocumentModel,
+  makeSignedOperation,
   getCreatePayload,
   getUpdatePayloadForAddingAKey,
   getUpdatePayloadForRemovingAKey,
@@ -91,7 +92,7 @@ describe('resolve', () => {
     });
   });
 
-  describe.only('update', () => {
+  describe('update', () => {
     const mks = new MnemonicKeySystem(MnemonicKeySystem.generateMnemonic());
     let primaryKey;
     let recoveryKey;
@@ -120,10 +121,7 @@ describe('resolve', () => {
     it('should not work if specified kid does not exist in did document', async () => {
       const newKey = await mks.getKeyForPurpose('primary', 1);
       const updatePayload = await getUpdatePayloadForAddingAKey(lastOperation, '#newKey', newKey.publicKey, primaryKey.privateKey);
-      const invalidUpdatePayload = {
-        ...updatePayload,
-        header: { ...updatePayload.header, kid: '#primaryy' },
-      };
+      const invalidUpdatePayload = changeKid(updatePayload);
       const didDocument = await getDidDocumentForPayload(invalidUpdatePayload, didUniqueSuffix);
       expect(didDocument.publicKey).toHaveLength(2);
     });
@@ -184,18 +182,13 @@ describe('resolve', () => {
           },
         ],
       };
-      const encodedPayload = encodeJson(payload);
-      const signature = signEncodedPayload(encodedPayload, primaryKey.privateKey);
-      const requestBody = {
-        header: {
-          operation: 'update',
-          kid: '#primary',
-          alg: 'ES256K',
-        },
-        payload: encodedPayload,
-        signature,
+      const header = {
+        operation: 'update',
+        kid: '#primary',
+        alg: 'ES256K',
       };
-      const transaction = await create(sidetree)(requestBody);
+      const operation = makeSignedOperation(header, payload, primaryKey.privateKey);
+      const transaction = await create(sidetree)(operation);
       await syncTransaction(sidetree, transaction);
       lastOperation = await getLastOperation();
       const didDocument = await resolve(sidetree)(didUniqueSuffix);
@@ -257,10 +250,7 @@ describe('resolve', () => {
 
     it('should not work if specified kid does not exist in did document', async () => {
       const recoverPayload = await getRecoverPayload(didUniqueSuffix, didDocumentModel2, recoveryKey.privateKey);
-      const invalidRecoverPayload = {
-        ...recoverPayload,
-        header: { ...recoverPayload.header, kid: '#recoveryy' },
-      };
+      const invalidRecoverPayload = changeKid(recoverPayload, '#recoveryy');
       const didDocument = await getDidDocumentForPayload(invalidRecoverPayload, didUniqueSuffix);
       expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey.publicKey);
       expect(didDocument.publicKey[1].publicKeyHex).toBe(recoveryKey.publicKey);
@@ -311,10 +301,7 @@ describe('resolve', () => {
 
     it('should not work if specified kid does not exist in did document', async () => {
       const deletePayload = await getDeletePayload(didUniqueSuffix, recoveryKey.privateKey);
-      const invalidDeletePayload = {
-        ...deletePayload,
-        header: { ...deletePayload.header, kid: '#recoveryy' },
-      };
+      const invalidDeletePayload = changeKid(deletePayload, '#recoveryy');
       const didDocument = await getDidDocumentForPayload(invalidDeletePayload, didUniqueSuffix);
       expect(didDocument.id).toBeDefined();
     });
