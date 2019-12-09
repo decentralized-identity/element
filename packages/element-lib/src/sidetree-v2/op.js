@@ -42,7 +42,8 @@ const getCreatePayload = async (didDocumentModel, primaryKey) => {
 
 const getUpdatePayloadForAddingAKey = async (
   previousOperation,
-  newKid,
+  kid,
+  usage,
   newPublicKey,
   primaryPrivateKey,
 ) => {
@@ -54,7 +55,8 @@ const getUpdatePayloadForAddingAKey = async (
         action: 'add-public-keys',
         publicKeys: [
           {
-            id: newKid,
+            id: kid,
+            usage,
             type: 'Secp256k1VerificationKey2018',
             publicKeyHex: newPublicKey,
           },
