@@ -1,8 +1,8 @@
 /* eslint-disable arrow-body-style */
 const { payloadToHash, verifyOperationSignature } = require('../func');
+const { isDidDocumentModelValid, isKeyValid } = require('../validation');
 
 const isSignatureValid = async (didDocument, operation) => {
-  // TODO
   const { kid } = operation.decodedHeader;
   const signingKey = didDocument.publicKey.find(pubKey => pubKey.id === kid);
   if (!signingKey) {
@@ -27,6 +27,8 @@ const create = async (state, operation, lastValidOperation) => {
   }
 
   const originalDidDocument = operation.decodedOperationPayload;
+  // Validate did document model
+  isDidDocumentModelValid(originalDidDocument);
   await isSignatureValid(originalDidDocument, operation);
   return {
     ...operation.decodedOperationPayload,
@@ -37,6 +39,8 @@ const create = async (state, operation, lastValidOperation) => {
 const applyPatch = (didDocument, patch) => {
   if (patch.action === 'add-public-keys') {
     const publicKeySet = new Set(didDocument.publicKey.map(key => key.id));
+    // Validate keys
+    patch.publicKeys.forEach(isKeyValid);
     return patch.publicKeys.reduce((currentState, publicKey) => {
       if (!publicKeySet.has(publicKey)) {
         return {
@@ -89,6 +93,8 @@ const recover = async (state, operation) => {
   }
   await isSignatureValid(state, operation);
   const { didUniqueSuffix, newDidDocument } = operation.decodedOperationPayload;
+  // Validate did document model
+  isDidDocumentModelValid(newDidDocument);
   return {
     ...newDidDocument,
     id: `did:elem${didUniqueSuffix}`,
@@ -104,7 +110,6 @@ const deletE = async (state, operation) => {
 };
 
 const applyOperation = async (state, operation, lastValidOperation) => {
-  // TODO
   const type = operation.decodedHeader.operation;
   let newState = state;
   try {

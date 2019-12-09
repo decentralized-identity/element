@@ -58,6 +58,17 @@ describe('resolve', () => {
       expect(didDocument).not.toBeDefined();
     });
 
+    it('should not work if payload is not a valid did document model', async () => {
+      const invalidDidDocumentModel = {
+        ...didDocumentModel,
+        '@context': undefined,
+      };
+      const header = decodeJson(createPayload.protected);
+      const invalidCreatePayload = makeSignedOperation(header, invalidDidDocumentModel, primaryKey.privateKey);
+      const didDocument = await getDidDocumentForPayload(invalidCreatePayload, didUniqueSuffix);
+      expect(didDocument).not.toBeDefined();
+    });
+
     it('should not be resolveable before sync', async () => {
       const didDocument = await resolve(sidetree)(didUniqueSuffix);
       expect(didDocument).not.toBeDefined();
@@ -118,7 +129,7 @@ describe('resolve', () => {
 
     it('should not work if specified kid does not exist in did document', async () => {
       const newKey = await mks.getKeyForPurpose('primary', 1);
-      const updatePayload = await getUpdatePayloadForAddingAKey(lastOperation, '#newKey', newKey.publicKey, primaryKey.privateKey);
+      const updatePayload = await getUpdatePayloadForAddingAKey(lastOperation, '#newKey', 'signing', newKey.publicKey, primaryKey.privateKey);
       const invalidUpdatePayload = changeKid(updatePayload);
       const didDocument = await getDidDocumentForPayload(invalidUpdatePayload, didUniqueSuffix);
       expect(didDocument.publicKey).toHaveLength(2);
@@ -126,14 +137,14 @@ describe('resolve', () => {
 
     it('should not work if signature is not valid', async () => {
       const newKey = await mks.getKeyForPurpose('primary', 1);
-      const invalidUpdatePayload = await getUpdatePayloadForAddingAKey(lastOperation, '#newKey', newKey.publicKey, recoveryKey.privateKey);
+      const invalidUpdatePayload = await getUpdatePayloadForAddingAKey(lastOperation, '#newKey', 'signing', newKey.publicKey, recoveryKey.privateKey);
       const didDocument = await getDidDocumentForPayload(invalidUpdatePayload, didUniqueSuffix);
       expect(didDocument.publicKey).toHaveLength(2);
     });
 
     it('should add a new key', async () => {
       const newKey = await mks.getKeyForPurpose('primary', 1);
-      const payload = await getUpdatePayloadForAddingAKey(lastOperation, '#newKey', newKey.publicKey, primaryKey.privateKey);
+      const payload = await getUpdatePayloadForAddingAKey(lastOperation, '#newKey', 'signing', newKey.publicKey, primaryKey.privateKey);
       const transaction = await create(sidetree)(payload);
       await syncTransaction(sidetree, transaction);
       lastOperation = await getLastOperation();
@@ -165,11 +176,13 @@ describe('resolve', () => {
             publicKeys: [
               {
                 id: '#newKey2',
+                usage: 'signing',
                 type: 'Secp256k1VerificationKey2018',
                 publicKeyHex: newKey2.publicKey,
               },
               {
                 id: '#newKey3',
+                usage: 'signing',
                 type: 'Secp256k1VerificationKey2018',
                 publicKeyHex: newKey3.publicKey,
               },
@@ -256,6 +269,26 @@ describe('resolve', () => {
 
     it('should not work if signature is not valid', async () => {
       const invalidRecoverPayload = await getRecoverPayload(didUniqueSuffix, didDocumentModel2, primaryKey.privateKey);
+      const didDocument = await getDidDocumentForPayload(invalidRecoverPayload, didUniqueSuffix);
+      expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey.publicKey);
+      expect(didDocument.publicKey[1].publicKeyHex).toBe(recoveryKey.publicKey);
+    });
+
+    it('should not work if payload is not a valid did document model', async () => {
+      const invalidDidDocumentModel = {
+        ...didDocumentModel2,
+        '@context': undefined,
+      };
+      const payload = {
+        didUniqueSuffix,
+        newDidDocument: invalidDidDocumentModel,
+      };
+      const header = {
+        operation: 'recover',
+        kid: '#recovery',
+        alg: 'ES256K',
+      };
+      const invalidRecoverPayload = makeSignedOperation(header, payload, recoveryKey.privateKey);
       const didDocument = await getDidDocumentForPayload(invalidRecoverPayload, didUniqueSuffix);
       expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey.publicKey);
       expect(didDocument.publicKey[1].publicKeyHex).toBe(recoveryKey.publicKey);

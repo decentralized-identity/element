@@ -5,6 +5,8 @@ const operationBindingModel = require('./operationBindingModel.json');
 const sidetreeTransaction = require('./sidetree/transaction.json');
 const sidetreeAnchorFile = require('./sidetree/anchorFile.json');
 const sidetreeBatchFile = require('./sidetree/batchFile.json');
+const sidetreeKey = require('./sidetree/key.json');
+const sidetreeDidDocumentModel = require('./sidetree/didDocumentModel.json');
 
 const schemas = {
   didDoc,
@@ -12,6 +14,8 @@ const schemas = {
   sidetreeTransaction,
   sidetreeAnchorFile,
   sidetreeBatchFile,
+  sidetreeKey,
+  sidetreeDidDocumentModel,
 };
 
 class SchemaValidator {

@@ -1,0 +1,33 @@
+{
+  "$id": "/sidetree.key",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "required": true,
+      "example": ["#primary", "#recovery"]
+    },
+    "type": {
+      "type": "string",
+      "required": true,
+      "enum": ["Secp256k1VerificationKey2018"],
+      "example": ["Secp256k1VerificationKey2018"]
+    },
+    "controller": {
+      "type": "string",
+      "example": ["did:foo:bar"]
+    },
+    "usage": {
+      "type": "string",
+      "required": true,
+      "enum": ["recovery", "signing"],
+      "example": ["recovery", "signing"]
+    },
+    "publicKeyHex": {
+      "type": "string",
+      "required": true,
+      "example": ["025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124"]
+    }
+  },
+  "additionalProperties": false
+}
