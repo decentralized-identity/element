@@ -17,18 +17,21 @@ const getDidDocumentModel = (primaryPublicKey, recoveryPublicKey) => ({
 });
 
 const getCreatePayload = async (didDocumentModel, primaryKey) => {
+  // Create the encoded protected header.
+  const header = {
+    operation: 'create',
+    kid: '#primary',
+    alg: 'ES256K',
+  };
+  const encodedHeader = encodeJson(header);
   const encodedPayload = encodeJson(didDocumentModel);
-  const signature = signEncodedPayload(encodedPayload, primaryKey.privateKey);
-  const requestBody = {
-    header: {
-      operation: 'create',
-      kid: '#primary',
-      alg: 'ES256K',
-    },
+  const signature = signEncodedPayload(encodedHeader, encodedPayload, primaryKey.privateKey);
+  const operation = {
+    protected: encodedHeader,
     payload: encodedPayload,
     signature,
   };
-  return requestBody;
+  return operation;
 };
 
 const getUpdatePayloadForAddingAKey = async (

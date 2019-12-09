@@ -37,7 +37,8 @@ const payloadToHash = (payload) => {
 
 const getDidUniqueSuffix = (operation) => {
   const decodedPayload = decodeJson(operation.payload);
-  switch (operation.header.operation) {
+  const header = decodeJson(operation.protected);
+  switch (header.operation) {
     case 'create':
       return payloadToHash(decodedPayload);
     case 'update':
@@ -53,10 +54,12 @@ const batchFileToOperations = batchFile => batchFile.operations.map((op) => {
   const decodedOperation = decodeJson(op);
   const operationHash = payloadToHash(decodedOperation.payload);
   const decodedOperationPayload = decodeJson(decodedOperation.payload);
+  const decodedHeader = decodeJson(decodedOperation.protected);
   return {
     operationHash,
     decodedOperation,
     decodedOperationPayload,
+    decodedHeader,
   };
 });
 
