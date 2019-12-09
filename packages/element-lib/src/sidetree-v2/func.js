@@ -3,8 +3,7 @@ const base64url = require('base64url');
 const crypto = require('crypto');
 const secp256k1 = require('secp256k1');
 const multihashes = require('multihashes');
-// TODO: remove schema dependency
-const schema = require('../schema');
+const { isTransactionValid, isBatchFileValid, isAnchorFileValid } = require('./validation');
 
 // This function applies f, an async function, sequentially to an array of values
 // We need it because:
@@ -62,30 +61,6 @@ const batchFileToOperations = batchFile => batchFile.operations.map((op) => {
     decodedHeader,
   };
 });
-
-const isTransactionValid = (transaction) => {
-  const valid = schema.validator.isValid(transaction, schema.schemas.sidetreeTransaction);
-  if (!valid) {
-    throw new Error('transaction not valid', transaction);
-  }
-  return valid;
-};
-
-const isAnchorFileValid = (anchorFile) => {
-  const valid = schema.validator.isValid(anchorFile, schema.schemas.sidetreeAnchorFile);
-  if (!valid) {
-    throw new Error('anchorFile not valid', anchorFile);
-  }
-  return valid;
-};
-
-const isBatchFileValid = (batchFile) => {
-  const valid = schema.validator.isValid(batchFile, schema.schemas.sidetreeBatchFile);
-  if (!valid) {
-    throw new Error('batchFile not valid', batchFile);
-  }
-  return valid;
-};
 
 const syncTransaction = async (sidetree, transaction) => {
   try {
@@ -169,7 +144,6 @@ module.exports = {
   getDidUniqueSuffix,
   batchFileToOperations,
   syncTransaction,
-  isTransactionValid,
   signEncodedPayload,
   verifyOperationSignature,
 };
