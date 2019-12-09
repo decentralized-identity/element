@@ -47,7 +47,7 @@ describe('resolve', () => {
     });
 
     it('should not work if specified kid does not exist in did document', async () => {
-      const invalidCreatePayload = changeKid(createPayload, '#primaryy');
+      const invalidCreatePayload = changeKid(createPayload, '#invalidKid');
       const didDocument = await getDidDocumentForPayload(invalidCreatePayload, didUniqueSuffix);
       expect(didDocument).not.toBeDefined();
     });
@@ -248,7 +248,7 @@ describe('resolve', () => {
 
     it('should not work if specified kid does not exist in did document', async () => {
       const recoverPayload = await getRecoverPayload(didUniqueSuffix, didDocumentModel2, recoveryKey.privateKey);
-      const invalidRecoverPayload = changeKid(recoverPayload, '#recoveryy');
+      const invalidRecoverPayload = changeKid(recoverPayload, '#invalidKid');
       const didDocument = await getDidDocumentForPayload(invalidRecoverPayload, didUniqueSuffix);
       expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey.publicKey);
       expect(didDocument.publicKey[1].publicKeyHex).toBe(recoveryKey.publicKey);
@@ -299,7 +299,7 @@ describe('resolve', () => {
 
     it('should not work if specified kid does not exist in did document', async () => {
       const deletePayload = await getDeletePayload(didUniqueSuffix, recoveryKey.privateKey);
-      const invalidDeletePayload = changeKid(deletePayload, '#recoveryy');
+      const invalidDeletePayload = changeKid(deletePayload, '#invalidKid');
       const didDocument = await getDidDocumentForPayload(invalidDeletePayload, didUniqueSuffix);
       expect(didDocument.id).toBeDefined();
     });
