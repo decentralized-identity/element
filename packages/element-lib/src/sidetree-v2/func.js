@@ -132,28 +132,26 @@ const syncTransaction = async (sidetree, transaction) => {
   }
 };
 
-// TODO check signatures
-// TODO
-const signEncodedPayload = (encodedHeader, encodedPayload, privateKeyHex) => {
+// TODO check is signatures are the same as sidetree's
+const signEncodedPayload = (encodedHeader, encodedPayload, privateKey) => {
   const toBeSigned = `${encodedHeader}.${encodedPayload}`;
   const hash = crypto
     .createHash('sha256')
     .update(Buffer.from(toBeSigned))
     .digest();
-  const privateKeyBuffer = Buffer.from(privateKeyHex, 'hex');
+  const privateKeyBuffer = Buffer.from(privateKey, 'hex');
   const signatureObject = secp256k1.sign(hash, privateKeyBuffer);
   const signature = base64url.encode(signatureObject.signature);
   return signature;
 };
 
-// TODO refactor args
-const verifyOperationSignature = ({
+const verifyOperationSignature = (
   encodedHeader,
-  encodedOperationPayload,
+  encodedPayload,
   signature,
   publicKey,
-}) => {
-  const toBeVerified = `${encodedHeader}.${encodedOperationPayload}`;
+) => {
+  const toBeVerified = `${encodedHeader}.${encodedPayload}`;
   const hash = crypto
     .createHash('sha256')
     .update(Buffer.from(toBeVerified))

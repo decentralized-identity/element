@@ -9,12 +9,12 @@ const isSignatureValid = async (didDocument, operation) => {
     throw new Error('signing key not found');
   }
 
-  const valid = await verifyOperationSignature({
-    encodedHeader: operation.decodedOperation.protected,
-    encodedOperationPayload: operation.decodedOperation.payload,
-    signature: operation.decodedOperation.signature,
-    publicKey: signingKey.publicKeyHex,
-  });
+  const valid = await verifyOperationSignature(
+    operation.decodedOperation.protected,
+    operation.decodedOperation.payload,
+    operation.decodedOperation.signature,
+    signingKey.publicKeyHex,
+  );
   if (!valid) {
     throw new Error('signature is not valid');
   }

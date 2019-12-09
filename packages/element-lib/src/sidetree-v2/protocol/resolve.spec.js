@@ -14,9 +14,7 @@ const {
 const {
   getDidUniqueSuffix,
   syncTransaction,
-  encodeJson,
   decodeJson,
-  signEncodedPayload,
 } = require('../func');
 const { MnemonicKeySystem } = require('../../../index');
 

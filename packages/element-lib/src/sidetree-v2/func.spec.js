@@ -31,12 +31,12 @@ describe('sign and verify', () => {
     const signature = signEncodedPayload(encodedHeader, encodedPayload, primaryKey.privateKey);
     expect(signature).toBeDefined();
     // Verify
-    const valid = verifyOperationSignature({
+    const valid = verifyOperationSignature(
       encodedHeader,
-      encodedOperationPayload: encodedPayload,
+      encodedPayload,
       signature,
-      publicKey: primaryKey.publicKey,
-    });
+      primaryKey.publicKey,
+    );
     expect(valid).toBeTruthy();
   });
 });
