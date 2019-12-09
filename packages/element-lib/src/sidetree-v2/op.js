@@ -5,11 +5,13 @@ const getDidDocumentModel = (primaryPublicKey, recoveryPublicKey) => ({
   publicKey: [
     {
       id: '#primary',
+      usage: 'signing',
       type: 'Secp256k1VerificationKey2018',
       publicKeyHex: primaryPublicKey,
     },
     {
       id: '#recovery',
+      usage: 'recovery',
       type: 'Secp256k1VerificationKey2018',
       publicKeyHex: recoveryPublicKey,
     },
