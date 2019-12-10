@@ -4,15 +4,19 @@ class OperationQueue {
     this.type = 'operationQueue';
   }
 
+  async getQueue() {
+    const queueObj = await this.db.read(this.type);
+    return (queueObj && queueObj.queue) || [];
+  }
+
   /**
    * Places an operation at the tail of the queue.
    * If there is already an operation for the same DID, Sidetree Error is thrown with 'code': 'batch_writer_already_has_operation_for_did'.
    */
   async enqueue(didUniqueSuffix, operationBuffer) {
-    await this.db.write(`${this.type}${didUniqueSuffix}`, {
-      type: this.type,
-      time: Date.now(),
-      operationBuffer,
+    const queue = await this.getQueue();
+    await this.db.write(this.type, {
+      queue: [...queue, operationBuffer],
     });
     return true;
   }
@@ -20,16 +24,20 @@ class OperationQueue {
   /**
    * Removes the given count of operation buffers from the beginning of the queue.
    */
-  dequeue(count) {
+  async dequeue(count) {
+    const queue = await this.getQueue();
+    const toDequeue = queue.slice(0, count);
+    const remaining = queue.slice(count);
+    console.log(remaining);
+    return toDequeue;
   }
 
   /**
    * Fetches the given count of operation buffers from the beginning of the queue without removing them.
    */
   async peek(count) {
-    const operations = await this.db.readCollection(this.type);
-    operations.sort((o1, o2) => o1.time - o2.time);
-    return operations.slice(0, count);
+    const queue = await this.getQueue();
+    return queue.slice(0, count);
   }
 
   /**

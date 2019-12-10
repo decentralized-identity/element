@@ -68,8 +68,7 @@ class ElementRXDBAdapter {
           didUniqueSuffix: {},
           decodedOperation: {},
           decodedOperationPayload: {},
-          time: {},
-          operationBuffer: {},
+          queue: {},
         },
       },
     });
