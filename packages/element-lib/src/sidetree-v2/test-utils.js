@@ -1,5 +1,6 @@
 const element = require('../../index');
-const { encodeJson, decodeJson } = require('./func');
+const { encodeJson, decodeJson, syncTransaction } = require('./func');
+const { create, resolve } = require('./protocol');
 
 const getTestSideTree = () => {
   const db = new element.adapters.database.ElementRXDBAdapter({
@@ -32,7 +33,15 @@ const changeKid = (payload, newKid) => {
   };
 };
 
+const getDidDocumentForPayload = async (sidetree, payload, didUniqueSuffix) => {
+  const transaction = await create(sidetree)(payload);
+  await syncTransaction(sidetree, transaction);
+  const didDocument = await resolve(sidetree)(didUniqueSuffix);
+  return didDocument;
+};
+
 module.exports = {
   getTestSideTree,
   changeKid,
+  getDidDocumentForPayload,
 };

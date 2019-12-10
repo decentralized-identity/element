@@ -1,7 +1,11 @@
 /* eslint-disable max-len */
 const create = require('./create');
 const resolve = require('./resolve');
-const { getTestSideTree, changeKid } = require('../test-utils');
+const {
+  getTestSideTree,
+  changeKid,
+  getDidDocumentForPayload,
+} = require('../test-utils');
 const {
   getDidDocumentModel,
   makeSignedOperation,
@@ -19,13 +23,6 @@ const {
 const { MnemonicKeySystem } = require('../../../index');
 
 const sidetree = getTestSideTree();
-
-const getDidDocumentForPayload = async (payload, didUniqueSuffix) => {
-  const transaction = await create(sidetree)(payload);
-  await syncTransaction(sidetree, transaction);
-  const didDocument = await resolve(sidetree)(didUniqueSuffix);
-  return didDocument;
-};
 
 describe('resolve', () => {
   describe('create', () => {
@@ -48,13 +45,13 @@ describe('resolve', () => {
 
     it('should not work if specified kid does not exist in did document', async () => {
       const invalidCreatePayload = changeKid(createPayload, '#invalidKid');
-      const didDocument = await getDidDocumentForPayload(invalidCreatePayload, didUniqueSuffix);
+      const didDocument = await getDidDocumentForPayload(sidetree, invalidCreatePayload, didUniqueSuffix);
       expect(didDocument).not.toBeDefined();
     });
 
     it('should not work if signature is not valid', async () => {
       const invalidCreatePayload = await getCreatePayload(didDocumentModel, recoveryKey);
-      const didDocument = await getDidDocumentForPayload(invalidCreatePayload, didUniqueSuffix);
+      const didDocument = await getDidDocumentForPayload(sidetree, invalidCreatePayload, didUniqueSuffix);
       expect(didDocument).not.toBeDefined();
     });
 
@@ -65,7 +62,7 @@ describe('resolve', () => {
       };
       const header = decodeJson(createPayload.protected);
       const invalidCreatePayload = makeSignedOperation(header, invalidDidDocumentModel, primaryKey.privateKey);
-      const didDocument = await getDidDocumentForPayload(invalidCreatePayload, didUniqueSuffix);
+      const didDocument = await getDidDocumentForPayload(sidetree, invalidCreatePayload, didUniqueSuffix);
       expect(didDocument).not.toBeDefined();
     });
 
@@ -131,14 +128,14 @@ describe('resolve', () => {
       const newKey = await mks.getKeyForPurpose('primary', 1);
       const updatePayload = await getUpdatePayloadForAddingAKey(lastOperation, '#newKey', 'signing', newKey.publicKey, primaryKey.privateKey);
       const invalidUpdatePayload = changeKid(updatePayload);
-      const didDocument = await getDidDocumentForPayload(invalidUpdatePayload, didUniqueSuffix);
+      const didDocument = await getDidDocumentForPayload(sidetree, invalidUpdatePayload, didUniqueSuffix);
       expect(didDocument.publicKey).toHaveLength(2);
     });
 
     it('should not work if signature is not valid', async () => {
       const newKey = await mks.getKeyForPurpose('primary', 1);
       const invalidUpdatePayload = await getUpdatePayloadForAddingAKey(lastOperation, '#newKey', 'signing', newKey.publicKey, recoveryKey.privateKey);
-      const didDocument = await getDidDocumentForPayload(invalidUpdatePayload, didUniqueSuffix);
+      const didDocument = await getDidDocumentForPayload(sidetree, invalidUpdatePayload, didUniqueSuffix);
       expect(didDocument.publicKey).toHaveLength(2);
     });
 
@@ -262,14 +259,14 @@ describe('resolve', () => {
     it('should not work if specified kid does not exist in did document', async () => {
       const recoverPayload = await getRecoverPayload(didUniqueSuffix, didDocumentModel2, recoveryKey.privateKey);
       const invalidRecoverPayload = changeKid(recoverPayload, '#invalidKid');
-      const didDocument = await getDidDocumentForPayload(invalidRecoverPayload, didUniqueSuffix);
+      const didDocument = await getDidDocumentForPayload(sidetree, invalidRecoverPayload, didUniqueSuffix);
       expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey.publicKey);
       expect(didDocument.publicKey[1].publicKeyHex).toBe(recoveryKey.publicKey);
     });
 
     it('should not work if signature is not valid', async () => {
       const invalidRecoverPayload = await getRecoverPayload(didUniqueSuffix, didDocumentModel2, primaryKey.privateKey);
-      const didDocument = await getDidDocumentForPayload(invalidRecoverPayload, didUniqueSuffix);
+      const didDocument = await getDidDocumentForPayload(sidetree, invalidRecoverPayload, didUniqueSuffix);
       expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey.publicKey);
       expect(didDocument.publicKey[1].publicKeyHex).toBe(recoveryKey.publicKey);
     });
@@ -289,7 +286,7 @@ describe('resolve', () => {
         alg: 'ES256K',
       };
       const invalidRecoverPayload = makeSignedOperation(header, payload, recoveryKey.privateKey);
-      const didDocument = await getDidDocumentForPayload(invalidRecoverPayload, didUniqueSuffix);
+      const didDocument = await getDidDocumentForPayload(sidetree, invalidRecoverPayload, didUniqueSuffix);
       expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey.publicKey);
       expect(didDocument.publicKey[1].publicKeyHex).toBe(recoveryKey.publicKey);
     });
@@ -333,13 +330,13 @@ describe('resolve', () => {
     it('should not work if specified kid does not exist in did document', async () => {
       const deletePayload = await getDeletePayload(didUniqueSuffix, recoveryKey.privateKey);
       const invalidDeletePayload = changeKid(deletePayload, '#invalidKid');
-      const didDocument = await getDidDocumentForPayload(invalidDeletePayload, didUniqueSuffix);
+      const didDocument = await getDidDocumentForPayload(sidetree, invalidDeletePayload, didUniqueSuffix);
       expect(didDocument.id).toBeDefined();
     });
 
     it('should not work if signature is not valid', async () => {
       const invalidDeletePayload = await getDeletePayload(didUniqueSuffix, primaryKey.privateKey);
-      const didDocument = await getDidDocumentForPayload(invalidDeletePayload, didUniqueSuffix);
+      const didDocument = await getDidDocumentForPayload(sidetree, invalidDeletePayload, didUniqueSuffix);
       expect(didDocument.id).toBeDefined();
     });
 
