@@ -78,4 +78,10 @@ describe('operationQueue', () => {
     expect(await operationQueue.contains(didUniqueSuffix2)).toBeTruthy();
     expect(await operationQueue.contains(didUniqueSuffix3)).not.toBeTruthy();
   });
+
+  it('should throw if already an operation in the queue for this did', () => {
+    const errorMessage = 'there already is an operation for the did';
+    return expect(operationQueue.enqueue(didUniqueSuffix1, createPayload1))
+      .rejects.toMatchObject(Error(errorMessage));
+  });
 });
