@@ -34,23 +34,23 @@ describe('operationQueue', () => {
     // Peek the first operation of the queue
     let operations = await operationQueue.peek(1);
     expect(operations).toHaveLength(1);
-    expect(operations[0].id).toEqual(`${operationQueue.type}${didUniqueSuffix1}`);
+    expect(operations[0]).toEqual(createPayload1);
     // Peek the first two operations of the queue
     operations = await operationQueue.peek(2);
     expect(operations).toHaveLength(2);
-    expect(operations[0].id).toEqual(`${operationQueue.type}${didUniqueSuffix1}`);
-    expect(operations[1].id).toEqual(`${operationQueue.type}${didUniqueSuffix2}`);
+    expect(operations[0]).toEqual(createPayload1);
+    expect(operations[1]).toEqual(createPayload2);
     // Peek the first three operations of the queue
     operations = await operationQueue.peek(3);
     expect(operations).toHaveLength(3);
-    expect(operations[0].id).toEqual(`${operationQueue.type}${didUniqueSuffix1}`);
-    expect(operations[1].id).toEqual(`${operationQueue.type}${didUniqueSuffix2}`);
-    expect(operations[2].id).toEqual(`${operationQueue.type}${didUniqueSuffix3}`);
+    expect(operations[0]).toEqual(createPayload1);
+    expect(operations[1]).toEqual(createPayload2);
+    expect(operations[2]).toEqual(createPayload3);
     // Peek more operations than the queue contains
     operations = await operationQueue.peek(4);
     expect(operations).toHaveLength(3);
-    expect(operations[0].id).toEqual(`${operationQueue.type}${didUniqueSuffix1}`);
-    expect(operations[1].id).toEqual(`${operationQueue.type}${didUniqueSuffix2}`);
-    expect(operations[2].id).toEqual(`${operationQueue.type}${didUniqueSuffix3}`);
+    expect(operations[0]).toEqual(createPayload1);
+    expect(operations[1]).toEqual(createPayload2);
+    expect(operations[2]).toEqual(createPayload3);
   });
 });
