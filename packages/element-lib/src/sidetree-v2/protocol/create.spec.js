@@ -1,6 +1,6 @@
 const create = require('./create');
 const resolve = require('./resolve');
-const { getTestSideTree } = require('../test-utils');
+const { getTestSideTree, getCreatePayloadForKeyIndex } = require('../test-utils');
 const { getDidDocumentModel, getCreatePayload } = require('../op');
 const {
   batchFileToOperations,
@@ -78,16 +78,10 @@ describe('create batch', () => {
   let anchorFile;
   let batchFile;
 
-  const getPayloadForKeyIndex = async (index) => {
-    const primaryKey = await mks.getKeyForPurpose('primary', index);
-    const recoveryKey = await mks.getKeyForPurpose('recovery', index);
-    const didDocumentModel = getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
-    return getCreatePayload(didDocumentModel, primaryKey);
-  };
 
   beforeAll(async () => {
-    createPayload1 = await getPayloadForKeyIndex(0);
-    createPayload2 = await getPayloadForKeyIndex(1);
+    createPayload1 = await getCreatePayloadForKeyIndex(mks, 0);
+    createPayload2 = await getCreatePayloadForKeyIndex(mks, 1);
     didUniqueSuffix1 = getDidUniqueSuffix(createPayload1);
     didUniqueSuffix2 = getDidUniqueSuffix(createPayload2);
     batch = [createPayload1, createPayload2];

@@ -1,5 +1,10 @@
 const element = require('../../index');
-const { encodeJson, decodeJson, syncTransaction } = require('./func');
+const {
+  encodeJson,
+  decodeJson,
+  syncTransaction,
+} = require('./func');
+const { getDidDocumentModel, getCreatePayload } = require('./op');
 const { create, resolve } = require('./protocol');
 
 const getTestSideTree = () => {
@@ -40,8 +45,16 @@ const getDidDocumentForPayload = async (sidetree, payload, didUniqueSuffix) => {
   return didDocument;
 };
 
+const getCreatePayloadForKeyIndex = async (mks, index) => {
+  const primaryKey = await mks.getKeyForPurpose('primary', index);
+  const recoveryKey = await mks.getKeyForPurpose('recovery', index);
+  const didDocumentModel = getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
+  return getCreatePayload(didDocumentModel, primaryKey);
+};
+
 module.exports = {
   getTestSideTree,
   changeKid,
   getDidDocumentForPayload,
+  getCreatePayloadForKeyIndex,
 };
