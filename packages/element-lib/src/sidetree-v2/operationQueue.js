@@ -28,7 +28,9 @@ class OperationQueue {
     const queue = await this.getQueue();
     const toDequeue = queue.slice(0, count);
     const remaining = queue.slice(count);
-    console.log(remaining);
+    await this.db.write(this.type, {
+      queue: remaining,
+    });
     return toDequeue;
   }
 

@@ -30,7 +30,7 @@ describe('operationQueue', () => {
     expect(await operationQueue.enqueue(didUniqueSuffix3, createPayload3)).toBeTruthy();
   });
 
-  it('should peek the right number of operations', async () => {
+  it('should peek the operations in the right order', async () => {
     // Peek the first operation of the queue
     let operations = await operationQueue.peek(1);
     expect(operations).toHaveLength(1);
@@ -52,5 +52,22 @@ describe('operationQueue', () => {
     expect(operations[0]).toEqual(createPayload1);
     expect(operations[1]).toEqual(createPayload2);
     expect(operations[2]).toEqual(createPayload3);
+  });
+
+  it('should dequeue the operations in the right order', async () => {
+    // Dequeue the first operation of the queue
+    let operations = await operationQueue.dequeue(1);
+    expect(operations).toHaveLength(1);
+    expect(operations[0]).toEqual(createPayload1);
+    // Dequeue two more operations
+    operations = await operationQueue.dequeue(2);
+    expect(operations).toHaveLength(2);
+    expect(operations[0]).toEqual(createPayload2);
+    expect(operations[1]).toEqual(createPayload3);
+    // Dequeue when there is nothing more to dequeue
+    operations = await operationQueue.dequeue(1);
+    expect(operations).toHaveLength(0);
+    operations = await operationQueue.dequeue(2);
+    expect(operations).toHaveLength(0);
   });
 });
