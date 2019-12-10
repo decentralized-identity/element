@@ -16,7 +16,10 @@ class OperationQueue {
   async enqueue(didUniqueSuffix, operationBuffer) {
     const queue = await this.getQueue();
     await this.db.write(this.type, {
-      queue: [...queue, operationBuffer],
+      queue: [...queue, {
+        didUniqueSuffix,
+        operationBuffer,
+      }],
     });
     return true;
   }
@@ -31,7 +34,7 @@ class OperationQueue {
     await this.db.write(this.type, {
       queue: remaining,
     });
-    return toDequeue;
+    return toDequeue.map(o => o.operationBuffer);
   }
 
   /**
@@ -39,13 +42,17 @@ class OperationQueue {
    */
   async peek(count) {
     const queue = await this.getQueue();
-    return queue.slice(0, count);
+    return queue.slice(0, count)
+      .map(o => o.operationBuffer);
   }
 
   /**
    * Checks to see if the queue already contains an operation for the given DID unique suffix.
    */
-  contains(didUniqueSuffix) {}
+  async contains(didUniqueSuffix) {
+    const queue = await this.getQueue();
+    return queue.some(o => o.didUniqueSuffix === didUniqueSuffix);
+  }
 }
 
 module.exports = OperationQueue;
