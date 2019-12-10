@@ -11,7 +11,8 @@ class OperationQueue {
 
   /**
    * Places an operation at the tail of the queue.
-   * If there is already an operation for the same DID, Sidetree Error is thrown with 'code': 'batch_writer_already_has_operation_for_did'.
+   * If there is already an operation for the same DID, an Error is
+   * thrown
    */
   async enqueue(didUniqueSuffix, operationBuffer) {
     const queue = await this.getQueue();
@@ -25,7 +26,8 @@ class OperationQueue {
   }
 
   /**
-   * Removes the given count of operation buffers from the beginning of the queue.
+   * Removes the given count of operation buffers from the beginning of
+   * the queue.
    */
   async dequeue(count) {
     const queue = await this.getQueue();
@@ -38,7 +40,8 @@ class OperationQueue {
   }
 
   /**
-   * Fetches the given count of operation buffers from the beginning of the queue without removing them.
+   * Fetches the given count of operation buffers from the beginning of
+   * the queue without removing them.
    */
   async peek(count) {
     const queue = await this.getQueue();
@@ -47,7 +50,8 @@ class OperationQueue {
   }
 
   /**
-   * Checks to see if the queue already contains an operation for the given DID unique suffix.
+   * Checks to see if the queue already contains an operation for the
+   * given DID unique suffix.
    */
   async contains(didUniqueSuffix) {
     const queue = await this.getQueue();
