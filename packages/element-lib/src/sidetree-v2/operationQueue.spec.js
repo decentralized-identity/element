@@ -70,4 +70,12 @@ describe('operationQueue', () => {
     operations = await operationQueue.dequeue(2);
     expect(operations).toHaveLength(0);
   });
+
+  it('should say if the queue contains a given operation', async () => {
+    await operationQueue.enqueue(didUniqueSuffix1, createPayload1);
+    await operationQueue.enqueue(didUniqueSuffix2, createPayload2);
+    expect(await operationQueue.contains(didUniqueSuffix1)).toBeTruthy();
+    expect(await operationQueue.contains(didUniqueSuffix2)).toBeTruthy();
+    expect(await operationQueue.contains(didUniqueSuffix3)).not.toBeTruthy();
+  });
 });
