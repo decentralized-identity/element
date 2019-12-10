@@ -16,6 +16,9 @@ class OperationQueue {
    */
   async enqueue(didUniqueSuffix, operationBuffer) {
     const queue = await this.getQueue();
+    if (queue.some(o => o.didUniqueSuffix === didUniqueSuffix)) {
+      throw new Error('there already is an operation for the did');
+    }
     await this.db.write(this.type, {
       queue: [...queue, {
         didUniqueSuffix,
