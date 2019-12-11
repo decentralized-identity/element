@@ -38,6 +38,9 @@ const batchWrite = sidetree => async () => {
   // Anchor on ethereum
   const transaction = await sidetree.blockchain.write(anchorFileHash);
 
+  // Remove written operations from queue if batch writing is successful.
+  await sidetree.operationQueue.dequeue(decodedOperations.length);
+
   return transaction;
 };
 
