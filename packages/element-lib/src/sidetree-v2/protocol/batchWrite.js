@@ -1,7 +1,6 @@
 const MerkleTools = require('merkle-tools');
 const { encodeJson, getDidUniqueSuffix } = require('../func');
 
-// TODO deterministic stringify
 const batchWrite = sidetree => async (req) => {
   const requests = Array.isArray(req) ? req : [req];
   const operations = requests.map(encodeJson);

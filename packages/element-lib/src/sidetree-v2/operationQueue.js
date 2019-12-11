@@ -48,8 +48,7 @@ class OperationQueue {
    */
   async peek(count) {
     const queue = await this.getQueue();
-    return queue.slice(0, count)
-      .map(o => o.operationBuffer);
+    return queue.slice(0, count).map(o => o.operationBuffer);
   }
 
   /**
