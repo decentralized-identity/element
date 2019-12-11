@@ -1,4 +1,4 @@
-const create = require('./create');
+const batchWrite = require('./batchWrite');
 const resolve = require('./resolve');
 const { getTestSideTree, getCreatePayloadForKeyIndex } = require('../test-utils');
 const { getDidDocumentModel, getCreatePayload } = require('../op');
@@ -12,7 +12,7 @@ const { MnemonicKeySystem } = require('../../../index');
 
 const sidetree = getTestSideTree();
 
-describe('create', () => {
+describe('batchWrite', () => {
   const mks = new MnemonicKeySystem(MnemonicKeySystem.generateMnemonic());
   let createPayload;
   let transaction;
@@ -25,7 +25,7 @@ describe('create', () => {
     const recoveryKey = await mks.getKeyForPurpose('recovery', 0);
     const didDocumentModel = getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
     createPayload = await getCreatePayload(didDocumentModel, primaryKey);
-    transaction = await create(sidetree)(createPayload);
+    transaction = await batchWrite(sidetree)(createPayload);
   });
 
   it('should anchor an anchorFileHash to Ethereum', async () => {
@@ -88,7 +88,7 @@ describe('create batch', () => {
   });
 
   it('should submit a batched transaction', async () => {
-    transaction = await create(sidetree)(batch);
+    transaction = await batchWrite(sidetree)(batch);
     expect(transaction.anchorFileHash).toBeDefined();
   });
 

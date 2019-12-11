@@ -5,7 +5,7 @@ const {
   syncTransaction,
 } = require('./func');
 const { getDidDocumentModel, getCreatePayload } = require('./op');
-const { create, resolve } = require('./protocol');
+const { batchWrite, resolve } = require('./protocol');
 
 const getTestSideTree = () => {
   const db = new element.adapters.database.ElementRXDBAdapter({
@@ -39,7 +39,7 @@ const changeKid = (payload, newKid) => {
 };
 
 const getDidDocumentForPayload = async (sidetree, payload, didUniqueSuffix) => {
-  const transaction = await create(sidetree)(payload);
+  const transaction = await batchWrite(sidetree)(payload);
   await syncTransaction(sidetree, transaction);
   const didDocument = await resolve(sidetree)(didUniqueSuffix);
   return didDocument;
