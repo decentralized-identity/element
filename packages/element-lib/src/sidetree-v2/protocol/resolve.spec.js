@@ -1,5 +1,4 @@
 /* eslint-disable max-len */
-const batchWrite = require('./batchWrite');
 const resolve = require('./resolve');
 const {
   getTestSideTree,

@@ -5,7 +5,7 @@ const {
   syncTransaction,
 } = require('./func');
 const { getDidDocumentModel, getCreatePayload } = require('./op');
-const { batchWrite, resolve } = require('./protocol');
+const { resolve } = require('./protocol');
 
 const getTestSideTree = () => {
   const db = new element.adapters.database.ElementRXDBAdapter({
