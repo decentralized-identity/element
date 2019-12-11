@@ -31,17 +31,18 @@ class BatchScheduler {
    */
   async writeOperationBatch() {
     const start = Date.now(); // For calculating time taken to write operations.
-    const { batchingIntervalInSeconds } = this.sidetree.parameters;
+    const { batchingIntervalInSeconds, maxOperationsPerBatch } = this.sidetree.parameters;
+    const operationCount = (await this.sidetree.operationQueue.peek(maxOperationsPerBatch)).length;
 
     try {
-      console.info('Start operation batch writing...');
+      console.info('Start batch writing...');
       await this.sidetree.batchWrite();
     } catch (error) {
       console.error('Unexpected and unhandled error during batch writing, investigate and fix:');
       console.error(error);
     } finally {
       const end = Date.now();
-      console.info(`End operation batch writing. Duration: ${(end - start) / 1000} ms.`);
+      console.info(`End batch writing of ${operationCount} operations. Duration: ${(end - start) / 1000} ms.`);
 
       if (this.continuePeriodicBatchWriting) {
         console.info(`Waiting for ${batchingIntervalInSeconds} seconds before writing another batch.`);
