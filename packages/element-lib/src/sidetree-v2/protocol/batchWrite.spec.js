@@ -138,3 +138,67 @@ describe('batchWrite with several operations', () => {
     expect(didDocument.publicKey).toEqual(decodedPayload.publicKey);
   });
 });
+
+describe('batchWrite with more operations than maxOperationsPerBatch', () => {
+  const mks = new MnemonicKeySystem(MnemonicKeySystem.generateMnemonic());
+  let createPayload1;
+  let createPayload2;
+  let createPayload3;
+  let createPayload4;
+  let createPayload5;
+  let createPayload6;
+  let didUniqueSuffix1;
+  let didUniqueSuffix2;
+  let didUniqueSuffix3;
+  let didUniqueSuffix4;
+  let didUniqueSuffix5;
+  let didUniqueSuffix6;
+  let transaction;
+  let anchorFile;
+  let batchFile;
+
+  beforeAll(async () => {
+    createPayload1 = await getCreatePayloadForKeyIndex(mks, 0);
+    createPayload2 = await getCreatePayloadForKeyIndex(mks, 1);
+    createPayload3 = await getCreatePayloadForKeyIndex(mks, 3);
+    createPayload4 = await getCreatePayloadForKeyIndex(mks, 4);
+    createPayload5 = await getCreatePayloadForKeyIndex(mks, 5);
+    createPayload6 = await getCreatePayloadForKeyIndex(mks, 6);
+    didUniqueSuffix1 = getDidUniqueSuffix(createPayload1);
+    didUniqueSuffix2 = getDidUniqueSuffix(createPayload2);
+    didUniqueSuffix3 = getDidUniqueSuffix(createPayload3);
+    didUniqueSuffix4 = getDidUniqueSuffix(createPayload4);
+    didUniqueSuffix5 = getDidUniqueSuffix(createPayload5);
+    didUniqueSuffix6 = getDidUniqueSuffix(createPayload6);
+    await sidetree.operationQueue.enqueue(didUniqueSuffix1, createPayload1);
+    await sidetree.operationQueue.enqueue(didUniqueSuffix2, createPayload2);
+    await sidetree.operationQueue.enqueue(didUniqueSuffix3, createPayload3);
+    await sidetree.operationQueue.enqueue(didUniqueSuffix4, createPayload4);
+    await sidetree.operationQueue.enqueue(didUniqueSuffix5, createPayload5);
+    await sidetree.operationQueue.enqueue(didUniqueSuffix6, createPayload6);
+  });
+
+  it('should only include 5 operations in next batch', async () => {
+    transaction = await batchWrite(sidetree)();
+    expect(transaction.anchorFileHash).toBeDefined();
+    anchorFile = await sidetree.storage.read(transaction.anchorFileHash);
+    batchFile = await sidetree.storage.read(anchorFile.batchFileHash);
+    const operations = batchFileToOperations(batchFile);
+    expect(operations).toHaveLength(5);
+    expect(operations[0].decodedOperation).toEqual(createPayload1);
+    expect(operations[1].decodedOperation).toEqual(createPayload2);
+    expect(operations[2].decodedOperation).toEqual(createPayload3);
+    expect(operations[3].decodedOperation).toEqual(createPayload4);
+    expect(operations[4].decodedOperation).toEqual(createPayload5);
+  });
+
+  it('should batch the remaining transaction', async () => {
+    transaction = await batchWrite(sidetree)();
+    expect(transaction.anchorFileHash).toBeDefined();
+    anchorFile = await sidetree.storage.read(transaction.anchorFileHash);
+    batchFile = await sidetree.storage.read(anchorFile.batchFileHash);
+    const operations = batchFileToOperations(batchFile);
+    expect(operations).toHaveLength(1);
+    expect(operations[0].decodedOperation).toEqual(createPayload6);
+  });
+});
