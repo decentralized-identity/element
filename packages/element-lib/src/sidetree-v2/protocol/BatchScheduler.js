@@ -35,7 +35,7 @@ class BatchScheduler {
 
     try {
       console.info('Start operation batch writing...');
-      await this.sidetree.batchWrite.write();
+      await this.sidetree.batchWrite();
     } catch (error) {
       console.error('Unexpected and unhandled error during batch writing, investigate and fix:');
       console.error(error);
@@ -52,6 +52,7 @@ class BatchScheduler {
 
   /**
    * Processes a batch of operations now
+   * Mainly used for test purposes.
    */
   async writeNow(payload) {
     const didUniqueSuffix = getDidUniqueSuffix(payload);
