@@ -52,7 +52,7 @@ describe('BatchScheduler', () => {
   describe('startPeriodicBatchWriting / stopPeriodicBatchWriting', () => {
     const sleep = seconds => new Promise(r => setTimeout(r, seconds * 1000));
 
-    it('should process a batch of operations', async () => {
+    it('should start batching at a regular interval', async () => {
       const spy = jest.spyOn(batchScheduler, 'writeOperationBatch');
       expect(batchScheduler.continuePeriodicBatchWriting).toBe(false);
       await batchScheduler.startPeriodicBatchWriting();
