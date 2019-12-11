@@ -1,4 +1,3 @@
-const { batchingIntervalInSeconds } = require('./protocol-parameters');
 const { getDidUniqueSuffix } = require('../func');
 
 class BatchScheduler {
@@ -32,6 +31,7 @@ class BatchScheduler {
    */
   async writeOperationBatch() {
     const start = Date.now(); // For calculating time taken to write operations.
+    const { batchingIntervalInSeconds } = this.sidetree.parameters;
 
     try {
       console.info('Start operation batch writing...');

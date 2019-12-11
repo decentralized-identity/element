@@ -1,4 +1,0 @@
-{
-  "maxOperationsPerBatch": 10000,
-  "batchingIntervalInSeconds": 10
-}

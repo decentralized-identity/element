@@ -23,7 +23,18 @@ const getTestSideTree = () => {
     anchorContractAddress: '0x1DABA81D326Ae274d5b18111440a05cD9581b305',
   });
 
-  return new element.SidetreeV2({ db, storage, blockchain });
+  const parameters = {
+    maxOperationsPerBatch: 5,
+    batchingIntervalInSeconds: 1,
+  };
+
+  const sidetree = new element.SidetreeV2({
+    db,
+    storage,
+    blockchain,
+    parameters,
+  });
+  return sidetree;
 };
 
 const changeKid = (payload, newKid) => {

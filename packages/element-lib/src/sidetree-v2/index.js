@@ -5,7 +5,12 @@ const func = require('./func');
 const OperationQueue = require('./operationQueue');
 
 class Sidetree {
-  constructor({ db, blockchain, storage }) {
+  constructor({
+    db,
+    blockchain,
+    storage,
+    parameters,
+  }) {
     const operationQueue = new OperationQueue(db);
     // Utils for sidetree
     this.blockchain = blockchain;
@@ -21,6 +26,8 @@ class Sidetree {
     this.operationQueue = operationQueue;
     this.batchWrite = batchWrite(this);
     this.batchScheduler = new BatchScheduler(this);
+    // Parameters
+    this.parameters = parameters;
   }
 }
 
