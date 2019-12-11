@@ -5,11 +5,15 @@
 In this report we study the resilience of a Sidetree node against an attacker trying to spam the operation queue by submitting `create` operations.
 The default value for `maxOperationsPerBatch` is 10000, therefore we will test with values up to 10000 (see table below)
 
-The full experiment is done in `./batching-stress-test.spec.js` with:
+The full experiment is done in `./batching-spam-attack.js` with:
 - Ganache for the `blockchain` interface
 - A local IPFS node for the `storage` interface
 - The RXDB adapter for the `db` interface
 - A MacBook Pro with 8Gg or RAM and a 2,3 GHz i5 processor
+
+To run the experiment, run `node packages/element-lib/src/sidetree-v2/___tests___/batching-spam-attack.js`
+
+## Results
 
 | number of operations submitted | 10 | 100 | 1000 | 2000 | 5000 | 10000 
 | - | -- | --- | ---- | ---- | ---- | -----
