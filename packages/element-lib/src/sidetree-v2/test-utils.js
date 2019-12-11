@@ -39,7 +39,7 @@ const changeKid = (payload, newKid) => {
 };
 
 const getDidDocumentForPayload = async (sidetree, payload, didUniqueSuffix) => {
-  const transaction = await batchWrite(sidetree)(payload);
+  const transaction = await sidetree.batchScheduler.writeNow(payload);
   await syncTransaction(sidetree, transaction);
   const didDocument = await resolve(sidetree)(didUniqueSuffix);
   return didDocument;
