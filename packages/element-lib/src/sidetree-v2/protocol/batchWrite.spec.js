@@ -12,7 +12,7 @@ const { MnemonicKeySystem } = require('../../../index');
 
 const sidetree = getTestSideTree();
 
-describe('batchWrite', () => {
+describe('batchWrite with one operation', () => {
   const mks = new MnemonicKeySystem(MnemonicKeySystem.generateMnemonic());
   let createPayload;
   let transaction;
@@ -25,7 +25,9 @@ describe('batchWrite', () => {
     const recoveryKey = await mks.getKeyForPurpose('recovery', 0);
     const didDocumentModel = getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
     createPayload = await getCreatePayload(didDocumentModel, primaryKey);
-    transaction = await batchWrite(sidetree)(createPayload);
+    didUniqueSuffix = getDidUniqueSuffix(createPayload);
+    await sidetree.operationQueue.enqueue(didUniqueSuffix, createPayload);
+    transaction = await batchWrite(sidetree)();
   });
 
   it('should anchor an anchorFileHash to Ethereum', async () => {
@@ -35,7 +37,6 @@ describe('batchWrite', () => {
   it('should publish anchorFile to IPFS', async () => {
     anchorFile = await sidetree.storage.read(transaction.anchorFileHash);
     expect(anchorFile.batchFileHash).toBeDefined();
-    didUniqueSuffix = getDidUniqueSuffix(createPayload);
     expect(anchorFile.didUniqueSuffixes).toEqual([didUniqueSuffix]);
     expect(anchorFile.merkleRoot).toBeDefined();
   });
@@ -67,13 +68,12 @@ describe('batchWrite', () => {
   });
 });
 
-describe('create batch', () => {
+describe('batchWrite with several operations', () => {
   const mks = new MnemonicKeySystem(MnemonicKeySystem.generateMnemonic());
   let createPayload1;
   let createPayload2;
   let didUniqueSuffix1;
   let didUniqueSuffix2;
-  let batch;
   let transaction;
   let anchorFile;
   let batchFile;
@@ -84,11 +84,12 @@ describe('create batch', () => {
     createPayload2 = await getCreatePayloadForKeyIndex(mks, 1);
     didUniqueSuffix1 = getDidUniqueSuffix(createPayload1);
     didUniqueSuffix2 = getDidUniqueSuffix(createPayload2);
-    batch = [createPayload1, createPayload2];
   });
 
   it('should submit a batched transaction', async () => {
-    transaction = await batchWrite(sidetree)(batch);
+    await sidetree.operationQueue.enqueue(didUniqueSuffix1, createPayload1);
+    await sidetree.operationQueue.enqueue(didUniqueSuffix2, createPayload2);
+    transaction = await batchWrite(sidetree)();
     expect(transaction.anchorFileHash).toBeDefined();
   });
 
