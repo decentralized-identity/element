@@ -1,10 +1,17 @@
 const MerkleTools = require('merkle-tools');
 const { encodeJson, getDidUniqueSuffix } = require('../func');
 
-// TODO deterministic stringify
-const create = sidetree => async (req) => {
-  const requests = Array.isArray(req) ? req : [req];
-  const operations = requests.map(encodeJson);
+const batchWrite = sidetree => async () => {
+  // Get the batch of operations to be anchored on the blockchain.
+  const { maxOperationsPerBatch } = sidetree.parameters;
+  const decodedOperations = await sidetree.operationQueue.peek(maxOperationsPerBatch);
+
+  // Do nothing if there is nothing to batch together.
+  if (decodedOperations.length === 0) {
+    return null;
+  }
+
+  const operations = decodedOperations.map(encodeJson);
 
   // Write batchFile to storage
   const batchFile = {
@@ -13,7 +20,7 @@ const create = sidetree => async (req) => {
   const batchFileHash = await sidetree.storage.write(batchFile);
 
   // Write anchorFile to storage
-  const didUniqueSuffixes = requests.map(getDidUniqueSuffix);
+  const didUniqueSuffixes = decodedOperations.map(getDidUniqueSuffix);
   const merkleTools = new MerkleTools({
     hashType: 'sha256', // optional, defaults to 'sha256'
   });
@@ -31,7 +38,10 @@ const create = sidetree => async (req) => {
   // Anchor on ethereum
   const transaction = await sidetree.blockchain.write(anchorFileHash);
 
+  // Remove written operations from queue if batch writing is successful.
+  await sidetree.operationQueue.dequeue(decodedOperations.length);
+
   return transaction;
 };
 
-module.exports = create;
+module.exports = batchWrite;

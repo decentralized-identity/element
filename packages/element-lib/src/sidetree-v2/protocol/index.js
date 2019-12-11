@@ -1,9 +1,9 @@
 const resolve = require('./resolve');
 const sync = require('./sync');
-const create = require('./create');
+const batchWrite = require('./batchWrite');
 
 module.exports = {
   resolve,
   sync,
-  create,
+  batchWrite,
 };

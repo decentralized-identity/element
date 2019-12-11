@@ -1,5 +1,11 @@
 const element = require('../../index');
-const { encodeJson, decodeJson } = require('./func');
+const {
+  encodeJson,
+  decodeJson,
+  syncTransaction,
+} = require('./func');
+const { getDidDocumentModel, getCreatePayload } = require('./op');
+const { resolve } = require('./protocol');
 
 const getTestSideTree = () => {
   const db = new element.adapters.database.ElementRXDBAdapter({
@@ -17,7 +23,18 @@ const getTestSideTree = () => {
     anchorContractAddress: '0x1DABA81D326Ae274d5b18111440a05cD9581b305',
   });
 
-  return new element.SidetreeV2({ db, storage, blockchain });
+  const parameters = {
+    maxOperationsPerBatch: 5,
+    batchingIntervalInSeconds: 1,
+  };
+
+  const sidetree = new element.SidetreeV2({
+    db,
+    storage,
+    blockchain,
+    parameters,
+  });
+  return sidetree;
 };
 
 const changeKid = (payload, newKid) => {
@@ -32,7 +49,23 @@ const changeKid = (payload, newKid) => {
   };
 };
 
+const getDidDocumentForPayload = async (sidetree, payload, didUniqueSuffix) => {
+  const transaction = await sidetree.batchScheduler.writeNow(payload);
+  await syncTransaction(sidetree, transaction);
+  const didDocument = await resolve(sidetree)(didUniqueSuffix);
+  return didDocument;
+};
+
+const getCreatePayloadForKeyIndex = async (mks, index) => {
+  const primaryKey = await mks.getKeyForPurpose('primary', index);
+  const recoveryKey = await mks.getKeyForPurpose('recovery', index);
+  const didDocumentModel = getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
+  return getCreatePayload(didDocumentModel, primaryKey);
+};
+
 module.exports = {
   getTestSideTree,
   changeKid,
+  getDidDocumentForPayload,
+  getCreatePayloadForKeyIndex,
 };
