@@ -48,4 +48,28 @@ describe('BatchScheduler', () => {
       expect(didDocument3.id).toContain(didUniqueSuffix3);
     });
   });
+
+  describe('startPeriodicBatchWriting / stopPeriodicBatchWriting', () => {
+    const sleep = seconds => new Promise(r => setTimeout(r, seconds * 1000));
+
+    it('should process a batch of operations', async () => {
+      const spy = jest.spyOn(batchScheduler, 'writeOperationBatch');
+      expect(batchScheduler.continuePeriodicBatchWriting).toBe(false);
+      await batchScheduler.startPeriodicBatchWriting();
+      expect(batchScheduler.continuePeriodicBatchWriting).toBe(true);
+      // Check that batching happens every second
+      expect(spy).toHaveBeenCalledTimes(0);
+      await sleep(1);
+      expect(spy).toHaveBeenCalledTimes(1);
+      await sleep(1);
+      expect(spy).toHaveBeenCalledTimes(2);
+      await batchScheduler.stopPeriodicBatchWriting();
+      expect(batchScheduler.continuePeriodicBatchWriting).toBe(false);
+      // Check that batching stops after next batch
+      await sleep(1);
+      expect(spy).toHaveBeenCalledTimes(3);
+      await sleep(1);
+      expect(spy).toHaveBeenCalledTimes(3);
+    });
+  });
 });
