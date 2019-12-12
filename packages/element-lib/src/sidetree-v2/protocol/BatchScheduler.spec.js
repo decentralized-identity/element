@@ -5,6 +5,8 @@ const { MnemonicKeySystem } = require('../../../index');
 const sidetree = getTestSideTree();
 const batchScheduler = new BatchScheduler(sidetree);
 
+jest.setTimeout(10 * 1000);
+
 describe('BatchScheduler', () => {
   describe('writeNow', () => {
     const mks = new MnemonicKeySystem(MnemonicKeySystem.generateMnemonic());
