@@ -47,6 +47,8 @@ const sidetree = new element.SidetreeV2({
   parameters,
 });
 
+
+// eslint-disable-next-line no-unused-vars
 const attackFullSyncNode = async (n) => {
   // Attacker created transactions
   let start = Date.now();
