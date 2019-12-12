@@ -367,7 +367,7 @@ describe('resolve', () => {
   });
 });
 
-describe.only('resolve just in time', () => {
+describe('resolve just in time', () => {
   describe('create', () => {
     const mks = new MnemonicKeySystem(MnemonicKeySystem.generateMnemonic());
     let createPayload1;
