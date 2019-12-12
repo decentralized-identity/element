@@ -47,7 +47,7 @@ const sidetree = new element.SidetreeV2({
   parameters,
 });
 
-const attack = async (n) => {
+const attackFullSyncNode = async (n) => {
   // Attacker created transactions
   let start = Date.now();
   const attacker = new Attacker(sidetree, n);
@@ -66,21 +66,51 @@ const attack = async (n) => {
   console.log(`observer synced ${n} operations in ${(end - start) / 1000}s`);
   // All transactions should be resolveable
   start = Date.now();
-  const firstDid = attacker.queue[0].didUniqueSuffix;
-  await sidetree.resolve(firstDid);
-  const lastDid = attacker.queue[attacker.queue.length - 1].didUniqueSuffix;
-  await sidetree.resolve(lastDid);
+  const { didUniqueSuffix } = attacker.queue[0];
+  await sidetree.resolve(didUniqueSuffix);
+  end = Date.now();
+  console.log(`user resolved a did in ${(end - start) / 1000}s`);
+};
+
+const attackJustInTimeSyncNode = async (n) => {
+  // Attacker created transactions
+  let start = Date.now();
+  const attacker = new Attacker(sidetree, n);
+  await attacker.start();
+  let end = Date.now();
+  console.log(`attacker created ${n} operations in ${(end - start) / 1000}s`);
+  // Sidetree processed transactions in batch
+  start = Date.now();
+  await sidetree.batchWrite();
+  end = Date.now();
+  console.log(`sidetree wrote a batch of ${n} operations in ${(end - start) / 1000}s`);
+  // Resolver should sync did
+  start = Date.now();
+  const { didUniqueSuffix } = attacker.queue[0];
+  await sidetree.sync(didUniqueSuffix);
+  end = Date.now();
+  console.log(`observer synced ${n} operations in ${(end - start) / 1000}s`);
+  // All transactions should be resolveable
+  start = Date.now();
+  await sidetree.resolve(didUniqueSuffix);
   end = Date.now();
   console.log(`user resolved a did in ${(end - start) / 1000}s`);
 };
 
 (async () => {
-  await attack(10);
-  await attack(100);
-  await attack(1000);
-  await attack(2000);
-  await attack(5000);
-  await attack(10000);
+//  await attackFullSyncNode(10);
+//  await attackFullSyncNode(100);
+//  await attackFullSyncNode(1000);
+//  await attackFullSyncNode(2000);
+//  await attackFullSyncNode(5000);
+//  await attackFullSyncNode(10000);
+//
+  await attackJustInTimeSyncNode(10);
+  await attackJustInTimeSyncNode(100);
+  await attackJustInTimeSyncNode(1000);
+  await attackJustInTimeSyncNode(2000);
+  await attackJustInTimeSyncNode(5000);
+  await attackJustInTimeSyncNode(10000);
   // eslint-disable-next-line no-process-exit
   process.exit(0);
 })();
