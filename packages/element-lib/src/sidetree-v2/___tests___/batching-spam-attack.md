@@ -29,6 +29,6 @@ From this table, we can see that the bottleneck is the sync time of the observer
 
 Even if the maximum number of operations per batch is theoretically 10000, a node running on standard hardware would need to limit its operationQueue size to about 1000.
 
-Considering an average block time of 15s (https://etherscan.io/chart/blocktime), that gives an effective throughtput of 67 transactions per second on standard hardware
+Considering an average block time of 15s (https://etherscan.io/chart/blocktime), that gives an effective throughput of 67 operations per second on standard hardware
 
 Above that threshold, the full sync done by the observer cannot keep up, and a partial sync would need to be done at resolve time
