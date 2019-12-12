@@ -94,6 +94,9 @@ const syncTransaction = async (sidetree, transaction, onlyDidUniqueSuffix = null
       writeOperationToCache,
       filteredOperationByDidUniqueSuffixes,
     ).then(() => {
+      if (operationsByDidUniqueSuffixes.length !== filteredOperationByDidUniqueSuffixes.length) {
+        return null;
+      }
       return sidetree.db.write(`transaction:${transaction.transactionNumber}`, {
         type: 'transaction',
         ...transaction,

@@ -415,5 +415,12 @@ describe.only('resolve just in time', () => {
       const cachedTransactions = await sidetree.db.readCollection('transaction');
       expect(cachedTransactions).toHaveLength(0);
     });
+
+    it('should fully synced transaction if did is the only suffix in the batch', async () => {
+      const didDocument = await resolve(sidetree)(didUniqueSuffix3, true);
+      expect(didDocument.id).toContain(didUniqueSuffix3);
+      const cachedTransactions = await sidetree.db.readCollection('transaction');
+      expect(cachedTransactions).toHaveLength(1);
+    });
   });
 });
