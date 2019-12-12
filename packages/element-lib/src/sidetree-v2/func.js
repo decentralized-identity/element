@@ -62,11 +62,15 @@ const batchFileToOperations = batchFile => batchFile.operations.map((op) => {
   };
 });
 
-const syncTransaction = async (sidetree, transaction) => {
+const syncTransaction = async (sidetree, transaction, onlyDidUniqueSuffix = null) => {
   try {
     isTransactionValid(transaction);
     const anchorFile = await sidetree.storage.read(transaction.anchorFileHash);
     isAnchorFileValid(anchorFile);
+    // Only sync the batch files containing operations about that didUniqueSuffix if provided
+    if (onlyDidUniqueSuffix && !anchorFile.didUniqueSuffixes.includes(onlyDidUniqueSuffix)) {
+      return null;
+    }
     const batchFile = await sidetree.storage.read(anchorFile.batchFileHash);
     isBatchFileValid(batchFile);
     const operations = batchFileToOperations(batchFile);
@@ -79,13 +83,16 @@ const syncTransaction = async (sidetree, transaction) => {
         operation,
       };
     });
+    const filteredOperationByDidUniqueSuffixes = operationsByDidUniqueSuffixes
+      // Only keep operations related to the didUniqueSuffix if provided
+      .filter(op => !onlyDidUniqueSuffix || op.didUniqueSuffix === onlyDidUniqueSuffix);
     const writeOperationToCache = (op) => {
       const operationId = `operation:${op.operation.operationHash}${op.transaction.transactionTime}`;
       return sidetree.db.write(operationId, op);
     };
     return executeSequentially(
       writeOperationToCache,
-      operationsByDidUniqueSuffixes,
+      filteredOperationByDidUniqueSuffixes,
     ).then(() => {
       return sidetree.db.write(`transaction:${transaction.transactionNumber}`, {
         type: 'transaction',

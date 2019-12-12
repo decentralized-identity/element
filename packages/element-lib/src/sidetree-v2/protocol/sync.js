@@ -15,7 +15,8 @@ const getFirstUnprocessedBlockNumber = (transactionsAlreadyProcessed) => {
   return firstUnprocessedTransaction.transactionTime;
 };
 
-const sync = sidetree => async () => {
+// If a onlyDidSuffix argument is specified, only sync the operations of that suffix
+const sync = sidetree => async (onlyDidUniqueSuffix = null) => {
   // Get a set of transactions that have only been processed from cache
   const transactionsAlreadyProcessed = await sidetree.db.readCollection('transaction');
   const processedSet = new Set(transactionsAlreadyProcessed.map(t => t.transactionNumber));
@@ -28,10 +29,11 @@ const sync = sidetree => async () => {
   );
   const transactionQueue = transactions
     // Only process transactions that haven't been processed
-    .filter(transaction => !processedSet.has(transaction.transactionNumber))
-    // Only process the first 100 unprocessed transactions
-    .slice(0, 100);
-  return executeSequentially(t => syncTransaction(sidetree, t), transactionQueue);
+    .filter(transaction => !processedSet.has(transaction.transactionNumber));
+  return executeSequentially(
+    t => syncTransaction(sidetree, t, onlyDidUniqueSuffix),
+    transactionQueue,
+  );
 };
 
 module.exports = sync;

@@ -134,9 +134,13 @@ const applyOperation = async (state, operation, lastValidOperation) => {
     return { valid: false, newState };
   }
 };
-
-const resolve = sidetree => async (did) => {
+const resolve = sidetree => async (did, justInTime = false) => {
   const didUniqueSuffix = did.split(':').pop();
+  if (justInTime) {
+    // If the justInTime flag is true then perform a partial sync to only sync
+    // the batch files containing operations for that didUniqueSuffix
+    await sidetree.sync(did);
+  }
   const operations = await sidetree.db.readCollection(didUniqueSuffix);
   // eslint-disable-next-line max-len
   operations.sort((op1, op2) => op1.transaction.transactionNumber - op2.transaction.transactionNumber);
