@@ -12,10 +12,10 @@ import 'brace/mode/json';
 import 'brace/theme/github';
 
 import FormControl from '@material-ui/core/FormControl';
-
-import {
-  Button, Typography, Grid, TextField,
-} from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
 import { DisplayPayloadDialog } from '../index';
 
 const base64url = require('base64url');

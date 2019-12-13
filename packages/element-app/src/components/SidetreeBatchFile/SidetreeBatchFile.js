@@ -6,10 +6,9 @@ import Typography from '@material-ui/core/Typography/Typography';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails/ExpansionPanelDetails';
-
 import Avatar from '@material-ui/core/Avatar';
-
-import { VerifiedUser, ExpandMore } from '@material-ui/icons';
+import VerifiedUser from '@material-ui/icons/VerifiedUser';
+import ExpandMore from '@material-ui/icons/ExpandMore';
 
 import { SidetreeOperation } from '../SidetreeOperation';
 

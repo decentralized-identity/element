@@ -1,18 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-
-import {
-  Paper,
-  List,
-  ListItem,
-  Avatar,
-  ListItemText,
-  ListItemSecondaryAction,
-  IconButton,
-} from '@material-ui/core';
-
-import { FilterNone, VerifiedUser } from '@material-ui/icons';
+import Paper from '@material-ui/core/Paper';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import Avatar from '@material-ui/core/Avatar';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import IconButton from '@material-ui/core/IconButton';
+import FilterNone from '@material-ui/icons/FilterNone';
+import VerifiedUser from '@material-ui/icons/VerifiedUser';
 
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 

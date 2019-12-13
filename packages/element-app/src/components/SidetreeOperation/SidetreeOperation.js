@@ -24,9 +24,10 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
-import {
-  VerifiedUser, ExpandMore, Lock, Edit,
-} from '@material-ui/icons';
+import VerifiedUser from '@material-ui/icons/VerifiedUser';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import Lock from '@material-ui/icons/Lock';
+import Edit from '@material-ui/icons/Edit';
 
 // eslint-disable-next-line
 const styles = theme => ({

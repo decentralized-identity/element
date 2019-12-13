@@ -1,32 +1,25 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-
-import {
-  Typography,
-  List,
-  ListItem,
-  Avatar,
-  ListItemText,
-  ListItemSecondaryAction,
-  IconButton,
-} from '@material-ui/core';
-
+import Typography from '@material-ui/core/Typography';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import Avatar from '@material-ui/core/Avatar';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import IconButton from '@material-ui/core/IconButton';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-
-import {
-  FilterNone, DeviceHub, Fingerprint, VpnKey, Https,
-} from '@material-ui/icons';
-
+import FilterNone from '@material-ui/icons/FilterNone';
+import DeviceHub from '@material-ui/icons/DeviceHub';
+import Fingerprint from '@material-ui/icons/Fingerprint';
+import VpnKey from '@material-ui/icons/VpnKey';
+import Https from '@material-ui/icons/Https';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-
 import QRCode from 'qrcode.react';
-
 import { DIDDocumentHeader } from '../DIDDocumentHeader';
 
 // eslint-disable-next-line

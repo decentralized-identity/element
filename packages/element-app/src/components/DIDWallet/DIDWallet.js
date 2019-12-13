@@ -1,19 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
-import {
-  Paper,
-  Button,
-  Typography,
-  Grid,
-  FormControl,
-  FormLabel,
-  FormGroup,
-  FormControlLabel,
-  Switch,
-  Chip,
-} from '@material-ui/core';
-
+import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
+import Chip from '@material-ui/core/Chip';
 import { red } from '@material-ui/core/colors';
 
 import QRCode from 'qrcode.react';
