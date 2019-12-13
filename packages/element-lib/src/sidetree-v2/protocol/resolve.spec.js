@@ -4,6 +4,7 @@ const {
   getTestSideTree,
   changeKid,
   getDidDocumentForPayload,
+  getCreatePayloadForKeyIndex,
 } = require('../test-utils');
 const {
   getDidDocumentModel,
@@ -362,6 +363,64 @@ describe('resolve', () => {
       await syncTransaction(sidetree, secondDeleteTransaction);
       const didDocument = await resolve(sidetree)(didUniqueSuffix);
       expect(didDocument).not.toBeDefined();
+    });
+  });
+});
+
+describe('resolve just in time', () => {
+  describe('create', () => {
+    const mks = new MnemonicKeySystem(MnemonicKeySystem.generateMnemonic());
+    let createPayload1;
+    let createPayload2;
+    let createPayload3;
+    let didUniqueSuffix1;
+    let didUniqueSuffix2;
+    let didUniqueSuffix3;
+    let spyDbWrite;
+
+    beforeAll(async () => {
+      await sidetree.db.deleteDB();
+      // Create a first transaction with two operations
+      createPayload1 = await getCreatePayloadForKeyIndex(mks, 0);
+      createPayload2 = await getCreatePayloadForKeyIndex(mks, 1);
+      didUniqueSuffix1 = getDidUniqueSuffix(createPayload1);
+      didUniqueSuffix2 = getDidUniqueSuffix(createPayload2);
+      await sidetree.operationQueue.enqueue(didUniqueSuffix1, createPayload1);
+      await sidetree.operationQueue.enqueue(didUniqueSuffix2, createPayload2);
+      await sidetree.batchWrite();
+      // Create a second transaction with one other operation
+      createPayload3 = await getCreatePayloadForKeyIndex(mks, 2);
+      didUniqueSuffix3 = getDidUniqueSuffix(createPayload3);
+      await sidetree.operationQueue.enqueue(didUniqueSuffix3, createPayload3);
+      await sidetree.batchWrite();
+    });
+
+    it('should resolve the did just in time without syncing first', async () => {
+      spyDbWrite = jest.spyOn(sidetree.db, 'write');
+      const didDocument = await resolve(sidetree)(didUniqueSuffix1, true);
+      expect(didDocument.id).toContain(didUniqueSuffix1);
+    });
+
+    it('should only have synced one of the three operations', async () => {
+      expect(spyDbWrite).toHaveBeenCalledTimes(1);
+      const operations1 = await sidetree.db.readCollection(didUniqueSuffix1);
+      expect(operations1).toHaveLength(1);
+      const operations2 = await sidetree.db.readCollection(didUniqueSuffix2);
+      expect(operations2).toHaveLength(0);
+      const operations3 = await sidetree.db.readCollection(didUniqueSuffix3);
+      expect(operations3).toHaveLength(0);
+    });
+
+    it('should not have fully synced any transactions', async () => {
+      const cachedTransactions = await sidetree.db.readCollection('transaction');
+      expect(cachedTransactions).toHaveLength(0);
+    });
+
+    it('should fully synced transaction if did is the only suffix in the batch', async () => {
+      const didDocument = await resolve(sidetree)(didUniqueSuffix3, true);
+      expect(didDocument.id).toContain(didUniqueSuffix3);
+      const cachedTransactions = await sidetree.db.readCollection('transaction');
+      expect(cachedTransactions).toHaveLength(1);
     });
   });
 });
