@@ -244,35 +244,4 @@ router.get('/:did/record', async (req, res, next) => {
   }
 });
 
-/**
- * @swagger
- *
- * paths:
- *   "/sidetree/{did}/previousOperationHash":
- *     get:
- *       description: Return the previousOperationHash.
- *       tags: [Sidetree]
- *       produces:
- *       - application/json
- *       parameters:
- *       - in: path
- *         name: did
- *         required: true
- *         type: string
- *       responses:
- *         '200':
- *           description: A Sidetree operation hash.
- */
-router.get('/:did/previousOperationHash', async (req, res, next) => {
-  try {
-    const { did } = req.params;
-    const previousOperationHash = await req.app
-      .get('sidetree')
-      .getPreviousOperationHash(did.split(':').pop());
-    res.status(200).json({ previousOperationHash });
-  } catch (e) {
-    next(e);
-  }
-});
-
 module.exports = router;

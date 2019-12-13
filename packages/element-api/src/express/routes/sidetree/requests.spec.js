@@ -40,13 +40,6 @@ describe('sidetree', () => {
     expect(res.body.record.doc.id).toBe(actor.did);
   });
 
-  it('previousOperationHash', async () => {
-    res = await server
-      .get(`/api/v1/sidetree/${actor.did}/previousOperationHash`)
-      .set('Accept', 'application/json');
-    expect(res.body.previousOperationHash).toBeDefined();
-  });
-
   it('operations', async () => {
     res = await server.get('/api/v1/sidetree/operations').set('Accept', 'application/json');
     expect(res.body.length).toBeDefined();
