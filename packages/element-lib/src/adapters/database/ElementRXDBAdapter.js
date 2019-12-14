@@ -2,7 +2,8 @@
 const RxDB = require('rxdb');
 
 class ElementRXDBAdapter {
-  constructor({ name, remote }) {
+  // TODO
+  constructor({ name, remote, adapter }) {
     // RXDB name regex is quite restrictive, therefore we have to replace
     // some special characters like "." and "-" with "_"
     // and put all letters to lowercase
@@ -16,6 +17,13 @@ class ElementRXDBAdapter {
       RxDB.plugin(require('pouchdb-adapter-memory'));
       RxDB.plugin(require('pouchdb-adapter-http'));
       this.adapter = 'memory';
+    }
+    switch (adapter) {
+      case 'websql':
+        RxDB.plugin(require('pouchdb-adapter-node-websql'));
+        this.adapter = adapter;
+        break;
+      default:
     }
   }
 
