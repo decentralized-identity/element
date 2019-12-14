@@ -62,10 +62,24 @@ const batchFileToOperations = batchFile => batchFile.operations.map((op) => {
   };
 });
 
+const getAnchorFile = async (sidetree, anchorFileHash) => {
+  const cachedAnchorFile = await sidetree.db.read(anchorFileHash);
+  let anchorFile;
+  if (!cachedAnchorFile) {
+    console.log('no anchorFile found', anchorFileHash);
+    anchorFile = await sidetree.storage.read(anchorFileHash);
+    await sidetree.storage.write(anchorFileHash, anchorFile);
+  } else {
+    console.log('cache hit!', anchorFileHash);
+    anchorFile = cachedAnchorFile;
+  }
+  return anchorFile;
+};
+
 const syncTransaction = async (sidetree, transaction, onlyDidUniqueSuffix = null) => {
   try {
     isTransactionValid(transaction);
-    const anchorFile = await sidetree.storage.read(transaction.anchorFileHash);
+    const anchorFile = await getAnchorFile(sidetree, transaction.anchorFileHash);
     isAnchorFileValid(anchorFile);
     // Only sync the batch files containing operations about that didUniqueSuffix if provided
     if (onlyDidUniqueSuffix && !anchorFile.didUniqueSuffixes.includes(onlyDidUniqueSuffix)) {
