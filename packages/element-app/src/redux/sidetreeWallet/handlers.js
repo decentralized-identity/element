@@ -1,20 +1,23 @@
 import { withHandlers } from 'recompose';
 import element from '@transmute/element-lib';
 
+// FIXME
+const sidetree = new element.SidetreeV2({});
+const { func, op } = sidetree;
+
 export default withHandlers({
   getMyDidUniqueSuffix: ({ wallet }) => async () => {
     const [primaryKey] = Object.values(wallet.data.keys);
-    return element.op.getDidUniqueSuffix({
-      primaryKey,
-      recoveryPublicKey: primaryKey.publicKey,
-    });
+    const didDocumentModel = op.getDidDocumentModel(primaryKey.publicKey, primaryKey.publicKey);
+    const createPayload = await op.getCreatePayload(didDocumentModel, primaryKey);
+    const didUniqueSuffix = func.getDidUniqueSuffix(createPayload);
+    return didUniqueSuffix;
   },
   createDIDRequest: ({ wallet }) => async () => {
     const [primaryKey] = Object.values(wallet.data.keys);
-    return element.op.create({
-      primaryKey,
-      recoveryPublicKey: primaryKey.publicKey,
-    });
+    const didDocumentModel = op.getDidDocumentModel(primaryKey.publicKey, primaryKey.publicKey);
+    const createPayload = await op.getCreatePayload(didDocumentModel, primaryKey);
+    return createPayload;
   },
   createAddKeyRequest: ({ wallet }) => async (key, myDidDocument, previousOperationHash) => {
     const [primaryKey] = Object.values(wallet.data.keys);
