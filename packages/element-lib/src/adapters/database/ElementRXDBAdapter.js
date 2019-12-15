@@ -52,9 +52,7 @@ class ElementRXDBAdapter {
           multihash: {
             type: 'string',
           },
-          object: {
-            type: 'object',
-          },
+          object: {},
           persisted: {
             type: 'boolean',
           },
