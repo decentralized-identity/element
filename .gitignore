@@ -7,3 +7,5 @@ attic
 *.log
 
 licenses
+
+element-rxdb-*
