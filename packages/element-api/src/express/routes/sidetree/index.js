@@ -49,11 +49,12 @@ router.get('/node', async (req, res, next) => {
  *           schema:
  *              type: object
  */
+// FIXME schemas
 router.post('/requests', async (req, res, next) => {
   try {
-    const { header, payload, signature } = req.body;
-    await req.app.get('sidetree').createTransactionFromRequests([{ header, payload, signature }]);
-    res.status(200).json({ ok: true });
+    const sidetree = req.app.get('sidetree-v2');
+    sidetree.batchScheduler.writeNow(req.body);
+    res.sendStatus(202);
   } catch (e) {
     next(e);
   }
@@ -207,8 +208,10 @@ router.get('/operations/:didUniqueSuffix', async (req, res, next) => {
 router.get('/:did', async (req, res, next) => {
   try {
     const { did } = req.params;
-    const result = await req.app.get('sidetree').resolveWithRetry(did, 2);
-    res.status(200).json(result);
+    const sidetree = req.app.get('sidetree-v2');
+    const didDocument = await sidetree.resolve(did, true);
+    console.log({ didDocument });
+    res.status(200).json(didDocument);
   } catch (e) {
     next(e);
   }
