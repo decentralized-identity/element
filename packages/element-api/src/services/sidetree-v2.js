@@ -12,7 +12,7 @@ const blockchain = element.blockchain.ethereum.configure({
 
 const db = new element.adapters.database.ElementRXDBAdapter({
   name: 'element',
-  adapter: 'websql',
+  adapter: 'leveldown',
 });
 
 const storage = new element.adapters.storage.StorageManager(

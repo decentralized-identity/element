@@ -19,9 +19,9 @@ class ElementRXDBAdapter {
       this.adapter = 'memory';
     }
     switch (adapter) {
-      case 'websql':
-        RxDB.plugin(require('pouchdb-adapter-node-websql'));
-        this.adapter = adapter;
+      case 'leveldown':
+        RxDB.plugin(require('pouchdb-adapter-leveldb')); // leveldown adapters need the leveldb plugin to work
+        this.adapter = require('leveldown');
         break;
       default:
     }
