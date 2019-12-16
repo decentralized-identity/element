@@ -66,11 +66,9 @@ const getAnchorFile = async (sidetree, anchorFileHash) => {
   const cachedAnchorFile = await sidetree.db.read(anchorFileHash);
   let anchorFile;
   if (!cachedAnchorFile) {
-    console.log('no anchorFile found', anchorFileHash);
     anchorFile = await sidetree.storage.read(anchorFileHash);
     await sidetree.db.write(anchorFileHash, anchorFile);
   } else {
-    console.log('cache hit!', anchorFileHash);
     anchorFile = cachedAnchorFile;
   }
   return anchorFile;
