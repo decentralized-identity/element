@@ -173,9 +173,10 @@ router.get('/operations', async (req, res, next) => {
  */
 router.get('/operations/:didUniqueSuffix', async (req, res, next) => {
   try {
-    const { didUniqueSuffix } = req.params;
-    const result = await req.app.get('sidetree').getOperations(didUniqueSuffix);
-    res.status(200).json(result);
+    const didUniqueSuffix = req.params.didUniqueSuffix.split(':').pop();
+    const sidetree = req.app.get('sidetree-v2');
+    const operations = await sidetree.db.readCollection(didUniqueSuffix);
+    res.status(200).json(operations);
   } catch (e) {
     next(e);
   }
@@ -210,7 +211,6 @@ router.get('/:did', async (req, res, next) => {
     const { did } = req.params;
     const sidetree = req.app.get('sidetree-v2');
     const didDocument = await sidetree.resolve(did, true);
-    console.log({ didDocument });
     res.status(200).json(didDocument);
   } catch (e) {
     next(e);
@@ -240,6 +240,7 @@ router.get('/:did', async (req, res, next) => {
 router.get('/:did/record', async (req, res, next) => {
   try {
     const { did } = req.params;
+    // TODO: Use resolver without jit here
     const result = await req.app.get('sidetree').db.read(`element:sidetree:${did}`);
     res.status(200).json(result);
   } catch (e) {
