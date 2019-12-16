@@ -28,7 +28,7 @@ const sync = sidetree => async (onlyDidUniqueSuffix = null) => {
     checkpoint = checkpoint ? checkpoint.transactionTime : 0;
     checkpoint = checkpoint || 0;
   }
-  const fromBlock = Math.max(firstUnprocessedBlock, checkpoint);
+  const fromBlock = Math.max(firstUnprocessedBlock, checkpoint + 1);
   const transactions = await sidetree.blockchain.getTransactions(
     fromBlock,
     'latest',
