@@ -10,15 +10,32 @@ const blockchain = element.blockchain.ethereum.configure({
   anchorContractAddress: config.ethereum.anchor_contract_address,
 });
 
-const db = new element.adapters.database.ElementCouchDBAdapter({
+const db = new element.adapters.database.ElementRXDBAdapter({
   name: 'element',
-  remote: config.couchdb_remote,
+  adapter: 'leveldown',
 });
 
-const storage = element.storage.ipfs.configure({
-  multiaddr: config.ipfs.multiaddr,
-});
+const storage = new element.adapters.storage.StorageManager(
+  db,
+  element.storage.ipfs.configure({
+    multiaddr: config.ipfs.multiaddr,
+  }),
+  {
+    autoPersist: false,
+    retryIntervalSeconds: 5,
+  },
+);
 
-const sidetree = new element.SidetreeV2({ db, storage, blockchain });
+const parameters = {
+  maxOperationsPerBatch: 10 * 1000,
+  batchingIntervalInSeconds: 10,
+};
+
+const sidetree = new element.SidetreeV2({
+  db,
+  storage,
+  blockchain,
+  parameters,
+});
 
 module.exports = sidetree;

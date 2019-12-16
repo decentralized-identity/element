@@ -1,5 +1,5 @@
 /* eslint-disable arrow-body-style */
-const { payloadToHash, verifyOperationSignature } = require('../func');
+const { verifyOperationSignature } = require('../func');
 const { isDidDocumentModelValid, isKeyValid } = require('../validation');
 
 const isSignatureValid = async (didDocument, operation) => {
@@ -32,7 +32,7 @@ const create = async (state, operation, lastValidOperation) => {
   await isSignatureValid(originalDidDocument, operation);
   return {
     ...operation.decodedOperationPayload,
-    id: `did:elem:${payloadToHash(operation.decodedOperationPayload)}`,
+    id: `did:elem:${operation.operationHash}`,
   };
 };
 
@@ -139,7 +139,7 @@ const resolve = sidetree => async (did, justInTime = false) => {
   if (justInTime) {
     // If the justInTime flag is true then perform a partial sync to only sync
     // the batch files containing operations for that didUniqueSuffix
-    await sidetree.sync(did);
+    await sidetree.sync(didUniqueSuffix);
   }
   const operations = await sidetree.db.readCollection(didUniqueSuffix);
   // eslint-disable-next-line max-len

@@ -6,11 +6,11 @@ const API_BASE = process.env.REACT_APP_API_URL;
 export default withHandlers({
   predictDID: ({ set, getMyDidUniqueSuffix }) => async () => {
     const didUniqueSuffix = await getMyDidUniqueSuffix();
-    const defaultDID = `did:elem:${didUniqueSuffix}`;
+    const did = `did:elem:${didUniqueSuffix}`;
     set({
-      predictedDID: defaultDID,
+      predictedDID: did,
     });
-    let res = await axios.get(`${API_BASE}/sidetree/${defaultDID}`);
+    let res = await axios.get(`${API_BASE}/sidetree/${did}`);
     set({ myDidDocument: res.data });
     res = await axios.get(`${API_BASE}/sidetree/operations/${didUniqueSuffix}`);
     set({ sidetreeOperations: res.data });

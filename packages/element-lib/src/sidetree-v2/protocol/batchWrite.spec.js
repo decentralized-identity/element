@@ -50,6 +50,7 @@ describe('batchWrite with one operation', () => {
     const operations = batchFileToOperations(batchFile);
     expect(operations).toHaveLength(1);
     expect(operations[0].decodedOperation).toEqual(createPayload);
+    expect(operations[0].operationHash).toEqual(didUniqueSuffix);
   });
 
   it('should not return the did before sync is called', async () => {

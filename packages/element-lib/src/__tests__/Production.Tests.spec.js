@@ -32,6 +32,7 @@ describe.skip('Production Tests', () => {
     name: 'production-tests',
     // Use a test DB for the production tests
     remote: config.couchdb_remote.replace('element-did', 'test-element-did'),
+    adapter: 'memory',
   });
 
   const manager = new element.adapters.storage.StorageManager(db, storage, {

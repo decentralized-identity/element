@@ -27,6 +27,7 @@ describe('StorageManager', () => {
     });
     db = new element.adapters.database.ElementRXDBAdapter({
       name: 'storage-manager',
+      adapter: 'memory',
     });
   });
 

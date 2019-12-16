@@ -6,6 +6,7 @@ const dbName = 'elementrxdb';
 beforeAll(async () => {
   db = new ElementRXDBAdapter({
     name: dbName,
+    adapter: 'memory',
   });
 });
 

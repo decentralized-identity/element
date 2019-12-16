@@ -376,7 +376,6 @@ describe('resolve just in time', () => {
     let didUniqueSuffix1;
     let didUniqueSuffix2;
     let didUniqueSuffix3;
-    let spyDbWrite;
 
     beforeAll(async () => {
       await sidetree.db.deleteDB();
@@ -396,13 +395,11 @@ describe('resolve just in time', () => {
     });
 
     it('should resolve the did just in time without syncing first', async () => {
-      spyDbWrite = jest.spyOn(sidetree.db, 'write');
       const didDocument = await resolve(sidetree)(didUniqueSuffix1, true);
       expect(didDocument.id).toContain(didUniqueSuffix1);
     });
 
     it('should only have synced one of the three operations', async () => {
-      expect(spyDbWrite).toHaveBeenCalledTimes(1);
       const operations1 = await sidetree.db.readCollection(didUniqueSuffix1);
       expect(operations1).toHaveLength(1);
       const operations2 = await sidetree.db.readCollection(didUniqueSuffix2);

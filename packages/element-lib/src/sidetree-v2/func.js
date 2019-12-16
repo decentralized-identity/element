@@ -35,15 +35,14 @@ const payloadToHash = (payload) => {
 };
 
 const getDidUniqueSuffix = (operation) => {
-  const decodedPayload = decodeJson(operation.payload);
   const header = decodeJson(operation.protected);
   switch (header.operation) {
     case 'create':
-      return payloadToHash(decodedPayload);
+      return payloadToHash(operation.payload);
     case 'update':
     case 'recover':
     case 'delete':
-      return decodedPayload.didUniqueSuffix;
+      return decodeJson(operation.payload).didUniqueSuffix;
     default:
       throw Error(`Cannot extract didUniqueSuffixe from: ${operation}`);
   }
@@ -62,10 +61,22 @@ const batchFileToOperations = batchFile => batchFile.operations.map((op) => {
   };
 });
 
+const getAnchorFile = async (sidetree, anchorFileHash) => {
+  const cachedAnchorFile = await sidetree.db.read(anchorFileHash);
+  let anchorFile;
+  if (!cachedAnchorFile) {
+    anchorFile = await sidetree.storage.read(anchorFileHash);
+    await sidetree.db.write(anchorFileHash, anchorFile);
+  } else {
+    anchorFile = cachedAnchorFile;
+  }
+  return anchorFile;
+};
+
 const syncTransaction = async (sidetree, transaction, onlyDidUniqueSuffix = null) => {
   try {
     isTransactionValid(transaction);
-    const anchorFile = await sidetree.storage.read(transaction.anchorFileHash);
+    const anchorFile = await getAnchorFile(sidetree, transaction.anchorFileHash);
     isAnchorFileValid(anchorFile);
     // Only sync the batch files containing operations about that didUniqueSuffix if provided
     if (onlyDidUniqueSuffix && !anchorFile.didUniqueSuffixes.includes(onlyDidUniqueSuffix)) {

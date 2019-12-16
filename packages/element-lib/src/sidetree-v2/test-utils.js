@@ -10,6 +10,7 @@ const { resolve } = require('./protocol');
 const getTestSideTree = () => {
   const db = new element.adapters.database.ElementRXDBAdapter({
     name: 'element-test',
+    adapter: 'memory',
   });
 
   const storage = element.storage.ipfs.configure({
