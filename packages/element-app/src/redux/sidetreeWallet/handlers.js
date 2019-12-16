@@ -1,9 +1,7 @@
 import { withHandlers } from 'recompose';
 import element from '@transmute/element-lib';
 
-// FIXME
-const sidetree = new element.SidetreeV2({});
-const { func, op } = sidetree;
+const { func, op } = new element.SidetreeV2({});
 
 export default withHandlers({
   getMyDidUniqueSuffix: ({ wallet }) => async () => {

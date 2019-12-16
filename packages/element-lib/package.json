@@ -63,7 +63,6 @@
     "pouchdb-adapter-idb": "^7.1.1",
     "pouchdb-adapter-leveldb": "^7.1.1",
     "pouchdb-adapter-memory": "^7.1.1",
-    "pouchdb-adapter-node-websql": "^7.0.0",
     "rxdb": "^8.5.0",
     "rxjs": "^6.5.2",
     "secp256k1": "^3.6.2",
