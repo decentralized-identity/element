@@ -35,15 +35,14 @@ const payloadToHash = (payload) => {
 };
 
 const getDidUniqueSuffix = (operation) => {
-  const decodedPayload = decodeJson(operation.payload);
   const header = decodeJson(operation.protected);
   switch (header.operation) {
     case 'create':
-      return payloadToHash(decodedPayload);
+      return payloadToHash(operation.payload);
     case 'update':
     case 'recover':
     case 'delete':
-      return decodedPayload.didUniqueSuffix;
+      return decodeJson(operation.payload).didUniqueSuffix;
     default:
       throw Error(`Cannot extract didUniqueSuffixe from: ${operation}`);
   }

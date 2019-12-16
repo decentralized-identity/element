@@ -1,5 +1,5 @@
 /* eslint-disable arrow-body-style */
-const { payloadToHash, verifyOperationSignature } = require('../func');
+const { verifyOperationSignature } = require('../func');
 const { isDidDocumentModelValid, isKeyValid } = require('../validation');
 
 const isSignatureValid = async (didDocument, operation) => {
@@ -32,7 +32,7 @@ const create = async (state, operation, lastValidOperation) => {
   await isSignatureValid(originalDidDocument, operation);
   return {
     ...operation.decodedOperationPayload,
-    id: `did:elem:${payloadToHash(operation.decodedOperationPayload)}`,
+    id: `did:elem:${operation.operationHash}`,
   };
 };
 
