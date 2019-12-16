@@ -1,16 +1,20 @@
 const faker = require('faker');
 const element = require('@transmute/element-lib');
 
-const generateActors = (count) => {
+const { op, func } = new element.SidetreeV2({});
+
+const generateActors = async (count) => {
   const actors = [];
   let i = 0;
 
   while (i < count) {
     const mks = new element.MnemonicKeySystem(element.MnemonicKeySystem.generateMnemonic());
-    const didUniqueSuffix = element.op.getDidUniqueSuffix({
-      primaryKey: mks.getKeyForPurpose('primary', 0),
-      recoveryPublicKey: mks.getKeyForPurpose('recovery', 0).publicKey,
-    });
+    const primaryKey = mks.getKeyForPurpose('primary', 0);
+    const recoveryKey = mks.getKeyForPurpose('recovery', 0);
+    const didDocumentModel = op.getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
+    // eslint-disable-next-line no-await-in-loop
+    const createPayload = await op.getCreatePayload(didDocumentModel, primaryKey);
+    const didUniqueSuffix = func.getDidUniqueSuffix(createPayload);
     const actor = {
       '@context': 'https://schema.org',
       '@type': 'Person',

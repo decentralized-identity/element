@@ -11,25 +11,27 @@ jest.setTimeout(20 * 1000);
 
 beforeAll(async () => {
   server = await request(app);
-  [actor] = elementFixtures.generateActors(1);
+  [actor] = await elementFixtures.generateActors(1);
 });
 
 afterAll(async () => {});
 
+const { op, func } = new element.SidetreeV2({});
+
 describe('sidetree', () => {
-  it('requests', async () => {
-    const createReq = element.op.create({
-      primaryKey: actor.mks.getKeyForPurpose('primary', 0),
-      recoveryPublicKey: actor.mks.getKeyForPurpose('recovery', 0).publicKey,
-    });
+  it.only('requests', async () => {
+    const primaryKey = actor.mks.getKeyForPurpose('primary', 0);
+    const recoveryKey = actor.mks.getKeyForPurpose('recovery', 0);
+    const didDocumentModel = op.getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
+    const createPayload = await op.getCreatePayload(didDocumentModel, primaryKey);
 
     res = await server
       .post('/api/v1/sidetree/requests')
-      .send(createReq)
+      .send(createPayload)
       .set('Accept', 'application/json');
-    expect(res.body.ok).toBe(true);
+    expect(res.statusCode).toBe(202);
     await new Promise(resolve => setTimeout(resolve, 2 * 1000));
-    res = await server.get(`/api/v1/sidetree/${actor.did}`).set('Accept', 'application/json');
+    res = await server.get(`/api/v1/sidetree/${actor.did}`);
     expect(res.body.id).toBe(actor.did);
   });
 
