@@ -21,7 +21,14 @@ const sync = sidetree => async (onlyDidUniqueSuffix = null) => {
   const transactionsAlreadyProcessed = await sidetree.db.readCollection('transaction');
   const processedSet = new Set(transactionsAlreadyProcessed.map(t => t.transactionNumber));
   // Get all transactions from the smart contract
-  const fromBlock = getFirstUnprocessedBlockNumber(transactionsAlreadyProcessed);
+  const firstUnprocessedBlock = getFirstUnprocessedBlockNumber(transactionsAlreadyProcessed);
+  let checkpoint = 0;
+  if (onlyDidUniqueSuffix) {
+    checkpoint = await sidetree.db.read(`checkpoint:${onlyDidUniqueSuffix}`);
+    checkpoint = checkpoint ? checkpoint.transactionTime : 0;
+    checkpoint = checkpoint || 0;
+  }
+  const fromBlock = Math.max(firstUnprocessedBlock, checkpoint);
   const transactions = await sidetree.blockchain.getTransactions(
     fromBlock,
     'latest',
@@ -30,10 +37,14 @@ const sync = sidetree => async (onlyDidUniqueSuffix = null) => {
   const transactionQueue = transactions
     // Only process transactions that haven't been processed
     .filter(transaction => !processedSet.has(transaction.transactionNumber));
-  return executeSequentially(
+  await executeSequentially(
     t => syncTransaction(sidetree, t, onlyDidUniqueSuffix),
     transactionQueue,
   );
+  if (onlyDidUniqueSuffix && transactionQueue.length > 0) {
+    const { transactionTime } = transactionQueue.pop();
+    await sidetree.db.write(`checkpoint:${onlyDidUniqueSuffix}`, { transactionTime });
+  }
 };
 
 module.exports = sync;
