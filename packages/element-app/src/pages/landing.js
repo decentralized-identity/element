@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
-
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 import {
   grey,
   deepPurple,
@@ -10,10 +11,7 @@ import {
   indigo,
   purple,
 } from '@material-ui/core/colors';
-
 import { AutoRotatingCarousel, Slide } from 'material-auto-rotating-carousel';
-
-import { Button, Typography } from '@material-ui/core';
 
 import { Pages } from '../components/index';
 
