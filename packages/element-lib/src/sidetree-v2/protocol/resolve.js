@@ -139,7 +139,7 @@ const resolve = sidetree => async (did, justInTime = false) => {
   if (justInTime) {
     // If the justInTime flag is true then perform a partial sync to only sync
     // the batch files containing operations for that didUniqueSuffix
-    await sidetree.sync(did);
+    await sidetree.sync(didUniqueSuffix);
   }
   const operations = await sidetree.db.readCollection(didUniqueSuffix);
   // eslint-disable-next-line max-len
