@@ -16,10 +16,10 @@ beforeAll(async () => {
 
 afterAll(async () => {});
 
-const { op, func } = new element.SidetreeV2({});
+const { op } = new element.SidetreeV2({});
 
 describe('sidetree', () => {
-  it.only('requests', async () => {
+  it('requests', async () => {
     const primaryKey = actor.mks.getKeyForPurpose('primary', 0);
     const recoveryKey = actor.mks.getKeyForPurpose('recovery', 0);
     const didDocumentModel = op.getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
