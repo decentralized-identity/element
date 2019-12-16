@@ -13,6 +13,7 @@ const blockchain = element.blockchain.ethereum.configure({
 const db = new element.adapters.database.ElementRXDBAdapter({
   name: 'element-did.rxdb.api',
   remote: config.couchdb_remote,
+  adapter: 'memory',
 });
 
 const storage = element.storage.ipfs.configure({

@@ -18,6 +18,7 @@ beforeAll(async () => {
 
   const db = new element.adapters.database.ElementRXDBAdapter({
     name: 'element-pouchdb.close',
+    adapter: 'memory',
   });
 
   const serviceBus = new element.adapters.serviceBus.ElementNanoBusAdapter();

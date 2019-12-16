@@ -7,6 +7,7 @@ const storage = element.storage.ipfs.configure({
 
 const db = new element.adapters.database.ElementRXDBAdapter({
   name: 'element-rxdb.element-app',
+  adapter: 'browser',
 });
 
 const storageManager = new element.adapters.storage.StorageManager(db, storage);

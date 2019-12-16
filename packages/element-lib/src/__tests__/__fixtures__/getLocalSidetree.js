@@ -8,6 +8,7 @@ module.exports = async (dbName) => {
 
   const db = new element.adapters.database.ElementRXDBAdapter({
     name: `element-pouchdb.${dbName}`,
+    adapter: 'memory',
   });
 
   const serviceBus = new element.adapters.serviceBus.ElementNanoBusAdapter();

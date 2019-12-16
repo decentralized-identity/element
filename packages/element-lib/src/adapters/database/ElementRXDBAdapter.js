@@ -2,7 +2,6 @@
 const RxDB = require('rxdb');
 
 class ElementRXDBAdapter {
-  // TODO
   constructor({ name, remote, adapter }) {
     // RXDB name regex is quite restrictive, therefore we have to replace
     // some special characters like "." and "-" with "_"
@@ -10,18 +9,19 @@ class ElementRXDBAdapter {
     this.name = name.replace(/\.|-/g, '_').toLowerCase();
     // https://USERNAME:PASSWORD@INSTANCE.cloudantnosqldb.appdomain.cloud/DB/
     this.remote = remote;
-    if (process.browser) {
-      RxDB.plugin(require('pouchdb-adapter-idb'));
-      this.adapter = 'idb';
-    } else {
-      RxDB.plugin(require('pouchdb-adapter-memory'));
-      RxDB.plugin(require('pouchdb-adapter-http'));
-      this.adapter = 'memory';
-    }
     switch (adapter) {
+      case 'browser':
+        RxDB.plugin(require('pouchdb-adapter-idb'));
+        this.adapter = 'idb';
+        break;
       case 'leveldown':
         RxDB.plugin(require('pouchdb-adapter-leveldb')); // leveldown adapters need the leveldb plugin to work
         this.adapter = require('leveldown');
+        break;
+      case 'memory':
+        RxDB.plugin(require('pouchdb-adapter-memory'));
+        RxDB.plugin(require('pouchdb-adapter-http'));
+        this.adapter = 'memory';
         break;
       default:
     }
