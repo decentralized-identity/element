@@ -15,9 +15,13 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
-import {
-  DoneAll, VerifiedUser, Receipt, ExpandMore, Link, Fingerprint,
-} from '@material-ui/icons';
+
+import DoneAll from '@material-ui/icons/DoneAll';
+import VerifiedUser from '@material-ui/icons/VerifiedUser';
+import Receipt from '@material-ui/icons/Receipt';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import Link from '@material-ui/icons/Link';
+import Fingerprint from '@material-ui/icons/Fingerprint';
 
 const getIpfsUrl = (anchorFileBase, anchorFileHash) => {
   if (anchorFileBase) {

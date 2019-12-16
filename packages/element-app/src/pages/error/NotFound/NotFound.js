@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-
-import { Typography, Button } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 
 import { Pages, ParticlesContainer } from '../../../components/index';
 

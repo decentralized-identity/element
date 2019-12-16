@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
-import { LinearProgress, Button } from '@material-ui/core';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Button from '@material-ui/core/Button';
 
 export class CreateDefaultDID extends Component {
   handleCreate = () => {

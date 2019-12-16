@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Grid } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
 
 import { Pages } from '../../index';
 

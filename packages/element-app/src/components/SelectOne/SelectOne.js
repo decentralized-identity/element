@@ -9,7 +9,7 @@ import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import Chip from '@material-ui/core/Chip';
 import MenuItem from '@material-ui/core/MenuItem';
-import { Cancel as CancelIcon } from '@material-ui/icons';
+import CancelIcon from '@material-ui/icons/Cancel';
 
 import styles from './SelectOneStyles';
 
