@@ -51,7 +51,11 @@ class SidetreeOperation extends Component {
     const { operation, classes } = this.props;
     const { expanded } = this.state;
 
-    const { alg, kid } = operation.operation.decodedOperation.header;
+    const { decodedOperationPayload } = operation.operation;
+    const { transactionTimestamp } = operation.transaction;
+    const header = operation.operation.decodedHeader;
+    const { alg, kid, operation: operationName } = header;
+    const { signature } = operation.operation.decodedOperation;
 
     return (
       <ExpansionPanel expanded={expanded} className={classes.expansion}>
@@ -71,13 +75,13 @@ class SidetreeOperation extends Component {
               <Typography
                 style={{ paddingTop: '4px' }}
                 variant={'subtitle1'}
-              >{`${operation.operation.decodedOperation.header.operation.toUpperCase()} ${'Operation'}`}</Typography>
+              >{`${operationName.toUpperCase()} ${'Operation'}`}</Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography
                 style={{ paddingTop: '8px', wordBreak: 'break-all' }}
                 variant={'subtitle2'}
-              >{`${moment(operation.transaction.transactionTimestamp * 1000).fromNow()}`}</Typography>
+              >{`${moment(transactionTimestamp * 1000).fromNow()}`}</Typography>
             </Grid>
           </Grid>
         </ExpansionPanelSummary>
@@ -91,7 +95,7 @@ class SidetreeOperation extends Component {
               </ListItemAvatar>
               <ListItemText
                 style={{ wordBreak: 'break-all', marginRight: '2px' }}
-                primary={operation.operation.decodedOperation.header.operation}
+                primary={operationName}
                 secondary={`${alg} ${kid}`}
               />
             </ListItem>
@@ -105,7 +109,7 @@ class SidetreeOperation extends Component {
               <ListItemText
                 style={{ wordBreak: 'break-all', marginRight: '2px' }}
                 primary={'Signature'}
-                secondary={`${operation.operation.decodedOperation.signature}`}
+                secondary={`${signature}`}
               />
             </ListItem>
           </List>
@@ -117,7 +121,7 @@ class SidetreeOperation extends Component {
             readOnly
             wrapEnabled={true}
             name="payloadViewer"
-            value={JSON.stringify(operation.operation.decodedOperationPayload, null, 2)}
+            value={JSON.stringify(decodedOperationPayload, null, 2)}
             editorProps={{ $blockScrolling: true }}
           />
         </ExpansionPanelDetails>
