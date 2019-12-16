@@ -217,35 +217,4 @@ router.get('/:did', async (req, res, next) => {
   }
 });
 
-/**
- * @swagger
- *
- * paths:
- *   "/sidetree/{did}/record":
- *     get:
- *       description: Get a sidetree record for a given DID.
- *       tags: [Sidetree]
- *       produces:
- *       - application/json
- *       parameters:
- *       - in: path
- *         name: did
- *         description: DID to resolve
- *         required: true
- *         type: string
- *       responses:
- *         '200':
- *           description: A sidetree record.
- */
-router.get('/:did/record', async (req, res, next) => {
-  try {
-    const { did } = req.params;
-    // TODO: Use resolver without jit here
-    const result = await req.app.get('sidetree').db.read(`element:sidetree:${did}`);
-    res.status(200).json(result);
-  } catch (e) {
-    next(e);
-  }
-});
-
 module.exports = router;
