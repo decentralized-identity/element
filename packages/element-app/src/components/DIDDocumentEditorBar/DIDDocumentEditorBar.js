@@ -61,7 +61,6 @@ class DIDDocumentEditorBar extends Component {
   };
 
   render() {
-    // const { classes } = this.props;
     const { isAddKeyDialogOpen, isRemoveKeyDialogOpen } = this.state;
     return (
       <React.Fragment>
@@ -71,7 +70,6 @@ class DIDDocumentEditorBar extends Component {
               <Grid item>
                 <Button
                   color="primary"
-                  // variant={'contained'}
                   onClick={() => {
                     this.setState({
                       isAddKeyDialogOpen: true,
@@ -84,7 +82,6 @@ class DIDDocumentEditorBar extends Component {
               <Grid item>
                 <Button
                   color="primary"
-                  // variant={'contained'}
                   onClick={() => {
                     this.setState({
                       isRemoveKeyDialogOpen: true,

@@ -48,10 +48,8 @@ export default withHandlers({
       newPublicKey,
       primaryKey.privateKey,
     );
-    console.log({ payload });
     return payload;
   },
-  // TODO remove didUniqueSuffix
   createRemoveKeyRequest: ({ getKey }) => async (
     kid,
     didUniqueSuffix,
