@@ -21,6 +21,23 @@ See also [ion](https://github.com/decentralized-identity/ion), [sidetree](https:
 - [Current Anchor Contract](https://ropsten.etherscan.io/address/0xD49Da2b7C0A15f6ac5A856f026D68A9B9848D96f)
 
 ## Getting Started
+1. *Clone Repo*
+
+```
+git clone https://github.com/decentralized-identity/element 
+```
+
+2. *Run via `docker-compose up`*
+
+
+```
+docker-compose
+```
+
+
+
+Running Tests 
+---------------
 
 #### If you're using EC2
 
