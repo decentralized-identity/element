@@ -55,7 +55,7 @@ class CreateWalletDialog extends React.Component {
         privateKey: key.privateKey,
         tags: ['Secp256k1VerificationKey2018', kid],
         notes: '',
-      }
+      };
       return walletKey;
     });
     const wallet = didWallet.create({ keys });
