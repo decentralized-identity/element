@@ -22,13 +22,16 @@ class DIDDocumentEditorBar extends Component {
   };
 
   handleAddKey = (item) => {
-    this.props.handleAddKey(this.props.keys[item.value]);
+    const { publicKey, tags } = item.value;
+    const kid = tags[1];
+    this.props.handleAddKey(kid, publicKey);
     this.setState({
       isAddKeyDialogOpen: false,
       isRemoveKeyDialogOpen: false,
     });
   };
 
+  // TODO prevent removing recovery key
   handleRemoveKey = (item) => {
     this.props.handleRemoveKey(item.value);
     this.setState({
@@ -39,17 +42,11 @@ class DIDDocumentEditorBar extends Component {
 
   onlyNewKeys = () => {
     const { didDocument, keys } = this.props;
-    const res = {};
-    Object.values(keys)
-      .filter(
-        key => Object.values(didDocument.publicKey)
-          .map(didKey => didKey.publicKeyHex)
-          .indexOf(key.publicKey) === -1,
-      )
-      .forEach((nk) => {
-        res[nk.kid] = nk;
-      });
-
+    const didDocumentPublicKeys = didDocument.publicKey
+      .map(key => key.publicKeyHex);
+    const res = Object.values(keys)
+      .filter(key => !didDocumentPublicKeys.includes(key.publicKey))
+      .reduce((acc, key) => ({ ...acc, [key.kid]: key }), {});
     return res;
   };
 

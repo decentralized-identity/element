@@ -13,6 +13,7 @@ export default withHandlers({
     let res = await axios.get(`${API_BASE}/sidetree/${did}`);
     set({ myDidDocument: res.data });
     res = await axios.get(`${API_BASE}/sidetree/operations/${didUniqueSuffix}`);
+    // TODO: .header
     set({ sidetreeOperations: res.data });
   },
   getOperationsForDidUniqueSuffix: ({ set }) => async (didUniqueSuffix) => {

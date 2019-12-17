@@ -25,8 +25,8 @@ export class AddKeyDialog extends React.Component {
     const { selected } = this.state;
     const { open } = this.props;
     const suggestions = Object.values(this.props.keys).map(key => ({
-      label: `${key.kid.substring(0, 5)}... ${key.tags[0]}... ${key.publicKey.substring(0, 5)}...`,
-      value: key.kid,
+      label: `${key.tags[1]}...${key.publicKey}`,
+      value: key,
     }));
     return (
       <Dialog fullWidth open={open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
