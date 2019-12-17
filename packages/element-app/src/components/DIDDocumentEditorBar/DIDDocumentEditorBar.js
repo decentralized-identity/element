@@ -31,7 +31,6 @@ class DIDDocumentEditorBar extends Component {
     });
   };
 
-  // TODO prevent removing recovery key
   handleRemoveKey = (item) => {
     this.props.handleRemoveKey(item.value);
     this.setState({
@@ -56,6 +55,8 @@ class DIDDocumentEditorBar extends Component {
       .map(key => key.publicKey);
     const res = didDocument.publicKey
       .filter(key => walletPublicKeys.includes(key.publicKeyHex))
+      // Cannot remove the recovery key (enforced by server element-lib as well)
+      .filter(key => key.id !== '#recovery')
       .reduce((acc, key) => ({ ...acc, [key.id]: key }), {});
     return res;
   };
