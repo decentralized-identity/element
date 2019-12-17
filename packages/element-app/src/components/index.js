@@ -10,8 +10,6 @@ export { default as ElementDIDDocument } from './ElementDIDDocument';
 
 export { default as ExpansionPanelList } from './ExpansionPanelList';
 export { default as DIDWallet } from './DIDWallet';
-export { default as DIDSigner } from './DIDSigner';
-export { default as DIDVerifer } from './DIDVerifer';
 
 export { default as DisplayPayloadDialog } from './DisplayPayloadDialog';
 
