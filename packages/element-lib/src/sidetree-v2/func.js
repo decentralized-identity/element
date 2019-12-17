@@ -74,6 +74,7 @@ const getAnchorFile = async (sidetree, anchorFileHash) => {
 };
 
 const syncTransaction = async (sidetree, transaction, onlyDidUniqueSuffix = null) => {
+  console.log('sync', transaction.transactionNumber);
   try {
     isTransactionValid(transaction);
     const anchorFile = await getAnchorFile(sidetree, transaction.anchorFileHash);
