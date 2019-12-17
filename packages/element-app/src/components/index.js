@@ -13,8 +13,6 @@ export { default as DIDWallet } from './DIDWallet';
 export { default as DIDSigner } from './DIDSigner';
 export { default as DIDVerifer } from './DIDVerifer';
 
-export { default as DIDEncrypter } from './DIDEncrypter';
-
 export { default as DisplayPayloadDialog } from './DisplayPayloadDialog';
 
 export { default as ElementFullNode } from './ElementFullNode';
