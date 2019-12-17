@@ -10,9 +10,6 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
 const styles = {
-  card: {
-    // maxWidth: 345,
-  },
   media: {
     height: 140,
     backgroundSize: 'contain',
@@ -73,7 +70,6 @@ class ImportWalletFileCard extends React.Component {
             />
           </Button>
         </CardActions>
-        {/* <CreateWalletDialog open={dialogIsOpen} /> */}
       </Card>
     );
   }

@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 
 export class CreateDefaultDID extends Component {
   handleCreate = () => {
-    this.props.createDID(this.props.wallet);
+    this.props.createDID();
   };
 
   render() {
@@ -31,7 +31,6 @@ export class CreateDefaultDID extends Component {
 }
 
 CreateDefaultDID.propTypes = {
-  wallet: PropTypes.object.isRequired,
   createDID: PropTypes.func.isRequired,
   resolving: PropTypes.any.isRequired,
 };
