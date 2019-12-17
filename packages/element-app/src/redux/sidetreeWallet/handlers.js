@@ -20,9 +20,10 @@ export default withHandlers({
   },
   createDIDRequest: ({ getKey }) => async () => {
     const primaryKey = getKey('#primary');
+    const recoveryKey = getKey('#recovery');
     const didDocumentModel = op.getDidDocumentModel(
       primaryKey.publicKey,
-      primaryKey.publicKey,
+      recoveryKey.publicKey,
     );
     const createPayload = await op.getCreatePayload(
       didDocumentModel,
