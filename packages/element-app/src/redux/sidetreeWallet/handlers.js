@@ -49,32 +49,18 @@ export default withHandlers({
       signature,
     };
   },
-  createRemoveKeyRequest: ({ wallet }) => async (key, myDidDocument, previousOperationHash) => {
-    const [primaryKey] = Object.values(wallet.data.keys);
-    const didUniqueSuffix = element.op.getDidUniqueSuffix({
-      primaryKey,
-      recoveryPublicKey: primaryKey.publicKey,
-    });
-    const keyIndex = myDidDocument.publicKey.map(k => k.publicKeyHex).indexOf(key.publicKey);
-    const encodedPayload = element.func.encodeJson({
+  createRemoveKeyRequest: ({ wallet }) => async (kid, didUniqueSuffix, operationHash) => {
+    console.log({ kid });
+    const lastOperation = {
       didUniqueSuffix,
-      previousOperationHash,
-      patch: [
-        {
-          op: 'remove',
-          path: `/publicKey/${keyIndex}`,
-        },
-      ],
-    });
-    const signature = element.func.signEncodedPayload(encodedPayload, primaryKey.privateKey);
-    return {
-      header: {
-        operation: 'update',
-        kid: '#primary',
-        alg: 'ES256K',
-      },
-      payload: encodedPayload,
-      signature,
+      operation: { operationHash },
     };
+    const [primaryKey] = Object.values(wallet.data.keys);
+    const payload = await op.getUpdatePayloadForRemovingAKey(
+      lastOperation,
+      kid,
+      primaryKey.privateKey,
+    );
+    return payload;
   },
 });

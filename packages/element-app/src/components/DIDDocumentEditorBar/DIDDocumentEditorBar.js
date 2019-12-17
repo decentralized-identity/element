@@ -30,7 +30,7 @@ class DIDDocumentEditorBar extends Component {
   };
 
   handleRemoveKey = (item) => {
-    this.props.handleRemoveKey(this.props.keys[item.value]);
+    this.props.handleRemoveKey(item.value);
     this.setState({
       isAddKeyDialogOpen: false,
       isRemoveKeyDialogOpen: false,
@@ -55,17 +55,11 @@ class DIDDocumentEditorBar extends Component {
 
   onlyExistingKeys = () => {
     const { didDocument, keys } = this.props;
-    const res = {};
-    Object.values(keys)
-      .filter(
-        key => Object.values(didDocument.publicKey)
-          .map(didKey => didKey.publicKeyHex)
-          .indexOf(key.publicKey) !== -1,
-      )
-      .forEach((nk) => {
-        res[nk.kid] = nk;
-      });
-
+    const walletPublicKeys = Object.values(keys)
+      .map(key => key.publicKey);
+    const res = didDocument.publicKey
+      .filter(key => walletPublicKeys.includes(key.publicKeyHex))
+      .reduce((acc, key) => ({ ...acc, [key.id]: key }), {});
     return res;
   };
 
