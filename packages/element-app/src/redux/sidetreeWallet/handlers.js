@@ -4,58 +4,28 @@ import element from '@transmute/element-lib';
 const { func, op } = new element.SidetreeV2({});
 
 export default withHandlers({
-  getMyDidUniqueSuffix: ({ wallet }) => async () => {
-    const [primaryKey] = Object.values(wallet.data.keys);
-    const didDocumentModel = op.getDidDocumentModel(primaryKey.publicKey, primaryKey.publicKey);
+  getMyDidUniqueSuffix: ({ getKey }) => async () => {
+    const primaryKey = getKey('#primary');
+    const recoveryKey = getKey('#recovery');
+    const didDocumentModel = op.getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
     const createPayload = await op.getCreatePayload(didDocumentModel, primaryKey);
     const didUniqueSuffix = func.getDidUniqueSuffix(createPayload);
     return didUniqueSuffix;
   },
-  createDIDRequest: ({ wallet }) => async () => {
-    const [primaryKey] = Object.values(wallet.data.keys);
+  createDIDRequest: ({ getKey }) => async () => {
+    const primaryKey = getKey('#primary');
     const didDocumentModel = op.getDidDocumentModel(primaryKey.publicKey, primaryKey.publicKey);
     const createPayload = await op.getCreatePayload(didDocumentModel, primaryKey);
     return createPayload;
   },
-  createAddKeyRequest: ({ wallet }) => async (key, myDidDocument, previousOperationHash) => {
-    const [primaryKey] = Object.values(wallet.data.keys);
-    const didUniqueSuffix = element.op.getDidUniqueSuffix({
-      primaryKey,
-      recoveryPublicKey: primaryKey.publicKey,
-    });
-    const encodedPayload = element.func.encodeJson({
-      didUniqueSuffix,
-      previousOperationHash,
-      patch: [
-        {
-          op: 'replace',
-          path: `/publicKey/${myDidDocument.publicKey.length}`,
-          value: {
-            id: `#kid=${key.kid}`,
-            type: 'Secp256k1VerificationKey2018',
-            publicKeyHex: key.publicKey,
-          },
-        },
-      ],
-    });
-    const signature = element.func.signEncodedPayload(encodedPayload, primaryKey.privateKey);
-    return {
-      header: {
-        operation: 'update',
-        kid: '#primary',
-        alg: 'ES256K',
-      },
-      payload: encodedPayload,
-      signature,
-    };
+  createAddKeyRequest: ({ getKey }) => async (key, myDidDocument, previousOperationHash) => {
   },
-  createRemoveKeyRequest: ({ wallet }) => async (kid, didUniqueSuffix, operationHash) => {
-    console.log({ kid });
+  createRemoveKeyRequest: ({ getKey }) => async (kid, didUniqueSuffix, operationHash) => {
     const lastOperation = {
       didUniqueSuffix,
       operation: { operationHash },
     };
-    const [primaryKey] = Object.values(wallet.data.keys);
+    const primaryKey = getKey('#primary');
     const payload = await op.getUpdatePayloadForRemovingAKey(
       lastOperation,
       kid,

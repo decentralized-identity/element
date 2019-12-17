@@ -46,38 +46,19 @@ class CreateWalletDialog extends React.Component {
       confirm: '',
       ciphered: '',
     });
-    const primaryKey = element.func.createKeys();
-    const recoveryKey = element.func.createKeys();
-    const edvKey = element.func.createKeys();
-    const wallet = didWallet.create({
-      keys: [
-        {
-          type: 'assymetric',
-          encoding: 'hex',
-          publicKey: primaryKey.publicKey,
-          privateKey: primaryKey.privateKey,
-          tags: ['Secp256k1VerificationKey2018', '#primary'],
-          notes: '',
-        },
-        {
-          type: 'assymetric',
-          encoding: 'hex',
-          publicKey: recoveryKey.publicKey,
-          privateKey: recoveryKey.privateKey,
-          tags: ['Secp256k1VerificationKey2018', '#recovery'],
-          notes: '',
-        },
-        {
-          type: 'assymetric',
-          encoding: 'hex',
-          publicKey: edvKey.publicKey,
-          privateKey: edvKey.privateKey,
-          tags: ['Secp256k1VerificationKey2018', '#edv'],
-          notes: '',
-        },
-      ],
+    const keys = ['#primary', '#recovery', '#edv'].map((kid) => {
+      const key = element.func.createKeys();
+      const walletKey = {
+        type: 'assymetric',
+        encoding: 'hex',
+        publicKey: key.publicKey,
+        privateKey: key.privateKey,
+        tags: ['Secp256k1VerificationKey2018', kid],
+        notes: '',
+      }
+      return walletKey;
     });
-
+    const wallet = didWallet.create({ keys });
     this.wallet = wallet;
   }
 
