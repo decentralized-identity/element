@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
 import Grid from '@material-ui/core/Grid/Grid';
 import Typography from '@material-ui/core/Typography/Typography';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel/ExpansionPanel';
@@ -9,7 +8,6 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails/Expan
 import Avatar from '@material-ui/core/Avatar';
 import VerifiedUser from '@material-ui/icons/VerifiedUser';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-
 import { SidetreeOperation } from '../SidetreeOperation';
 
 export class SidetreeBatchFile extends Component {

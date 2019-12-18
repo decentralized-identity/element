@@ -62,19 +62,23 @@ const batchFileToOperations = batchFile => batchFile.operations.map((op) => {
 });
 
 const readThenWriteToCache = async (sidetree, hash) => {
+  console.log({ hash });
   const cachedRecord = await sidetree.db.read(hash);
+  console.log({ cachedRecord });
   let record;
   if (!cachedRecord) {
+    console.info('storage read');
     record = await sidetree.storage.read(hash);
     await sidetree.db.write(hash, record);
   } else {
+    console.info('cache read');
     record = cachedRecord;
   }
   return record;
 };
 
 const syncTransaction = async (sidetree, transaction, onlyDidUniqueSuffix = null) => {
-  console.log('sync', transaction.transactionNumber);
+  console.info('sync', transaction.transactionNumber);
   try {
     isTransactionValid(transaction);
     const anchorFile = await readThenWriteToCache(sidetree, transaction.anchorFileHash);

@@ -183,7 +183,6 @@ export default withHandlers({
 
   getSidetreeOperationsFromTransactionTimeHash: ({ set }) => async (transactionTimeHash) => {
     set({ loading: true });
-    // const summary = await sidetree.getTransactionSummary(transactionTimeHash);
     const { data } = await axios.get(
       `${API_BASE}/sidetree/transaction/${transactionTimeHash}/summary`,
     );
