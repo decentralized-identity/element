@@ -54,6 +54,7 @@ export class SidetreeTransaction extends Component {
 
     const { expanded } = this.state;
 
+    // Add link to transaction
     const blochHashUrl = getBlockExplorerUrl(transaction.transactionTimeHash, blockchain, network);
     const ipfsUrl = getIpfsUrl(anchorFileBase, transaction.anchorFileHash);
     return (
@@ -107,7 +108,7 @@ export class SidetreeTransaction extends Component {
                     <IconButton
                       aria-label="Link"
                       onClick={() => {
-                        this.props.onClickTransactionTimeHash(transaction.transactionTimeHash);
+                        this.props.onClickTransactionTimeHash(transaction.transactionHash);
                       }}
                     >
                       <Forward />

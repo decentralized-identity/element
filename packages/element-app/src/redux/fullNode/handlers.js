@@ -180,11 +180,11 @@ export default withHandlers({
     }
     set({ resolving: false });
   },
-
-  getSidetreeOperationsFromTransactionTimeHash: ({ set }) => async (transactionTimeHash) => {
+  // FIXME
+  getSidetreeOperationsFromTransactionTimeHash: ({ set }) => async (transactionHash) => {
     set({ loading: true });
     const { data } = await axios.get(
-      `${API_BASE}/sidetree/transaction/${transactionTimeHash}/summary`,
+      `${API_BASE}/sidetree/transaction/${transactionHash}/summary`,
     );
     set({ sidetreeTransactionSummary: data, loading: false });
   },

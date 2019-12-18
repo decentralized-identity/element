@@ -37,8 +37,8 @@ export class ExplorerPage extends Component {
                   transaction={transaction}
                   blockchain={'Ethereum'}
                   network={'ropsten'}
-                  onClickTransactionTimeHash={(transactionTimeHash) => {
-                    this.props.history.push(`/server/transactions/${transactionTimeHash}`);
+                  onClickTransactionTimeHash={(transactionHash) => {
+                    this.props.history.push(`/server/transactions/${transactionHash}`);
                   }}
                 />
               </Grid>

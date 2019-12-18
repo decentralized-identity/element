@@ -26,7 +26,7 @@ const getWeb3 = ({ mnemonic, hdPath, providerUrl }) => {
 
 const eventLogToSidetreeTransaction = log => ({
   transactionTime: log.blockNumber,
-  // FIMXME
+  // FIXME
   transactionTimeHash: log.blockHash,
   transactionHash: log.transactionHash,
   transactionNumber: log.args.transactionNumber.toNumber(),

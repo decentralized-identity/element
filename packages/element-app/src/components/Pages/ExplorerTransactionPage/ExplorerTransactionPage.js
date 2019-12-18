@@ -13,7 +13,7 @@ import { SidetreeBatchFile } from '../../SidetreeBatchFile';
 export class ExplorerTransactionPage extends Component {
   componentWillMount() {
     this.props.getSidetreeOperationsFromTransactionTimeHash(
-      this.props.match.params.transactionTimeHash,
+      this.props.match.params.transactionHash,
     );
   }
 
