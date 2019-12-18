@@ -11,4 +11,25 @@ const getTransactions = sidetree => async () => {
   return lastTransactionsWithTimestamp;
 };
 
-module.exports = getTransactions;
+const getTransactionSummary = sidetree => async (transactionTimeHash) => {
+  const transaction = await sidetree.getTransactions({ transactionTimeHash });
+  const anchorFile = await sidetree.func.readThenWriteToCache(sidetree, transaction.anchorFileHash);
+  const batchFile = await sidetree.func.readThenWriteToCache(sidetree, anchorFile.batchFileHash);
+  let operations;
+  try {
+    operations = sidetree.func.batchFileToOperations(batchFile);
+  } catch (e) {
+    operations = [];
+  }
+  return {
+    transaction,
+    anchorFile,
+    batchFile,
+    operations,
+  };
+};
+
+module.exports = {
+  getTransactions,
+  getTransactionSummary,
+};

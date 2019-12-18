@@ -2,8 +2,8 @@ const {
   resolve,
   sync,
   batchWrite,
-  getTransactions,
 } = require('./protocol');
+const { getTransactions, getTransactionSummary } = require('./protocol/getTransactions');
 const BatchScheduler = require('./protocol/BatchScheduler');
 const op = require('./op');
 const func = require('./func');
@@ -35,6 +35,7 @@ class Sidetree {
     this.parameters = parameters;
 
     this.getTransactions = getTransactions(this);
+    this.getTransactionSummary = getTransactionSummary(this);
   }
 }
 
