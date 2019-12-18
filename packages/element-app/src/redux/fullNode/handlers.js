@@ -180,7 +180,6 @@ export default withHandlers({
     }
     set({ resolving: false });
   },
-  // FIXME
   getSidetreeOperationsFromTransactionHash: ({ set }) => async (transactionHash) => {
     set({ loading: true });
     const { data } = await axios.get(

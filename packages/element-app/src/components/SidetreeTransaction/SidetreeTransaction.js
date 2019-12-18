@@ -16,15 +16,16 @@ import IconButton from '@material-ui/core/IconButton';
 import DoneAll from '@material-ui/icons/DoneAll';
 import VerifiedUser from '@material-ui/icons/VerifiedUser';
 import Receipt from '@material-ui/icons/Receipt';
+import ThumbsUpDownIcon from '@material-ui/icons/ThumbsUpDown';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import Link from '@material-ui/icons/Link';
 import LocalActivity from '@material-ui/icons/LocalActivity';
 import Forward from '@material-ui/icons/Forward';
 
-const getBlockExplorerUrl = (blockHash, blockchain, network) => {
+const getBlockExplorerUrl = (suffix, blockchain, network) => {
   if (blockchain === 'Ethereum') {
     const sub = network ? `${network}.` : '';
-    return `https://${sub}etherscan.io/block/${blockHash}`;
+    return `https://${sub}etherscan.io/${suffix}`;
   }
   return '#';
 };
@@ -54,9 +55,10 @@ export class SidetreeTransaction extends Component {
 
     const { expanded } = this.state;
 
-    // TODO Add link to transaction
-    const blochHashUrl = getBlockExplorerUrl(transaction.transactionTimeHash, blockchain, network);
-    const ipfsUrl = getIpfsUrl(anchorFileBase, transaction.anchorFileHash);
+    const { transactionHash, transactionTimeHash, anchorFileHash } = transaction;
+    const blochHashUrl = getBlockExplorerUrl(`block/${transactionTimeHash}`, blockchain, network);
+    const transactionHashUrl = getBlockExplorerUrl(`tx/${transactionHash}`, blockchain, network);
+    const ipfsUrl = getIpfsUrl(anchorFileBase, anchorFileHash);
     return (
       <ExpansionPanel expanded={expanded}>
         <ExpansionPanelSummary
@@ -125,7 +127,7 @@ export class SidetreeTransaction extends Component {
                 </ListItemAvatar>
                 <ListItemText
                   style={{ wordBreak: 'break-all', marginRight: '2px' }}
-                  primary={`Block ${transaction.transactionTime}`}
+                  primary={`Ethereum Block ${transaction.transactionTime}`}
                   secondary={transaction.transactionTimeHash}
                 />
                 <ListItemSecondaryAction>
@@ -140,6 +142,28 @@ export class SidetreeTransaction extends Component {
                 </ListItemSecondaryAction>
               </ListItem>
 
+              <ListItem>
+                <ListItemAvatar>
+                  <Avatar>
+                    <ThumbsUpDownIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  style={{ wordBreak: 'break-all', marginRight: '2px' }}
+                  primary={'Ethereum transaction' }
+                  secondary={transaction.transactionHash}
+                />
+                <ListItemSecondaryAction>
+                  <IconButton
+                    aria-label="Link"
+                    onClick={() => {
+                      window.open(transactionHashUrl);
+                    }}
+                  >
+                    <Link />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              </ListItem>
               <ListItem>
                 <ListItemAvatar>
                   <Avatar>
