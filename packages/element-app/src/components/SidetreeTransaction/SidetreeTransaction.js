@@ -98,7 +98,7 @@ export class SidetreeTransaction extends Component {
                 </ListItemAvatar>
                 <ListItemText
                   style={{ wordBreak: 'break-all', marginRight: '2px' }}
-                  primary={`Transaction ${transaction.transactionNumber}`}
+                  primary={`Sidetree Transaction ${transaction.transactionNumber}`}
                   secondary={
                     !transaction.transactionTimestamp
                       ? ''
