@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
 import moment from 'moment';
-
 import Grid from '@material-ui/core/Grid/Grid';
 import Typography from '@material-ui/core/Typography/Typography';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails/ExpansionPanelDetails';
-
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';

@@ -104,7 +104,7 @@ router.get('/docs', async (req, res, next) => {
 router.get('/transactions', async (req, res, next) => {
   try {
     const sidetree = req.app.get('sidetree-v2');
-    const result = await sidetree.getTransactions(req.query);
+    const result = await sidetree.getTransactions();
     res.status(200).json(result);
   } catch (e) {
     next(e);
