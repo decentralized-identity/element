@@ -53,6 +53,7 @@ export class ExplorerTransactionPage extends Component {
                   batchFileHash={sidetreeTransactionSummary.anchorFile.batchFileHash}
                   batchFile={sidetreeTransactionSummary.batchFile}
                   operations={sidetreeTransactionSummary.operations}
+                  transaction={sidetreeTransactionSummary.transaction}
                   expanded={true}
                 />
               </React.Fragment>

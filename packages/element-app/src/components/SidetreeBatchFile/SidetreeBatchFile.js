@@ -24,8 +24,7 @@ export class SidetreeBatchFile extends Component {
   }
 
   render() {
-    const { batchFileHash, operations } = this.props;
-
+    const { batchFileHash, operations, transaction } = this.props;
     const { expanded } = this.state;
 
     return (
@@ -58,8 +57,8 @@ export class SidetreeBatchFile extends Component {
         </ExpansionPanelSummary>
         <ExpansionPanelDetails style={{ flexDirection: 'column' }}>
           {operations.map(op => (
-            <React.Fragment key={op.operation.operationHash}>
-              <SidetreeOperation operation={op} expanded={true} />
+            <React.Fragment key={op.operationHash}>
+              <SidetreeOperation operation={{ operation: op, transaction }} expanded={true} />
             </React.Fragment>
           ))}
         </ExpansionPanelDetails>
@@ -72,6 +71,7 @@ SidetreeBatchFile.propTypes = {
   batchFileHash: PropTypes.string.isRequired,
   batchFile: PropTypes.object.isRequired,
   operations: PropTypes.array.isRequired,
+  transaction: PropTypes.object.isRequired,
   expanded: PropTypes.bool,
 };
 

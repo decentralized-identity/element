@@ -39,15 +39,16 @@ const operations = [
         ],
       },
     },
-    transaction: {
-      transactionTime: 6427949,
-      transactionTimeHash: '0x9352a467034a7a3ea07d696c8fe1d3b573b9d60850ed585e6a597a1dfee8c915',
-      transactionNumber: 416,
-      anchorFileHash: 'QmSoAXE8aFuzhw1Fjdy7dW6kEPE31u4Cduub5ZKaFqwmvQ',
-      transactionTimestamp: 1569024138,
-    },
   },
 ];
+
+const transaction = {
+  transactionTime: 6427949,
+  transactionTimeHash: '0x9352a467034a7a3ea07d696c8fe1d3b573b9d60850ed585e6a597a1dfee8c915',
+  transactionNumber: 416,
+  anchorFileHash: 'QmSoAXE8aFuzhw1Fjdy7dW6kEPE31u4Cduub5ZKaFqwmvQ',
+  transactionTimestamp: 1569024138,
+};
 
 storiesOf('Sidetree', module).add('Batch File', () => (
   <div>
@@ -55,6 +56,7 @@ storiesOf('Sidetree', module).add('Batch File', () => (
       batchFileHash={'QmSXdFQsKWRS6qJLSDgjAG7SLsFfiwJkDK5NDyUScVEjjo'}
       batchFile={batchFile}
       operations={operations}
+      transaction={transaction}
     />
   </div>
 ));
