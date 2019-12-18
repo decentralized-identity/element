@@ -4,9 +4,11 @@ const getTransactions = sidetree => async () => {
     'latest',
     { omitTimestamp: true },
   );
-  // Only get the last 20 transactions
-  const limit = 20;
-  return transactions.slice(-limit);
+  // Only get the last 20 transactions to avoid crashing the page
+  const lastTransactions = transactions.slice(-20);
+  const lastTransactionsWithTimestamp = await sidetree.blockchain
+    .extendSidetreeTransactionWithTimestamp(lastTransactions);
+  return lastTransactionsWithTimestamp;
 };
 
 module.exports = getTransactions;
