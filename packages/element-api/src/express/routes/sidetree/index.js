@@ -128,7 +128,8 @@ router.get('/transactions', async (req, res, next) => {
 router.get('/transaction/:transactionTimeHash/summary', async (req, res, next) => {
   try {
     const { transactionTimeHash } = req.params;
-    const result = await req.app.get('sidetree').getTransactionSummary(transactionTimeHash);
+    const sidetree = req.app.get('sidetree-v2');
+    const result = await sidetree.getTransactionSummary(transactionTimeHash);
     res.status(200).json(result);
   } catch (e) {
     next(e);
