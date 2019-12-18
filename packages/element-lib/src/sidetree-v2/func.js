@@ -62,16 +62,14 @@ const batchFileToOperations = batchFile => batchFile.operations.map((op) => {
 });
 
 const readThenWriteToCache = async (sidetree, hash) => {
-  console.log({ hash });
   const cachedRecord = await sidetree.db.read(hash);
-  console.log({ cachedRecord });
   let record;
   if (!cachedRecord) {
-    console.info('storage read');
+    console.info('storage read', hash);
     record = await sidetree.storage.read(hash);
     await sidetree.db.write(hash, record);
   } else {
-    console.info('cache read');
+    console.info('cache read', hash);
     record = cachedRecord;
   }
   return record;
