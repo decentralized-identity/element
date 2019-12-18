@@ -123,8 +123,15 @@ class EthereumBlockchain {
     return instance;
   }
 
+  async getInstance() {
+    if (!this.instance) {
+      this.instance = await this.anchorContract.at(this.anchorContractAddress);
+    }
+    return this.instance;
+  }
+
   async getTransactions(fromBlock, toBlock, options) {
-    const instance = await this.anchorContract.at(this.anchorContractAddress);
+    const instance = await this.getInstance();
     const logs = await instance.getPastEvents('Anchor', {
       // TODO: add indexing here...
       // https://ethereum.stackexchange.com/questions/8658/what-does-the-indexed-keyword-do
@@ -162,7 +169,7 @@ class EthereumBlockchain {
   async write(anchorFileHash) {
     await this.resolving;
     const [from] = await getAccounts(this.web3);
-    const instance = await this.anchorContract.at(this.anchorContractAddress);
+    const instance = await this.getInstance();
     const bytes32EncodedHash = base58EncodedMultihashToBytes32(anchorFileHash);
     try {
       const receipt = await this.retryWithLatestTransactionCount(
