@@ -65,11 +65,9 @@ const readThenWriteToCache = async (sidetree, hash) => {
   const cachedRecord = await sidetree.db.read(hash);
   let record;
   if (!cachedRecord) {
-    console.info('storage read', hash);
     record = await sidetree.storage.read(hash);
     await sidetree.db.write(hash, record);
   } else {
-    console.info('cache read', hash);
     record = cachedRecord;
   }
   return record;

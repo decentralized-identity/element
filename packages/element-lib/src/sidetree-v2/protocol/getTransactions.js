@@ -1,4 +1,3 @@
-// TODO refactor
 const getTransactions = sidetree => async () => {
   const transactions = await sidetree.blockchain.getTransactions(
     0,
