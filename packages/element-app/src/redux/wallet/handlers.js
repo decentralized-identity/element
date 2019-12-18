@@ -4,6 +4,8 @@ const didWallet = require('@transmute/did-wallet');
 const _ = require('lodash');
 
 export default withHandlers({
+  getKey: ({ wallet }) => kid => Object.values(wallet.data.keys)
+    .find(walletKey => walletKey.tags.includes(kid)),
   importCipherTextWallet: ({
     cipherTextWalletImported,
     snackbarMessage,

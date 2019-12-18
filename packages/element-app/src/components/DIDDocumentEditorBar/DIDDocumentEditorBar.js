@@ -22,7 +22,9 @@ class DIDDocumentEditorBar extends Component {
   };
 
   handleAddKey = (item) => {
-    this.props.handleAddKey(this.props.keys[item.value]);
+    const { publicKey, tags } = item.value;
+    const kid = tags[1];
+    this.props.handleAddKey(kid, publicKey);
     this.setState({
       isAddKeyDialogOpen: false,
       isRemoveKeyDialogOpen: false,
@@ -30,7 +32,7 @@ class DIDDocumentEditorBar extends Component {
   };
 
   handleRemoveKey = (item) => {
-    this.props.handleRemoveKey(this.props.keys[item.value]);
+    this.props.handleRemoveKey(item.value);
     this.setState({
       isAddKeyDialogOpen: false,
       isRemoveKeyDialogOpen: false,
@@ -39,38 +41,27 @@ class DIDDocumentEditorBar extends Component {
 
   onlyNewKeys = () => {
     const { didDocument, keys } = this.props;
-    const res = {};
-    Object.values(keys)
-      .filter(
-        key => Object.values(didDocument.publicKey)
-          .map(didKey => didKey.publicKeyHex)
-          .indexOf(key.publicKey) === -1,
-      )
-      .forEach((nk) => {
-        res[nk.kid] = nk;
-      });
-
+    const didDocumentPublicKeys = didDocument.publicKey
+      .map(key => key.publicKeyHex);
+    const res = Object.values(keys)
+      .filter(key => !didDocumentPublicKeys.includes(key.publicKey))
+      .reduce((acc, key) => ({ ...acc, [key.kid]: key }), {});
     return res;
   };
 
   onlyExistingKeys = () => {
     const { didDocument, keys } = this.props;
-    const res = {};
-    Object.values(keys)
-      .filter(
-        key => Object.values(didDocument.publicKey)
-          .map(didKey => didKey.publicKeyHex)
-          .indexOf(key.publicKey) !== -1,
-      )
-      .forEach((nk) => {
-        res[nk.kid] = nk;
-      });
-
+    const walletPublicKeys = Object.values(keys)
+      .map(key => key.publicKey);
+    const res = didDocument.publicKey
+      .filter(key => walletPublicKeys.includes(key.publicKeyHex))
+      // Cannot remove the recovery key (enforced by server element-lib as well)
+      .filter(key => key.id !== '#recovery')
+      .reduce((acc, key) => ({ ...acc, [key.id]: key }), {});
     return res;
   };
 
   render() {
-    // const { classes } = this.props;
     const { isAddKeyDialogOpen, isRemoveKeyDialogOpen } = this.state;
     return (
       <React.Fragment>
@@ -80,7 +71,6 @@ class DIDDocumentEditorBar extends Component {
               <Grid item>
                 <Button
                   color="primary"
-                  // variant={'contained'}
                   onClick={() => {
                     this.setState({
                       isAddKeyDialogOpen: true,
@@ -93,7 +83,6 @@ class DIDDocumentEditorBar extends Component {
               <Grid item>
                 <Button
                   color="primary"
-                  // variant={'contained'}
                   onClick={() => {
                     this.setState({
                       isRemoveKeyDialogOpen: true,

@@ -30,13 +30,6 @@ class DIDDocumentHeader extends Component {
               </Avatar>
               <ListItemText
                 primary={did}
-                // secondary={
-                //   <React.Fragment>
-                //     <Typography component="span" className={classes.subtitle}>
-                //       {didDocument['@context']}
-                //     </Typography>
-                //   </React.Fragment>
-                // }
               />
               <ListItemSecondaryAction>
                 <CopyToClipboard

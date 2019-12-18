@@ -4,77 +4,68 @@ import element from '@transmute/element-lib';
 const { func, op } = new element.SidetreeV2({});
 
 export default withHandlers({
-  getMyDidUniqueSuffix: ({ wallet }) => async () => {
-    const [primaryKey] = Object.values(wallet.data.keys);
-    const didDocumentModel = op.getDidDocumentModel(primaryKey.publicKey, primaryKey.publicKey);
-    const createPayload = await op.getCreatePayload(didDocumentModel, primaryKey);
+  getMyDidUniqueSuffix: ({ getKey }) => async () => {
+    const primaryKey = getKey('#primary');
+    const recoveryKey = getKey('#recovery');
+    const didDocumentModel = op.getDidDocumentModel(
+      primaryKey.publicKey,
+      recoveryKey.publicKey,
+    );
+    const createPayload = await op.getCreatePayload(
+      didDocumentModel,
+      primaryKey,
+    );
     const didUniqueSuffix = func.getDidUniqueSuffix(createPayload);
     return didUniqueSuffix;
   },
-  createDIDRequest: ({ wallet }) => async () => {
-    const [primaryKey] = Object.values(wallet.data.keys);
-    const didDocumentModel = op.getDidDocumentModel(primaryKey.publicKey, primaryKey.publicKey);
-    const createPayload = await op.getCreatePayload(didDocumentModel, primaryKey);
+  createDIDRequest: ({ getKey }) => async () => {
+    const primaryKey = getKey('#primary');
+    const recoveryKey = getKey('#recovery');
+    const didDocumentModel = op.getDidDocumentModel(
+      primaryKey.publicKey,
+      recoveryKey.publicKey,
+    );
+    const createPayload = await op.getCreatePayload(
+      didDocumentModel,
+      primaryKey,
+    );
     return createPayload;
   },
-  createAddKeyRequest: ({ wallet }) => async (key, myDidDocument, previousOperationHash) => {
-    const [primaryKey] = Object.values(wallet.data.keys);
-    const didUniqueSuffix = element.op.getDidUniqueSuffix({
-      primaryKey,
-      recoveryPublicKey: primaryKey.publicKey,
-    });
-    const encodedPayload = element.func.encodeJson({
+  createAddKeyRequest: ({ getKey }) => async (
+    kid,
+    newPublicKey,
+    didUniqueSuffix,
+    operationHash,
+  ) => {
+    const lastOperation = {
       didUniqueSuffix,
-      previousOperationHash,
-      patch: [
-        {
-          op: 'replace',
-          path: `/publicKey/${myDidDocument.publicKey.length}`,
-          value: {
-            id: `#kid=${key.kid}`,
-            type: 'Secp256k1VerificationKey2018',
-            publicKeyHex: key.publicKey,
-          },
-        },
-      ],
-    });
-    const signature = element.func.signEncodedPayload(encodedPayload, primaryKey.privateKey);
-    return {
-      header: {
-        operation: 'update',
-        kid: '#primary',
-        alg: 'ES256K',
-      },
-      payload: encodedPayload,
-      signature,
+      operation: { operationHash },
     };
+    const primaryKey = getKey('#primary');
+    const payload = await op.getUpdatePayloadForAddingAKey(
+      lastOperation,
+      kid,
+      'signing',
+      newPublicKey,
+      primaryKey.privateKey,
+    );
+    return payload;
   },
-  createRemoveKeyRequest: ({ wallet }) => async (key, myDidDocument, previousOperationHash) => {
-    const [primaryKey] = Object.values(wallet.data.keys);
-    const didUniqueSuffix = element.op.getDidUniqueSuffix({
-      primaryKey,
-      recoveryPublicKey: primaryKey.publicKey,
-    });
-    const keyIndex = myDidDocument.publicKey.map(k => k.publicKeyHex).indexOf(key.publicKey);
-    const encodedPayload = element.func.encodeJson({
+  createRemoveKeyRequest: ({ getKey }) => async (
+    kid,
+    didUniqueSuffix,
+    operationHash,
+  ) => {
+    const lastOperation = {
       didUniqueSuffix,
-      previousOperationHash,
-      patch: [
-        {
-          op: 'remove',
-          path: `/publicKey/${keyIndex}`,
-        },
-      ],
-    });
-    const signature = element.func.signEncodedPayload(encodedPayload, primaryKey.privateKey);
-    return {
-      header: {
-        operation: 'update',
-        kid: '#primary',
-        alg: 'ES256K',
-      },
-      payload: encodedPayload,
-      signature,
+      operation: { operationHash },
     };
+    const primaryKey = getKey('#primary');
+    const payload = await op.getUpdatePayloadForRemovingAKey(
+      lastOperation,
+      kid,
+      primaryKey.privateKey,
+    );
+    return payload;
   },
 });
