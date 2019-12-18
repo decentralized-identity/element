@@ -13,7 +13,7 @@ const getTransactions = sidetree => async () => {
 };
 
 const getTransactionSummary = sidetree => async (transactionHash) => {
-  const { blockNumber } = await sidetree.blockchain.getTransaction(transactionHash);
+  const { blockNumber } = await sidetree.blockchain.getEthereumTransaction(transactionHash);
   const transactions = await sidetree.blockchain.getTransactions(blockNumber, blockNumber);
   const transaction = transactions.find(t => t.transactionHash === transactionHash);
   const anchorFile = await sidetree.func.readThenWriteToCache(sidetree, transaction.anchorFileHash);
