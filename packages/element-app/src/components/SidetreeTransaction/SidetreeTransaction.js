@@ -54,7 +54,7 @@ export class SidetreeTransaction extends Component {
 
     const { expanded } = this.state;
 
-    // Add link to transaction
+    // TODO Add link to transaction
     const blochHashUrl = getBlockExplorerUrl(transaction.transactionTimeHash, blockchain, network);
     const ipfsUrl = getIpfsUrl(anchorFileBase, transaction.anchorFileHash);
     return (
@@ -103,12 +103,12 @@ export class SidetreeTransaction extends Component {
                       : `${moment(transaction.transactionTimestamp * 1000).fromNow()}`
                   }
                 />
-                {this.props.onClickTransactionTimeHash && (
+                {this.props.onClick && (
                   <ListItemSecondaryAction>
                     <IconButton
                       aria-label="Link"
                       onClick={() => {
-                        this.props.onClickTransactionTimeHash(transaction.transactionHash);
+                        this.props.onClick(transaction.transactionHash);
                       }}
                     >
                       <Forward />
@@ -171,7 +171,7 @@ SidetreeTransaction.propTypes = {
   network: PropTypes.string,
   expanded: PropTypes.bool,
   anchorFileBase: PropTypes.string,
-  onClickTransactionTimeHash: PropTypes.func,
+  onClick: PropTypes.func,
 };
 
 export default SidetreeTransaction;

@@ -37,7 +37,7 @@ export class ExplorerPage extends Component {
                   transaction={transaction}
                   blockchain={'Ethereum'}
                   network={'ropsten'}
-                  onClickTransactionTimeHash={(transactionHash) => {
+                  onClick={(transactionHash) => {
                     this.props.history.push(`/server/transactions/${transactionHash}`);
                   }}
                 />

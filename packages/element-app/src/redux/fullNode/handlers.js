@@ -181,7 +181,7 @@ export default withHandlers({
     set({ resolving: false });
   },
   // FIXME
-  getSidetreeOperationsFromTransactionTimeHash: ({ set }) => async (transactionHash) => {
+  getSidetreeOperationsFromTransactionHash: ({ set }) => async (transactionHash) => {
     set({ loading: true });
     const { data } = await axios.get(
       `${API_BASE}/sidetree/transaction/${transactionHash}/summary`,
