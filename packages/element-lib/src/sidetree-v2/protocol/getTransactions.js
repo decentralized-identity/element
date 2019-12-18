@@ -1,14 +1,7 @@
-const getTransactions = sidetree => async ({ transactionTimeHash } = {}) => {
-  let since = 0;
-  let end = 'latest';
-  if (transactionTimeHash) {
-    const blockchainTime = await sidetree.blockchain.getBlockchainTime(transactionTimeHash);
-    since = blockchainTime.time;
-    end = since + 1;
-  }
+const getTransactions = sidetree => async () => {
   const transactions = await sidetree.blockchain.getTransactions(
-    since,
-    end,
+    0,
+    'latest',
     { omitTimestamp: true },
   );
   // Only get the last 20 transactions to avoid crashing the page
@@ -18,9 +11,10 @@ const getTransactions = sidetree => async ({ transactionTimeHash } = {}) => {
   return lastTransactionsWithTimestamp;
 };
 
-const getTransactionSummary = sidetree => async (transactionTimeHash) => {
-  const transactions = await sidetree.getTransactions({ transactionTimeHash });
-  const transaction = transactions.pop();
+const getTransactionSummary = sidetree => async (transactionHash) => {
+  const { blockNumber } = await sidetree.blockchain.getTransaction(transactionHash);
+  const transactions = await sidetree.blockchain.getTransactions(blockNumber, blockNumber);
+  const transaction = transactions.find(t => t.transactionHash === transactionHash);
   const anchorFile = await sidetree.func.readThenWriteToCache(sidetree, transaction.anchorFileHash);
   const batchFile = await sidetree.func.readThenWriteToCache(sidetree, anchorFile.batchFileHash);
   let operations;
