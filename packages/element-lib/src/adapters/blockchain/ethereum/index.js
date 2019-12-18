@@ -26,7 +26,9 @@ const getWeb3 = ({ mnemonic, hdPath, providerUrl }) => {
 
 const eventLogToSidetreeTransaction = log => ({
   transactionTime: log.blockNumber,
+  // FIMXME
   transactionTimeHash: log.blockHash,
+  transactionHash: log.transactionHash,
   transactionNumber: log.args.transactionNumber.toNumber(),
   anchorFileHash: bytes32EnodedMultihashToBase58EncodedMultihash(log.args.anchorFileHash),
 });
@@ -143,6 +145,18 @@ class EthereumBlockchain {
       return txns;
     }
     return this.extendSidetreeTransactionWithTimestamp(txns);
+  }
+
+  async getTransaction(transactionHash) {
+    const transaction = await new Promise((resolve, reject) => {
+      this.web3.eth.getTransaction(transactionHash, (err, data) => {
+        if (err) {
+          return reject(err);
+        }
+        return resolve(data);
+      });
+    });
+    return transaction;
   }
 
   async getBlockchainTime(blockHashOrBlockNumber) {
