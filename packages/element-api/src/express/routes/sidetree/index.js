@@ -138,29 +138,6 @@ router.get('/transaction/:transactionTimeHash/summary', async (req, res, next) =
  * @swagger
  *
  * paths:
- *   "/sidetree/operations":
- *     get:
- *       description: Return all operations.
- *       tags: [Sidetree]
- *       produces:
- *       - application/json
- *       responses:
- *         '200':
- *           description: sidetree operations.
- */
-router.get('/operations', async (req, res, next) => {
-  try {
-    const result = await req.app.get('sidetree').getOperations();
-    res.status(200).json(result);
-  } catch (e) {
-    next(e);
-  }
-});
-
-/**
- * @swagger
- *
- * paths:
  *   "/sidetree/operations/{didUniqueSuffix}":
  *     get:
  *       description: Return all operations for a didUniqueSuffix.
