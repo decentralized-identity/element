@@ -56,6 +56,75 @@ export default withHandlers({
     });
     set({ resolving: false });
   },
+  addKeyToDIDDocument: ({
+    snackbarMessage,
+    getMyDidUniqueSuffix,
+    createAddKeyRequest,
+    set,
+    sidetree,
+  }) => async (kid, newPublicKey) => {
+    set({ resolving: true });
+    const didUniqueSuffix = await getMyDidUniqueSuffix();
+    const operations = await sidetree.db.readCollection(didUniqueSuffix);
+    const lastOperation = operations.pop();
+    const { operationHash } = lastOperation.operation;
+    const updatePayload = await createAddKeyRequest(
+      kid,
+      newPublicKey,
+      didUniqueSuffix,
+      operationHash,
+    );
+    snackbarMessage({
+      snackbarMessage: {
+        message: 'This will take a few minutes....',
+        variant: 'info',
+        open: true,
+      },
+    });
+    await sidetree.batchScheduler.writeNow(updatePayload);
+    const myDidDocument = await sidetree.resolve(didUniqueSuffix, true);
+    set({ myDidDocument });
+    snackbarMessage({
+      snackbarMessage: {
+        message: 'Key added.',
+        variant: 'success',
+        open: true,
+      },
+    });
+    set({ resolving: false });
+  },
+  removeKeyFromDIDDocument: ({
+    snackbarMessage,
+    getMyDidUniqueSuffix,
+    createRemoveKeyRequest,
+    set,
+    sidetree,
+  }) => async (kid) => {
+    set({ resolving: true });
+    const didUniqueSuffix = await getMyDidUniqueSuffix();
+    const operations = await sidetree.db.readCollection(didUniqueSuffix);
+    const lastOperation = operations.pop();
+    const { operationHash } = lastOperation.operation;
+    const updatePayload = await createRemoveKeyRequest(kid, didUniqueSuffix, operationHash);
+    snackbarMessage({
+      snackbarMessage: {
+        message: 'This will take a few minutes....',
+        variant: 'info',
+        open: true,
+      },
+    });
+    await sidetree.batchScheduler.writeNow(updatePayload);
+    const myDidDocument = await sidetree.resolve(didUniqueSuffix, true);
+    set({ myDidDocument });
+    snackbarMessage({
+      snackbarMessage: {
+        message: 'Key removed.',
+        variant: 'success',
+        open: true,
+      },
+    });
+    set({ resolving: false });
+  },
   // eslint-disable-next-line
   resolveDID: ({ didResolved, sidetree, snackbarMessage, set }) => async did => {
     set({ resolving: true });
@@ -130,94 +199,5 @@ export default withHandlers({
     set({ loading: true });
     const summary = await sidetree.getTransactionSummary(transactionHash);
     set({ sidetreeTransactionSummary: summary, loading: false });
-  },
-  addKeyToDIDDocument: ({
-    snackbarMessage,
-    getMyDidUniqueSuffix,
-    createAddKeyRequest,
-    set,
-    sidetree,
-  }) => async (key) => {
-    set({ resolving: true });
-    try {
-      snackbarMessage({
-        snackbarMessage: {
-          message: 'This may take a few minutes.',
-          variant: 'info',
-          open: true,
-        },
-      });
-      const didUniqueSuffix = await getMyDidUniqueSuffix();
-      let myDidDocument = await sidetree.resolve(`did:elem:${didUniqueSuffix}`);
-      const previousOperationHash = await sidetree.getPreviousOperationHash(didUniqueSuffix);
-      await sidetree.createTransactionFromRequests([
-        await createAddKeyRequest(key, myDidDocument, previousOperationHash),
-      ]);
-      await sidetree.sleep(2);
-      myDidDocument = await sidetree.resolve(`did:elem:${didUniqueSuffix}`);
-      set({ myDidDocument });
-      snackbarMessage({
-        snackbarMessage: {
-          message: 'Key added.',
-          variant: 'success',
-          open: true,
-        },
-      });
-    } catch (e) {
-      console.error(e);
-      snackbarMessage({
-        snackbarMessage: {
-          message: 'Could not add key.',
-          variant: 'error',
-          open: true,
-        },
-      });
-    }
-    set({ resolving: false });
-  },
-
-  removeKeyFromDIDDocument: ({
-    snackbarMessage,
-    getMyDidUniqueSuffix,
-    createRemoveKeyRequest,
-    set,
-    sidetree,
-  }) => async (key) => {
-    set({ resolving: true });
-    try {
-      snackbarMessage({
-        snackbarMessage: {
-          message: 'This may take a few minutes.',
-          variant: 'info',
-          open: true,
-        },
-      });
-      const didUniqueSuffix = await getMyDidUniqueSuffix();
-      const previousOperationHash = await sidetree.getPreviousOperationHash(didUniqueSuffix);
-      let myDidDocument = await sidetree.resolve(`did:elem:${didUniqueSuffix}`);
-      await sidetree.createTransactionFromRequests([
-        await createRemoveKeyRequest(key, myDidDocument, previousOperationHash),
-      ]);
-      await sidetree.sleep(10);
-      myDidDocument = await sidetree.resolve(`did:elem:${didUniqueSuffix}`);
-      set({ myDidDocument });
-      snackbarMessage({
-        snackbarMessage: {
-          message: 'Key removed.',
-          variant: 'success',
-          open: true,
-        },
-      });
-    } catch (e) {
-      console.error(e);
-      snackbarMessage({
-        snackbarMessage: {
-          message: 'Could not remove key.',
-          variant: 'error',
-          open: true,
-        },
-      });
-    }
-    set({ resolving: false });
   },
 });
