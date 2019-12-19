@@ -1,7 +1,5 @@
 import { withHandlers } from 'recompose';
 
-import config from '../../config';
-
 export default withHandlers({
   predictDID: ({ set, sidetree, getMyDidUniqueSuffix }) => async () => {
     const didUniqueSuffix = await getMyDidUniqueSuffix();
