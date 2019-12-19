@@ -21,12 +21,18 @@ if (window.web3) {
   });
 }
 
+const parameters = {
+  maxOperationsPerBatch: 10 * 1000,
+  batchingIntervalInSeconds: 10,
+};
+
 export const initSidetree = async () => {
   if (window.web3) {
     const sidetree = new element.SidetreeV2({
       blockchain,
       storage: storageManager,
       db,
+      parameters,
     });
     await blockchain.resolving;
     return sidetree;

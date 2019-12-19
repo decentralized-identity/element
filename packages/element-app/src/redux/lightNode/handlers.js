@@ -35,7 +35,8 @@ export default withHandlers({
         open: true,
       },
     });
-    await sidetree.createTransactionFromRequests([await createDIDRequest()]);
+    const createReq = await createDIDRequest();
+    await sidetree.batchScheduler.writeNow(createReq);
     snackbarMessage({
       snackbarMessage: {
         message: 'DID Created. Resolving....',
@@ -44,7 +45,7 @@ export default withHandlers({
       },
     });
     const didUniqueSuffix = await getMyDidUniqueSuffix();
-    const myDidDocument = await sidetree.resolve(`did:elem:${didUniqueSuffix}`);
+    const myDidDocument = await sidetree.resolve(didUniqueSuffix, true);
     set({ myDidDocument });
     snackbarMessage({
       snackbarMessage: {
