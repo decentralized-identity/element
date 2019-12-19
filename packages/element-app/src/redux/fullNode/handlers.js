@@ -123,13 +123,11 @@ export default withHandlers({
     }
     set({ resolving: false });
   },
-
   getSidetreeTransactions: ({ set }) => async ({ limit }) => {
     set({ loading: true });
     const { data } = await axios.get(`${API_BASE}/sidetree/transactions?limit=${limit}`);
     set({ sidetreeTxns: data.reverse(), loading: false });
   },
-
   getAll: ({ snackbarMessage, set }) => async () => {
     set({ resolving: true });
     try {

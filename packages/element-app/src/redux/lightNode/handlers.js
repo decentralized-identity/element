@@ -125,6 +125,37 @@ export default withHandlers({
     });
     set({ resolving: false });
   },
+  getSidetreeTransactions: ({ sidetree, set }) => async ({ limit }) => {
+    set({ loading: true });
+    const data = await sidetree.getTransactions({ limit });
+    set({ sidetreeTxns: data.reverse(), loading: false });
+  },
+  getAll: ({ snackbarMessage, sidetree, set }) => async () => {
+    set({ resolving: true });
+    try {
+      const data = await sidetree.db.readCollection('did:documentRecord');
+      const getTransactionTime = record => record.record.lastTransaction.transactionTime;
+      data.sort((a, b) => getTransactionTime(b) - getTransactionTime(a));
+      set({ documentRecords: data });
+      snackbarMessage({
+        snackbarMessage: {
+          message: 'Resolved sidetree.',
+          variant: 'success',
+          open: true,
+        },
+      });
+    } catch (e) {
+      console.error(e);
+      snackbarMessage({
+        snackbarMessage: {
+          message: 'Could not resolve sidetree.',
+          variant: 'error',
+          open: true,
+        },
+      });
+    }
+    set({ resolving: false });
+  },
   // eslint-disable-next-line
   resolveDID: ({ didResolved, sidetree, snackbarMessage, set }) => async did => {
     set({ resolving: true });
@@ -151,46 +182,6 @@ export default withHandlers({
       });
     }
     set({ resolving: false });
-  },
-  getAll: ({ snackbarMessage, sidetree, set }) => async () => {
-    set({ resolving: true });
-    try {
-      const all = await sidetree.blockchain.getTransactions(config.ELEMENT_START_BLOCK, 'latest');
-      const lastTransaction = all.pop();
-      await sidetree.sync({
-        fromTransactionTime: config.ELEMENT_START_BLOCK,
-        toTransactionTime: lastTransaction.transactionTime,
-      });
-      // sidetree.db.readCollection should only be used in tests. this should be an exposed method.
-      const records = await sidetree.db.readCollection('element:sidetree:did:documentRecord');
-      const getTransactionTime = record => record.record.lastTransaction.transactionTime;
-      records.sort((a, b) => getTransactionTime(b) - getTransactionTime(a));
-      set({ documentRecords: records, resolving: false });
-    } catch (e) {
-      console.error(e);
-      snackbarMessage({
-        snackbarMessage: {
-          message: 'Could not resolve all sidetree documents.',
-          variant: 'error',
-          open: true,
-        },
-      });
-    }
-    set({ resolving: false });
-  },
-  getSidetreeTransactions: ({ sidetree, set }) => async (args) => {
-    set({ loading: true });
-    let records = await sidetree.getTransactions(args);
-    if (!records.length) {
-      const all = await sidetree.blockchain.getTransactions(config.ELEMENT_START_BLOCK, 'latest');
-      const lastTransaction = all.pop();
-      await sidetree.sync({
-        fromTransactionTime: config.ELEMENT_START_BLOCK,
-        toTransactionTime: lastTransaction.transactionTime,
-      });
-      records = await sidetree.getTransactions(args);
-    }
-    set({ sidetreeTxns: records.reverse(), loading: false });
   },
   getSidetreeOperationsFromTransactionHash: ({
     sidetree,
