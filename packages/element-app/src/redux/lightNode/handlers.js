@@ -13,6 +13,48 @@ export default withHandlers({
     const operations = await sidetree.db.readCollection(didUniqueSuffix);
     set({ sidetreeOperations: operations });
   },
+  getOperationsForDidUniqueSuffix: ({ sidetree, set }) => async (didUniqueSuffix) => {
+    set({ loading: true });
+    const myDidDocument = await sidetree.resolve(didUniqueSuffix, true);
+    set({ didDocumentForOperations: myDidDocument });
+    const operations = await sidetree.db.readCollection(didUniqueSuffix);
+    set({ sidetreeOperations: operations, loading: false });
+  },
+  createDID: ({
+    snackbarMessage,
+    sidetree,
+    createDIDRequest,
+    getMyDidUniqueSuffix,
+    set,
+  }) => async () => {
+    set({ resolving: true });
+    snackbarMessage({
+      snackbarMessage: {
+        message: 'Creating your DID will take a few minutes....',
+        variant: 'info',
+        open: true,
+      },
+    });
+    await sidetree.createTransactionFromRequests([await createDIDRequest()]);
+    snackbarMessage({
+      snackbarMessage: {
+        message: 'DID Created. Resolving....',
+        variant: 'info',
+        open: true,
+      },
+    });
+    const didUniqueSuffix = await getMyDidUniqueSuffix();
+    const myDidDocument = await sidetree.resolve(`did:elem:${didUniqueSuffix}`);
+    set({ myDidDocument });
+    snackbarMessage({
+      snackbarMessage: {
+        message: `Resolved did:elem:${didUniqueSuffix}`,
+        variant: 'success',
+        open: true,
+      },
+    });
+    set({ resolving: false });
+  },
   // eslint-disable-next-line
   resolveDID: ({ didResolved, sidetree, snackbarMessage, set }) => async did => {
     set({ resolving: true });
@@ -88,47 +130,6 @@ export default withHandlers({
     const summary = await sidetree.getTransactionSummary(transactionHash);
     set({ sidetreeTransactionSummary: summary, loading: false });
   },
-  getOperationsForDidUniqueSuffix: ({ sidetree, set }) => async (didUniqueSuffix) => {
-    set({ loading: true });
-    const record = await sidetree.getOperations(didUniqueSuffix);
-    set({ sidetreeOperations: record, loading: false });
-  },
-  createDID: ({
-    snackbarMessage,
-    sidetree,
-    createDIDRequest,
-    getMyDidUniqueSuffix,
-    set,
-  }) => async () => {
-    set({ resolving: true });
-    snackbarMessage({
-      snackbarMessage: {
-        message: 'Creating your DID will take a few minutes....',
-        variant: 'info',
-        open: true,
-      },
-    });
-    await sidetree.createTransactionFromRequests([await createDIDRequest()]);
-    snackbarMessage({
-      snackbarMessage: {
-        message: 'DID Created. Resolving....',
-        variant: 'info',
-        open: true,
-      },
-    });
-    const didUniqueSuffix = await getMyDidUniqueSuffix();
-    const myDidDocument = await sidetree.resolve(`did:elem:${didUniqueSuffix}`);
-    set({ myDidDocument });
-    snackbarMessage({
-      snackbarMessage: {
-        message: `Resolved did:elem:${didUniqueSuffix}`,
-        variant: 'success',
-        open: true,
-      },
-    });
-    set({ resolving: false });
-  },
-
   addKeyToDIDDocument: ({
     snackbarMessage,
     getMyDidUniqueSuffix,
