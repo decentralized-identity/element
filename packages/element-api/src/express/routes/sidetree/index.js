@@ -20,7 +20,8 @@ const router = express.Router();
  */
 router.get('/node', async (req, res, next) => {
   try {
-    const result = await req.app.get('sidetree').getNodeInfo();
+    const sidetree = req.app.get('sidetree-v2');
+    const result = await sidetree.getNodeInfo();
     res.status(200).json(result);
   } catch (e) {
     next(e);
