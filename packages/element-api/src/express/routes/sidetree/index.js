@@ -103,7 +103,9 @@ router.get('/docs', async (req, res, next) => {
  */
 router.get('/transactions', async (req, res, next) => {
   try {
-    const result = await req.app.get('sidetree').getTransactions(req.query);
+    const sidetree = req.app.get('sidetree-v2');
+    const { limit } = req.query;
+    const result = await sidetree.getTransactions({ limit });
     res.status(200).json(result);
   } catch (e) {
     next(e);
@@ -127,30 +129,8 @@ router.get('/transactions', async (req, res, next) => {
 router.get('/transaction/:transactionTimeHash/summary', async (req, res, next) => {
   try {
     const { transactionTimeHash } = req.params;
-    const result = await req.app.get('sidetree').getTransactionSummary(transactionTimeHash);
-    res.status(200).json(result);
-  } catch (e) {
-    next(e);
-  }
-});
-
-/**
- * @swagger
- *
- * paths:
- *   "/sidetree/operations":
- *     get:
- *       description: Return all operations.
- *       tags: [Sidetree]
- *       produces:
- *       - application/json
- *       responses:
- *         '200':
- *           description: sidetree operations.
- */
-router.get('/operations', async (req, res, next) => {
-  try {
-    const result = await req.app.get('sidetree').getOperations();
+    const sidetree = req.app.get('sidetree-v2');
+    const result = await sidetree.getTransactionSummary(transactionTimeHash);
     res.status(200).json(result);
   } catch (e) {
     next(e);

@@ -58,6 +58,7 @@ class ElementRXDBAdapter {
           },
           transactionTime: {},
           transactionTimeHash: {},
+          transactionHash: {},
           transactionNumber: {},
           transactionTimestamp: {},
           consideredUnresolvableUntil: {},

@@ -61,23 +61,23 @@ const batchFileToOperations = batchFile => batchFile.operations.map((op) => {
   };
 });
 
-const getAnchorFile = async (sidetree, anchorFileHash) => {
-  const cachedAnchorFile = await sidetree.db.read(anchorFileHash);
-  let anchorFile;
-  if (!cachedAnchorFile) {
-    anchorFile = await sidetree.storage.read(anchorFileHash);
-    await sidetree.db.write(anchorFileHash, anchorFile);
+const readThenWriteToCache = async (sidetree, hash) => {
+  const cachedRecord = await sidetree.db.read(hash);
+  let record;
+  if (!cachedRecord) {
+    record = await sidetree.storage.read(hash);
+    await sidetree.db.write(hash, record);
   } else {
-    anchorFile = cachedAnchorFile;
+    record = cachedRecord;
   }
-  return anchorFile;
+  return record;
 };
 
 const syncTransaction = async (sidetree, transaction, onlyDidUniqueSuffix = null) => {
-  console.log('sync', transaction.transactionNumber);
+  console.info('sync', transaction.transactionNumber);
   try {
     isTransactionValid(transaction);
-    const anchorFile = await getAnchorFile(sidetree, transaction.anchorFileHash);
+    const anchorFile = await readThenWriteToCache(sidetree, transaction.anchorFileHash);
     isAnchorFileValid(anchorFile);
     // Only sync the batch files containing operations about that didUniqueSuffix if provided
     if (onlyDidUniqueSuffix && !anchorFile.didUniqueSuffixes.includes(onlyDidUniqueSuffix)) {
@@ -168,4 +168,5 @@ module.exports = {
   syncTransaction,
   signEncodedPayload,
   verifyOperationSignature,
+  readThenWriteToCache,
 };

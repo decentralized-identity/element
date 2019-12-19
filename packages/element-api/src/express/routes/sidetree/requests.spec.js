@@ -35,11 +35,6 @@ describe('sidetree', () => {
     expect(res.body.id).toBe(actor.did);
   });
 
-  it('operations', async () => {
-    res = await server.get('/api/v1/sidetree/operations').set('Accept', 'application/json');
-    expect(res.body.length).toBeDefined();
-  });
-
   it('docs', async () => {
     res = await server.get('/api/v1/sidetree/docs').set('Accept', 'application/json');
     expect(res.body.length).toBeDefined();

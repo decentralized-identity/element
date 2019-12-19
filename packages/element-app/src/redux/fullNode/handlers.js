@@ -124,14 +124,9 @@ export default withHandlers({
     set({ resolving: false });
   },
 
-  getSidetreeTransactions: ({ set }) => async (args) => {
+  getSidetreeTransactions: ({ set }) => async ({ limit }) => {
     set({ loading: true });
-
-    let endpoint = `${API_BASE}/sidetree/transactions`;
-    if (args) {
-      endpoint += `?since=${args.since}&transactionTimeHash=${args.transactionTimeHash}}`;
-    }
-    const { data } = await axios.get(endpoint);
+    const { data } = await axios.get(`${API_BASE}/sidetree/transactions?limit=${limit}`);
     set({ sidetreeTxns: data.reverse(), loading: false });
   },
 
@@ -185,12 +180,10 @@ export default withHandlers({
     }
     set({ resolving: false });
   },
-
-  getSidetreeOperationsFromTransactionTimeHash: ({ set }) => async (transactionTimeHash) => {
+  getSidetreeOperationsFromTransactionHash: ({ set }) => async (transactionHash) => {
     set({ loading: true });
-    // const summary = await sidetree.getTransactionSummary(transactionTimeHash);
     const { data } = await axios.get(
-      `${API_BASE}/sidetree/transaction/${transactionTimeHash}/summary`,
+      `${API_BASE}/sidetree/transaction/${transactionHash}/summary`,
     );
     set({ sidetreeTransactionSummary: data, loading: false });
   },

@@ -49,14 +49,13 @@ class SidetreeOperation extends Component {
   }
 
   render() {
-    const { operation, classes } = this.props;
+    const { operation: { operation, transaction }, classes } = this.props;
     const { expanded } = this.state;
-
-    const { decodedOperationPayload } = operation.operation;
-    const { transactionTimestamp } = operation.transaction;
-    const header = operation.operation.decodedHeader;
+    const { decodedOperationPayload } = operation;
+    const { transactionTimestamp } = transaction;
+    const header = operation.decodedHeader;
     const { alg, kid, operation: operationName } = header;
-    const { signature } = operation.operation.decodedOperation;
+    const { signature } = operation.decodedOperation;
 
     return (
       <ExpansionPanel expanded={expanded} className={classes.expansion}>

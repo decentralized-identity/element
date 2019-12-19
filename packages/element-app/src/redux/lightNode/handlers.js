@@ -70,12 +70,12 @@ export default withHandlers({
     }
     set({ sidetreeTxns: records.reverse(), loading: false });
   },
-  getSidetreeOperationsFromTransactionTimeHash: ({
+  getSidetreeOperationsFromTransactionHash: ({
     sidetree,
     set,
-  }) => async (transactionTimeHash) => {
+  }) => async (transactionHash) => {
     set({ loading: true });
-    const summary = await sidetree.getTransactionSummary(transactionTimeHash);
+    const summary = await sidetree.getTransactionSummary(transactionHash);
     set({ sidetreeTransactionSummary: summary, loading: false });
   },
   getOperationsForDidUniqueSuffix: ({ sidetree, set }) => async (didUniqueSuffix) => {

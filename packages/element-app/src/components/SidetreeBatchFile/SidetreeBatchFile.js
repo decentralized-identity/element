@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
 import Grid from '@material-ui/core/Grid/Grid';
 import Typography from '@material-ui/core/Typography/Typography';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel/ExpansionPanel';
@@ -9,7 +8,6 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails/Expan
 import Avatar from '@material-ui/core/Avatar';
 import VerifiedUser from '@material-ui/icons/VerifiedUser';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-
 import { SidetreeOperation } from '../SidetreeOperation';
 
 export class SidetreeBatchFile extends Component {
@@ -24,8 +22,7 @@ export class SidetreeBatchFile extends Component {
   }
 
   render() {
-    const { batchFileHash, operations } = this.props;
-
+    const { batchFileHash, operations, transaction } = this.props;
     const { expanded } = this.state;
 
     return (
@@ -58,8 +55,8 @@ export class SidetreeBatchFile extends Component {
         </ExpansionPanelSummary>
         <ExpansionPanelDetails style={{ flexDirection: 'column' }}>
           {operations.map(op => (
-            <React.Fragment key={op.operation.operationHash}>
-              <SidetreeOperation operation={op} expanded={true} />
+            <React.Fragment key={op.operationHash}>
+              <SidetreeOperation operation={{ operation: op, transaction }} expanded={true} />
             </React.Fragment>
           ))}
         </ExpansionPanelDetails>
@@ -72,6 +69,7 @@ SidetreeBatchFile.propTypes = {
   batchFileHash: PropTypes.string.isRequired,
   batchFile: PropTypes.object.isRequired,
   operations: PropTypes.array.isRequired,
+  transaction: PropTypes.object.isRequired,
   expanded: PropTypes.bool,
 };
 

@@ -12,8 +12,8 @@ import { SidetreeBatchFile } from '../../SidetreeBatchFile';
 
 export class ExplorerTransactionPage extends Component {
   componentWillMount() {
-    this.props.getSidetreeOperationsFromTransactionTimeHash(
-      this.props.match.params.transactionTimeHash,
+    this.props.getSidetreeOperationsFromTransactionHash(
+      this.props.match.params.transactionHash,
     );
   }
 
@@ -53,6 +53,7 @@ export class ExplorerTransactionPage extends Component {
                   batchFileHash={sidetreeTransactionSummary.anchorFile.batchFileHash}
                   batchFile={sidetreeTransactionSummary.batchFile}
                   operations={sidetreeTransactionSummary.operations}
+                  transaction={sidetreeTransactionSummary.transaction}
                   expanded={true}
                 />
               </React.Fragment>
@@ -66,7 +67,7 @@ export class ExplorerTransactionPage extends Component {
 
 ExplorerTransactionPage.propTypes = {
   nodeStore: PropTypes.object.isRequired,
-  getSidetreeOperationsFromTransactionTimeHash: PropTypes.func.isRequired,
+  getSidetreeOperationsFromTransactionHash: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
 };

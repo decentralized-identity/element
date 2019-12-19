@@ -30,7 +30,7 @@ class App extends React.Component {
                 <Route exact path="/dapp/explore" render={() => <Pages.LightNodeExplorerPage />} />
                 <Route
                   exact
-                  path="/dapp/transactions/:transactionTimeHash"
+                  path="/dapp/transactions/:transactionHash"
                   render={() => <Pages.LightNodeExplorerTransactionPage />}
                 />
                 <Route
@@ -84,7 +84,7 @@ class App extends React.Component {
                 <Route exact path="/explorer" render={() => <Pages.FullNodeExplorerPage />} />
                 <Route
                   exact
-                  path="/server/transactions/:transactionTimeHash"
+                  path="/server/transactions/:transactionHash"
                   render={() => <Pages.FullNodeExplorerTransactionPage />}
                 />
                 <Route

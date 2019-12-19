@@ -3,21 +3,13 @@ import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
-
 import { Pages } from '../../index';
-
 import { SidetreeTransaction } from '../../SidetreeTransaction';
 
 export class ExplorerPage extends Component {
   componentWillMount() {
-    const searchParams = new URLSearchParams(window.location.search);
-    const since = searchParams.get('since');
-    const transactionTimeHash = searchParams.get('transaction-time-hash');
-    if (since && transactionTimeHash) {
-      this.props.getSidetreeTransactions({ since, transactionTimeHash });
-    } else {
-      this.props.getSidetreeTransactions();
-    }
+    // Only get the last 20 transactions to avoid crashing the page
+    this.props.getSidetreeTransactions({ limit: 20 });
   }
 
   render() {
@@ -46,8 +38,8 @@ export class ExplorerPage extends Component {
                   transaction={transaction}
                   blockchain={'Ethereum'}
                   network={'ropsten'}
-                  onClickTransactionTimeHash={(transactionTimeHash) => {
-                    this.props.history.push(`/server/transactions/${transactionTimeHash}`);
+                  onClick={(transactionHash) => {
+                    this.props.history.push(`/server/transactions/${transactionHash}`);
                   }}
                 />
               </Grid>

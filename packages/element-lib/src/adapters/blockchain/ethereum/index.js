@@ -27,6 +27,7 @@ const getWeb3 = ({ mnemonic, hdPath, providerUrl }) => {
 const eventLogToSidetreeTransaction = log => ({
   transactionTime: log.blockNumber,
   transactionTimeHash: log.blockHash,
+  transactionHash: log.transactionHash,
   transactionNumber: log.args.transactionNumber.toNumber(),
   anchorFileHash: bytes32EnodedMultihashToBase58EncodedMultihash(log.args.anchorFileHash),
 });
@@ -123,8 +124,15 @@ class EthereumBlockchain {
     return instance;
   }
 
+  async getInstance() {
+    if (!this.instance) {
+      this.instance = await this.anchorContract.at(this.anchorContractAddress);
+    }
+    return this.instance;
+  }
+
   async getTransactions(fromBlock, toBlock, options) {
-    const instance = await this.anchorContract.at(this.anchorContractAddress);
+    const instance = await this.getInstance();
     const logs = await instance.getPastEvents('Anchor', {
       // TODO: add indexing here...
       // https://ethereum.stackexchange.com/questions/8658/what-does-the-indexed-keyword-do
@@ -136,6 +144,18 @@ class EthereumBlockchain {
       return txns;
     }
     return this.extendSidetreeTransactionWithTimestamp(txns);
+  }
+
+  async getEthereumTransaction(transactionHash) {
+    const transaction = await new Promise((resolve, reject) => {
+      this.web3.eth.getTransaction(transactionHash, (err, data) => {
+        if (err) {
+          return reject(err);
+        }
+        return resolve(data);
+      });
+    });
+    return transaction;
   }
 
   async getBlockchainTime(blockHashOrBlockNumber) {
@@ -162,7 +182,7 @@ class EthereumBlockchain {
   async write(anchorFileHash) {
     await this.resolving;
     const [from] = await getAccounts(this.web3);
-    const instance = await this.anchorContract.at(this.anchorContractAddress);
+    const instance = await this.getInstance();
     const bytes32EncodedHash = base58EncodedMultihashToBytes32(anchorFileHash);
     try {
       const receipt = await this.retryWithLatestTransactionCount(
