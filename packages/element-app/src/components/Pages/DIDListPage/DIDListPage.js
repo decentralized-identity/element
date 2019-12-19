@@ -30,7 +30,7 @@ export class DIDListPage extends Component {
                 <DIDListItem
                   record={dr.record}
                   onClick={(item) => {
-                    this.props.history.push(`/server/transactions/${item.lastTransaction.transactionHash}`);
+                    this.props.history.push(`/server/operations/${item.doc.id.split(':').pop()}`);
                   }}
                 />
               </div>
