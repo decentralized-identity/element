@@ -156,8 +156,12 @@ export default withHandlers({
     }
     set({ resolving: false });
   },
-  // eslint-disable-next-line
-  resolveDID: ({ didResolved, sidetree, snackbarMessage, set }) => async did => {
+  resolveDID: ({
+    didResolved,
+    sidetree,
+    snackbarMessage,
+    set,
+  }) => async (did) => {
     set({ resolving: true });
     try {
       const doc = await sidetree.resolve(did, true);
