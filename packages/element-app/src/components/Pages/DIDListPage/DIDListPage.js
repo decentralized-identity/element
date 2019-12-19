@@ -22,7 +22,7 @@ export class DIDListPage extends Component {
           <div>
             <Typography variant="h6">DID List</Typography>
             <br />
-            <Typography variant="body1">{'Only displaying local data.'}</Typography>
+            <Typography variant="body1">{'Only displaying DIDs that have been resolved at least once on this node'}</Typography>
             <br />
 
             {documentRecords.map(dr => (
