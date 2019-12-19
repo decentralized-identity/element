@@ -115,7 +115,6 @@ DIDProfilePage.propTypes = {
   predictDID: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired,
   createDID: PropTypes.func.isRequired,
-  getOperationsForDidUniqueSuffix: PropTypes.func.isRequired,
   snackbarMessage: PropTypes.func.isRequired,
   addKeyToDIDDocument: PropTypes.func.isRequired,
   removeKeyFromDIDDocument: PropTypes.func.isRequired,

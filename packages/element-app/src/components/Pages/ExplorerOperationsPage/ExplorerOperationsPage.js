@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
-
 import { Pages } from '../../index';
-
 import { SidetreeOperation } from '../../SidetreeOperation';
 import { DIDDocument } from '../../DIDDocument';
 
@@ -14,8 +11,6 @@ export class ExplorerOperationsPage extends Component {
   async componentWillMount() {
     if (this.props.match.params.didUniqueSuffix) {
       this.props.getOperationsForDidUniqueSuffix(this.props.match.params.didUniqueSuffix);
-    } else {
-      this.props.getOperationsForDidUniqueSuffix();
     }
   }
 
