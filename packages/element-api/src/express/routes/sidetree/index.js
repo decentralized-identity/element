@@ -78,9 +78,8 @@ router.post('/requests', async (req, res, next) => {
  */
 router.get('/docs', async (req, res, next) => {
   try {
-    const sidetree = req.app.get('sidetree');
-    await sidetree.sync();
-    const result = await sidetree.db.readCollection('element:sidetree:did:documentRecord');
+    const sidetree = req.app.get('sidetree-v2');
+    const result = await sidetree.db.readCollection('did:documentRecord');
     res.status(200).json(result);
   } catch (e) {
     next(e);
