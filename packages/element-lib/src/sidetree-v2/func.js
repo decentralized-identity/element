@@ -86,12 +86,14 @@ const syncTransaction = async (sidetree, transaction, onlyDidUniqueSuffix = null
     const batchFile = await sidetree.storage.read(anchorFile.batchFileHash);
     isBatchFileValid(batchFile);
     const operations = batchFileToOperations(batchFile);
+    const [transactionWithTimestamp] = await sidetree.blockchain
+      .extendSidetreeTransactionWithTimestamp([transaction]);
     const operationsByDidUniqueSuffixes = operations.map((operation) => {
       const didUniqueSuffix = getDidUniqueSuffix(operation.decodedOperation);
       return {
         type: didUniqueSuffix,
         didUniqueSuffix,
-        transaction,
+        transaction: transactionWithTimestamp,
         operation,
       };
     });
