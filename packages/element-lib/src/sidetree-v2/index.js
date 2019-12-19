@@ -15,7 +15,7 @@ class Sidetree {
     blockchain,
     storage,
     parameters,
-  }) {
+  } = {}) {
     const operationQueue = new OperationQueue(db);
     // Utils for sidetree
     this.blockchain = blockchain;

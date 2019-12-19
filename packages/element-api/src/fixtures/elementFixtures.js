@@ -1,7 +1,7 @@
 const faker = require('faker');
 const element = require('@transmute/element-lib');
 
-const { op, func } = new element.SidetreeV2({});
+const { op, func } = new element.SidetreeV2();
 
 const generateActors = async (count) => {
   const actors = [];
