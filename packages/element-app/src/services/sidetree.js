@@ -11,7 +11,6 @@ const db = new element.adapters.database.ElementRXDBAdapter({
 });
 
 const storageManager = new element.adapters.storage.StorageManager(db, storage);
-const serviceBus = new element.adapters.serviceBus.ElementNanoBusAdapter();
 
 let blockchain;
 
@@ -24,14 +23,10 @@ if (window.web3) {
 
 export const initSidetree = async () => {
   if (window.web3) {
-    const sidetree = new element.Sidetree({
+    const sidetree = new element.SidetreeV2({
       blockchain,
       storage: storageManager,
-      serviceBus,
       db,
-      config: {
-        VERBOSITY: 1,
-      },
     });
     await blockchain.resolving;
     return sidetree;
