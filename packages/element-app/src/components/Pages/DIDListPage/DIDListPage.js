@@ -14,6 +14,7 @@ export class DIDListPage extends Component {
 
   render() {
     const { resolving, documentRecords } = this.props.nodeStore;
+    const prefix = this.props.fullNode ? '/server' : '/dapp';
     return (
       <Pages.WithNavigation>
         {resolving || !documentRecords ? (
@@ -30,7 +31,7 @@ export class DIDListPage extends Component {
                 <DIDListItem
                   record={dr.record}
                   onClick={(item) => {
-                    this.props.history.push(`/server/operations/${item.doc.id.split(':').pop()}`);
+                    this.props.history.push(`${prefix}/operations/${item.doc.id.split(':').pop()}`);
                   }}
                 />
               </div>
@@ -49,6 +50,7 @@ DIDListPage.propTypes = {
   match: PropTypes.object.isRequired,
   history: PropTypes.any.isRequired,
   getAll: PropTypes.func.isRequired,
+  fullNode: PropTypes.object,
 };
 
 export default DIDListPage;

@@ -15,6 +15,7 @@ export class ExplorerPage extends Component {
   render() {
     const { nodeStore } = this.props;
     const { sidetreeTxns } = nodeStore;
+    const prefix = this.props.fullNode ? '/server' : '/dapp';
     return (
       <Pages.WithNavigation>
         <Grid container spacing={24}>
@@ -39,7 +40,7 @@ export class ExplorerPage extends Component {
                   blockchain={'Ethereum'}
                   network={'ropsten'}
                   onClick={(transactionHash) => {
-                    this.props.history.push(`/server/transactions/${transactionHash}`);
+                    this.props.history.push(`${prefix}/transactions/${transactionHash}`);
                   }}
                 />
               </Grid>
@@ -56,4 +57,5 @@ ExplorerPage.propTypes = {
   getSidetreeTransactions: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
+  fullNode: PropTypes.object,
 };
