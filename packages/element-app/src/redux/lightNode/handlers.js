@@ -3,6 +3,16 @@ import { withHandlers } from 'recompose';
 import config from '../../config';
 
 export default withHandlers({
+  predictDID: ({ set, sidetree, getMyDidUniqueSuffix }) => async () => {
+    const didUniqueSuffix = await getMyDidUniqueSuffix();
+    set({
+      predictedDID: `did:elem:${didUniqueSuffix}`,
+    });
+    const myDidDocument = await sidetree.resolve(didUniqueSuffix, true);
+    set({ myDidDocument });
+    const operations = await sidetree.db.readCollection(didUniqueSuffix);
+    set({ sidetreeOperations: operations });
+  },
   // eslint-disable-next-line
   resolveDID: ({ didResolved, sidetree, snackbarMessage, set }) => async did => {
     set({ resolving: true });
@@ -82,16 +92,6 @@ export default withHandlers({
     set({ loading: true });
     const record = await sidetree.getOperations(didUniqueSuffix);
     set({ sidetreeOperations: record, loading: false });
-  },
-  predictDID: ({ set, sidetree, getMyDidUniqueSuffix }) => async () => {
-    const didUniqueSuffix = await getMyDidUniqueSuffix();
-    set({
-      predictedDID: `did:elem:${didUniqueSuffix}`,
-    });
-    const myDidDocument = await sidetree.resolve(`did:elem:${didUniqueSuffix}`);
-    set({ myDidDocument });
-    const record = await sidetree.getOperations(didUniqueSuffix);
-    set({ sidetreeOperations: record });
   },
   createDID: ({
     snackbarMessage,
