@@ -7,7 +7,7 @@ export default withHandlers({
   resolveDID: ({ didResolved, sidetree, snackbarMessage, set }) => async did => {
     set({ resolving: true });
     try {
-      const doc = await sidetree.resolve(did);
+      const doc = await sidetree.resolve(did, true);
       if (doc) {
         didResolved({ didDocument: doc });
         snackbarMessage({
