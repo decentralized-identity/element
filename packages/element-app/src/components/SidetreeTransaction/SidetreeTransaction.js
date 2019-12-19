@@ -22,10 +22,10 @@ import Link from '@material-ui/icons/Link';
 import LocalActivity from '@material-ui/icons/LocalActivity';
 import Forward from '@material-ui/icons/Forward';
 
-const getBlockExplorerUrl = (suffix, blockchain, network) => {
+const getBlockExplorerUrl = (path, hash, blockchain, network) => {
   if (blockchain === 'Ethereum') {
     const sub = network ? `${network}.` : '';
-    return `https://${sub}etherscan.io/${suffix}`;
+    return `https://${sub}etherscan.io/${path}${hash}`;
   }
   return '#';
 };
@@ -56,8 +56,8 @@ export class SidetreeTransaction extends Component {
     const { expanded } = this.state;
 
     const { transactionHash, transactionTimeHash, anchorFileHash } = transaction;
-    const blochHashUrl = getBlockExplorerUrl(`block/${transactionTimeHash}`, blockchain, network);
-    const transactionHashUrl = getBlockExplorerUrl(`tx/${transactionHash}`, blockchain, network);
+    const blochHashUrl = getBlockExplorerUrl('block/', transactionTimeHash, blockchain, network);
+    const transactionHashUrl = getBlockExplorerUrl('tx/', transactionHash, blockchain, network);
     const ipfsUrl = getIpfsUrl(anchorFileBase, anchorFileHash);
     return (
       <ExpansionPanel expanded={expanded}>
