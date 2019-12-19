@@ -16,10 +16,8 @@ const onErrorResponse = require('../../src/express/onErrorResponse');
 app.use(cors({ origin: true }));
 app.use(express.json());
 if (process.env.NODE_ENV === 'testing') {
-  app.set('sidetree', require('../services/sidetree-test'));
   app.set('sidetree-v2', require('../services/sidetree-v2-test'));
 } else {
-  app.set('sidetree', require('../services/sidetree'));
   app.set('sidetree-v2', require('../services/sidetree-v2'));
 }
 
