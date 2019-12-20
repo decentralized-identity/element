@@ -39,6 +39,13 @@ class Sidetree {
     this.getTransactionSummary = getTransactionSummary(this);
     this.getNodeInfo = getNodeInfo(this);
   }
+
+  async close() {
+    await this.batchScheduler.stopPeriodicBatchWriting();
+    await this.blockchain.close();
+    await this.storage.close();
+    await this.db.close();
+  }
 }
 
 module.exports = Sidetree;
