@@ -20,7 +20,8 @@ const router = express.Router();
  */
 router.get('/node', async (req, res, next) => {
   try {
-    const result = await req.app.get('sidetree').getNodeInfo();
+    const sidetree = req.app.get('sidetree');
+    const result = await sidetree.getNodeInfo();
     res.status(200).json(result);
   } catch (e) {
     next(e);
@@ -52,7 +53,7 @@ router.get('/node', async (req, res, next) => {
 // FIXME schemas
 router.post('/requests', async (req, res, next) => {
   try {
-    const sidetree = req.app.get('sidetree-v2');
+    const sidetree = req.app.get('sidetree');
     sidetree.batchScheduler.writeNow(req.body);
     res.sendStatus(202);
   } catch (e) {
@@ -79,8 +80,7 @@ router.post('/requests', async (req, res, next) => {
 router.get('/docs', async (req, res, next) => {
   try {
     const sidetree = req.app.get('sidetree');
-    await sidetree.sync();
-    const result = await sidetree.db.readCollection('element:sidetree:did:documentRecord');
+    const result = await sidetree.db.readCollection('did:documentRecord');
     res.status(200).json(result);
   } catch (e) {
     next(e);
@@ -103,7 +103,7 @@ router.get('/docs', async (req, res, next) => {
  */
 router.get('/transactions', async (req, res, next) => {
   try {
-    const sidetree = req.app.get('sidetree-v2');
+    const sidetree = req.app.get('sidetree');
     const { limit } = req.query;
     const result = await sidetree.getTransactions({ limit });
     res.status(200).json(result);
@@ -129,7 +129,7 @@ router.get('/transactions', async (req, res, next) => {
 router.get('/transaction/:transactionTimeHash/summary', async (req, res, next) => {
   try {
     const { transactionTimeHash } = req.params;
-    const sidetree = req.app.get('sidetree-v2');
+    const sidetree = req.app.get('sidetree');
     const result = await sidetree.getTransactionSummary(transactionTimeHash);
     res.status(200).json(result);
   } catch (e) {
@@ -154,7 +154,7 @@ router.get('/transaction/:transactionTimeHash/summary', async (req, res, next) =
 router.get('/operations/:didUniqueSuffix', async (req, res, next) => {
   try {
     const didUniqueSuffix = req.params.didUniqueSuffix.split(':').pop();
-    const sidetree = req.app.get('sidetree-v2');
+    const sidetree = req.app.get('sidetree');
     const operations = await sidetree.db.readCollection(didUniqueSuffix);
     res.status(200).json(operations);
   } catch (e) {
@@ -189,7 +189,7 @@ router.get('/operations/:didUniqueSuffix', async (req, res, next) => {
 router.get('/:did', async (req, res, next) => {
   try {
     const { did } = req.params;
-    const sidetree = req.app.get('sidetree-v2');
+    const sidetree = req.app.get('sidetree');
     const didDocument = await sidetree.resolve(did, true);
     res.status(200).json(didDocument);
   } catch (e) {

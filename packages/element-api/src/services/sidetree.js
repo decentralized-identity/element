@@ -1,7 +1,4 @@
 const element = require('@transmute/element-lib');
-const { firestore } = require('./firebase');
-const ElementFirestoreAdapter = require('./element-adapter-firestore');
-
 const { getBaseConfig } = require('../config');
 
 const config = getBaseConfig();
@@ -13,9 +10,11 @@ const blockchain = element.blockchain.ethereum.configure({
   anchorContractAddress: config.ethereum.anchor_contract_address,
 });
 
-const db = new ElementFirestoreAdapter({
-  firestore,
+const db = new element.adapters.database.ElementRXDBAdapter({
+  name: 'element',
+  adapter: 'leveldown',
 });
+
 const storage = new element.adapters.storage.StorageManager(
   db,
   element.storage.ipfs.configure({
@@ -27,24 +26,16 @@ const storage = new element.adapters.storage.StorageManager(
   },
 );
 
-const serviceBus = new element.adapters.serviceBus.ElementNanoBusAdapter();
+const parameters = {
+  maxOperationsPerBatch: 10 * 1000,
+  batchingIntervalInSeconds: 10,
+};
 
-const sidetree = new element.Sidetree({
-  blockchain,
-  storage,
-  serviceBus,
+const sidetree = new element.SidetreeV2({
   db,
-  config: {
-    BATCH_INTERVAL_SECONDS: parseInt(
-      config.sidetree.batch_interval_in_seconds,
-      10,
-    ),
-    BAD_STORAGE_HASH_DELAY_SECONDS: parseInt(
-      config.sidetree.bad_storage_hash_delay_in_seconds,
-      10,
-    ),
-    VERBOSITY: parseInt(config.sidetree.verbosity, 10),
-  },
+  storage,
+  blockchain,
+  parameters,
 });
 
 module.exports = sidetree;

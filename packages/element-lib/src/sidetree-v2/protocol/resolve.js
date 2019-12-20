@@ -189,6 +189,15 @@ const resolve = sidetree => async (did, justInTime = false) => {
       });
     }, Promise.resolve(didDocument));
 
+  if (didDocument) {
+    await sidetree.db.write(didDocument.id, {
+      type: 'did:documentRecord',
+      record: {
+        lastTransaction: lastValidOperation.transaction,
+        doc: didDocument,
+      },
+    });
+  }
   return didDocument;
 };
 

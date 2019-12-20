@@ -16,7 +16,7 @@ beforeAll(async () => {
 
 afterAll(async () => {});
 
-const { op } = new element.SidetreeV2({});
+const { op } = new element.SidetreeV2();
 
 describe('sidetree', () => {
   it('requests', async () => {

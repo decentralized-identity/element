@@ -20,6 +20,7 @@ export class ExplorerTransactionPage extends Component {
   render() {
     const { nodeStore } = this.props;
     const { sidetreeTransactionSummary } = nodeStore;
+    const prefix = this.props.fullNode ? '/server' : '/dapp';
     return (
       <Pages.WithNavigation>
         <Grid container spacing={24}>
@@ -44,7 +45,7 @@ export class ExplorerTransactionPage extends Component {
                   anchorFileHash={sidetreeTransactionSummary.transaction.anchorFileHash}
                   anchorFile={sidetreeTransactionSummary.anchorFile}
                   onClickUID={(didUniqueSuffix) => {
-                    this.props.history.push(`/server/operations/${didUniqueSuffix}`);
+                    this.props.history.push(`${prefix}/operations/${didUniqueSuffix}`);
                   }}
                   expanded={true}
                 />
@@ -70,4 +71,5 @@ ExplorerTransactionPage.propTypes = {
   getSidetreeOperationsFromTransactionHash: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
+  fullNode: PropTypes.object,
 };

@@ -4,6 +4,7 @@ const {
   batchWrite,
 } = require('./protocol');
 const { getTransactions, getTransactionSummary } = require('./protocol/getTransactions');
+const getNodeInfo = require('./protocol/getNodeInfo');
 const BatchScheduler = require('./protocol/BatchScheduler');
 const op = require('./op');
 const func = require('./func');
@@ -15,7 +16,7 @@ class Sidetree {
     blockchain,
     storage,
     parameters,
-  }) {
+  } = {}) {
     const operationQueue = new OperationQueue(db);
     // Utils for sidetree
     this.blockchain = blockchain;
@@ -36,6 +37,14 @@ class Sidetree {
 
     this.getTransactions = getTransactions(this);
     this.getTransactionSummary = getTransactionSummary(this);
+    this.getNodeInfo = getNodeInfo(this);
+  }
+
+  async close() {
+    await this.batchScheduler.stopPeriodicBatchWriting();
+    await this.blockchain.close();
+    await this.storage.close();
+    await this.db.close();
   }
 }
 
