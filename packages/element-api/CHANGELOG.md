@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/decentralized-identity/element/compare/v0.2.0...v0.3.0) (2019-12-20)
+
+
+### Features
+
+* add support for leveldown rxdb adapter ([e5fa056](https://github.com/decentralized-identity/element/commit/e5fa056))
+* getTransactions endpoint ([fd7e7e0](https://github.com/decentralized-identity/element/commit/fd7e7e0))
+* use couchdb adapter for docker setup ([58d36a5](https://github.com/decentralized-identity/element/commit/58d36a5))
+
+
+
+
+
 # [0.2.0](https://github.com/decentralized-identity/element/compare/v0.0.2-2...v0.2.0) (2019-11-08)
 
 

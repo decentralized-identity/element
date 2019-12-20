@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/decentralized-identity/element/compare/v0.2.0...v0.3.0) (2019-12-20)
+
+
+### Bug Fixes
+
+* addressed missing changes ([8e799ed](https://github.com/decentralized-identity/element/commit/8e799ed))
+* createDIDRequest to use the recovery key ([dbfc319](https://github.com/decentralized-identity/element/commit/dbfc319))
+* prevent removing the recovery key ([8b8b172](https://github.com/decentralized-identity/element/commit/8b8b172))
+* reduce bundle size for prod ([84de553](https://github.com/decentralized-identity/element/commit/84de553))
+
+
+### Features
+
+* create several keys in did wallet ([a2847f8](https://github.com/decentralized-identity/element/commit/a2847f8))
+* implement remove did key ([1f0d689](https://github.com/decentralized-identity/element/commit/1f0d689))
+
+
+
+
+
 # [0.2.0](https://github.com/decentralized-identity/element/compare/v0.0.2-2...v0.2.0) (2019-11-08)
 
 
