@@ -7,6 +7,5 @@ module.exports = {
   operationsToAnchorFile: require('./operationsToAnchorFile'),
   operationsToTransaction: require('./operationsToTransaction'),
   getOperationReceiptFromBatchFile: require('./getOperationReceiptFromBatchFile'),
-  encodeJson: require('./encodeJson'),
   requestBodyToEncodedOperation: require('./requestBodyToEncodedOperation'),
 };
