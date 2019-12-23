@@ -1,7 +1,7 @@
-const { getTestSideTree, getCreatePayloadForKeyIndex } = require('./test-utils');
+const { getTestSideTree, getCreatePayloadForKeyIndex } = require('../__tests__/test-utils');
 const OperationQueue = require('./operationQueue');
-const { MnemonicKeySystem } = require('../../index');
-const { getDidUniqueSuffix } = require('./func');
+const { MnemonicKeySystem } = require('../../../index');
+const { getDidUniqueSuffix } = require('../../sidetree-v2/func');
 
 const sidetree = getTestSideTree();
 const operationQueue = new OperationQueue(sidetree.db);

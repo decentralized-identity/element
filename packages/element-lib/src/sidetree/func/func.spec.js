@@ -4,9 +4,9 @@ const {
   verifyOperationSignature,
   encodeJson,
   base58EncodedMultihashToBytes32,
-} = require('./func');
-const { MnemonicKeySystem } = require('../../index');
-const sidetreeCreatePayload = require('./__fixtures__/sidetreeCreatePayload.json');
+} = require('.');
+const { MnemonicKeySystem } = require('../../../index');
+const sidetreeCreatePayload = require('../__tests__/sidetreeCreatePayload');
 
 describe('payloadToHash', () => {
   it('should compute the right encodedHash', async () => {

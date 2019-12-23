@@ -1,11 +1,11 @@
 /* eslint-disable max-len */
-const resolve = require('./resolve');
+const resolve = require('./');
 const {
   getTestSideTree,
   changeKid,
   getDidDocumentForPayload,
   getCreatePayloadForKeyIndex,
-} = require('../test-utils');
+} = require('../__tests__/test-utils');
 const {
   getDidDocumentModel,
   makeSignedOperation,

@@ -1,6 +1,6 @@
-const { getDidDocumentModel } = require('./op');
-const { isDidDocumentModelValid } = require('./validation');
-const { MnemonicKeySystem } = require('../../index');
+const { getDidDocumentModel } = require('./');
+const { isDidDocumentModelValid } = require('../utils/validation');
+const { MnemonicKeySystem } = require('../../../index');
 
 describe('getDidDocumentModel', () => {
   const mks = new MnemonicKeySystem(MnemonicKeySystem.generateMnemonic());

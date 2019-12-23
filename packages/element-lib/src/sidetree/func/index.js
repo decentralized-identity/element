@@ -3,7 +3,7 @@ const base64url = require('base64url');
 const crypto = require('crypto');
 const secp256k1 = require('secp256k1');
 const multihashes = require('multihashes');
-const { isTransactionValid, isBatchFileValid, isAnchorFileValid } = require('./validation');
+const { isTransactionValid, isBatchFileValid, isAnchorFileValid } = require('../utils/validation');
 
 // This function applies f, an async function, sequentially to an array of values
 // We need it because:

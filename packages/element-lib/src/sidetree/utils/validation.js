@@ -1,5 +1,5 @@
 // TODO: remove schema dependency
-const schema = require('../schema');
+const schema = require('../../schema');
 
 const isTransactionValid = (transaction) => {
   const valid = schema.validator.isValid(transaction, schema.schemas.sidetreeTransaction);

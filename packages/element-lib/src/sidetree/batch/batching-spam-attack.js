@@ -1,4 +1,4 @@
-const { getCreatePayloadForKeyIndex } = require('../test-utils');
+const { getCreatePayloadForKeyIndex } = require('../__tests__/test-utils');
 const { MnemonicKeySystem } = require('../../../index');
 const element = require('../../../index');
 

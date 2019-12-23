@@ -1,6 +1,6 @@
 const batchWrite = require('./batchWrite');
-const resolve = require('./resolve');
-const { getTestSideTree, getCreatePayloadForKeyIndex } = require('../test-utils');
+const resolve = require('../resolve');
+const { getTestSideTree, getCreatePayloadForKeyIndex } = require('../__tests__/test-utils');
 const { getDidDocumentModel, getCreatePayload } = require('../op');
 const {
   batchFileToOperations,

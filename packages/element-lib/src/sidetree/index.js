@@ -1,14 +1,11 @@
-const {
-  resolve,
-  sync,
-  batchWrite,
-} = require('./protocol');
-const { getTransactions, getTransactionSummary } = require('./protocol/getTransactions');
-const getNodeInfo = require('./protocol/getNodeInfo');
-const BatchScheduler = require('./protocol/BatchScheduler');
+const resolve = require('./resolve');
+const sync = require('./sync');
+const { getTransactions, getTransactionSummary, getNodeInfo } = require('./utils/transactions');
+const OperationQueue = require('./batch/operationQueue');
+const BatchScheduler = require('./batch/BatchScheduler');
+const batchWrite = require('./batch/batchWrite');
 const op = require('./op');
 const func = require('./func');
-const OperationQueue = require('./operationQueue');
 
 class Sidetree {
   constructor({

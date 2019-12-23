@@ -1,6 +1,6 @@
 /* eslint-disable arrow-body-style */
 const { verifyOperationSignature } = require('../func');
-const { isDidDocumentModelValid, isKeyValid } = require('../validation');
+const { isDidDocumentModelValid, isKeyValid } = require('../utils/validation');
 
 const isSignatureValid = async (didDocument, operation) => {
   const { kid } = operation.decodedHeader;
