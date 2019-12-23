@@ -163,6 +163,13 @@ const base58EncodedMultihashToBytes32 = base58EncodedMultihash => (
   `0x${multihashes.toHexString(multihashes.fromB58String(base58EncodedMultihash)).substring(4)}`
 );
 
+const bytes32EnodedMultihashToBase58EncodedMultihash = bytes32EncodedMultihash => multihashes
+  .toB58String(
+    multihashes.fromHexString(
+      `1220${bytes32EncodedMultihash.replace('0x', '')}`,
+    ),
+  );
+
 module.exports = {
   executeSequentially,
   encodeJson,
@@ -175,4 +182,5 @@ module.exports = {
   verifyOperationSignature,
   readThenWriteToCache,
   base58EncodedMultihashToBytes32,
+  bytes32EnodedMultihashToBase58EncodedMultihash,
 };
