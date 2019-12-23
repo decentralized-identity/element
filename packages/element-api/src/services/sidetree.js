@@ -1,4 +1,6 @@
 const element = require('@transmute/element-lib');
+const ElementFirestoreAdapter = require('./element-adapter-firestore');
+const { firestore } = require('./firebase');
 const { getBaseConfig } = require('../config');
 
 const config = getBaseConfig();
@@ -10,10 +12,7 @@ const blockchain = element.blockchain.ethereum.configure({
   anchorContractAddress: config.ethereum.anchor_contract_address,
 });
 
-const db = new element.adapters.database.ElementRXDBAdapter({
-  name: 'element',
-  adapter: 'leveldown',
-});
+const db = new ElementFirestoreAdapter({ firestore });
 
 const storage = new element.adapters.storage.StorageManager(
   db,
