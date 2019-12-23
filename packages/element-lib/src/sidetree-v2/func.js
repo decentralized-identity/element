@@ -159,6 +159,9 @@ const verifyOperationSignature = (
   return secp256k1.verify(hash, base64url.toBuffer(signature), publicKeyBuffer);
 };
 
+const base58EncodedMultihashToBytes32 = base58EncodedMultihash => (
+  `0x${multihashes.toHexString(multihashes.fromB58String(base58EncodedMultihash)).substring(4)}`
+);
 
 module.exports = {
   executeSequentially,
@@ -171,4 +174,5 @@ module.exports = {
   signEncodedPayload,
   verifyOperationSignature,
   readThenWriteToCache,
+  base58EncodedMultihashToBytes32,
 };
