@@ -1,18 +1,12 @@
-const getLocalSidetree = require('./__fixtures__/getLocalSidetree');
+const { getTestSideTree } = require('./test-utils');
 
 jest.setTimeout(10 * 1000);
 
 const element = require('../../index');
 
-let sidetree;
+const sidetree = getTestSideTree();
 const alice = { name: 'alice', type: 'actor' };
-
-beforeAll(async () => {
-  sidetree = await getLocalSidetree('CRUD.One');
-  alice.mks = new element.MnemonicKeySystem(
-    'category copy escape scan type news bird awake affair base mansion favorite',
-  );
-});
+alice.mks = new element.MnemonicKeySystem(element.MnemonicKeySystem.generateMnemonic());
 
 afterAll(async () => {
   await sidetree.close();
@@ -20,24 +14,16 @@ afterAll(async () => {
 
 describe('CRUD.One', () => {
   it('create', async () => {
-    alice.didUniqueSuffix = sidetree.op.getDidUniqueSuffix({
-      primaryKey: alice.mks.getKeyForPurpose('primary', 0),
-      recoveryPublicKey: alice.mks.getKeyForPurpose('recovery', 0).publicKey,
-    });
-    const txn = await sidetree.createTransactionFromRequests(
-      sidetree.op.create({
-        primaryKey: alice.mks.getKeyForPurpose('primary', 0),
-        recoveryPublicKey: alice.mks.getKeyForPurpose('recovery', 0).publicKey,
-      }),
+    const alicePrimaryKey = alice.mks.getKeyForPurpose('primary', 0);
+    const aliceRecoveryKey = alice.mks.getKeyForPurpose('recovery', 0);
+    const didDocumentModel = sidetree.op.getDidDocumentModel(
+      alicePrimaryKey.publicKey, aliceRecoveryKey.publicKey,
     );
-    await sidetree.sync({
-      fromTransactionTime: txn.transactionTime,
-      toTransactionTime: txn.transactionTime,
-    });
-    const [docRecord] = await sidetree.db.readCollection('element:sidetree:did:documentRecord');
-
-    expect(docRecord.record.previousOperationHash).toBe(alice.didUniqueSuffix);
-    const didDoc = await sidetree.resolve(`did:elem:${alice.didUniqueSuffix}`);
+    const createPayload = await sidetree.op.getCreatePayload(didDocumentModel, alicePrimaryKey);
+    alice.didUniqueSuffix = sidetree.func.getDidUniqueSuffix(createPayload);
+    const txn = await sidetree.batchScheduler.writeNow(createPayload);
+    expect(txn).toBeDefined();
+    const didDoc = await sidetree.resolve(`did:elem:${alice.didUniqueSuffix}`, true);
     expect(didDoc.id).toBe(`did:elem:${alice.didUniqueSuffix}`);
     expect(didDoc.publicKey[0].publicKeyHex).toBe(
       alice.mks.getKeyForPurpose('primary', 0).publicKey,
@@ -48,16 +34,18 @@ describe('CRUD.One', () => {
   });
 
   it('recover', async () => {
-    await sidetree.createTransactionFromRequests(
-      sidetree.op.recover({
-        didUniqueSuffix: alice.didUniqueSuffix,
-        previousOperationHash: await sidetree.getPreviousOperationHash(alice.didUniqueSuffix),
-        newPrimaryPublicKey: alice.mks.getKeyForPurpose('primary', 1).publicKey,
-        newRecoveryPublicKey: alice.mks.getKeyForPurpose('recovery', 1).publicKey,
-        recoveryPrivateKey: alice.mks.getKeyForPurpose('recovery', 0).privateKey,
-      }),
+    const aliceRecoveryKey = alice.mks.getKeyForPurpose('recovery', 0);
+    const newPrimaryPublicKey = alice.mks.getKeyForPurpose('primary', 1).publicKey;
+    const newRecoveryPublicKey = alice.mks.getKeyForPurpose('recovery', 1).publicKey;
+    const didDocumentModel = sidetree.op.getDidDocumentModel(
+      newPrimaryPublicKey, newRecoveryPublicKey,
     );
-    const didDoc = await sidetree.resolve(`did:elem:${alice.didUniqueSuffix}`);
+    const recoverPayload = await sidetree.op.getRecoverPayload(
+      alice.didUniqueSuffix, didDocumentModel, aliceRecoveryKey.privateKey,
+    );
+    const txn = await sidetree.batchScheduler.writeNow(recoverPayload);
+    expect(txn).toBeDefined();
+    const didDoc = await sidetree.resolve(`did:elem:${alice.didUniqueSuffix}`, true);
     expect(didDoc.id).toBe(`did:elem:${alice.didUniqueSuffix}`);
     expect(didDoc.publicKey[0].publicKeyHex).toBe(
       alice.mks.getKeyForPurpose('primary', 1).publicKey,
@@ -67,40 +55,40 @@ describe('CRUD.One', () => {
     );
   });
 
-  it('update', async () => {
-    await sidetree.createTransactionFromRequests(
-      sidetree.op.update({
-        didUniqueSuffix: alice.didUniqueSuffix,
-        previousOperationHash: await sidetree.getPreviousOperationHash(alice.didUniqueSuffix),
-        patch: [
-          {
-            op: 'replace',
-            path: '/service',
-            value: [
-              {
-                id: '#element.orbitdb',
-                type: 'OrbitDB.PublicAttestationStore',
-                serviceEndpoint:
-                  'https://api.example.com/orbitdb/QmTJGHccriUtq3qf3bvAQUcDUHnBbHNJG2x2FYwYUecN43',
-              },
-            ],
-          },
-        ],
-        primaryPrivateKey: alice.mks.getKeyForPurpose('primary', 1).privateKey,
-      }),
-    );
-    const didDoc = await sidetree.resolve(`did:elem:${alice.didUniqueSuffix}`);
-    expect(didDoc.service[0].id).toBe('#element.orbitdb');
-  });
+  // it('update', async () => {
+  //   await sidetree.createTransactionFromRequests(
+  //     sidetree.op.update({
+  //       didUniqueSuffix: alice.didUniqueSuffix,
+  //       previousOperationHash: await sidetree.getPreviousOperationHash(alice.didUniqueSuffix),
+  //       patch: [
+  //         {
+  //           op: 'replace',
+  //           path: '/service',
+  //           value: [
+  //             {
+  //               id: '#element.orbitdb',
+  //               type: 'OrbitDB.PublicAttestationStore',
+  //               serviceEndpoint:
+  //                 'https://api.example.com/orbitdb/QmTJGHccriUtq3qf3bvAQUcDUHnBbHNJG2x2FYwYUecN43',
+  //             },
+  //           ],
+  //         },
+  //       ],
+  //       primaryPrivateKey: alice.mks.getKeyForPurpose('primary', 1).privateKey,
+  //     }),
+  //   );
+  //   const didDoc = await sidetree.resolve(`did:elem:${alice.didUniqueSuffix}`);
+  //   expect(didDoc.service[0].id).toBe('#element.orbitdb');
+  // });
 
-  it('deactivate', async () => {
-    await sidetree.createTransactionFromRequests(
-      sidetree.op.deactivate({
-        didUniqueSuffix: alice.didUniqueSuffix,
-        recoveryPrivateKey: alice.mks.getKeyForPurpose('recovery', 1).privateKey,
-      }),
-    );
-    const didDoc = await sidetree.resolve(`did:elem:${alice.didUniqueSuffix}`);
-    expect(didDoc.publicKey.length).toBe(0);
-  });
+  // it('deactivate', async () => {
+  //   await sidetree.createTransactionFromRequests(
+  //     sidetree.op.deactivate({
+  //       didUniqueSuffix: alice.didUniqueSuffix,
+  //       recoveryPrivateKey: alice.mks.getKeyForPurpose('recovery', 1).privateKey,
+  //     }),
+  //   );
+  //   const didDoc = await sidetree.resolve(`did:elem:${alice.didUniqueSuffix}`);
+  //   expect(didDoc.publicKey.length).toBe(0);
+  // });
 });
