@@ -1,6 +1,7 @@
 const resolve = require('./resolve');
 const sync = require('./sync');
-const { getTransactions, getTransactionSummary, getNodeInfo } = require('./utils/transactions');
+const { getTransactions, getTransactionSummary } = require('./utils/transactions');
+const getNodeInfo = require('./utils/getNodeInfo');
 const OperationQueue = require('./batch/operationQueue');
 const BatchScheduler = require('./batch/BatchScheduler');
 const batchWrite = require('./batch/batchWrite');
