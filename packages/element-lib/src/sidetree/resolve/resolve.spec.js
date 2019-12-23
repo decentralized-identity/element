@@ -5,7 +5,7 @@ const {
   changeKid,
   getDidDocumentForPayload,
   getCreatePayloadForKeyIndex,
-} = require('../__tests__/test-utils');
+} = require('../../__tests__/test-utils');
 const {
   getDidDocumentModel,
   makeSignedOperation,
@@ -19,7 +19,7 @@ const {
   getDidUniqueSuffix,
   syncTransaction,
   decodeJson,
-} = require('../func');
+} = require('../../func');
 const { MnemonicKeySystem } = require('../../../index');
 
 const sidetree = getTestSideTree();

@@ -1,13 +1,13 @@
 const batchWrite = require('./batchWrite');
 const resolve = require('../resolve');
-const { getTestSideTree, getCreatePayloadForKeyIndex } = require('../__tests__/test-utils');
+const { getTestSideTree, getCreatePayloadForKeyIndex } = require('../../__tests__/test-utils');
 const { getDidDocumentModel, getCreatePayload } = require('../op');
 const {
   batchFileToOperations,
   getDidUniqueSuffix,
   decodeJson,
   syncTransaction,
-} = require('../func');
+} = require('../../func');
 const { MnemonicKeySystem } = require('../../../index');
 
 const sidetree = getTestSideTree();

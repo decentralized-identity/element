@@ -1,5 +1,5 @@
 const BatchScheduler = require('./BatchScheduler');
-const { getCreatePayloadForKeyIndex, getTestSideTree } = require('../__tests__/test-utils');
+const { getCreatePayloadForKeyIndex, getTestSideTree } = require('../../__tests__/test-utils');
 const { MnemonicKeySystem } = require('../../../index');
 
 const sidetree = getTestSideTree();

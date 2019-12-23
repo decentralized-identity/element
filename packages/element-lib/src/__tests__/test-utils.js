@@ -1,11 +1,11 @@
-const element = require('../../../index');
+const element = require('../../index');
 const {
   encodeJson,
   decodeJson,
   syncTransaction,
-} = require('../func');
-const { getDidDocumentModel, getCreatePayload } = require('../op');
-const resolve = require('../resolve');
+} = require('../func/func');
+const { getDidDocumentModel, getCreatePayload } = require('../sidetree/op');
+const resolve = require('../sidetree/resolve');
 
 const getTestSideTree = () => {
   const db = new element.adapters.database.ElementRXDBAdapter({

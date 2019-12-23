@@ -5,9 +5,9 @@ const {
   encodeJson,
   base58EncodedMultihashToBytes32,
   bytes32EnodedMultihashToBase58EncodedMultihash,
-} = require('.');
-const { MnemonicKeySystem } = require('../../../index');
-const sidetreeCreatePayload = require('../__tests__/sidetreeCreatePayload');
+} = require('./func');
+const { MnemonicKeySystem } = require('../../index');
+const sidetreeCreatePayload = require('../__tests__/__fixtures__/sidetreeCreatePayload');
 
 describe('payloadToHash', () => {
   it('should compute the right encodedHash', async () => {

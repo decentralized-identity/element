@@ -1,4 +1,4 @@
-const { getDidUniqueSuffix } = require('../func');
+const { getDidUniqueSuffix } = require('../../func/func');
 
 class BatchScheduler {
   constructor(sidetree) {

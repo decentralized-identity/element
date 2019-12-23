@@ -1,5 +1,5 @@
 const MerkleTools = require('merkle-tools');
-const { encodeJson, getDidUniqueSuffix } = require('../func');
+const { encodeJson, getDidUniqueSuffix } = require('../../func/func');
 
 const batchWrite = sidetree => async () => {
   // Get the batch of operations to be anchored on the blockchain.

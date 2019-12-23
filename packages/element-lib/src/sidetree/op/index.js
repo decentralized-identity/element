@@ -1,4 +1,4 @@
-const { encodeJson, signEncodedPayload } = require('../func');
+const { encodeJson, signEncodedPayload } = require('../../func/func');
 
 const getDidDocumentModel = (primaryPublicKey, recoveryPublicKey) => ({
   '@context': 'https://w3id.org/did/v1',
