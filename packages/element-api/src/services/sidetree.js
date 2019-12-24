@@ -30,7 +30,7 @@ const parameters = {
   batchingIntervalInSeconds: 10,
 };
 
-const sidetree = new element.SidetreeV2({
+const sidetree = new element.Sidetree({
   db,
   storage,
   blockchain,

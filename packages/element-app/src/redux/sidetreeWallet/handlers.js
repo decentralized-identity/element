@@ -1,7 +1,5 @@
 import { withHandlers } from 'recompose';
-import element from '@transmute/element-lib';
-
-const { func, op } = new element.SidetreeV2();
+import { func, op } from '@transmute/element-lib';
 
 export default withHandlers({
   getMyDidUniqueSuffix: ({ getKey }) => async () => {

@@ -28,7 +28,7 @@ const parameters = {
 
 export const initSidetree = async () => {
   if (window.web3) {
-    const sidetree = new element.SidetreeV2({
+    const sidetree = new element.Sidetree({
       blockchain,
       storage: storageManager,
       db,
