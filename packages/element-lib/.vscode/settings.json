@@ -1,0 +1,8 @@
+{
+  "editor.formatOnSave": true,
+  "javascript.format.enable": false,
+  "javascript.referencesCodeLens.enabled": true,
+  "editor.rulers": [80],
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeLens": false
+}
