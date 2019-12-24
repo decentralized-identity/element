@@ -74,7 +74,9 @@ const readThenWriteToCache = async (sidetree, hash) => {
 };
 
 const syncTransaction = async (sidetree, transaction, onlyDidUniqueSuffix = null) => {
-  console.info('sync', transaction.transactionNumber);
+  if (process.env.NODE_ENV !== 'test') {
+    console.info('sync', transaction.transactionNumber);
+  }
   try {
     isTransactionValid(transaction);
     const anchorFile = await readThenWriteToCache(sidetree, transaction.anchorFileHash);

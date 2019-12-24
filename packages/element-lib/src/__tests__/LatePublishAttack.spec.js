@@ -5,7 +5,7 @@ const {
   updateByActorIndex,
 } = require('./__fixtures__/sidetreeTestUtils');
 
-jest.setTimeout(20 * 1000);
+jest.setTimeout(10 * 1000);
 
 const { getTestSideTree, getLastOperation } = require('./test-utils');
 
@@ -16,6 +16,10 @@ let anchorFile;
 let anchorFileHash;
 let actor;
 let newKey;
+
+afterAll(async () => {
+  await sidetree.close();
+});
 
 // Why Sidetree DIDs are non transferable.
 // we need randomness here, because obviously IPFS will have the published
