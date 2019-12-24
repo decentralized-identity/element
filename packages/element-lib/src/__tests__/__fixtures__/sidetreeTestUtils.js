@@ -111,15 +111,16 @@ const assertRecoverSucceeded = async (sidetree, actorIndex) => {
   );
 };
 
-const deactivateByActorIndex = async (actorIndex, version) => element.op.deactivate({
-  didUniqueSuffix: getActorByIndex(actorIndex).didUniqueSuffix,
-  recoveryPrivateKey: getActorByIndex(actorIndex).mks.getKeyForPurpose('recovery', version)
-    .privateKey,
-});
+// FIXME jit by default
+const deactivateByActorIndex = async (actorIndex) => {
+  const actor = getActorByIndex(actorIndex);
+  const { didUniqueSuffix } = getActorByIndex(actorIndex);
+  return element.op.getDeletePayload(didUniqueSuffix, actor.recoveryKey.privateKey);
+};
 
 const assertDeactivateSucceeded = async (sidetree, actorIndex) => {
-  const didDoc = await sidetree.resolve(`did:elem:${getActorByIndex(actorIndex).didUniqueSuffix}`);
-  expect(didDoc.publicKey.length).toBe(0);
+  const didDoc = await sidetree.resolve(`did:elem:${getActorByIndex(actorIndex).didUniqueSuffix}`, true);
+  expect(didDoc).not.toBeDefined();
 };
 
 module.exports = {

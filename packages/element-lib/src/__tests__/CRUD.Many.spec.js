@@ -69,14 +69,21 @@ describe('CRUD.Many', () => {
     actors[actor1.didUniqueSuffix].recoveryKey = actor1.mks.getKeyForPurpose('recovery', 20);
   });
 
-  // it('transaction 4 & 5 deactivate', async () => {
-  //   await sidetree.createTransactionFromRequests([
-  //     await deactivateByActorIndex(0, 1),
-  //     await deactivateByActorIndex(2, 0),
-  //   ]);
-  //   await assertDeactivateSucceeded(sidetree, 0);
-  //   await assertDeactivateSucceeded(sidetree, 2);
-  //   await sidetree.createTransactionFromRequests([await deactivateByActorIndex(1, 1)]);
-  //   await assertDeactivateSucceeded(sidetree, 1);
-  // });
+  it('transaction 4 & 5 deactivate', async () => {
+    const actor1 = getActorByIndex(0);
+    const actor3 = getActorByIndex(2);
+    const deletePayload1 = await deactivateByActorIndex(0, 1);
+    const deletePayload3 = await deactivateByActorIndex(2, 1);
+    await sidetree.operationQueue.enqueue(actor1.didUniqueSuffix, deletePayload1);
+    await sidetree.operationQueue.enqueue(actor3.didUniqueSuffix, deletePayload3);
+    await sidetree.batchWrite();
+    await assertDeactivateSucceeded(sidetree, 0);
+    await assertDeactivateSucceeded(sidetree, 2);
+
+    const actor2 = getActorByIndex(1);
+    const deletePayload2 = await deactivateByActorIndex(1, 1);
+    await sidetree.operationQueue.enqueue(actor2.didUniqueSuffix, deletePayload2);
+    await sidetree.batchWrite();
+    await assertDeactivateSucceeded(sidetree, 1);
+  });
 });
