@@ -45,20 +45,29 @@ describe('CRUD.Many', () => {
     await assertCreateSucceeded(sidetree, 2);
   });
 
-  // it('transaction 2 & 3 update, recover', async () => {
-  //   await updateByActorIndex(sidetree, 0, 0),
-  //   await sidetree.createTransactionFromRequests([
-  //     await recoverByActorIndex(sidetree, 1, 0),
-  //   ]);
-  //   await assertUpdateSucceeded(sidetree, 0);
-  //   await assertRecoverSucceeded(sidetree, 1);
-  //   await sidetree.createTransactionFromRequests([
-  //     await updateByActorIndex(sidetree, 1, 1),
-  //     await recoverByActorIndex(sidetree, 0, 0),
-  //   ]);
-  //   await assertUpdateSucceeded(sidetree, 1);
-  //   await assertRecoverSucceeded(sidetree, 0);
-  // });
+  it('transaction 2 & 3 update, recover', async () => {
+    const actor1 = getActorByIndex(0);
+    const actor2 = getActorByIndex(1);
+    const updatePayload1 = await updateByActorIndex(sidetree, 0);
+    const recoverPayload2 = await recoverByActorIndex(sidetree, 1);
+    await sidetree.operationQueue.enqueue(actor1.didUniqueSuffix, updatePayload1);
+    await sidetree.operationQueue.enqueue(actor2.didUniqueSuffix, recoverPayload2);
+    await sidetree.batchWrite();
+    await assertUpdateSucceeded(sidetree, 0);
+    await assertRecoverSucceeded(sidetree, 1);
+    actors[actor2.didUniqueSuffix].primaryKey = actor2.mks.getKeyForPurpose('primary', 20);
+    actors[actor2.didUniqueSuffix].recoveryKey = actor2.mks.getKeyForPurpose('recovery', 20);
+
+    const updatePayload2 = await updateByActorIndex(sidetree, 1);
+    const recoverPayload1 = await recoverByActorIndex(sidetree, 0);
+    await sidetree.operationQueue.enqueue(actor1.didUniqueSuffix, updatePayload2);
+    await sidetree.operationQueue.enqueue(actor2.didUniqueSuffix, recoverPayload1);
+    await sidetree.batchWrite();
+    await assertUpdateSucceeded(sidetree, 1);
+    await assertRecoverSucceeded(sidetree, 0);
+    actors[actor1.didUniqueSuffix].primaryKey = actor1.mks.getKeyForPurpose('primary', 20);
+    actors[actor1.didUniqueSuffix].recoveryKey = actor1.mks.getKeyForPurpose('recovery', 20);
+  });
 
   // it('transaction 4 & 5 deactivate', async () => {
   //   await sidetree.createTransactionFromRequests([

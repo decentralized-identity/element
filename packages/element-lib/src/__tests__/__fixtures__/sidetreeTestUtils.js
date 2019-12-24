@@ -1,6 +1,8 @@
 const faker = require('faker');
 const element = require('../../../index');
 
+const { getLastOperation } = require('../test-utils');
+
 const actors = {};
 const getActorByIndex = index => actors[Object.keys(actors)[index]];
 
@@ -32,6 +34,8 @@ const generateActors = async (count) => {
       createPayload,
       mks,
       didUniqueSuffix,
+      primaryKey,
+      recoveryKey,
     };
   }
   return actors;
@@ -60,47 +64,51 @@ const assertCreateSucceeded = async (sidetree, actorIndex) => {
   );
 };
 
-const assertRecoverSucceeded = async (sidetree, actorIndex) => {
-  const didDoc = await sidetree.resolve(`did:elem:${getActorByIndex(actorIndex).didUniqueSuffix}`);
-  expect(didDoc.id).toBe(`did:elem:${getActorByIndex(actorIndex).didUniqueSuffix}`);
-  expect(didDoc.publicKey[0].publicKeyHex).toBe(
-    getActorByIndex(actorIndex).mks.getKeyForPurpose('primary', 1).publicKey,
+const updateByActorIndex = async (sidetree, actorIndex) => {
+  const actor = getActorByIndex(actorIndex);
+  // FIXME
+  // make sure getPreviousOperationHash will hit cache.
+  const { didUniqueSuffix } = getActorByIndex(actorIndex);
+  await sidetree.resolve(didUniqueSuffix, true);
+  const lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
+  const newKey = actor.mks.getKeyForPurpose('primary', 10);
+  return element.op.getUpdatePayloadForAddingAKey(
+    lastOperation, '#newKey', 'signing', newKey.publicKey, actor.primaryKey.privateKey,
   );
-  expect(didDoc.publicKey[1].publicKeyHex).toBe(
-    getActorByIndex(actorIndex).mks.getKeyForPurpose('recovery', 1).publicKey,
+};
+
+const recoverByActorIndex = async (sidetree, actorIndex) => {
+  const actor = getActorByIndex(actorIndex);
+  const { didUniqueSuffix } = getActorByIndex(actorIndex);
+  const newPrimaryPublicKey = actor.mks.getKeyForPurpose('primary', 20).publicKey;
+  const newRecoveryPublicKey = actor.mks.getKeyForPurpose('recovery', 20).publicKey;
+  const didDocumentModel = sidetree.op.getDidDocumentModel(
+    newPrimaryPublicKey, newRecoveryPublicKey,
+  );
+  return sidetree.op.getRecoverPayload(
+    didUniqueSuffix, didDocumentModel, actor.recoveryKey.privateKey,
   );
 };
 
 const assertUpdateSucceeded = async (sidetree, actorIndex) => {
-  const didDoc = await sidetree.resolve(`did:elem:${getActorByIndex(actorIndex).didUniqueSuffix}`);
-  expect(didDoc.service[0].id).toBe('#element.orbitdb');
+  const actor = getActorByIndex(actorIndex);
+  const newKey = actor.mks.getKeyForPurpose('primary', 10);
+  const didDoc = await sidetree.resolve(`did:elem:${actor.didUniqueSuffix}`, true);
+  expect(didDoc.id).toBe(`did:elem:${actor.didUniqueSuffix}`);
+  expect(didDoc.publicKey[2].id).toBe('#newKey');
+  expect(didDoc.publicKey[2].publicKeyHex).toBe(newKey.publicKey);
 };
 
-const updateByActorIndex = async (sidetree, actorIndex, version) => {
-  // make sure getPreviousOperationHash will hit cache.
-  await sidetree.resolve(`did:elem:${getActorByIndex(actorIndex).didUniqueSuffix}`);
-  return element.op.update({
-    didUniqueSuffix: getActorByIndex(actorIndex).didUniqueSuffix,
-    previousOperationHash: await sidetree.getPreviousOperationHash(
-      getActorByIndex(actorIndex).didUniqueSuffix,
-    ),
-    patch: [
-      {
-        op: 'replace',
-        path: '/service',
-        value: [
-          {
-            id: '#element.orbitdb',
-            type: 'OrbitDB.PublicAttestationStore',
-            serviceEndpoint:
-              'https://api.example.com/orbitdb/QmTJGHccriUtq3qf3bvAQUcDUHnBbHNJG2x2FYwYUecN43',
-          },
-        ],
-      },
-    ],
-    primaryPrivateKey: getActorByIndex(actorIndex).mks.getKeyForPurpose('primary', version)
-      .privateKey,
-  });
+const assertRecoverSucceeded = async (sidetree, actorIndex) => {
+  const actor = getActorByIndex(actorIndex);
+  const didDoc = await sidetree.resolve(`did:elem:${actor.didUniqueSuffix}`, true);
+  expect(didDoc.id).toBe(`did:elem:${actor.didUniqueSuffix}`);
+  expect(didDoc.publicKey[0].publicKeyHex).toBe(
+    actor.mks.getKeyForPurpose('primary', 20).publicKey,
+  );
+  expect(didDoc.publicKey[1].publicKeyHex).toBe(
+    actor.mks.getKeyForPurpose('recovery', 20).publicKey,
+  );
 };
 
 const deactivateByActorIndex = async (actorIndex, version) => element.op.deactivate({
@@ -112,21 +120,6 @@ const deactivateByActorIndex = async (actorIndex, version) => element.op.deactiv
 const assertDeactivateSucceeded = async (sidetree, actorIndex) => {
   const didDoc = await sidetree.resolve(`did:elem:${getActorByIndex(actorIndex).didUniqueSuffix}`);
   expect(didDoc.publicKey.length).toBe(0);
-};
-
-const recoverByActorIndex = async (sidetree, actorIndex, version) => {
-  // make sure getPreviousOperationHash will hit cache.
-  await sidetree.resolve(`did:elem:${getActorByIndex(actorIndex).didUniqueSuffix}`);
-  return element.op.recover({
-    didUniqueSuffix: getActorByIndex(actorIndex).didUniqueSuffix,
-    previousOperationHash: await sidetree.getPreviousOperationHash(
-      getActorByIndex(actorIndex).didUniqueSuffix,
-    ),
-    newPrimaryPublicKey: getActorByIndex(actorIndex).mks.getKeyForPurpose('primary', version + 1).publicKey,
-    newRecoveryPublicKey: getActorByIndex(actorIndex).mks.getKeyForPurpose('recovery', version + 1).publicKey,
-    recoveryPrivateKey: getActorByIndex(actorIndex).mks.getKeyForPurpose('recovery', version)
-      .privateKey,
-  });
 };
 
 module.exports = {

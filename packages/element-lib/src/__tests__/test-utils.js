@@ -64,9 +64,17 @@ const getCreatePayloadForKeyIndex = async (mks, index) => {
   return getCreatePayload(didDocumentModel, primaryKey);
 };
 
+const getLastOperation = async (sidetree, didUniqueSuffix) => {
+  const operations = await sidetree.db.readCollection(didUniqueSuffix);
+  operations.sort((o1, o2) => o1.transaction.transactionTime - o2.transaction.transactionTime);
+  const last = operations.pop();
+  return last;
+};
+
 module.exports = {
   getTestSideTree,
   changeKid,
   getDidDocumentForPayload,
   getCreatePayloadForKeyIndex,
+  getLastOperation,
 };
