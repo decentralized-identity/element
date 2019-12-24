@@ -3,7 +3,6 @@ jest.setTimeout(10 * 1000);
 const {
   getActorByIndex,
   generateActors,
-  createByActorIndex,
   updateByActorIndex,
   recoverByActorIndex,
   deactivateByActorIndex,
@@ -72,8 +71,8 @@ describe('CRUD.Many', () => {
   it('transaction 4 & 5 deactivate', async () => {
     const actor1 = getActorByIndex(0);
     const actor3 = getActorByIndex(2);
-    const deletePayload1 = await deactivateByActorIndex(0, 1);
-    const deletePayload3 = await deactivateByActorIndex(2, 1);
+    const deletePayload1 = await deactivateByActorIndex(0);
+    const deletePayload3 = await deactivateByActorIndex(2);
     await sidetree.operationQueue.enqueue(actor1.didUniqueSuffix, deletePayload1);
     await sidetree.operationQueue.enqueue(actor3.didUniqueSuffix, deletePayload3);
     await sidetree.batchWrite();
@@ -81,7 +80,7 @@ describe('CRUD.Many', () => {
     await assertDeactivateSucceeded(sidetree, 2);
 
     const actor2 = getActorByIndex(1);
-    const deletePayload2 = await deactivateByActorIndex(1, 1);
+    const deletePayload2 = await deactivateByActorIndex(1);
     await sidetree.operationQueue.enqueue(actor2.didUniqueSuffix, deletePayload2);
     await sidetree.batchWrite();
     await assertDeactivateSucceeded(sidetree, 1);
