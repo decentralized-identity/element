@@ -14,6 +14,41 @@
       "items": {
         "$ref": "sidetree.key"
       }
+    },
+    "authentication": {
+      "type": "array",
+      "required": false,
+      "items": {
+        "type": "string"
+      }
+    },
+    "assertionMethod": {
+      "type": "array",
+      "required": false,
+      "items": {
+        "type": "string"
+      }
+    },
+    "capabilityDelegation": {
+      "type": "array",
+      "required": false,
+      "items": {
+        "type": "string"
+      }
+    },
+    "capabilityInvocation": {
+      "type": "array",
+      "required": false,
+      "items": {
+        "type": "string"
+      }
+    },
+    "keyAgreement": {
+      "type": "array",
+      "required": false,
+      "items": {
+        "anyOf": [{ "type": "string" }, { "$ref": "sidetree.key" }]
+      }
     }
   },
   "additionalProperties": false

@@ -1,0 +1,7 @@
+{
+  "passphrase": null,
+  "controller": "did:key:z6Mkozt95WhH9chvYaPTTsd1FzMbXc1cuvo1hfiZodGNd9Gs",
+  "type": "Ed25519VerificationKey2018",
+  "privateKeyBase58": "zVaKUW8ZRLMSbcpMeeB7xDnkZTcEKZsSVGF78EuSgqSZ2bP8dFXxkKzffsBdL5htdyQgYrSTjPKzne7CiwVy6ZM",
+  "publicKeyBase58": "AYd6VGSqp5DTS5YknJfAQtobi2jmW3Yf1eodyMJMhvVV"
+}

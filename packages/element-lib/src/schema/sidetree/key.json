@@ -10,7 +10,11 @@
     "type": {
       "type": "string",
       "required": true,
-      "enum": ["Secp256k1VerificationKey2018"],
+      "enum": [
+        "Secp256k1VerificationKey2018",
+        "Ed25519VerificationKey2018",
+        "X25519KeyAgreementKey2019"
+      ],
       "example": ["Secp256k1VerificationKey2018"]
     },
     "controller": {
@@ -25,8 +29,13 @@
     },
     "publicKeyHex": {
       "type": "string",
-      "required": true,
+      "required": false,
       "example": ["025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124"]
+    },
+    "publicKeyBase58": {
+      "type": "string",
+      "required": false,
+      "example": ["AYd6VGSqp5DTS5YknJfAQtobi2jmW3Yf1eodyMJMhvVV"]
     }
   },
   "additionalProperties": false
