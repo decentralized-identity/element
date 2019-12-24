@@ -1,4 +1,4 @@
-const objectToMultihash = require('../../func/objectToMultihash');
+const element = require('../../../index');
 
 class StorageManager {
   constructor(db, storage, options) {
@@ -49,7 +49,7 @@ class StorageManager {
   }
 
   async write(object) {
-    const key = await objectToMultihash(object);
+    const key = await element.func.objectToMultihash(object);
     const cacheWriteResult = await this.db.write(`element:sidetree:cas-cachable:${key}`, {
       type: 'element:sidetree:cas-cachable',
       multihash: key,

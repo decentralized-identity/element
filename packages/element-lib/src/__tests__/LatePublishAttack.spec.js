@@ -53,7 +53,7 @@ describe('LatePublishAttack', () => {
     };
 
     // Instead of writing the batchFile to IPFS, we only compute its hash
-    batchFileHash = await sidetree.func.objectToMultiHash(batchFile);
+    batchFileHash = await sidetree.func.objectToMultihash(batchFile);
 
     // Write anchorFile to storage
     const didUniqueSuffixes = decodedOperations.map(sidetree.func.getDidUniqueSuffix);
@@ -70,7 +70,7 @@ describe('LatePublishAttack', () => {
       merkleRoot: root.toString('hex'),
     };
     // Instead of writing the anchorFile to IPFS, we only compute its hash
-    anchorFileHash = await sidetree.func.objectToMultiHash(anchorFile);
+    anchorFileHash = await sidetree.func.objectToMultihash(anchorFile);
     // Anchor on ethereum
     await sidetree.blockchain.write(anchorFileHash);
   });

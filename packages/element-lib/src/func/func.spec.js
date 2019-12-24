@@ -5,7 +5,8 @@ const {
   encodeJson,
   base58EncodedMultihashToBytes32,
   bytes32EnodedMultihashToBase58EncodedMultihash,
-} = require('./func');
+  objectToMultihash,
+} = require('.');
 const { MnemonicKeySystem } = require('../../index');
 const sidetreeCreatePayload = require('../__tests__/__fixtures__/sidetreeCreatePayload');
 
@@ -56,5 +57,14 @@ describe('bytes32EnodedMultihashToBase58EncodedMultihash', () => {
       '0xcd12c23f653b9abc436e390b59178678ce7acb6b9fa8a19e509e2313c4e55328',
     );
     expect(result).toBe('Qmc9Asse4CvAuQJ77vMARRqLYTrL4ZzWK8BKb2FHRAYcuD');
+  });
+});
+
+const { aliceEncodedCreateOp } = require('../__tests__/__fixtures__');
+
+describe('objectToMultihash', () => {
+  it('should return the content id of an object', async () => {
+    const mhash = await objectToMultihash(aliceEncodedCreateOp);
+    expect(mhash).toBe('QmVuCdToH535yi5ByW9dJJQTwg9v67PWQydLabdPMWJw2p');
   });
 });
