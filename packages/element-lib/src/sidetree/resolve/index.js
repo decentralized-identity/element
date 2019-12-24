@@ -97,7 +97,7 @@ const recover = async (state, operation) => {
   isDidDocumentModelValid(newDidDocument);
   return {
     ...newDidDocument,
-    id: `did:elem${didUniqueSuffix}`,
+    id: `did:elem:${didUniqueSuffix}`,
   };
 };
 
