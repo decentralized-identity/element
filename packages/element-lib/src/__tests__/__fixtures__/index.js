@@ -86,7 +86,7 @@ const aliceCreateAnchorFile = {
 };
 
 const generateActor = () => {
-  const keypair = element.func.createKeys();
+  const keypair = element.crypto.secp256k1.createKeys();
   const createPayload = {
     ...createPayloadTemplate,
   };
@@ -126,7 +126,7 @@ const generateCreates = async (actorMap) => {
 const generateUpdate1 = async (actorMap) => {
   const operations = [];
   Object.values(actorMap).forEach(async (actor) => {
-    const keypair = element.func.createKeys();
+    const keypair = element.crypto.secp256k1.createKeys();
     const operation = await element.func.payloadToOperation({
       type: 'update',
       kid: '#key1',
