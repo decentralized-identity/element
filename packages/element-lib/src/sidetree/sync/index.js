@@ -1,4 +1,70 @@
-const { executeSequentially, syncTransaction } = require('../../func');
+const {
+  executeSequentially,
+  readThenWriteToCache,
+  batchFileToOperations,
+  getDidUniqueSuffix,
+} = require('../../func');
+const { isTransactionValid, isBatchFileValid, isAnchorFileValid } = require('../utils/validation');
+
+const syncTransaction = async (sidetree, transaction, onlyDidUniqueSuffix = null) => {
+  if (process.env.NODE_ENV !== 'test') {
+    console.info('sync', transaction.transactionNumber);
+  }
+  try {
+    isTransactionValid(transaction);
+    const anchorFile = await readThenWriteToCache(sidetree, transaction.anchorFileHash);
+    isAnchorFileValid(anchorFile);
+    // Only sync the batch files containing operations about that didUniqueSuffix if provided
+    if (onlyDidUniqueSuffix && !anchorFile.didUniqueSuffixes.includes(onlyDidUniqueSuffix)) {
+      return null;
+    }
+    const batchFile = await sidetree.storage.read(anchorFile.batchFileHash);
+    isBatchFileValid(batchFile);
+    const operations = batchFileToOperations(batchFile);
+    const [transactionWithTimestamp] = await sidetree.blockchain
+      .extendSidetreeTransactionWithTimestamp([transaction]);
+    const operationsByDidUniqueSuffixes = operations.map((operation) => {
+      const didUniqueSuffix = getDidUniqueSuffix(operation.decodedOperation);
+      return {
+        type: didUniqueSuffix,
+        didUniqueSuffix,
+        transaction: transactionWithTimestamp,
+        operation,
+      };
+    });
+    const filteredOperationByDidUniqueSuffixes = operationsByDidUniqueSuffixes
+      // Only keep operations related to the didUniqueSuffix if provided
+      .filter(op => !onlyDidUniqueSuffix || op.didUniqueSuffix === onlyDidUniqueSuffix);
+    const writeOperationToCache = (op) => {
+      const operationId = `operation:${op.operation.operationHash}${op.transaction.transactionTime}`;
+      return sidetree.db.write(operationId, op);
+    };
+    return executeSequentially(
+      writeOperationToCache,
+      filteredOperationByDidUniqueSuffixes,
+    ).then(() => {
+      if (operationsByDidUniqueSuffixes.length !== filteredOperationByDidUniqueSuffixes.length) {
+        return null;
+      }
+      return sidetree.db.write(`transaction:${transaction.transactionNumber}`, {
+        type: 'transaction',
+        ...transaction,
+      });
+    });
+  } catch (error) {
+    console.log(error);
+    // https://stackoverflow.com/questions/18391212/is-it-not-possible-to-stringify-an-error-using-json-stringify
+    const stringifiedError = JSON.stringify(
+      error,
+      Object.getOwnPropertyNames(error),
+    );
+    return sidetree.db.write(`transaction:${transaction.transactionNumber}`, {
+      type: 'transaction',
+      ...transaction,
+      error: stringifiedError,
+    });
+  }
+};
 
 const getFirstUnprocessedBlockNumber = (transactionsAlreadyProcessed) => {
   const firstUnprocessedTransaction = transactionsAlreadyProcessed
@@ -47,4 +113,4 @@ const sync = sidetree => async (onlyDidUniqueSuffix = null) => {
   }
 };
 
-module.exports = sync;
+module.exports = { syncTransaction, sync };
