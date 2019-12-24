@@ -5,6 +5,7 @@ const {
   changeKid,
   getDidDocumentForPayload,
   getCreatePayloadForKeyIndex,
+  getLastOperation,
 } = require('../../__tests__/test-utils');
 const {
   getDidDocumentModel,
@@ -106,13 +107,6 @@ describe('resolve', () => {
     let lastOperation;
     let createPayload;
 
-    const getLastOperation = async () => {
-      const operations = await sidetree.db.readCollection(didUniqueSuffix);
-      operations.sort((o1, o2) => o1.transaction.transactionTime - o2.transaction.transactionTime);
-      const last = operations.pop();
-      return last;
-    };
-
     beforeAll(async () => {
       primaryKey = await mks.getKeyForPurpose('primary', 0);
       recoveryKey = await mks.getKeyForPurpose('recovery', 0);
@@ -121,7 +115,7 @@ describe('resolve', () => {
       didUniqueSuffix = getDidUniqueSuffix(createPayload);
       const createTransaction = await sidetree.batchScheduler.writeNow(createPayload);
       await syncTransaction(sidetree, createTransaction);
-      lastOperation = await getLastOperation();
+      lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
     });
 
     it('should not work if specified kid does not exist in did document', async () => {
@@ -144,7 +138,7 @@ describe('resolve', () => {
       const payload = await getUpdatePayloadForAddingAKey(lastOperation, '#newKey', 'signing', newKey.publicKey, primaryKey.privateKey);
       const transaction = await sidetree.batchScheduler.writeNow(payload);
       await syncTransaction(sidetree, transaction);
-      lastOperation = await getLastOperation();
+      lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
       const didDocument = await resolve(sidetree)(didUniqueSuffix);
       expect(didDocument.publicKey).toHaveLength(3);
       expect(didDocument.publicKey[2].publicKeyHex).toBe(newKey.publicKey);
@@ -154,7 +148,7 @@ describe('resolve', () => {
       const payload = await getUpdatePayloadForRemovingAKey(lastOperation, '#newKey', primaryKey.privateKey);
       const transaction = await sidetree.batchScheduler.writeNow(payload);
       await syncTransaction(sidetree, transaction);
-      lastOperation = await getLastOperation();
+      lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
       const didDocument = await resolve(sidetree)(didUniqueSuffix);
       expect(didDocument.publicKey).toHaveLength(2);
       expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey.publicKey);
@@ -198,7 +192,7 @@ describe('resolve', () => {
       const operation = makeSignedOperation(header, payload, primaryKey.privateKey);
       const transaction = await sidetree.batchScheduler.writeNow(operation);
       await syncTransaction(sidetree, transaction);
-      lastOperation = await getLastOperation();
+      lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
       const didDocument = await resolve(sidetree)(didUniqueSuffix);
       expect(didDocument.publicKey).toHaveLength(3);
       expect(didDocument.publicKey[0].publicKeyHex).toBe(recoveryKey.publicKey);
@@ -219,7 +213,7 @@ describe('resolve', () => {
       const payload = await getUpdatePayloadForRemovingAKey(lastOperation, '#fakekid', primaryKey.privateKey);
       const transaction = await sidetree.batchScheduler.writeNow(payload);
       await syncTransaction(sidetree, transaction);
-      lastOperation = await getLastOperation();
+      lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
       const didDocument = await resolve(sidetree)(didUniqueSuffix);
       expect(didDocument.publicKey).toHaveLength(3);
       expect(didDocument.publicKey[0].publicKeyHex).toBe(recoveryKey.publicKey);
