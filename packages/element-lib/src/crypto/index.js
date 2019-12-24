@@ -1,4 +1,5 @@
 const secp256k1 = require('secp256k1');
+const crypto = require('crypto');
 const bip39 = require('bip39');
 const hdkey = require('hdkey');
 const ethUtil = require('ethereumjs-util');
@@ -30,6 +31,19 @@ const mnemonicToKeypair = (mnemonic, hdPath) => {
   };
 };
 
+const createKeys = () => {
+  // generate privKey
+  let privKey;
+  do {
+    privKey = crypto.randomBytes(32);
+  } while (!secp256k1.privateKeyVerify(privKey));
+  const pubKey = secp256k1.publicKeyCreate(privKey);
+  return {
+    publicKey: pubKey.toString('hex'),
+    privateKey: privKey.toString('hex'),
+  };
+};
+
 module.exports = {
   bip39,
   hdkey,
@@ -40,5 +54,6 @@ module.exports = {
   secp256k1: {
     getCompressedPublicFromPrivate,
     getUncompressedPublicKeyFromCompressedPublicKey,
+    createKeys,
   },
 };

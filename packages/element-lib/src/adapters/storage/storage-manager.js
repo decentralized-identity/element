@@ -1,4 +1,4 @@
-const objectToMultihash = require('../../func/objectToMultihash');
+const { objectToMultihash } = require('../../func');
 
 class StorageManager {
   constructor(db, storage, options) {

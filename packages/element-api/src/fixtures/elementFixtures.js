@@ -1,14 +1,12 @@
 const faker = require('faker');
-const element = require('@transmute/element-lib');
-
-const { op, func } = new element.SidetreeV2();
+const { op, func, MnemonicKeySystem } = require('@transmute/element-lib');
 
 const generateActors = async (count) => {
   const actors = [];
   let i = 0;
 
   while (i < count) {
-    const mks = new element.MnemonicKeySystem(element.MnemonicKeySystem.generateMnemonic());
+    const mks = new MnemonicKeySystem(MnemonicKeySystem.generateMnemonic());
     const primaryKey = mks.getKeyForPurpose('primary', 0);
     const recoveryKey = mks.getKeyForPurpose('recovery', 0);
     const didDocumentModel = op.getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);

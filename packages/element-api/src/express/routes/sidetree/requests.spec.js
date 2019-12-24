@@ -16,14 +16,14 @@ beforeAll(async () => {
 
 afterAll(async () => {});
 
-const { op } = new element.SidetreeV2();
-
 describe('sidetree', () => {
   it('requests', async () => {
     const primaryKey = actor.mks.getKeyForPurpose('primary', 0);
     const recoveryKey = actor.mks.getKeyForPurpose('recovery', 0);
-    const didDocumentModel = op.getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
-    const createPayload = await op.getCreatePayload(didDocumentModel, primaryKey);
+    const didDocumentModel = element.op.getDidDocumentModel(
+      primaryKey.publicKey, recoveryKey.publicKey,
+    );
+    const createPayload = await element.op.getCreatePayload(didDocumentModel, primaryKey);
 
     res = await server
       .post('/api/v1/sidetree/requests')

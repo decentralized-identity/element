@@ -1,5 +1,4 @@
 const element = require('../../../index');
-const operationGenerator = require('./operationGenerator');
 
 const aliceKeys = {
   publicKey: '0249b2d0d92622bdf194a2af90f9d166e0dd324aff9b42c8727de90e887d76a4dc',
@@ -87,7 +86,7 @@ const aliceCreateAnchorFile = {
 };
 
 const generateActor = () => {
-  const keypair = element.func.createKeys();
+  const keypair = element.crypto.secp256k1.createKeys();
   const createPayload = {
     ...createPayloadTemplate,
   };
@@ -127,7 +126,7 @@ const generateCreates = async (actorMap) => {
 const generateUpdate1 = async (actorMap) => {
   const operations = [];
   Object.values(actorMap).forEach(async (actor) => {
-    const keypair = element.func.createKeys();
+    const keypair = element.crypto.secp256k1.createKeys();
     const operation = await element.func.payloadToOperation({
       type: 'update',
       kid: '#key1',
@@ -205,5 +204,4 @@ module.exports = {
   secondaryKeypair,
   recoveryKeypair,
   recoveryKeypair2,
-  operationGenerator,
 };

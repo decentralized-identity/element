@@ -1,4 +1,4 @@
-const getLocalSidetree = require('../../__tests__/__fixtures__/getLocalSidetree');
+const { getTestSideTree } = require('../../__tests__/test-utils');
 const element = require('../../../index');
 
 const protocol = require('./rsa-jwt-needham-schroeder');
@@ -55,7 +55,7 @@ const addRSAKey = async (actor) => {
 };
 
 beforeAll(async () => {
-  sidetree = await getLocalSidetree('Needham-Schroeder');
+  sidetree = getTestSideTree();
   // easily generate more.
   // const mnemonic = element.MnemonicKeySystem.generateMnemonic();
   alice = makeActor('lady sweet hurt damp goat rib under riot magnet hobby cross conduct');
@@ -76,7 +76,7 @@ afterAll(async () => {
   await sidetree.close();
 });
 
-describe('Needham-Schroeder', () => {
+describe.skip('Needham-Schroeder', () => {
   it('alice and bob have dids', async () => {
     const aliceDidDoc = await sidetree.resolve(alice.did);
     const bobDidDoc = await sidetree.resolve(bob.did);

@@ -1,8 +1,10 @@
 const Web3 = require('web3');
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 const contract = require('@truffle/contract');
-const bytes32EnodedMultihashToBase58EncodedMultihash = require('../../../func/bytes32EnodedMultihashToBase58EncodedMultihash');
-const base58EncodedMultihashToBytes32 = require('../../../func/base58EncodedMultihashToBytes32');
+const {
+  bytes32EnodedMultihashToBase58EncodedMultihash,
+  base58EncodedMultihashToBytes32,
+} = require('../../../func');
 const anchorContractArtifact = require('../../../../SimpleSidetreeAnchor.json');
 
 const getWeb3 = ({ mnemonic, hdPath, providerUrl }) => {
