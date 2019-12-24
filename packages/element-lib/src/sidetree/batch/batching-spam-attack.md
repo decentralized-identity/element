@@ -14,7 +14,7 @@ The full experiment is done in `./batching-spam-attack.js` with:
 - The RXDB adapter for the `db` interface
 - A MacBook Pro with 8Gg or RAM and a 2,3 GHz i5 processor
 
-To run the experiment, run `node packages/element-lib/src/sidetree-v2/___tests___/batching-spam-attack.js`
+To run the experiment, run `node packages/element-lib/src/sidetree/___tests___/batching-spam-attack.js`
 
 ## Results for the full sync node
 

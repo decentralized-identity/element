@@ -3,7 +3,6 @@ const crypto = require('./src/crypto');
 const schema = require('./src/schema');
 const adapters = require('./src/adapters');
 const Sidetree = require('./src/sidetree');
-const SidetreeV2 = require('./src/sidetree');
 const op = require('./src/sidetree/op');
 const MnemonicKeySystem = require('./src/crypto/MnemonicKeySystem');
 
@@ -18,6 +17,5 @@ module.exports = {
   adapters,
   op,
   Sidetree,
-  SidetreeV2,
   MnemonicKeySystem,
 };
