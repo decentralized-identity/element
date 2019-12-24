@@ -1,5 +1,5 @@
 /* eslint-disable arrow-body-style */
-const { verifyOperationSignature } = require('../../func/func');
+const { verifyOperationSignature } = require('../../func');
 const { isDidDocumentModelValid, isKeyValid } = require('../utils/validation');
 
 const isSignatureValid = async (didDocument, operation) => {

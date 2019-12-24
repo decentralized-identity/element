@@ -6,7 +6,7 @@ const OperationQueue = require('./batch/operationQueue');
 const BatchScheduler = require('./batch/BatchScheduler');
 const batchWrite = require('./batch/batchWrite');
 const op = require('./op');
-const func = require('../func/func');
+const func = require('../func');
 
 class Sidetree {
   constructor({

@@ -1,4 +1,4 @@
-const { executeSequentially, syncTransaction } = require('../../func/func');
+const { executeSequentially, syncTransaction } = require('../../func');
 
 const getFirstUnprocessedBlockNumber = (transactionsAlreadyProcessed) => {
   const firstUnprocessedTransaction = transactionsAlreadyProcessed

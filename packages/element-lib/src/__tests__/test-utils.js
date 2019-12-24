@@ -3,7 +3,7 @@ const {
   encodeJson,
   decodeJson,
   syncTransaction,
-} = require('../func/func');
+} = require('../func');
 const { getDidDocumentModel, getCreatePayload } = require('../sidetree/op');
 const resolve = require('../sidetree/resolve');
 
