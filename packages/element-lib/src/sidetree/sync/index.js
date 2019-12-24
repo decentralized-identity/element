@@ -6,7 +6,7 @@ const {
 } = require('../../func');
 const { isTransactionValid, isBatchFileValid, isAnchorFileValid } = require('../utils/validation');
 
-const syncTransaction = async (sidetree, transaction, onlyDidUniqueSuffix = null) => {
+const syncTransaction = sidetree => async (transaction, onlyDidUniqueSuffix = null) => {
   if (process.env.NODE_ENV !== 'test') {
     console.info('sync', transaction.transactionNumber);
   }
@@ -104,7 +104,7 @@ const sync = sidetree => async (onlyDidUniqueSuffix = null) => {
     // Only process transactions that haven't been processed
     .filter(transaction => !processedSet.has(transaction.transactionNumber));
   await executeSequentially(
-    t => syncTransaction(sidetree, t, onlyDidUniqueSuffix),
+    t => sidetree.syncTransaction(t, onlyDidUniqueSuffix),
     transactionQueue,
   );
   if (onlyDidUniqueSuffix && transactionQueue.length > 0) {

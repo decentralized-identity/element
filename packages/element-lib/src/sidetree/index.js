@@ -1,5 +1,5 @@
 const resolve = require('./resolve');
-const sync = require('./sync');
+const { sync, syncTransaction } = require('./sync');
 const { getTransactions, getTransactionSummary } = require('./utils/transactions');
 const getNodeInfo = require('./utils/getNodeInfo');
 const OperationQueue = require('./batch/operationQueue');
@@ -24,6 +24,7 @@ class Sidetree {
     this.func = func;
     // Observer
     this.sync = sync(this);
+    this.syncTransaction = syncTransaction(this);
     // Resolver
     this.resolve = resolve(this);
     // Batching

@@ -6,7 +6,6 @@ const {
   batchFileToOperations,
   getDidUniqueSuffix,
   decodeJson,
-  syncTransaction,
 } = require('../../func');
 const { MnemonicKeySystem } = require('../../../index');
 
@@ -59,7 +58,7 @@ describe('batchWrite with one operation', () => {
   });
 
   it('should resolve the did when the observer synced the transaction', async () => {
-    await syncTransaction(sidetree, transaction);
+    await sidetree.syncTransaction(transaction);
     const didDocument = await resolve(sidetree)(didUniqueSuffix);
     const did = `did:elem:${didUniqueSuffix}`;
     expect(didDocument.id).toBe(did);
@@ -121,7 +120,7 @@ describe('batchWrite with several operations', () => {
   });
 
   it('should resolve the first did when the observer synced the transaction', async () => {
-    await syncTransaction(sidetree, transaction);
+    await sidetree.syncTransaction(transaction);
     const didDocument = await resolve(sidetree)(didUniqueSuffix1);
     const did = `did:elem:${didUniqueSuffix1}`;
     expect(didDocument.id).toBe(did);
