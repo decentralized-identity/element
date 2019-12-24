@@ -13,7 +13,8 @@
       "enum": [
         "Secp256k1VerificationKey2018",
         "Ed25519VerificationKey2018",
-        "X25519KeyAgreementKey2019"
+        "X25519KeyAgreementKey2019",
+        "OpenPgpVerificationKey2019"
       ],
       "example": ["Secp256k1VerificationKey2018"]
     },
@@ -36,6 +37,11 @@
       "type": "string",
       "required": false,
       "example": ["AYd6VGSqp5DTS5YknJfAQtobi2jmW3Yf1eodyMJMhvVV"]
+    },
+    "publicKeyPem": {
+      "type": "string",
+      "required": false,
+      "example": ["-----BEGIN PGP PUBLIC KEY BLOCK-----\r\nVersion: OpenPGP.js...."]
     }
   },
   "additionalProperties": false

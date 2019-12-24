@@ -1,0 +1,35 @@
+{
+  "$id": "/sidetree.proof",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "required": true,
+      "enum": ["Ed25519Signature2018"],
+      "example": ["Ed25519Signature2018"]
+    },
+    "created": {
+      "type": "string",
+      "required": false,
+      "example": ["2019-11-16T15:33:43Z"]
+    },
+    "jws": {
+      "type": "string",
+      "required": false,
+      "example": [
+        "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..6HTKO58kIVZ4WHDJSVBYhaa-cMWUnOdlS0h7N4F0WpdqhS_L0lTA3qtezKXEh8RU0UvVdA1yDz70wwN5UPIGDg"
+      ]
+    },
+    "proofPurpose": {
+      "type": "string",
+      "required": false,
+      "example": ["assertionMethod"]
+    },
+    "verificationMethod": {
+      "type": "string",
+      "required": false,
+      "example": ["did:github:OR13#XJZ3sHC-idqckHQCYQSQBlNYcBNxh8FePiD_KenzZ2o"]
+    }
+  },
+  "additionalProperties": false
+}

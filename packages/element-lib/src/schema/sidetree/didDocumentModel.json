@@ -49,6 +49,20 @@
       "items": {
         "anyOf": [{ "type": "string" }, { "$ref": "sidetree.key" }]
       }
+    },
+    "service": {
+      "type": "array",
+      "required": false,
+      "items": {
+        "$ref": "sidetree.service"
+      }
+    },
+    "proof": {
+      "type": "object",
+      "required": false,
+      "items": {
+        "$ref": "sidetree.proof"
+      }
     }
   },
   "additionalProperties": false

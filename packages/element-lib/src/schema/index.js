@@ -6,6 +6,8 @@ const sidetreeTransaction = require('./sidetree/transaction.json');
 const sidetreeAnchorFile = require('./sidetree/anchorFile.json');
 const sidetreeBatchFile = require('./sidetree/batchFile.json');
 const sidetreeKey = require('./sidetree/key.json');
+const sidetreeService = require('./sidetree/service.json');
+const sidetreeProof = require('./sidetree/proof.json');
 const sidetreeDidDocumentModel = require('./sidetree/didDocumentModel.json');
 
 const schemas = {
@@ -15,6 +17,8 @@ const schemas = {
   sidetreeAnchorFile,
   sidetreeBatchFile,
   sidetreeKey,
+  sidetreeService,
+  sidetreeProof,
   sidetreeDidDocumentModel,
 };
 
@@ -24,7 +28,8 @@ class SchemaValidator {
    */
   constructor() {
     this._validator = new Validator();
-    Object.keys(schemas).forEach((sk) => {
+    Object.keys(schemas).forEach(sk => {
+      // eslint-disable-next-line
       const s = schemas[sk];
       if (!s) {
         throw new Error(`No schema found for ${sk}`);
