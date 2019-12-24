@@ -1,195 +1,126 @@
-const element = require('../../index');
+const MerkleTools = require('merkle-tools');
 const {
-  primaryKeypair,
-  primaryKeypair2,
-  secondaryKeypair,
-  recoveryKeypair,
-  recoveryKeypair2,
-} = require('./__fixtures__');
-const getLocalSidetree = require('./__fixtures__/getLocalSidetree');
-const fixtureStorage = require('./__fixtures__').storage;
+  getActorByIndex,
+  generateActors,
+  updateByActorIndex,
+} = require('./__fixtures__/sidetreeTestUtils');
 
 jest.setTimeout(20 * 1000);
 
-const sleep = seconds => new Promise(r => setTimeout(r, seconds * 1000));
+const { getTestSideTree, getLastOperation } = require('./test-utils');
 
 let sidetree;
-let didUniqueSuffix;
+let batchFile;
+let batchFileHash;
+let anchorFile;
 let anchorFileHash;
-
-const didDocument = {
-  '@context': 'https://w3id.org/did/v1',
-  publicKey: [
-    {
-      id: '#primary',
-      type: 'Secp256k1VerificationKey2018',
-      publicKeyHex: primaryKeypair.publicKey,
-    },
-    {
-      id: '#recovery',
-      type: 'Secp256k1VerificationKey2018',
-      publicKeyHex: recoveryKeypair.publicKey,
-    },
-  ],
-  service: [
-    {
-      id: '#transmute.element.test',
-      type: 'Transmute.Element.Test',
-      serviceEndpoint: `http://vanity.example.com#${Math.random()}`,
-    },
-  ],
-};
+let actor;
+let newKey;
 
 // Why Sidetree DIDs are non transferable.
 // we need randomness here, because obviously IPFS will have the published
 // data after one test run.
 describe('LatePublishAttack', () => {
   beforeAll(async () => {
-    sidetree = await getLocalSidetree('LatePublishAttack');
-    await sidetree.db.deleteDB();
+    sidetree = await getTestSideTree();
+    await generateActors(1);
+    actor = await getActorByIndex(0);
   });
 
   it('create a did', async () => {
-    const encodedPayload = element.func.encodeJson(didDocument);
-    const signature = element.func.signEncodedPayload(encodedPayload, primaryKeypair.privateKey);
-    const requestBody = {
-      header: {
-        operation: 'create',
-        kid: '#primary',
-        alg: 'ES256K',
-      },
-      payload: encodedPayload,
-      signature,
-    };
-    const txn = await sidetree.createTransactionFromRequests(requestBody);
+    const txn = await sidetree.batchScheduler.writeNow(actor.createPayload);
     expect(txn.transactionTime).toBeDefined();
-    await sidetree.sync({
-      fromTransactionTime: 0,
-      toTransactionTime: txn.transactionTime,
-    });
-    const type = 'element:sidetree:did:documentRecord';
+    await sidetree.resolve(actor.didUniqueSuffix, true);
+    const type = 'did:documentRecord';
     const [docRecord] = await sidetree.db.readCollection(type);
     expect(docRecord.type).toBe(type);
     expect(docRecord.record).toBeDefined();
-    expect(docRecord.record.previousOperationHash).toBeDefined();
     expect(docRecord.record.lastTransaction).toBeDefined();
-    expect(docRecord.record.doc).toEqual({
-      ...didDocument,
-      id: docRecord.record.doc.id,
-    });
-    didUniqueSuffix = docRecord.record.previousOperationHash;
   });
 
   it('create attack payload', async () => {
-    const encodedPayload = element.func.encodeJson({
-      didUniqueSuffix,
-      previousOperationHash: didUniqueSuffix, // should see this twice.
-      patch: [
-        // first op should update recovery key.
-        {
-          op: 'replace',
-          path: '/publicKey/1',
-          value: {
-            id: '#recovery',
-            type: 'Secp256k1VerificationKey2018',
-            publicKeyHex: secondaryKeypair.publicKey,
-          },
-        },
-        {
-          op: 'replace',
-          path: '/publicKey/0',
-          value: {
-            id: '#primary',
-            type: 'Secp256k1VerificationKey2018',
-            publicKeyHex: primaryKeypair2.publicKey,
-          },
-        },
-      ],
-    });
-    const signature = element.func.signEncodedPayload(encodedPayload, recoveryKeypair.privateKey);
-    const requestBody = {
-      header: {
-        operation: 'recover',
-        kid: '#recovery',
-        alg: 'ES256K',
-      },
-      payload: encodedPayload,
-      signature,
+    const updatePayload = await updateByActorIndex(sidetree, 0);
+    const decodedOperations = [updatePayload];
+    const operations = decodedOperations.map(sidetree.func.encodeJson);
+
+    // Write batchFile to storage
+    batchFile = {
+      operations,
     };
 
-    const encodedOperation = element.func.requestBodyToEncodedOperation({
-      ...requestBody,
+    // Instead of writing the batchFile to IPFS, we only compute its hash
+    batchFileHash = await sidetree.func.objectToMultiHash(batchFile);
+
+    // Write anchorFile to storage
+    const didUniqueSuffixes = decodedOperations.map(sidetree.func.getDidUniqueSuffix);
+    const merkleTools = new MerkleTools({
+      hashType: 'sha256', // optional, defaults to 'sha256'
     });
-    anchorFileHash = await element.func.operationsToAnchorFile({
-      operations: [encodedOperation],
-      storage: fixtureStorage, // this should be fixture storage
-    });
+    merkleTools.addLeaves(operations, true);
+    merkleTools.makeTree(false);
+    const root = merkleTools.getMerkleRoot();
+    merkleTools.resetTree();
+    anchorFile = {
+      batchFileHash,
+      didUniqueSuffixes,
+      merkleRoot: root.toString('hex'),
+    };
+    // Instead of writing the anchorFile to IPFS, we only compute its hash
+    anchorFileHash = await sidetree.func.objectToMultiHash(anchorFile);
+    // Anchor on ethereum
     await sidetree.blockchain.write(anchorFileHash);
   });
 
   it('pretend to transfer', async () => {
-    const encodedPayload = element.func.encodeJson({
-      didUniqueSuffix,
-      previousOperationHash: didUniqueSuffix, // should see this twice.
-      patch: [
-        // first op should update recovery key.
+    const lastOperation = await getLastOperation(sidetree, actor.didUniqueSuffix);
+    newKey = await actor.mks.getKeyForPurpose('primary', 2);
+    const payload = {
+      didUniqueSuffix: lastOperation.didUniqueSuffix,
+      previousOperationHash: lastOperation.operation.operationHash,
+      patches: [
         {
-          op: 'replace',
-          path: '/publicKey/1',
-          value: {
-            id: '#recovery',
-            type: 'Secp256k1VerificationKey2018',
-            publicKeyHex: recoveryKeypair2.publicKey,
-          },
-        },
-        {
-          op: 'replace',
-          path: '/publicKey/0',
-          value: {
-            id: '#primary',
-            type: 'Secp256k1VerificationKey2018',
-            publicKeyHex: primaryKeypair2.publicKey,
-          },
+          action: 'add-public-keys',
+          publicKeys: [
+            {
+              id: '#newKey',
+              usage: 'signing',
+              type: 'Secp256k1VerificationKey2018',
+              publicKeyHex: newKey.publicKey,
+            },
+          ],
+        }, {
+          action: 'remove-public-keys',
+          publicKeys: ['#primary'],
         },
       ],
-    });
-    const signature = element.func.signEncodedPayload(encodedPayload, recoveryKeypair.privateKey);
-    const requestBody = {
-      header: {
-        operation: 'recover',
-        kid: '#recovery',
-        alg: 'ES256K',
-      },
-      payload: encodedPayload,
-      signature,
     };
-    const txn = await sidetree.createTransactionFromRequests(requestBody);
+    const header = {
+      operation: 'update',
+      kid: '#primary',
+      alg: 'ES256K',
+    };
+    const operation = sidetree.op.makeSignedOperation(header, payload, actor.primaryKey.privateKey);
+    const txn = await sidetree.batchScheduler.writeNow(operation);
     expect(txn.transactionTime).toBeDefined();
   });
 
   it('observers think the transfer occured', async () => {
-    await sidetree.db.deleteDB();
-    await sleep(3);
-    const didDoc = await sidetree.resolve(`did:elem:${didUniqueSuffix}`);
-    expect(didDoc.publicKey[0].publicKeyHex).toBe(primaryKeypair2.publicKey);
-    expect(didDoc.publicKey[1].publicKeyHex).toBe(recoveryKeypair2.publicKey);
+    const didDoc = await sidetree.resolve(actor.didUniqueSuffix, true);
+    expect(didDoc.publicKey[1].publicKeyHex).toBe(newKey.publicKey);
+    expect(didDoc.publicKey[0].publicKeyHex).toBe(actor.recoveryKey.publicKey);
   });
 
   it('publish attack payload', async () => {
     // Now we publish our sneeky trick.
-    const ourLateAnchorFile = await fixtureStorage.read(anchorFileHash);
-    const ourLateBatchFile = await fixtureStorage.read(ourLateAnchorFile.batchFileHash);
-    await sidetree.storage.write(ourLateAnchorFile);
-    await sidetree.storage.write(ourLateBatchFile);
+    await sidetree.storage.write(batchFile);
+    await sidetree.storage.write(anchorFile);
   });
 
   it('observers can see the transfer never occured.', async () => {
-    // we need to delete the database,
-    // because the cache logic has already determined the attack hash not resolvable.
     await sidetree.db.deleteDB();
-    await sleep(3);
-    const didDoc = await sidetree.resolve(`did:elem:${didUniqueSuffix}`);
-    expect(didDoc.publicKey[0].publicKeyHex).toBe(primaryKeypair2.publicKey);
-    expect(didDoc.publicKey[1].publicKeyHex).toBe(secondaryKeypair.publicKey);
+    const didDoc = await sidetree.resolve(actor.didUniqueSuffix, true);
+    expect(didDoc.publicKey[0].publicKeyHex).toBe(actor.primaryKey.publicKey);
+    expect(didDoc.publicKey[1].publicKeyHex).toBe(actor.recoveryKey.publicKey);
+    expect(didDoc.publicKey[2].id).toBe('#newKey');
   });
 });
