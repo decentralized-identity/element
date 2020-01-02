@@ -1,6 +1,8 @@
-const { getTestSideTree } = require('../../__tests__/test-utils');
-const element = require('../../../index');
-
+const { getTestSideTree, getLastOperation } = require('../../__tests__/test-utils');
+const {
+  getActorByIndex,
+  generateActors,
+} = require('../../__tests__/__fixtures__/sidetreeTestUtils');
 const protocol = require('./rsa-jwt-needham-schroeder');
 
 jest.setTimeout(10 * 1000);
@@ -15,71 +17,61 @@ let m0;
 let m1;
 let m2;
 
-const makeActor = (mnemonic) => {
-  const mks = new element.MnemonicKeySystem(mnemonic);
-  const didUniqueSuffix = element.op.getDidUniqueSuffix({
-    primaryKey: mks.getKeyForPurpose('primary', 0),
-    recoveryPublicKey: mks.getKeyForPurpose('recovery', 0).publicKey,
-  });
-  return {
-    did: `did:elem:${didUniqueSuffix}`,
-    didUniqueSuffix,
-    mks,
-    mnemonic,
-  };
-};
-
 const addRSAKey = async (actor) => {
   const key = await protocol.generateKey();
   // eslint-disable-next-line
   actor.key = key;
-  await sidetree.createTransactionFromRequests([
-    sidetree.op.update({
-      didUniqueSuffix: actor.didUniqueSuffix,
-      previousOperationHash: await sidetree.getPreviousOperationHash(actor.didUniqueSuffix),
-      patch: [
-        {
-          op: 'replace',
-          path: '/publicKey/2',
-          value: {
-            id: `${actor.did}#auth`,
+  const { didUniqueSuffix } = actor;
+  await sidetree.resolve(didUniqueSuffix, true);
+  const lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
+  const payload = {
+    didUniqueSuffix: lastOperation.didUniqueSuffix,
+    previousOperationHash: lastOperation.operation.operationHash,
+    patches: [
+      {
+        action: 'add-public-keys',
+        publicKeys: [
+          {
+            id: `${actor.didUniqueSuffix}#auth`,
             controller: actor.did,
+            usage: 'signing',
             type: 'RsaVerificationKey2018',
             publicKeyPem: key.publicKey,
           },
-        },
-      ],
-      primaryPrivateKey: actor.mks.getKeyForPurpose('primary', 0).privateKey,
-    }),
-  ]);
+        ],
+      },
+    ],
+  };
+  const header = {
+    operation: 'update',
+    kid: '#primary',
+    alg: 'ES256K',
+  };
+  const updatePayload = await sidetree.op.makeSignedOperation(
+    header, payload, actor.primaryKey.privateKey,
+  );
+  await sidetree.operationQueue.enqueue(alice.didUniqueSuffix, updatePayload);
+  await sidetree.batchWrite();
 };
 
 beforeAll(async () => {
   sidetree = getTestSideTree();
-  // easily generate more.
-  // const mnemonic = element.MnemonicKeySystem.generateMnemonic();
-  alice = makeActor('lady sweet hurt damp goat rib under riot magnet hobby cross conduct');
-  bob = makeActor('present cute rubber purpose scout enjoy arena walnut rival report slogan city');
-  await sidetree.createTransactionFromRequests([
-    element.op.create({
-      primaryKey: alice.mks.getKeyForPurpose('primary', 0),
-      recoveryPublicKey: alice.mks.getKeyForPurpose('recovery', 0).publicKey,
-    }),
-    element.op.create({
-      primaryKey: bob.mks.getKeyForPurpose('primary', 0),
-      recoveryPublicKey: bob.mks.getKeyForPurpose('recovery', 0).publicKey,
-    }),
-  ]);
+  await generateActors(2);
+  alice = getActorByIndex(0);
+  bob = getActorByIndex(1);
+  await sidetree.operationQueue.enqueue(alice.didUniqueSuffix, alice.createPayload);
+  await sidetree.operationQueue.enqueue(bob.didUniqueSuffix, bob.createPayload);
+  await sidetree.batchWrite();
 });
 
 afterAll(async () => {
   await sidetree.close();
 });
 
-describe.skip('Needham-Schroeder', () => {
+describe('Needham-Schroeder', () => {
   it('alice and bob have dids', async () => {
-    const aliceDidDoc = await sidetree.resolve(alice.did);
-    const bobDidDoc = await sidetree.resolve(bob.did);
+    const aliceDidDoc = await sidetree.resolve(alice.didUniqueSuffix, true);
+    const bobDidDoc = await sidetree.resolve(bob.didUniqueSuffix, true);
     expect(aliceDidDoc.publicKey.length).toBe(2);
     expect(bobDidDoc.publicKey.length).toBe(2);
   });
@@ -87,66 +79,70 @@ describe.skip('Needham-Schroeder', () => {
   describe('key registration', () => {
     it('alice and bob add keys', async () => {
       await addRSAKey(alice);
-      const aliceDidDoc = await sidetree.resolve(alice.did);
+      const aliceDidDoc = await sidetree.resolve(alice.didUniqueSuffix, true);
       expect(aliceDidDoc.publicKey.length).toBe(3);
+      expect(aliceDidDoc.publicKey[2].type).toBe('RsaVerificationKey2018');
+      expect(aliceDidDoc.publicKey[2].publicKeyPem).toBeDefined();
 
       await addRSAKey(bob);
-      const bobDidDoc = await sidetree.resolve(bob.did);
+      const bobDidDoc = await sidetree.resolve(bob.didUniqueSuffix, true);
       expect(bobDidDoc.publicKey.length).toBe(3);
+      expect(bobDidDoc.publicKey[2].type).toBe('RsaVerificationKey2018');
+      expect(bobDidDoc.publicKey[2].publicKeyPem).toBeDefined();
     });
   });
 
-  describe('protocol', () => {
-    it('alice creates Na and encrypts it for bob', async () => {
-      const res = await protocol.createM0({
-        resolve: sidetree.resolve,
-        initiatorDid: alice.did,
-        responderDid: bob.did,
-        initiatorPrivateKey: alice.key.privateKey,
-      });
-      ({ m0, Na } = res);
-      expect(m0).toBeDefined();
-      expect(Na).toBeDefined();
-    });
+  // describe('protocol', () => {
+  //   it('alice creates Na and encrypts it for bob', async () => {
+  //     const res = await protocol.createM0({
+  //       resolve: sidetree.resolve,
+  //       initiatorDid: alice.did,
+  //       responderDid: bob.did,
+  //       initiatorPrivateKey: alice.key.privateKey,
+  //     });
+  //     ({ m0, Na } = res);
+  //     expect(m0).toBeDefined();
+  //     expect(Na).toBeDefined();
+  //   });
 
-    it('bob creates Nb and encrypts [Na, Nb, bob.did] for alice', async () => {
-      const res = await protocol.createM1({
-        m0,
-        resolve: sidetree.resolve,
-        initiatorDid: alice.did,
-        responderDid: bob.did,
-        responderPrivateKey: bob.key.privateKey,
-      });
-      ({ m1, Nb } = res);
-      expect(m0).toBeDefined();
-      expect(Nb).toBeDefined();
-    });
-    it('alice decrypts and verifies Na, sends Nb to bob', async () => {
-      const res = await protocol.createM2({
-        m1,
-        resolve: sidetree.resolve,
-        initiatorDid: alice.did,
-        responderDid: bob.did,
-        initiatorPrivateKey: alice.key.privateKey,
-        Na, // alice knows this, now she can see that bob does as well
-      });
-      ({ m2 } = res);
-      expect(res.m2).toBeDefined();
-      expect(res.Na).toBe(Na);
-      expect(res.Nb).toBe(Nb);
-    });
+  //   it('bob creates Nb and encrypts [Na, Nb, bob.did] for alice', async () => {
+  //     const res = await protocol.createM1({
+  //       m0,
+  //       resolve: sidetree.resolve,
+  //       initiatorDid: alice.did,
+  //       responderDid: bob.did,
+  //       responderPrivateKey: bob.key.privateKey,
+  //     });
+  //     ({ m1, Nb } = res);
+  //     expect(m0).toBeDefined();
+  //     expect(Nb).toBeDefined();
+  //   });
+  //   it('alice decrypts and verifies Na, sends Nb to bob', async () => {
+  //     const res = await protocol.createM2({
+  //       m1,
+  //       resolve: sidetree.resolve,
+  //       initiatorDid: alice.did,
+  //       responderDid: bob.did,
+  //       initiatorPrivateKey: alice.key.privateKey,
+  //       Na, // alice knows this, now she can see that bob does as well
+  //     });
+  //     ({ m2 } = res);
+  //     expect(res.m2).toBeDefined();
+  //     expect(res.Na).toBe(Na);
+  //     expect(res.Nb).toBe(Nb);
+  //   });
 
-    it('bob decrypts and verifies Nb', async () => {
-      const res = await protocol.verifyM2({
-        m2,
-        resolve: sidetree.resolve,
-        initiatorDid: alice.did,
-        responderDid: bob.did,
-        responderPrivateKey: bob.key.privateKey,
-        Nb, // bob knows this, now he can see that alice does as well
-      });
-      expect(res).toBe(true);
-      // Bob has authenticated Alice.
-    });
-  });
+  //   it('bob decrypts and verifies Nb', async () => {
+  //     const res = await protocol.verifyM2({
+  //       m2,
+  //       resolve: sidetree.resolve,
+  //       initiatorDid: alice.did,
+  //       responderDid: bob.did,
+  //       responderPrivateKey: bob.key.privateKey,
+  //       Nb, // bob knows this, now he can see that alice does as well
+  //     });
+  //     expect(res).toBe(true);
+  //     // Bob has authenticated Alice.
+  //   });
+  // });
 });
