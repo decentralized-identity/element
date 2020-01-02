@@ -1,11 +1,12 @@
-const { getTestSideTree, getLastOperation } = require('../../__tests__/test-utils');
+jest.setTimeout(10 * 1000);
+
 const {
+  getTestSideTree,
+  getLastOperation,
   getActorByIndex,
   generateActors,
-} = require('../../__tests__/__fixtures__/sidetreeTestUtils');
+} = require('../../__tests__/test-utils');
 const protocol = require('./rsa-jwt-needham-schroeder');
-
-jest.setTimeout(10 * 1000);
 
 let sidetree;
 let alice;

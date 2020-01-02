@@ -1,6 +1,7 @@
-const { getTestSideTree } = require('./test-utils');
+jest.setTimeout(10 * 1000);
 
 const {
+  getTestSideTree,
   generateActors,
   updateByActorIndex,
   recoverByActorIndex,
@@ -9,9 +10,7 @@ const {
   assertUpdateSucceeded,
   assertRecoverSucceeded,
   assertDeactivateSucceeded,
-} = require('./__fixtures__/sidetreeTestUtils');
-
-jest.setTimeout(10 * 1000);
+} = require('./test-utils');
 
 const sidetree = getTestSideTree();
 let actors;

@@ -1,6 +1,7 @@
 jest.setTimeout(10 * 1000);
 
 const {
+  getTestSideTree,
   getActorByIndex,
   generateActors,
   updateByActorIndex,
@@ -10,9 +11,7 @@ const {
   assertUpdateSucceeded,
   assertRecoverSucceeded,
   assertDeactivateSucceeded,
-} = require('./__fixtures__/sidetreeTestUtils');
-
-const { getTestSideTree } = require('./test-utils');
+} = require('./test-utils');
 
 const sidetree = getTestSideTree();
 
