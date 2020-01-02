@@ -32,7 +32,7 @@ const addRSAKey = async (actor) => {
         action: 'add-public-keys',
         publicKeys: [
           {
-            id: `${actor.didUniqueSuffix}#auth`,
+            id: `did:elem:${actor.didUniqueSuffix}#auth`,
             controller: actor.did,
             usage: 'signing',
             type: 'RsaVerificationKey2018',
@@ -92,57 +92,58 @@ describe('Needham-Schroeder', () => {
     });
   });
 
-  // describe('protocol', () => {
-  //   it('alice creates Na and encrypts it for bob', async () => {
-  //     const res = await protocol.createM0({
-  //       resolve: sidetree.resolve,
-  //       initiatorDid: alice.did,
-  //       responderDid: bob.did,
-  //       initiatorPrivateKey: alice.key.privateKey,
-  //     });
-  //     ({ m0, Na } = res);
-  //     expect(m0).toBeDefined();
-  //     expect(Na).toBeDefined();
-  //   });
+  describe('protocol', () => {
+    it('alice creates Na and encrypts it for bob', async () => {
+      const res = await protocol.createM0({
+        resolve: sidetree.resolve,
+        initiatorDid: alice.didUniqueSuffix,
+        responderDid: bob.didUniqueSuffix,
+        initiatorPrivateKey: alice.key.privateKey,
+      });
+      ({ m0, Na } = res);
+      expect(m0).toBeDefined();
+      expect(Na).toBeDefined();
+    });
 
-  //   it('bob creates Nb and encrypts [Na, Nb, bob.did] for alice', async () => {
-  //     const res = await protocol.createM1({
-  //       m0,
-  //       resolve: sidetree.resolve,
-  //       initiatorDid: alice.did,
-  //       responderDid: bob.did,
-  //       responderPrivateKey: bob.key.privateKey,
-  //     });
-  //     ({ m1, Nb } = res);
-  //     expect(m0).toBeDefined();
-  //     expect(Nb).toBeDefined();
-  //   });
-  //   it('alice decrypts and verifies Na, sends Nb to bob', async () => {
-  //     const res = await protocol.createM2({
-  //       m1,
-  //       resolve: sidetree.resolve,
-  //       initiatorDid: alice.did,
-  //       responderDid: bob.did,
-  //       initiatorPrivateKey: alice.key.privateKey,
-  //       Na, // alice knows this, now she can see that bob does as well
-  //     });
-  //     ({ m2 } = res);
-  //     expect(res.m2).toBeDefined();
-  //     expect(res.Na).toBe(Na);
-  //     expect(res.Nb).toBe(Nb);
-  //   });
+    it('bob creates Nb and encrypts [Na, Nb, bob.did] for alice', async () => {
+      const res = await protocol.createM1({
+        m0,
+        resolve: sidetree.resolve,
+        initiatorDid: alice.didUniqueSuffix,
+        responderDid: bob.didUniqueSuffix,
+        responderPrivateKey: bob.key.privateKey,
+      });
+      ({ m1, Nb } = res);
+      expect(m0).toBeDefined();
+      expect(Nb).toBeDefined();
+    });
 
-  //   it('bob decrypts and verifies Nb', async () => {
-  //     const res = await protocol.verifyM2({
-  //       m2,
-  //       resolve: sidetree.resolve,
-  //       initiatorDid: alice.did,
-  //       responderDid: bob.did,
-  //       responderPrivateKey: bob.key.privateKey,
-  //       Nb, // bob knows this, now he can see that alice does as well
-  //     });
-  //     expect(res).toBe(true);
-  //     // Bob has authenticated Alice.
-  //   });
-  // });
+    it('alice decrypts and verifies Na, sends Nb to bob', async () => {
+      const res = await protocol.createM2({
+        m1,
+        resolve: sidetree.resolve,
+        initiatorDid: alice.didUniqueSuffix,
+        responderDid: bob.didUniqueSuffix,
+        initiatorPrivateKey: alice.key.privateKey,
+        Na, // alice knows this, now she can see that bob does as well
+      });
+      ({ m2 } = res);
+      expect(res.m2).toBeDefined();
+      expect(res.Na).toBe(Na);
+      expect(res.Nb).toBe(Nb);
+    });
+
+    it('bob decrypts and verifies Nb', async () => {
+      const res = await protocol.verifyM2({
+        m2,
+        resolve: sidetree.resolve,
+        initiatorDid: alice.didUniqueSuffix,
+        responderDid: bob.didUniqueSuffix,
+        responderPrivateKey: bob.key.privateKey,
+        Nb, // bob knows this, now he can see that alice does as well
+      });
+      expect(res).toBe(true);
+      // Bob has authenticated Alice.
+    });
+  });
 });
