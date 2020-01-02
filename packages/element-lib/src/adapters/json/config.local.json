@@ -1,0 +1,5 @@
+{
+  "web3ProviderUrl": "http://127.0.0.1:8545",
+  "mnemonic": "hazard pride garment scout search divide solution argue wait avoid title cave",
+  "ipfsApiMultiAddr": "/ip4/127.0.0.1/tcp/5001"
+}

@@ -1,5 +1,5 @@
 const element = require('../../../../../index');
-const config = require('../../../../json/config.local.json');
+const config = require('../../../json/config.local.json');
 
 jest.setTimeout(10 * 1000);
 it('can write from 2 services to 2 contracts', async () => {

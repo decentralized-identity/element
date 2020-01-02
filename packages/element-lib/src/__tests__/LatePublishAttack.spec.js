@@ -1,13 +1,14 @@
 const MerkleTools = require('merkle-tools');
-const {
-  getActorByIndex,
-  generateActors,
-  updateByActorIndex,
-} = require('./__fixtures__/sidetreeTestUtils');
 
 jest.setTimeout(10 * 1000);
 
-const { getTestSideTree, getLastOperation } = require('./test-utils');
+const {
+  getTestSideTree,
+  getLastOperation,
+  getActorByIndex,
+  generateActors,
+  updateByActorIndex,
+} = require('./test-utils');
 
 let sidetree;
 let batchFile;
