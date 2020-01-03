@@ -1,3 +1,4 @@
+const { Ed25519KeyPair } = require('crypto-ld');
 const secp256k1 = require('secp256k1');
 const crypto = require('crypto');
 const bip39 = require('bip39');
@@ -44,6 +45,12 @@ const createKeys = () => {
   };
 };
 
+
+const createEd25519Keys = async () => {
+  const key = await Ed25519KeyPair.generate();
+  return key;
+};
+
 module.exports = {
   bip39,
   hdkey,
@@ -55,5 +62,8 @@ module.exports = {
     getCompressedPublicFromPrivate,
     getUncompressedPublicKeyFromCompressedPublicKey,
     createKeys,
+  },
+  ed25519: {
+    createKeys: createEd25519Keys,
   },
 };
