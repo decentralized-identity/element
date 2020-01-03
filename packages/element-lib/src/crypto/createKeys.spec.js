@@ -6,4 +6,11 @@ describe('createKeys', () => {
     expect(publicKey).toBeDefined();
     expect(privateKey).toBeDefined();
   });
+
+  it('creates base58 encoded ed25519 keypair', async () => {
+    const key = await crypto.ed25519.createKeys();
+    console.log({ key });
+    expect(key.publicKeyBase58).toBeDefined();
+    expect(key.privateKeyBase58).toBeDefined();
+  });
 });
