@@ -1,10 +1,10 @@
+jest.setTimeout(10 * 1000);
+
 const {
+  getTestSideTree,
   generateActors,
   getActorByIndex,
-} = require('./__fixtures__/sidetreeTestUtils');
-const { getTestSideTree } = require('./test-utils');
-
-jest.setTimeout(10 * 1000);
+} = require('./test-utils');
 
 let sidetree;
 let actor;

@@ -1,5 +1,5 @@
 const element = require('../../../index');
-const config = require('../../json/config.local.json');
+const config = require('../json/config.local.json');
 
 const testObj = {
   hello: 'world',

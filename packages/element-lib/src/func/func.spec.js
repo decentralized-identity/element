@@ -60,10 +60,9 @@ describe('bytes32EnodedMultihashToBase58EncodedMultihash', () => {
   });
 });
 
-const { aliceEncodedCreateOp } = require('../__tests__/__fixtures__');
-
 describe('objectToMultihash', () => {
   it('should return the content id of an object', async () => {
+    const aliceEncodedCreateOp = 'eyJoZWFkZXIiOnsib3BlcmF0aW9uIjoiY3JlYXRlIiwia2lkIjoiI2tleTEiLCJhbGciOiJFUzI1NksiLCJwcm9vZk9mV29yayI6e319LCJwYXlsb2FkIjoiZXlKQVkyOXVkR1Y0ZENJNkltaDBkSEJ6T2k4dmR6TnBaQzV2Y21jdlpHbGtMM1l4SWl3aWNIVmliR2xqUzJWNUlqcGJleUpwWkNJNklpTnJaWGt4SWl3aWRIbHdaU0k2SWxObFkzQXlOVFpyTVZabGNtbG1hV05oZEdsdmJrdGxlVEl3TVRnaUxDSndkV0pzYVdOTFpYbElaWGdpT2lJd01qUTVZakprTUdRNU1qWXlNbUprWmpFNU5HRXlZV1k1TUdZNVpERTJObVV3WkdRek1qUmhabVk1WWpReVl6ZzNNamRrWlRrd1pUZzROMlEzTm1FMFpHTWlmVjE5Iiwic2lnbmF0dXJlIjoiQUFmcFBjVVJibmNhVFdvLTk1TUY2eHZMYXZ6YjZ3bDgxdWZoU1ZjQTRZUS1xeVJkLWJBV1gxTGpFY09wQ0Z3ZkVYVzFxV3VfSTVyNE5BeVJyMU4yZEEifQ';
     const mhash = await objectToMultihash(aliceEncodedCreateOp);
     expect(mhash).toBe('QmVuCdToH535yi5ByW9dJJQTwg9v67PWQydLabdPMWJw2p');
   });

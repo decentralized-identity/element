@@ -131,6 +131,7 @@ const applyOperation = async (state, operation, lastValidOperation) => {
     }
     return { valid: true, newState };
   } catch (e) {
+    console.error(e.message);
     return { valid: false, newState };
   }
 };

@@ -48,11 +48,12 @@ describe('isKeyValid', () => {
     expect(() => isKeyValid(key)).toThrow();
   });
 
-  it('should fail if key does not contain publicKeyHex', async () => {
+  it('should fail if key contains an invalidKey encoding', async () => {
     const key = {
       id: '#primary',
       usage: 'signing',
       type: 'Secp256k1VerificationKey2018',
+      publicKeyWrongEncoding: '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
     };
     expect(() => isKeyValid(key)).toThrow();
   });
