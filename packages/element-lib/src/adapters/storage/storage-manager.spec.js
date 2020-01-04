@@ -64,7 +64,7 @@ describe('StorageManager', () => {
       });
       let count = 0;
       const fakeStorage = {
-        write: async (data) => {
+        write: async data => {
           if (count === 2) {
             return storage.write(data);
           }
@@ -108,10 +108,11 @@ describe('StorageManager', () => {
 
     // need to fix this when we add proper support for remote couchdb
     // this hack was added to fix failing IPFS issues
-    it.skip('can persist from db autmatically', (done) => {
+    // eslint-disable-next-line
+    it.skip('can persist from db autmatically', done => {
       let count = 0;
       const fakeStorage = {
-        write: async (data) => {
+        write: async data => {
           if (count === 2) {
             const res = await storage.write(data);
             done();

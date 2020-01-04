@@ -1,0 +1,49 @@
+{
+  "$id": "/sidetree.service",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "required": false,
+      "example": [
+        "did:example:123456789abcdefghi#hub",
+        "https://example.com/did/did:example:123456789abcdefghi/agent"
+      ]
+    },
+    "type": {
+      "type": "string",
+      "required": true,
+      "example": ["schema", "AgentService", "MessagingService"]
+    },
+    "serviceEndpoint": {
+      "anyOf": [
+        { "type": "string" },
+        {
+          "type": "object",
+          "properties": {
+            "@context": {
+              "type": "string",
+              "required": true,
+              "enum": ["https://schema.identity.foundation/hub"],
+              "example": ["https://schema.identity.foundation/hub"]
+            },
+            "type": {
+              "type": "string",
+              "required": true,
+              "example": ["UserHubEndpoint"]
+            },
+            "instances": {
+              "type": "array",
+              "required": true,
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  },
+  "additionalProperties": false
+}

@@ -6,7 +6,7 @@ npm i @transmute/element-lib --save
 
 ## Element Lib
 
-This javacript package handles all protocol operations and cryptographic implementation needed to support sidetree ethereum. [sidetree-core](https://github.com/decentralized-identity/sidetree/tree/master/lib), is moving this direction, but did not at the time currently publish a library like this as an npm package, so we had to reimplement this functionality. This might be good for the protocol from a diversity perspective, but we'd like to be able to share code, and not worry about implementation differences. For now, we think its best that the focus be on devex and speed for both ethereum and bitcoin implementations of Sidetree.
+This javacript package handles all protocol operations and cryptographic implementation needed to support sidetree ethereum. [sidetree-core](https://github.com/decentralized-identity/sidetree/tree/master/lib), is moving this direction, but did not at the time currently publish a library like this as an npm package, so we had to reimplement this functionality. This might be good for the protocol from a diversity perspective, but we'd like to be able to share code, and not worry about implementation differences. For now, we think its best that the focus be on devex and speed for both ethereum and bitcoin implementations of Sidetree...
 
 ### Integration
 
