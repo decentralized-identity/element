@@ -11,15 +11,20 @@ class ElementRXDBAdapter {
     this.remote = remote;
     switch (adapter) {
       case 'browser':
+        // eslint-disable-next-line
         RxDB.plugin(require('pouchdb-adapter-idb'));
         this.adapter = 'idb';
         break;
       case 'leveldown':
+        // eslint-disable-next-line
         RxDB.plugin(require('pouchdb-adapter-leveldb')); // leveldown adapters need the leveldb plugin to work
+        // eslint-disable-next-line
         this.adapter = require('leveldown');
         break;
       case 'memory':
+        // eslint-disable-next-line
         RxDB.plugin(require('pouchdb-adapter-memory'));
+        // eslint-disable-next-line
         RxDB.plugin(require('pouchdb-adapter-http'));
         this.adapter = 'memory';
         break;
@@ -111,13 +116,13 @@ class ElementRXDBAdapter {
         },
       });
 
-      rxReplicationState.complete$.subscribe((completed) => {
+      rxReplicationState.complete$.subscribe(completed => {
         if (completed) {
           resolve(completed);
         }
       });
 
-      rxReplicationState.error$.subscribe((error) => {
+      rxReplicationState.error$.subscribe(error => {
         reject(error);
       });
     });
