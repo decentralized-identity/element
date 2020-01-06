@@ -28,31 +28,13 @@ describe('DID Document model', () => {
   it('should support adding a ed25519 key', async () => {
     const newKey = await element.crypto.ed25519.createKeys();
     const previousOperation = await getLastOperation(sidetree, didUniqueSuffix);
-    const payload = {
-      didUniqueSuffix: previousOperation.didUniqueSuffix,
-      previousOperationHash: previousOperation.operation.operationHash,
-      patches: [
-        {
-          action: 'add-public-keys',
-          publicKeys: [
-            {
-              id: '#newKey',
-              usage: 'signing',
-              type: 'Ed25519VerificationKey2018',
-              publicKeyBase58: newKey.publicKeyBase58,
-            },
-          ],
-        },
-      ],
+    const newPublicKey = {
+      id: '#newKey',
+      usage: 'signing',
+      type: 'Ed25519VerificationKey2018',
+      publicKeyBase58: newKey.publicKeyBase58,
     };
-    const header = {
-      operation: 'update',
-      kid: '#primary',
-      alg: 'ES256K',
-    };
-    const updatePayload = await sidetree.op.makeSignedOperation(
-      header, payload, primaryKey.privateKey,
-    );
+    const updatePayload = await sidetree.op.getUpdatePayloadForAddingAKey(previousOperation, newPublicKey, primaryKey.privateKey);
     const txn = await sidetree.batchScheduler.writeNow(updatePayload);
     expect(txn).toBeDefined();
     const didDocument = await sidetree.resolve(didUniqueSuffix, true);
