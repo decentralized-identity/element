@@ -62,26 +62,11 @@ export default withHandlers({
     snackbarMessage,
     getMyDidUniqueSuffix,
     createAddKeyRequest,
+    getDidDocumentKey,
     set,
   }) => async (newKey) => {
-    const { publicKey, tags, encoding } = newKey;
-    const [type, kid] = tags;
-    let publicKeyType;
-    switch (encoding) {
-      case 'base58':
-        publicKeyType = 'publicKeyBase58';
-        break;
-      case 'hex':
-      default:
-        publicKeyType = 'publicKeyHex';
-    }
-    const newPublicKey = {
-      id: kid,
-      usage: 'signing',
-      type,
-      [publicKeyType]: publicKey,
-    };
     set({ resolving: true });
+    const newPublicKey = getDidDocumentKey(newKey);
     const didUniqueSuffix = await getMyDidUniqueSuffix();
     const res = await axios.get(`${API_BASE}/sidetree/operations/${didUniqueSuffix}`);
     const lastOperation = res.data.pop();

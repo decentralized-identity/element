@@ -2,6 +2,25 @@ import { withHandlers } from 'recompose';
 import { func, op } from '@transmute/element-lib';
 
 export default withHandlers({
+  getDidDocumentKey: () => (walletKey) => {
+    const { publicKey, tags, encoding } = walletKey;
+    const [type, kid] = tags;
+    let publicKeyType;
+    switch (encoding) {
+      case 'base58':
+        publicKeyType = 'publicKeyBase58';
+        break;
+      case 'hex':
+      default:
+        publicKeyType = 'publicKeyHex';
+    }
+    return {
+      id: kid,
+      usage: 'signing',
+      type,
+      [publicKeyType]: publicKey,
+    };
+  },
   getMyDidUniqueSuffix: ({ getKey }) => async () => {
     const primaryKey = getKey('#primary');
     const recoveryKey = getKey('#recovery');
