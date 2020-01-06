@@ -55,7 +55,7 @@ router.post('/requests', async (req, res, next) => {
   try {
     const sidetree = req.app.get('sidetree');
     await sidetree.batchScheduler.writeNow(req.body);
-    res.sendStatus(202);
+    res.sendStatus(200);
   } catch (e) {
     next(e);
   }

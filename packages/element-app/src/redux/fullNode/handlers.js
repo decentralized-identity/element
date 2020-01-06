@@ -30,7 +30,7 @@ export default withHandlers({
     set({ resolving: true });
 
     const createReq = await createDIDRequest();
-    await axios.post(`${API_BASE}/sidetree/requests`, createReq);
+    axios.post(`${API_BASE}/sidetree/requests`, createReq);
     snackbarMessage({
       snackbarMessage: {
         message: 'This will take a few minutes....',
@@ -76,7 +76,7 @@ export default withHandlers({
       didUniqueSuffix,
       operationHash,
     );
-    await axios.post(`${API_BASE}/sidetree/requests`, updatePayload);
+    axios.post(`${API_BASE}/sidetree/requests`, updatePayload);
     snackbarMessage({
       snackbarMessage: {
         message: 'This will take a few minutes....',
@@ -97,7 +97,7 @@ export default withHandlers({
     const lastOperation = res.data.pop();
     const { operationHash } = lastOperation.operation;
     const updatePayload = await createRemoveKeyRequest(kid, didUniqueSuffix, operationHash);
-    await axios.post(`${API_BASE}/sidetree/requests`, updatePayload);
+    axios.post(`${API_BASE}/sidetree/requests`, updatePayload);
     snackbarMessage({
       snackbarMessage: {
         message: 'This will take a few minutes....',
