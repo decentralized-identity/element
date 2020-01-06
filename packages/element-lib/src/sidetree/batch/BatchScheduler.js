@@ -57,7 +57,11 @@ class BatchScheduler {
    */
   async writeNow(payload) {
     const didUniqueSuffix = getDidUniqueSuffix(payload);
-    await this.sidetree.operationQueue.enqueue(didUniqueSuffix, payload);
+    try {
+      await this.sidetree.operationQueue.enqueue(didUniqueSuffix, payload);
+    } catch(e) {
+      console.error(e);
+    }
     return this.sidetree.batchWrite();
   }
 }
