@@ -31,6 +31,16 @@ const styles = theme => ({
   },
 });
 
+const getKeyValue = (publicKey) => {
+  if (publicKey.publicKeyHex) {
+    return publicKey.publicKeyHex;
+  }
+  if (publicKey.publicKeyBase58) {
+    return publicKey.publicKeyBase58;
+  }
+  return '';
+};
+
 class DIDDocument extends Component {
   render() {
     const {
@@ -102,12 +112,12 @@ class DIDDocument extends Component {
                     <ListItemText
                       style={{ wordBreak: 'break-all', marginRight: '2px' }}
                       primary={'Key'}
-                      secondary={publicKey.publicKeyHex}
+                      secondary={getKeyValue(publicKey)}
                     />
                     <ListItemSecondaryAction>
                       <CopyToClipboard
-                        text={publicKey.publicKeyHex}
-                        key={publicKey.publicKeyHex}
+                        text={getKeyValue(publicKey)}
+                        key={getKeyValue(publicKey)}
                         onCopy={onCopyToClipboard}
                         style={{ cursor: 'pointer' }}
                       >
