@@ -140,11 +140,15 @@ const updateByActorIndex = async (sidetree, actorIndex) => {
   await sidetree.resolve(didUniqueSuffix, true);
   const lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
   const newKey = actor.mks.getKeyForPurpose('primary', 10);
+  const newPublicKey = {
+    id: '#newKey',
+    usage: 'signing',
+    type: 'Secp256k1VerificationKey2018',
+    publicKeyHex: newKey.publicKey,
+  };
   return element.op.getUpdatePayloadForAddingAKey(
     lastOperation,
-    '#newKey',
-    'signing',
-    newKey.publicKey,
+    newPublicKey,
     actor.primaryKey.privateKey,
   );
 };

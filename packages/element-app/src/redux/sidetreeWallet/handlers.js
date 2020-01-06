@@ -40,11 +40,15 @@ export default withHandlers({
       operation: { operationHash },
     };
     const primaryKey = getKey('#primary');
+    const newKey = {
+      id: kid,
+      usage: 'signing',
+      type: 'Secp256k1VerificationKey2018',
+      publicKeyHex: newPublicKey,
+    };
     const payload = await op.getUpdatePayloadForAddingAKey(
       lastOperation,
-      kid,
-      'signing',
-      newPublicKey,
+      newKey,
       primaryKey.privateKey,
     );
     return payload;
