@@ -33,19 +33,18 @@ export class AddKeyDialog extends React.Component {
     this.props.onSubmit(parsedKey);
   };
 
-  componentWillReceiveProps(nextProps) {
-    const keys = element.func.createKeys();
-    const payload = {
+  async componentWillReceiveProps(nextProps) {
+    const key = await element.crypto.secp256k1.createKeys();
+    const walletKey = {
       type: 'assymetric',
       encoding: 'hex',
-      publicKey: keys.publicKey,
-      privateKey: keys.privateKey,
+      publicKey: key.publicKey,
+      privateKey: key.privateKey,
       tags: ['Secp256k1VerificationKey2018', 'WebBrowser'],
-      notes: '',
     };
     this.setState({
       open: nextProps.open,
-      jsonEditorValue: JSON.stringify(payload, null, 2),
+      jsonEditorValue: JSON.stringify(walletKey, null, 2),
     });
   }
 
