@@ -4,6 +4,32 @@ const didWallet = require('@transmute/did-wallet');
 const _ = require('lodash');
 
 export default withHandlers({
+  getEdvDidDocumentModel: () => (primaryKey, recoveryKey, edvKey) => {
+    const didDocumentModel = {
+      '@context': 'https://w3id.org/did/v1',
+      publicKey: [
+        {
+          type: primaryKey.tags[0],
+          id: primaryKey.tags[1],
+          usage: 'signing',
+          publicKeyHex: primaryKey.publicKey,
+        },
+        {
+          type: recoveryKey.tags[0],
+          id: recoveryKey.tags[1],
+          usage: 'recovery',
+          publicKeyHex: recoveryKey.publicKey,
+        },
+        {
+          type: edvKey.tags[0],
+          id: edvKey.tags[1],
+          usage: 'signing',
+          publicKeyBase58: edvKey.publicKey,
+        },
+      ],
+    };
+    return didDocumentModel;
+  },
   getKey: ({ wallet }) => kid => Object.values(wallet.data.keys)
     .find(walletKey => walletKey.tags.includes(kid)),
   importCipherTextWallet: ({
