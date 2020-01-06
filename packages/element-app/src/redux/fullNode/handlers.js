@@ -30,7 +30,7 @@ export default withHandlers({
     set({ resolving: true });
 
     const createReq = await createDIDRequest();
-    await axios.post(`${API_BASE}/sidetree/requests`, createReq);
+    axios.post(`${API_BASE}/sidetree/requests`, createReq);
     snackbarMessage({
       snackbarMessage: {
         message: 'This will take a few minutes....',
@@ -62,20 +62,21 @@ export default withHandlers({
     snackbarMessage,
     getMyDidUniqueSuffix,
     createAddKeyRequest,
+    getDidDocumentKey,
     set,
-  }) => async (kid, newPublicKey) => {
+  }) => async (newKey) => {
     set({ resolving: true });
+    const newPublicKey = getDidDocumentKey(newKey);
     const didUniqueSuffix = await getMyDidUniqueSuffix();
     const res = await axios.get(`${API_BASE}/sidetree/operations/${didUniqueSuffix}`);
     const lastOperation = res.data.pop();
     const { operationHash } = lastOperation.operation;
     const updatePayload = await createAddKeyRequest(
-      kid,
       newPublicKey,
       didUniqueSuffix,
       operationHash,
     );
-    await axios.post(`${API_BASE}/sidetree/requests`, updatePayload);
+    axios.post(`${API_BASE}/sidetree/requests`, updatePayload);
     snackbarMessage({
       snackbarMessage: {
         message: 'This will take a few minutes....',
@@ -96,7 +97,7 @@ export default withHandlers({
     const lastOperation = res.data.pop();
     const { operationHash } = lastOperation.operation;
     const updatePayload = await createRemoveKeyRequest(kid, didUniqueSuffix, operationHash);
-    await axios.post(`${API_BASE}/sidetree/requests`, updatePayload);
+    axios.post(`${API_BASE}/sidetree/requests`, updatePayload);
     snackbarMessage({
       snackbarMessage: {
         message: 'This will take a few minutes....',

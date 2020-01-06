@@ -58,16 +58,17 @@ export default withHandlers({
     snackbarMessage,
     getMyDidUniqueSuffix,
     createAddKeyRequest,
+    getDidDocumentKey,
     set,
     sidetree,
-  }) => async (kid, newPublicKey) => {
+  }) => async (newKey) => {
     set({ resolving: true });
+    const newPublicKey = getDidDocumentKey(newKey);
     const didUniqueSuffix = await getMyDidUniqueSuffix();
     const operations = await sidetree.db.readCollection(didUniqueSuffix);
     const lastOperation = operations.pop();
     const { operationHash } = lastOperation.operation;
     const updatePayload = await createAddKeyRequest(
-      kid,
       newPublicKey,
       didUniqueSuffix,
       operationHash,

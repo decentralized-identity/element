@@ -39,25 +39,46 @@ class CreateWalletDialog extends React.Component {
     this.props.onClose();
   };
 
-  componentWillReceiveProps(nextProps) {
+  async componentWillReceiveProps(nextProps) {
+    const { getEdvDidDocumentModel } = nextProps;
     this.setState({
       open: nextProps.open,
       password: '',
       confirm: '',
       ciphered: '',
     });
-    const keys = ['#primary', '#recovery', '#edv'].map((kid) => {
-      const key = element.func.createKeys();
-      const walletKey = {
-        type: 'assymetric',
-        encoding: 'hex',
-        publicKey: key.publicKey,
-        privateKey: key.privateKey,
-        tags: ['Secp256k1VerificationKey2018', kid],
-        notes: '',
-      };
-      return walletKey;
-    });
+    const primaryKey = await element.crypto.secp256k1.createKeys();
+    const walletKey1 = {
+      type: 'assymetric',
+      encoding: 'hex',
+      publicKey: primaryKey.publicKey,
+      privateKey: primaryKey.privateKey,
+      tags: ['Secp256k1VerificationKey2018', '#primary'],
+    };
+    const recoveryKey = await element.crypto.secp256k1.createKeys();
+    const walletKey2 = {
+      type: 'assymetric',
+      encoding: 'hex',
+      publicKey: recoveryKey.publicKey,
+      privateKey: recoveryKey.privateKey,
+      tags: ['Secp256k1VerificationKey2018', '#recovery'],
+    };
+    const edvKey = await element.crypto.ed25519.createKeys();
+    const walletKey3 = {
+      type: 'assymetric',
+      encoding: 'base58',
+      publicKey: edvKey.publicKeyBase58,
+      privateKey: edvKey.privateKeyBase58,
+      tags: ['Ed25519VerificationKey2018', '#edv'],
+    };
+    const keys = [walletKey1, walletKey2, walletKey3];
+    const didDocumentModel = getEdvDidDocumentModel(walletKey1, walletKey2, walletKey3);
+    const createPayload = await element.op.getCreatePayload(
+      didDocumentModel,
+      primaryKey,
+    );
+    const didUniqueSuffix = element.func.getDidUniqueSuffix(createPayload);
+    walletKey3.tags = [...walletKey3.tags, `did:elem:${didUniqueSuffix}#edv`];
     const wallet = didWallet.create({ keys });
     this.wallet = wallet;
   }
@@ -135,6 +156,7 @@ class CreateWalletDialog extends React.Component {
 CreateWalletDialog.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
+  getEdvDidDocumentModel: PropTypes.func,
 };
 
 export default CreateWalletDialog;

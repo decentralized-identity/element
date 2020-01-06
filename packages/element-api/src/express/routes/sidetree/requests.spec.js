@@ -29,7 +29,7 @@ describe('sidetree', () => {
       .post('/api/v1/sidetree/requests')
       .send(createPayload)
       .set('Accept', 'application/json');
-    expect(res.statusCode).toBe(202);
+    expect(res.statusCode).toBe(200);
     await new Promise(resolve => setTimeout(resolve, 2 * 1000));
     res = await server.get(`/api/v1/sidetree/${actor.did}`);
     expect(res.body.id).toBe(actor.did);

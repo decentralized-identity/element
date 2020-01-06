@@ -116,7 +116,13 @@ describe('resolve', () => {
 
     it('should not work if specified kid does not exist in did document', async () => {
       const newKey = await mks.getKeyForPurpose('primary', 1);
-      const updatePayload = await getUpdatePayloadForAddingAKey(lastOperation, '#newKey', 'signing', newKey.publicKey, primaryKey.privateKey);
+      const newPublicKey = {
+        id: '#newKey',
+        usage: 'signing',
+        type: 'Secp256k1VerificationKey2018',
+        publicKeyHex: newKey.publicKey,
+      };
+      const updatePayload = await getUpdatePayloadForAddingAKey(lastOperation, newPublicKey, primaryKey.privateKey);
       const invalidUpdatePayload = changeKid(updatePayload);
       const didDocument = await getDidDocumentForPayload(sidetree, invalidUpdatePayload, didUniqueSuffix);
       expect(didDocument.publicKey).toHaveLength(2);
@@ -124,14 +130,26 @@ describe('resolve', () => {
 
     it('should not work if signature is not valid', async () => {
       const newKey = await mks.getKeyForPurpose('primary', 1);
-      const invalidUpdatePayload = await getUpdatePayloadForAddingAKey(lastOperation, '#newKey', 'signing', newKey.publicKey, recoveryKey.privateKey);
+      const newPublicKey = {
+        id: '#newKey',
+        usage: 'signing',
+        type: 'Secp256k1VerificationKey2018',
+        publicKeyHex: newKey.publicKey,
+      };
+      const invalidUpdatePayload = await getUpdatePayloadForAddingAKey(lastOperation, newPublicKey, recoveryKey.privateKey);
       const didDocument = await getDidDocumentForPayload(sidetree, invalidUpdatePayload, didUniqueSuffix);
       expect(didDocument.publicKey).toHaveLength(2);
     });
 
     it('should add a new key', async () => {
       const newKey = await mks.getKeyForPurpose('primary', 1);
-      const payload = await getUpdatePayloadForAddingAKey(lastOperation, '#newKey', 'signing', newKey.publicKey, primaryKey.privateKey);
+      const newPublicKey = {
+        id: '#newKey',
+        usage: 'signing',
+        type: 'Secp256k1VerificationKey2018',
+        publicKeyHex: newKey.publicKey,
+      };
+      const payload = await getUpdatePayloadForAddingAKey(lastOperation, newPublicKey, primaryKey.privateKey);
       const transaction = await sidetree.batchScheduler.writeNow(payload);
       await sidetree.syncTransaction(transaction);
       lastOperation = await getLastOperation(sidetree, didUniqueSuffix);

@@ -2,13 +2,30 @@ import { withHandlers } from 'recompose';
 import { func, op } from '@transmute/element-lib';
 
 export default withHandlers({
-  getMyDidUniqueSuffix: ({ getKey }) => async () => {
+  getDidDocumentKey: () => (walletKey) => {
+    const { publicKey, tags, encoding } = walletKey;
+    const [type, kid] = tags;
+    let publicKeyType;
+    switch (encoding) {
+      case 'base58':
+        publicKeyType = 'publicKeyBase58';
+        break;
+      case 'hex':
+      default:
+        publicKeyType = 'publicKeyHex';
+    }
+    return {
+      id: kid,
+      usage: 'signing',
+      type,
+      [publicKeyType]: publicKey,
+    };
+  },
+  getMyDidUniqueSuffix: ({ getKey, getEdvDidDocumentModel }) => async () => {
     const primaryKey = getKey('#primary');
     const recoveryKey = getKey('#recovery');
-    const didDocumentModel = op.getDidDocumentModel(
-      primaryKey.publicKey,
-      recoveryKey.publicKey,
-    );
+    const edvKey = getKey('#edv');
+    const didDocumentModel = getEdvDidDocumentModel(primaryKey, recoveryKey, edvKey);
     const createPayload = await op.getCreatePayload(
       didDocumentModel,
       primaryKey,
@@ -16,13 +33,11 @@ export default withHandlers({
     const didUniqueSuffix = func.getDidUniqueSuffix(createPayload);
     return didUniqueSuffix;
   },
-  createDIDRequest: ({ getKey }) => async () => {
+  createDIDRequest: ({ getKey, getEdvDidDocumentModel }) => async () => {
     const primaryKey = getKey('#primary');
     const recoveryKey = getKey('#recovery');
-    const didDocumentModel = op.getDidDocumentModel(
-      primaryKey.publicKey,
-      recoveryKey.publicKey,
-    );
+    const edvKey = getKey('#edv');
+    const didDocumentModel = getEdvDidDocumentModel(primaryKey, recoveryKey, edvKey);
     const createPayload = await op.getCreatePayload(
       didDocumentModel,
       primaryKey,
@@ -30,8 +45,7 @@ export default withHandlers({
     return createPayload;
   },
   createAddKeyRequest: ({ getKey }) => async (
-    kid,
-    newPublicKey,
+    newKey,
     didUniqueSuffix,
     operationHash,
   ) => {
@@ -42,9 +56,7 @@ export default withHandlers({
     const primaryKey = getKey('#primary');
     const payload = await op.getUpdatePayloadForAddingAKey(
       lastOperation,
-      kid,
-      'signing',
-      newPublicKey,
+      newKey,
       primaryKey.privateKey,
     );
     return payload;

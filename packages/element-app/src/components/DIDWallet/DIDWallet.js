@@ -11,10 +11,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import Chip from '@material-ui/core/Chip';
 import { red } from '@material-ui/core/colors';
-
 import QRCode from 'qrcode.react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-
 import CreateWalletCard from './CreateWalletCard';
 import ImportWalletFileCard from './ImportWalletFileCard';
 import ImportWalletQRCard from './ImportWalletQRCard';
@@ -46,7 +44,9 @@ class DIDWallet extends Component {
   };
 
   render() {
-    const { importCipherTextWallet, wallet, addKeyToWallet } = this.props;
+    const {
+      importCipherTextWallet, wallet, addKeyToWallet, getEdvDidDocumentModel,
+    } = this.props;
     const { isWalletLockDialogOpen, isAddKeyDialogOpen } = this.state;
     const walletIsLocked = typeof wallet.data === 'string';
     const walletState = !walletIsLocked ? 'unlocked' : 'locked';
@@ -189,7 +189,7 @@ class DIDWallet extends Component {
           )}
 
           <Grid item xs={12} md={4}>
-            <CreateWalletCard />
+            <CreateWalletCard getEdvDidDocumentModel={getEdvDidDocumentModel}/>
           </Grid>
           <Grid item xs={12} md={4}>
             <ImportWalletFileCard importCipherTextWallet={importCipherTextWallet} />
@@ -209,6 +209,7 @@ DIDWallet.propTypes = {
   toggleWallet: PropTypes.func.isRequired,
   snackbarMessage: PropTypes.func.isRequired,
   addKeyToWallet: PropTypes.func.isRequired,
+  getEdvDidDocumentModel: PropTypes.func.isRequired,
 };
 
 export default DIDWallet;
