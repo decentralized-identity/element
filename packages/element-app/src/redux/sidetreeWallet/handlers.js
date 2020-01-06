@@ -30,8 +30,7 @@ export default withHandlers({
     return createPayload;
   },
   createAddKeyRequest: ({ getKey }) => async (
-    kid,
-    newPublicKey,
+    newKey,
     didUniqueSuffix,
     operationHash,
   ) => {
@@ -40,12 +39,6 @@ export default withHandlers({
       operation: { operationHash },
     };
     const primaryKey = getKey('#primary');
-    const newKey = {
-      id: kid,
-      usage: 'signing',
-      type: 'Secp256k1VerificationKey2018',
-      publicKeyHex: newPublicKey,
-    };
     const payload = await op.getUpdatePayloadForAddingAKey(
       lastOperation,
       newKey,

@@ -60,14 +60,30 @@ export default withHandlers({
     createAddKeyRequest,
     set,
     sidetree,
-  }) => async (kid, newPublicKey) => {
+  }) => async (newKey) => {
+    const { publicKey, tags, encoding } = newKey;
+    const [type, kid] = tags;
+    let publicKeyType;
+    switch (encoding) {
+      case 'base58':
+        publicKeyType = 'publicKeyBase58';
+        break;
+      case 'hex':
+      default:
+        publicKeyType = 'publicKeyHex';
+    }
+    const newPublicKey = {
+      id: kid,
+      usage: 'signing',
+      type,
+      [publicKeyType]: publicKey,
+    };
     set({ resolving: true });
     const didUniqueSuffix = await getMyDidUniqueSuffix();
     const operations = await sidetree.db.readCollection(didUniqueSuffix);
     const lastOperation = operations.pop();
     const { operationHash } = lastOperation.operation;
     const updatePayload = await createAddKeyRequest(
-      kid,
       newPublicKey,
       didUniqueSuffix,
       operationHash,

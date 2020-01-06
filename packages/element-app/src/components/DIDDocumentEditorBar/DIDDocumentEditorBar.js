@@ -22,9 +22,7 @@ class DIDDocumentEditorBar extends Component {
   };
 
   handleAddKey = (item) => {
-    const { publicKey, tags } = item.value;
-    const kid = tags[1];
-    this.props.handleAddKey(kid, publicKey);
+    this.props.handleAddKey(item.value);
     this.setState({
       isAddKeyDialogOpen: false,
       isRemoveKeyDialogOpen: false,
