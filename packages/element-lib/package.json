@@ -1,6 +1,6 @@
 {
   "name": "@transmute/element-lib",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Experimental Sidetree Protocol based DID Method `elem` with Ethereum and IPFS",
   "main": "index.js",
   "repository": {
@@ -72,14 +72,14 @@
   "devDependencies": {
     "@transmute/eslint-config": "0.0.7",
     "dotenv": "^7.0.0",
+    "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.7.0",
     "eslint-plugin-import": "^2.19.1",
     "eslint-plugin-jest": "^23.2.0",
     "eslint-plugin-node": "^11.0.0",
-    "eslint-plugin-security": "^1.4.0",
-    "eslint": "^5.16.0",
-    "eslint-config-prettier": "^6.7.0",
     "eslint-plugin-prettier": "^3.1.1",
+    "eslint-plugin-security": "^1.4.0",
     "faker": "^4.1.0",
     "ganache-cli": "^6.1.0",
     "go-ipfs": "^0.4.21",

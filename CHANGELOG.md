@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/decentralized-identity/element/compare/v0.3.0...v0.4.0) (2020-01-07)
+
+
+### Bug Fixes
+
+* eslint setup ([24be4e8](https://github.com/decentralized-identity/element/commit/24be4e8))
+* fix AddKeyDialog key creation ([7fe2731](https://github.com/decentralized-identity/element/commit/7fe2731))
+* recovery id bug ([90f1725](https://github.com/decentralized-identity/element/commit/90f1725))
+
+
+### Features
+
+* add ed25519 key to default wallet ([d8d6092](https://github.com/decentralized-identity/element/commit/d8d6092))
+* add RSA as valid key type ([2e33c5c](https://github.com/decentralized-identity/element/commit/2e33c5c))
+* add sidetree context to element ([a34b872](https://github.com/decentralized-identity/element/commit/a34b872))
+* add support for service and proof ([9aa0bea](https://github.com/decentralized-identity/element/commit/9aa0bea))
+* display key in did document regardless of its encoding ([2e9f539](https://github.com/decentralized-identity/element/commit/2e9f539))
+* update schema to support did-key ([8c00433](https://github.com/decentralized-identity/element/commit/8c00433))
+* upgrade did-wallet version ([dd2b223](https://github.com/decentralized-identity/element/commit/dd2b223))
+* use Firestore adapter for API ([7e89daa](https://github.com/decentralized-identity/element/commit/7e89daa))
+
+
+
+
+
 # [0.3.0](https://github.com/decentralized-identity/element/compare/v0.2.0...v0.3.0) (2019-12-20)
 
 

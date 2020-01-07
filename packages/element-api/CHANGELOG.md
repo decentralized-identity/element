@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/decentralized-identity/element/compare/v0.3.0...v0.4.0) (2020-01-07)
+
+
+### Features
+
+* use Firestore adapter for API ([7e89daa](https://github.com/decentralized-identity/element/commit/7e89daa))
+
+
+
+
+
 # [0.3.0](https://github.com/decentralized-identity/element/compare/v0.2.0...v0.3.0) (2019-12-20)
 
 

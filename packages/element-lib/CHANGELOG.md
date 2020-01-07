@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/decentralized-identity/element/compare/v0.3.0...v0.4.0) (2020-01-07)
+
+
+### Bug Fixes
+
+* eslint setup ([24be4e8](https://github.com/decentralized-identity/element/commit/24be4e8))
+* recovery id bug ([90f1725](https://github.com/decentralized-identity/element/commit/90f1725))
+
+
+### Features
+
+* add RSA as valid key type ([2e33c5c](https://github.com/decentralized-identity/element/commit/2e33c5c))
+* add support for service and proof ([9aa0bea](https://github.com/decentralized-identity/element/commit/9aa0bea))
+* update schema to support did-key ([8c00433](https://github.com/decentralized-identity/element/commit/8c00433))
+
+
+
+
+
 # [0.3.0](https://github.com/decentralized-identity/element/compare/v0.2.0...v0.3.0) (2019-12-20)
 
 
