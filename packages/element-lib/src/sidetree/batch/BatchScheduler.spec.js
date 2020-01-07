@@ -61,7 +61,7 @@ describe('BatchScheduler', () => {
       expect(batchScheduler.continuePeriodicBatchWriting).toBe(true);
       // Check that batching happens every second
       expect(spy).toHaveBeenCalledTimes(0);
-      await sleep(1);
+      await sleep(0.5);
       expect(spy).toHaveBeenCalledTimes(1);
       await sleep(1);
       expect(spy).toHaveBeenCalledTimes(2);
