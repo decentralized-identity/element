@@ -68,8 +68,8 @@ export default withHandlers({
     set({ resolving: true });
     const edvDidDocKey = getDidDocumentKey(edvKey);
     const didUniqueSuffix = await getMyDidUniqueSuffix();
-    const res = await axios.get(`${API_BASE}/sidetree/operations/${didUniqueSuffix}`);
-    const lastOperation = res.data.pop();
+    const operations = await axios.get(`${API_BASE}/sidetree/operations/${didUniqueSuffix}`);
+    const lastOperation = operations.data.pop();
     const updatePayload = await getEdvUpdatePayload(didUniqueSuffix, edvDidDocKey, lastOperation);
     axios.post(`${API_BASE}/sidetree/requests`, updatePayload);
     snackbarMessage({
@@ -90,8 +90,8 @@ export default withHandlers({
     set({ resolving: true });
     const newPublicKey = getDidDocumentKey(newKey);
     const didUniqueSuffix = await getMyDidUniqueSuffix();
-    const res = await axios.get(`${API_BASE}/sidetree/operations/${didUniqueSuffix}`);
-    const lastOperation = res.data.pop();
+    const operations = await axios.get(`${API_BASE}/sidetree/operations/${didUniqueSuffix}`);
+    const lastOperation = operations.data.pop();
     const { operationHash } = lastOperation.operation;
     const updatePayload = await createAddKeyRequest(
       newPublicKey,
