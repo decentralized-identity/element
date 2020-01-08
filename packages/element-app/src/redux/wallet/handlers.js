@@ -93,7 +93,7 @@ export default withHandlers({
         message = 'Unlocked wallet.';
       } else {
         const wall = didWallet.create({
-          keys: _.values(wallet.data.keys),
+          keys: Object.values(wallet.data.keys),
         });
         wall.lock(password);
 
@@ -122,7 +122,7 @@ export default withHandlers({
   addKeyToWallet: ({ snackbarMessage, set, wallet }) => async (key) => {
     set({ resolving: true });
     const wall = didWallet.create({
-      keys: _.values(wallet.data.keys),
+      keys: Object.values(wallet.data.keys),
     });
     wall.addKey(key);
     set({ data: wall });
