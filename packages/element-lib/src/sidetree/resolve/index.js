@@ -70,6 +70,7 @@ const applyPatch = (didDocument, patch) => {
     }, didDocument);
   }
   const addVerificationMethodToProperty = (propertyName, verificationMethod) => {
+    // eslint-disable-next-line security/detect-object-injection
     const property = didDocument[propertyName] || [];
     return {
       ...didDocument,
@@ -81,6 +82,7 @@ const applyPatch = (didDocument, patch) => {
   };
 
   const removeVerificationMethodFromProperty = (propertyName, id) => {
+    // eslint-disable-next-line security/detect-object-injection
     const property = didDocument[propertyName] || [];
     const filtered = property.filter((verificationMethod) => {
       if (typeof verificationMethod === 'string') {

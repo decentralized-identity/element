@@ -11,6 +11,7 @@ describe('patches', () => {
   let primaryKey;
   let recoveryKey;
   let didUniqueSuffix;
+  let did;
   let createPayload;
   let keyId;
 
@@ -21,6 +22,7 @@ describe('patches', () => {
     const didDocumentModel = await sidetree.op.getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
     createPayload = await await sidetree.op.getCreatePayload(didDocumentModel, primaryKey);
     didUniqueSuffix = await sidetree.func.getDidUniqueSuffix(createPayload);
+    did = `did:elem${didUniqueSuffix}`;
     const createTransaction = await sidetree.batchScheduler.writeNow(createPayload);
     await sidetree.syncTransaction(createTransaction);
   });
@@ -252,13 +254,19 @@ describe('patches', () => {
 
   it('should add a key agreement method', async () => {
     const lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
+    const key = {
+      id: `${did}#keyAgreement`,
+      type: 'X25519KeyAgreementKey2019',
+      controller: did,
+      publicKeyBase58: 'JhNWeSVLMYccCk7iopQW4guaSJTojqpMEELgSLhKwRr',
+    };
     const payload = {
       didUniqueSuffix: lastOperation.didUniqueSuffix,
       previousOperationHash: lastOperation.operation.operationHash,
       patches: [
         {
           action: 'add-key-agreement',
-          verificationMethod: keyId,
+          verificationMethod: key,
         },
       ],
     };
@@ -271,7 +279,7 @@ describe('patches', () => {
     const transaction = await sidetree.batchScheduler.writeNow(updatePayload);
     expect(transaction).toBeDefined();
     const didDocument = await sidetree.resolve(didUniqueSuffix, true);
-    expect(didDocument.keyAgreement).toEqual([keyId]);
+    expect(didDocument.keyAgreement).toEqual([key]);
   });
 
   it('should remove a key agreement method', async () => {
@@ -282,7 +290,7 @@ describe('patches', () => {
       patches: [
         {
           action: 'remove-key-agreement',
-          id: keyId,
+          id: `${did}#keyAgreement`,
         },
       ],
     };
