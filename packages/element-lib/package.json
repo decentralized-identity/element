@@ -67,7 +67,8 @@
     "rxdb": "^8.5.0",
     "rxjs": "^6.5.2",
     "secp256k1": "^3.6.2",
-    "web3": "^1.2.2"
+    "web3": "^1.2.2",
+    "x25519-key-pair": "digitalbazaar/x25519-key-pair#initial"
   },
   "devDependencies": {
     "@transmute/eslint-config": "0.0.7",
