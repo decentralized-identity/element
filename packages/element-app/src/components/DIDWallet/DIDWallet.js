@@ -44,7 +44,9 @@ class DIDWallet extends Component {
   };
 
   render() {
-    const { importCipherTextWallet, wallet, addKeyToWallet } = this.props;
+    const {
+      importCipherTextWallet, wallet, addKeyToWallet, getEdvDidDocumentModel,
+    } = this.props;
     const { isWalletLockDialogOpen, isAddKeyDialogOpen } = this.state;
     const walletIsLocked = typeof wallet.data === 'string';
     const walletState = !walletIsLocked ? 'unlocked' : 'locked';
@@ -187,7 +189,7 @@ class DIDWallet extends Component {
           )}
 
           <Grid item xs={12} md={4}>
-            <CreateWalletCard />
+            <CreateWalletCard getEdvDidDocumentModel={getEdvDidDocumentModel}/>
           </Grid>
           <Grid item xs={12} md={4}>
             <ImportWalletFileCard importCipherTextWallet={importCipherTextWallet} />
@@ -207,6 +209,7 @@ DIDWallet.propTypes = {
   toggleWallet: PropTypes.func.isRequired,
   snackbarMessage: PropTypes.func.isRequired,
   addKeyToWallet: PropTypes.func.isRequired,
+  getEdvDidDocumentModel: PropTypes.func.isRequired,
 };
 
 export default DIDWallet;

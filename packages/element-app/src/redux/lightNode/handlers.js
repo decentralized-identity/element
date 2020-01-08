@@ -54,39 +54,6 @@ export default withHandlers({
     });
     set({ resolving: false });
   },
-  setupEDV: ({
-    snackbarMessage,
-    getMyDidUniqueSuffix,
-    getDidDocumentKey,
-    getEdvUpdatePayload,
-    set,
-    sidetree,
-  }) => async (edvKey) => {
-    set({ resolving: true });
-    const edvDidDocKey = getDidDocumentKey(edvKey);
-    const didUniqueSuffix = await getMyDidUniqueSuffix();
-    const operations = await sidetree.db.readCollection(didUniqueSuffix);
-    const lastOperation = operations.pop();
-    const updatePayload = await getEdvUpdatePayload(didUniqueSuffix, edvDidDocKey, lastOperation);
-    snackbarMessage({
-      snackbarMessage: {
-        message: 'This will take a few minutes....',
-        variant: 'info',
-        open: true,
-      },
-    });
-    await sidetree.batchScheduler.writeNow(updatePayload);
-    const myDidDocument = await sidetree.resolve(didUniqueSuffix, true);
-    set({ myDidDocument });
-    snackbarMessage({
-      snackbarMessage: {
-        message: 'EDV properties added',
-        variant: 'success',
-        open: true,
-      },
-    });
-    set({ resolving: false });
-  },
   addKeyToDIDDocument: ({
     snackbarMessage,
     getMyDidUniqueSuffix,

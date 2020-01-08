@@ -40,6 +40,7 @@ class CreateWalletDialog extends React.Component {
   };
 
   async componentWillReceiveProps(nextProps) {
+    const { getEdvDidDocumentModel } = nextProps;
     this.setState({
       open: nextProps.open,
       password: '',
@@ -71,9 +72,7 @@ class CreateWalletDialog extends React.Component {
       tags: ['Ed25519VerificationKey2018', '#edv'],
     };
     const keys = [walletKey1, walletKey2, walletKey3];
-    const didDocumentModel = element.op.getDidDocumentModel(
-      walletKey1.publicKey, walletKey2.publicKey,
-    );
+    const didDocumentModel = getEdvDidDocumentModel(walletKey1, walletKey2, walletKey3);
     const createPayload = await element.op.getCreatePayload(
       didDocumentModel,
       primaryKey,
@@ -157,6 +156,7 @@ class CreateWalletDialog extends React.Component {
 CreateWalletDialog.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
+  getEdvDidDocumentModel: PropTypes.func,
 };
 
 export default CreateWalletDialog;

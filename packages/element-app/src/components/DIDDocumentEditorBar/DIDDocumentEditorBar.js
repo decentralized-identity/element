@@ -7,7 +7,6 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { AddKeyDialog } from './AddKeyDialog';
 import { RemoveKeyDialog } from './RemoveKeyDialog';
-import { SetupEDVDialog } from './SetupEDVDialog';
 
 const styles = () => ({
   title: {
@@ -28,24 +27,13 @@ const getKeyValue = (publicKey) => {
 
 class DIDDocumentEditorBar extends Component {
   state = {
-    isSetupEdvDialogOpen: false,
     isAddKeyDialogOpen: false,
     isRemoveKeyDialogOpen: false,
   };
 
-  setupEDV = (item) => {
-    this.props.setupEDV(item.value);
-    this.setState({
-      isSetupEdvDialogOpen: false,
-      isAddKeyDialogOpen: false,
-      isRemoveKeyDialogOpen: false,
-    });
-  }
-
   handleAddKey = (item) => {
     this.props.handleAddKey(item.value);
     this.setState({
-      isSetupEdvDialogOpen: false,
       isAddKeyDialogOpen: false,
       isRemoveKeyDialogOpen: false,
     });
@@ -54,7 +42,6 @@ class DIDDocumentEditorBar extends Component {
   handleRemoveKey = (item) => {
     this.props.handleRemoveKey(item.value);
     this.setState({
-      isSetupEdvDialogOpen: false,
       isAddKeyDialogOpen: false,
       isRemoveKeyDialogOpen: false,
     });
@@ -83,24 +70,12 @@ class DIDDocumentEditorBar extends Component {
   };
 
   render() {
-    const { isAddKeyDialogOpen, isRemoveKeyDialogOpen, isSetupEdvDialogOpen } = this.state;
+    const { isAddKeyDialogOpen, isRemoveKeyDialogOpen } = this.state;
     return (
       <React.Fragment>
         <AppBar position="static" color="default">
           <Toolbar disableGutters={false}>
             <Grid container>
-              <Grid item>
-                <Button
-                  color="primary"
-                  onClick={() => {
-                    this.setState({
-                      isSetupEdvDialogOpen: true,
-                    });
-                  }}
-                >
-                  Setup EDV
-                </Button>
-              </Grid>
               <Grid item>
                 <Button
                   color="primary"
@@ -128,16 +103,6 @@ class DIDDocumentEditorBar extends Component {
             </Grid>
           </Toolbar>
         </AppBar>
-        <SetupEDVDialog
-          open={isSetupEdvDialogOpen}
-          keys={this.onlyNewKeys()}
-          onClose={() => {
-            this.setState({
-              isSetupEdvDialogOpen: false,
-            });
-          }}
-          onSubmit={this.setupEDV}
-        />
         <AddKeyDialog
           open={isAddKeyDialogOpen}
           keys={this.onlyNewKeys()}
@@ -167,7 +132,6 @@ DIDDocumentEditorBar.propTypes = {
   classes: PropTypes.object.isRequired,
   didDocument: PropTypes.object.isRequired,
   keys: PropTypes.object.isRequired,
-  setupEDV: PropTypes.func.isRequired,
   handleAddKey: PropTypes.func.isRequired,
   handleRemoveKey: PropTypes.func.isRequired,
 };
