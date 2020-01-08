@@ -82,6 +82,30 @@ describe('patches', () => {
     expect(didDocument.authentication).toEqual([keyId]);
   });
 
+  it('should remove an authentication method', async () => {
+    const lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
+    const payload = {
+      didUniqueSuffix: lastOperation.didUniqueSuffix,
+      previousOperationHash: lastOperation.operation.operationHash,
+      patches: [
+        {
+          action: 'remove-authentication',
+          id: keyId,
+        },
+      ],
+    };
+    const header = {
+      operation: 'update',
+      kid: '#primary',
+      alg: 'ES256K',
+    };
+    const updatePayload = await sidetree.op.makeSignedOperation(header, payload, primaryKey.privateKey);
+    const transaction = await sidetree.batchScheduler.writeNow(updatePayload);
+    expect(transaction).toBeDefined();
+    const didDocument = await sidetree.resolve(didUniqueSuffix, true);
+    expect(didDocument.authentication).toEqual([]);
+  });
+
   it('should add an assertion method', async () => {
     const lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
     const payload = {
@@ -104,6 +128,30 @@ describe('patches', () => {
     expect(transaction).toBeDefined();
     const didDocument = await sidetree.resolve(didUniqueSuffix, true);
     expect(didDocument.assertionMethod).toEqual([keyId]);
+  });
+
+  it('should remove an assertion method', async () => {
+    const lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
+    const payload = {
+      didUniqueSuffix: lastOperation.didUniqueSuffix,
+      previousOperationHash: lastOperation.operation.operationHash,
+      patches: [
+        {
+          action: 'remove-assertion-method',
+          id: keyId,
+        },
+      ],
+    };
+    const header = {
+      operation: 'update',
+      kid: '#primary',
+      alg: 'ES256K',
+    };
+    const updatePayload = await sidetree.op.makeSignedOperation(header, payload, primaryKey.privateKey);
+    const transaction = await sidetree.batchScheduler.writeNow(updatePayload);
+    expect(transaction).toBeDefined();
+    const didDocument = await sidetree.resolve(didUniqueSuffix, true);
+    expect(didDocument.assertionMethod).toEqual([]);
   });
 
   it('should add a capability delegation', async () => {
@@ -130,6 +178,30 @@ describe('patches', () => {
     expect(didDocument.capabilityDelegation).toEqual([keyId]);
   });
 
+  it('should remove a capability delegation', async () => {
+    const lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
+    const payload = {
+      didUniqueSuffix: lastOperation.didUniqueSuffix,
+      previousOperationHash: lastOperation.operation.operationHash,
+      patches: [
+        {
+          action: 'remove-capability-delegation',
+          id: keyId,
+        },
+      ],
+    };
+    const header = {
+      operation: 'update',
+      kid: '#primary',
+      alg: 'ES256K',
+    };
+    const updatePayload = await sidetree.op.makeSignedOperation(header, payload, primaryKey.privateKey);
+    const transaction = await sidetree.batchScheduler.writeNow(updatePayload);
+    expect(transaction).toBeDefined();
+    const didDocument = await sidetree.resolve(didUniqueSuffix, true);
+    expect(didDocument.capabilityDelegation).toEqual([]);
+  });
+
   it('should add a capability invocation', async () => {
     const lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
     const payload = {
@@ -154,6 +226,30 @@ describe('patches', () => {
     expect(didDocument.capabilityInvocation).toEqual([keyId]);
   });
 
+  it('should remove a capability invocation', async () => {
+    const lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
+    const payload = {
+      didUniqueSuffix: lastOperation.didUniqueSuffix,
+      previousOperationHash: lastOperation.operation.operationHash,
+      patches: [
+        {
+          action: 'remove-capability-invocation',
+          id: keyId,
+        },
+      ],
+    };
+    const header = {
+      operation: 'update',
+      kid: '#primary',
+      alg: 'ES256K',
+    };
+    const updatePayload = await sidetree.op.makeSignedOperation(header, payload, primaryKey.privateKey);
+    const transaction = await sidetree.batchScheduler.writeNow(updatePayload);
+    expect(transaction).toBeDefined();
+    const didDocument = await sidetree.resolve(didUniqueSuffix, true);
+    expect(didDocument.capabilityInvocation).toEqual([]);
+  });
+
   it('should add a key agreement method', async () => {
     const lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
     const payload = {
@@ -176,6 +272,30 @@ describe('patches', () => {
     expect(transaction).toBeDefined();
     const didDocument = await sidetree.resolve(didUniqueSuffix, true);
     expect(didDocument.keyAgreement).toEqual([keyId]);
+  });
+
+  it('should remove a key agreement method', async () => {
+    const lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
+    const payload = {
+      didUniqueSuffix: lastOperation.didUniqueSuffix,
+      previousOperationHash: lastOperation.operation.operationHash,
+      patches: [
+        {
+          action: 'remove-key-agreement',
+          id: keyId,
+        },
+      ],
+    };
+    const header = {
+      operation: 'update',
+      kid: '#primary',
+      alg: 'ES256K',
+    };
+    const updatePayload = await sidetree.op.makeSignedOperation(header, payload, primaryKey.privateKey);
+    const transaction = await sidetree.batchScheduler.writeNow(updatePayload);
+    expect(transaction).toBeDefined();
+    const didDocument = await sidetree.resolve(didUniqueSuffix, true);
+    expect(didDocument.keyAgreement).toEqual([]);
   });
 
   it('should add a service endpoint', async () => {
@@ -205,5 +325,29 @@ describe('patches', () => {
     expect(transaction).toBeDefined();
     const didDocument = await sidetree.resolve(didUniqueSuffix, true);
     expect(didDocument.service).toEqual([endpoint]);
+  });
+
+  it('should remove a service endpoint', async () => {
+    const lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
+    const payload = {
+      didUniqueSuffix: lastOperation.didUniqueSuffix,
+      previousOperationHash: lastOperation.operation.operationHash,
+      patches: [
+        {
+          action: 'remove-service-endpoint',
+          id: '#endpoint1'
+        },
+      ],
+    };
+    const header = {
+      operation: 'update',
+      kid: '#primary',
+      alg: 'ES256K',
+    };
+    const updatePayload = await sidetree.op.makeSignedOperation(header, payload, primaryKey.privateKey);
+    const transaction = await sidetree.batchScheduler.writeNow(updatePayload);
+    expect(transaction).toBeDefined();
+    const didDocument = await sidetree.resolve(didUniqueSuffix, true);
+    expect(didDocument.service).toEqual([]);
   });
 });

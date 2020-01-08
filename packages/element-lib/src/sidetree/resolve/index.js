@@ -69,55 +69,60 @@ const applyPatch = (didDocument, patch) => {
       return currentState;
     }, didDocument);
   }
-  if (patch.action === 'add-authentication') {
-    const authentication = didDocument.authentication || [];
+  const addVerificationMethodToProperty = (propertyName, verificationMethod) => {
+    const property = didDocument[propertyName] || [];
     return {
       ...didDocument,
-      authentication: [
-        ...authentication,
-        patch.verificationMethod,
+      [propertyName]: [
+        ...property,
+        verificationMethod,
       ],
+    };
+  };
+
+  const removeVerificationMethodFromProperty = (propertyName, id) => {
+    const property = didDocument[propertyName] || [];
+    const filtered = property.filter((verificationMethod) => {
+      if (typeof verificationMethod === 'string') {
+        return verificationMethod !== id;
+      }
+      return verificationMethod.id !== id;
+    })
+    return {
+      ...didDocument,
+      [propertyName]: filtered,
     }
+  };
+
+  if (patch.action === 'add-authentication') {
+    return addVerificationMethodToProperty('authentication', patch.verificationMethod);
+  }
+  if (patch.action === 'remove-authentication') {
+    return removeVerificationMethodFromProperty('authentication', patch.id)
   }
   if (patch.action === 'add-assertion-method') {
-    const assertionMethod = didDocument.assertionMethod || [];
-    return {
-      ...didDocument,
-      assertionMethod: [
-        ...assertionMethod,
-        patch.verificationMethod,
-      ],
-    }
+    return addVerificationMethodToProperty('assertionMethod', patch.verificationMethod);
+  }
+  if (patch.action === 'remove-assertion-method') {
+    return removeVerificationMethodFromProperty('assertionMethod', patch.id)
   }
   if (patch.action === 'add-capability-delegation') {
-    const capabilityDelegation = didDocument.capabilityDelegation || [];
-    return {
-      ...didDocument,
-      capabilityDelegation: [
-        ...capabilityDelegation,
-        patch.verificationMethod,
-      ],
-    }
+    return addVerificationMethodToProperty('capabilityDelegation', patch.verificationMethod);
+  }
+  if (patch.action === 'remove-capability-delegation') {
+    return removeVerificationMethodFromProperty('capabilityDelegation', patch.id)
   }
   if (patch.action === 'add-capability-invocation') {
-    const capabilityInvocation = didDocument.capabilityInvocation || [];
-    return {
-      ...didDocument,
-      capabilityInvocation: [
-        ...capabilityInvocation,
-        patch.verificationMethod,
-      ],
-    }
+    return addVerificationMethodToProperty('capabilityInvocation', patch.verificationMethod);
+  }
+  if (patch.action === 'remove-capability-invocation') {
+    return removeVerificationMethodFromProperty('capabilityInvocation', patch.id)
   }
   if (patch.action === 'add-key-agreement') {
-    const keyAgreement = didDocument.keyAgreement || [];
-    return {
-      ...didDocument,
-      keyAgreement: [
-        ...keyAgreement,
-        patch.verificationMethod,
-      ],
-    }
+    return addVerificationMethodToProperty('keyAgreement', patch.verificationMethod);
+  }
+  if (patch.action === 'remove-key-agreement') {
+    return removeVerificationMethodFromProperty('keyAgreement', patch.id)
   }
   if (patch.action === 'add-service-endpoint') {
     const service = didDocument.service || [];
