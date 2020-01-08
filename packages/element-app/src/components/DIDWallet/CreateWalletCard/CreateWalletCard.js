@@ -27,7 +27,7 @@ class CreateWalletCard extends React.Component {
   };
 
   render() {
-    const { classes, getEdvDidDocumentModel } = this.props;
+    const { classes } = this.props;
     const { dialogIsOpen } = this.state;
     return (
       <Card className={classes.card}>
@@ -68,7 +68,6 @@ class CreateWalletCard extends React.Component {
         </CardActions>
         <CreateWalletDialog
           open={dialogIsOpen}
-          getEdvDidDocumentModel={getEdvDidDocumentModel}
           onClose={() => {
             this.setState({
               dialogIsOpen: false,
@@ -82,7 +81,6 @@ class CreateWalletCard extends React.Component {
 
 CreateWalletCard.propTypes = {
   classes: PropTypes.object.isRequired,
-  getEdvDidDocumentModel: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(CreateWalletCard);

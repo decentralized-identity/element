@@ -21,11 +21,10 @@ export default withHandlers({
       [publicKeyType]: publicKey,
     };
   },
-  getMyDidUniqueSuffix: ({ getKey, getEdvDidDocumentModel }) => async () => {
+  getMyDidUniqueSuffix: ({ getKey }) => async () => {
     const primaryKey = getKey('#primary');
     const recoveryKey = getKey('#recovery');
-    const edvKey = getKey('#edv');
-    const didDocumentModel = getEdvDidDocumentModel(primaryKey, recoveryKey, edvKey);
+    const didDocumentModel = op.getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
     const createPayload = await op.getCreatePayload(
       didDocumentModel,
       primaryKey,
@@ -33,11 +32,10 @@ export default withHandlers({
     const didUniqueSuffix = func.getDidUniqueSuffix(createPayload);
     return didUniqueSuffix;
   },
-  createDIDRequest: ({ getKey, getEdvDidDocumentModel }) => async () => {
+  createDIDRequest: ({ getKey }) => async () => {
     const primaryKey = getKey('#primary');
     const recoveryKey = getKey('#recovery');
-    const edvKey = getKey('#edv');
-    const didDocumentModel = getEdvDidDocumentModel(primaryKey, recoveryKey, edvKey);
+    const didDocumentModel = op.getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
     const createPayload = await op.getCreatePayload(
       didDocumentModel,
       primaryKey,
