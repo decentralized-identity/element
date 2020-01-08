@@ -28,7 +28,14 @@ describe('DID Document model', () => {
   it('should add the edv payload', async () => {
     const newKey = await element.crypto.ed25519.createKeys();
     const previousOperation = await getLastOperation(sidetree, didUniqueSuffix);
-    const keyId = `did:elem:${didUniqueSuffix}#edv`;
+    const did = `did:elem:${didUniqueSuffix}`;
+    const keyId = `${did}#edv`;
+    const key = {
+      id: `${did}#keyAgreement`,
+      type: 'X25519KeyAgreementKey2019',
+      controller: did,
+      publicKeyBase58: 'JhNWeSVLMYccCk7iopQW4guaSJTojqpMEELgSLhKwRr',
+    };
     const newPublicKey = {
       id: '#edv',
       usage: 'signing',
@@ -57,7 +64,7 @@ describe('DID Document model', () => {
     };
     const addKeyAgreementPatch = {
       action: 'add-key-agreement',
-      verificationMethod: keyId,
+      verificationMethod: key,
     };
     const payload = {
       didUniqueSuffix: previousOperation.didUniqueSuffix,
@@ -88,6 +95,6 @@ describe('DID Document model', () => {
     expect(didDocument.assertionMethod).toEqual([keyId]);
     expect(didDocument.capabilityDelegation).toEqual([keyId]);
     expect(didDocument.capabilityInvocation).toEqual([keyId]);
-    expect(didDocument.keyAgreement).toEqual([keyId]);
+    expect(didDocument.keyAgreement).toEqual([key]);
   });
 });
