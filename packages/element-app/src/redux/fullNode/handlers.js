@@ -58,6 +58,28 @@ export default withHandlers({
       set({ resolving: false });
     }, 1.5 * 60 * 1000);
   },
+  setupEDV: ({
+    snackbarMessage,
+    getMyDidUniqueSuffix,
+    getDidDocumentKey,
+    getEdvUpdatePayload,
+    set,
+  }) => async (edvKey) => {
+    set({ resolving: true });
+    const edvDidDocKey = getDidDocumentKey(edvKey);
+    const didUniqueSuffix = await getMyDidUniqueSuffix();
+    const res = await axios.get(`${API_BASE}/sidetree/operations/${didUniqueSuffix}`);
+    const lastOperation = res.data.pop();
+    const updatePayload = await getEdvUpdatePayload(didUniqueSuffix, edvDidDocKey, lastOperation);
+    axios.post(`${API_BASE}/sidetree/requests`, updatePayload);
+    snackbarMessage({
+      snackbarMessage: {
+        message: 'This will take a few minutes....',
+        variant: 'info',
+        open: true,
+      },
+    });
+  },
   addKeyToDIDDocument: ({
     snackbarMessage,
     getMyDidUniqueSuffix,

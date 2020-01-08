@@ -75,7 +75,7 @@ describe('DID Document model', () => {
         addAssertionMethodPatch,
         addCapabilityDelegationPatch,
         addCapabilityInvocationPatch,
-        addKeyAgreementPatch
+        addKeyAgreementPatch,
       ],
     };
     const header = {

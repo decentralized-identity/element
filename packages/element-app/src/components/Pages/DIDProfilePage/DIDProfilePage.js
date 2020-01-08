@@ -28,6 +28,7 @@ export class DIDProfilePage extends Component {
       wallet,
       createDID,
       snackbarMessage,
+      setupEDV,
       addKeyToDIDDocument,
       removeKeyFromDIDDocument,
     } = this.props;
@@ -54,6 +55,7 @@ export class DIDProfilePage extends Component {
                   <DIDDocumentEditorBar
                     didDocument={myDidDocument}
                     keys={wallet.data.keys}
+                    setupEDV={setupEDV}
                     handleAddKey={addKeyToDIDDocument}
                     handleRemoveKey={removeKeyFromDIDDocument}
                   />
@@ -116,6 +118,7 @@ DIDProfilePage.propTypes = {
   match: PropTypes.object.isRequired,
   createDID: PropTypes.func.isRequired,
   snackbarMessage: PropTypes.func.isRequired,
+  setupEDV: PropTypes.func.isRequired,
   addKeyToDIDDocument: PropTypes.func.isRequired,
   removeKeyFromDIDDocument: PropTypes.func.isRequired,
   history: PropTypes.any.isRequired,

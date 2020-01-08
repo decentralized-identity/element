@@ -79,6 +79,9 @@ storiesOf('DID Document / View', module)
         <DIDDocumentEditorBar
           didDocument={didDocument}
           keys={wallet.data.keys}
+          setupEDV={(key) => {
+            action('handle setup edv: ')(key);
+          }}
           handleAddKey={(key) => {
             action('handle add key: ')(key);
           }}
