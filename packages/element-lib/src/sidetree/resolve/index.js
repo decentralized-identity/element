@@ -69,6 +69,56 @@ const applyPatch = (didDocument, patch) => {
       return currentState;
     }, didDocument);
   }
+  if (patch.action === 'add-authentication') {
+    const authentication = didDocument.authentication || [];
+    return {
+      ...didDocument,
+      authentication: [
+        ...authentication,
+        patch.verificationMethod,
+      ],
+    }
+  }
+  if (patch.action === 'add-assertion-method') {
+    const assertionMethod = didDocument.assertionMethod || [];
+    return {
+      ...didDocument,
+      assertionMethod: [
+        ...assertionMethod,
+        patch.verificationMethod,
+      ],
+    }
+  }
+  if (patch.action === 'add-capability-delegation') {
+    const capabilityDelegation = didDocument.capabilityDelegation || [];
+    return {
+      ...didDocument,
+      capabilityDelegation: [
+        ...capabilityDelegation,
+        patch.verificationMethod,
+      ],
+    }
+  }
+  if (patch.action === 'add-capability-invocation') {
+    const capabilityInvocation = didDocument.capabilityInvocation || [];
+    return {
+      ...didDocument,
+      capabilityInvocation: [
+        ...capabilityInvocation,
+        patch.verificationMethod,
+      ],
+    }
+  }
+  if (patch.action === 'add-key-agreement') {
+    const keyAgreement = didDocument.keyAgreement || [];
+    return {
+      ...didDocument,
+      keyAgreement: [
+        ...keyAgreement,
+        patch.verificationMethod,
+      ],
+    }
+  }
   return didDocument;
 };
 

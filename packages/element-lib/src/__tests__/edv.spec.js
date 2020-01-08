@@ -84,5 +84,10 @@ describe('DID Document model', () => {
     expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey.publicKey);
     expect(didDocument.publicKey[1].publicKeyHex).toBe(recoveryKey.publicKey);
     expect(didDocument.publicKey[2].publicKeyBase58).toBe(newKey.publicKeyBase58);
+    expect(didDocument.authentication).toEqual([keyId]);
+    expect(didDocument.assertionMethod).toEqual([keyId]);
+    expect(didDocument.capabilityDelegation).toEqual([keyId]);
+    expect(didDocument.capabilityInvocation).toEqual([keyId]);
+    expect(didDocument.keyAgreement).toEqual([keyId]);
   });
 });
