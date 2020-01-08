@@ -177,4 +177,33 @@ describe('patches', () => {
     const didDocument = await sidetree.resolve(didUniqueSuffix, true);
     expect(didDocument.keyAgreement).toEqual([keyId]);
   });
+
+  it('should add a service endpoint', async () => {
+    const lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
+    const endpoint = {
+      id: '#endpoint1',
+      type: 'UserServiceEndpoint',
+      serviceEndpoint: 'https://example.com'
+    };
+    const payload = {
+      didUniqueSuffix: lastOperation.didUniqueSuffix,
+      previousOperationHash: lastOperation.operation.operationHash,
+      patches: [
+        {
+          action: 'add-service-endpoint',
+          ...endpoint,
+        },
+      ],
+    };
+    const header = {
+      operation: 'update',
+      kid: '#primary',
+      alg: 'ES256K',
+    };
+    const updatePayload = await sidetree.op.makeSignedOperation(header, payload, primaryKey.privateKey);
+    const transaction = await sidetree.batchScheduler.writeNow(updatePayload);
+    expect(transaction).toBeDefined();
+    const didDocument = await sidetree.resolve(didUniqueSuffix, true);
+    expect(didDocument.service).toEqual([endpoint]);
+  });
 });

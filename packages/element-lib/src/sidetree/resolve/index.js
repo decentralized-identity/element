@@ -119,6 +119,28 @@ const applyPatch = (didDocument, patch) => {
       ],
     }
   }
+  if (patch.action === 'add-service-endpoint') {
+    const service = didDocument.service || [];
+    return {
+      ...didDocument,
+      service: [
+        ...service,
+        {
+          id: patch.id,
+          type: patch.type,
+          serviceEndpoint: patch.serviceEndpoint
+        }
+      ]
+    };
+  }
+  if (patch.action === 'remove-service-endpoint') {
+    const service = didDocument.service || [];
+    const filteredService = service.filter(s => s.id !== patch.id)
+    return {
+      ...didDocument,
+      service: filteredService,
+    }
+  }
   return didDocument;
 };
 
