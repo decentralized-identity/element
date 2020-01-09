@@ -1,0 +1,36 @@
+{
+  "keyAgreement": [
+    {
+      "type": "X25519KeyAgreementKey2019",
+      "publicKeyBase58": "B1waCTaCYYwGXMZ2tkby4uqF299C7WHrd9bRcMoVWmGD",
+      "id": "did:elem:EiDSQ0zS2wcaNVZWO0mhcFdiLXgzcciVejd7FLCXJdCLwg#keyAgreement",
+      "usage": "signing"
+    }
+  ],
+  "assertionMethod": ["did:elem:EiDSQ0zS2wcaNVZWO0mhcFdiLXgzcciVejd7FLCXJdCLwg#edv"],
+  "@context": "https://w3id.org/did/v1",
+  "publicKey": [
+    {
+      "id": "did:elem:EiDSQ0zS2wcaNVZWO0mhcFdiLXgzcciVejd7FLCXJdCLwg#primary",
+      "usage": "signing",
+      "publicKeyHex": "02294d41d5b7cfd84e70fa341f70c23333671d28726acd4919b574f068f4231f98",
+      "type": "Secp256k1VerificationKey2018"
+    },
+    {
+      "id": "did:elem:EiDSQ0zS2wcaNVZWO0mhcFdiLXgzcciVejd7FLCXJdCLwg#recovery",
+      "usage": "recovery",
+      "publicKeyHex": "022414f1187f8f501b667f6bd51e3cb5c643a43ce572f4e596d3bcd7fb89493ae1",
+      "type": "Secp256k1VerificationKey2018"
+    },
+    {
+      "type": "Ed25519VerificationKey2018",
+      "publicKeyBase58": "5kNkKcAjUVx6hETGqJAAaSKHwcRDK8Frab9DjKRpJ1qZ",
+      "id": "did:elem:EiDSQ0zS2wcaNVZWO0mhcFdiLXgzcciVejd7FLCXJdCLwg#edv",
+      "usage": "signing"
+    }
+  ],
+  "capabilityInvocation": ["did:elem:EiDSQ0zS2wcaNVZWO0mhcFdiLXgzcciVejd7FLCXJdCLwg#edv"],
+  "authentication": ["did:elem:EiDSQ0zS2wcaNVZWO0mhcFdiLXgzcciVejd7FLCXJdCLwg#edv"],
+  "capabilityDelegation": ["did:elem:EiDSQ0zS2wcaNVZWO0mhcFdiLXgzcciVejd7FLCXJdCLwg#edv"],
+  "id": "did:elem:EiDSQ0zS2wcaNVZWO0mhcFdiLXgzcciVejd7FLCXJdCLwg"
+}
