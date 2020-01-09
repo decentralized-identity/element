@@ -137,6 +137,15 @@ const objectToMultihash = async (object) => {
   });
 };
 
+const toFullyQualifiedDidDocument = (didDocument) => {
+  const did = didDocument.id;
+  const stringified = JSON.stringify(didDocument);
+  console.log(stringified);
+  const expanded = stringified.replace(/"#/g, `"${did}#`);
+  console.log(expanded);
+  return JSON.parse(expanded);
+};
+
 module.exports = {
   executeSequentially,
   encodeJson,
@@ -150,4 +159,5 @@ module.exports = {
   base58EncodedMultihashToBytes32,
   bytes32EnodedMultihashToBase58EncodedMultihash,
   objectToMultihash,
+  toFullyQualifiedDidDocument,
 };
