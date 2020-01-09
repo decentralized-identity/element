@@ -74,6 +74,6 @@ describe('objectToMultihash', () => {
 describe('toFullyQualifiedDidDocument', () => {
   it('should change id properties', async () => {
     const fullyQualifiedDidDoc = toFullyQualifiedDidDocument(unqualifiedEdvDidDoc);
-    expect(fullyQualifiedDidDoc).toBe(fullyQualifiedEdvDidDoc);
+    expect(fullyQualifiedDidDoc).toEqual(fullyQualifiedEdvDidDoc);
   });
 });
