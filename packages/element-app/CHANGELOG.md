@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.1](https://github.com/decentralized-identity/element/compare/v0.4.0...v0.4.1) (2020-01-09)
+
+
+### Features
+
+* add support for setting up edv properties ([c8008de](https://github.com/decentralized-identity/element/commit/c8008de))
+
+
+
+
+
 # [0.4.0](https://github.com/decentralized-identity/element/compare/v0.3.0...v0.4.0) (2020-01-07)
 
 
