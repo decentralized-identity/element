@@ -69,6 +69,85 @@ const applyPatch = (didDocument, patch) => {
       return currentState;
     }, didDocument);
   }
+  const addVerificationMethodToProperty = (propertyName, verificationMethod) => {
+    // eslint-disable-next-line security/detect-object-injection
+    const property = didDocument[propertyName] || [];
+    return {
+      ...didDocument,
+      [propertyName]: [
+        ...property,
+        verificationMethod,
+      ],
+    };
+  };
+
+  const removeVerificationMethodFromProperty = (propertyName, id) => {
+    // eslint-disable-next-line security/detect-object-injection
+    const property = didDocument[propertyName] || [];
+    const filtered = property.filter((verificationMethod) => {
+      if (typeof verificationMethod === 'string') {
+        return verificationMethod !== id;
+      }
+      return verificationMethod.id !== id;
+    })
+    return {
+      ...didDocument,
+      [propertyName]: filtered,
+    }
+  };
+
+  if (patch.action === 'add-authentication') {
+    return addVerificationMethodToProperty('authentication', patch.verificationMethod);
+  }
+  if (patch.action === 'remove-authentication') {
+    return removeVerificationMethodFromProperty('authentication', patch.id)
+  }
+  if (patch.action === 'add-assertion-method') {
+    return addVerificationMethodToProperty('assertionMethod', patch.verificationMethod);
+  }
+  if (patch.action === 'remove-assertion-method') {
+    return removeVerificationMethodFromProperty('assertionMethod', patch.id)
+  }
+  if (patch.action === 'add-capability-delegation') {
+    return addVerificationMethodToProperty('capabilityDelegation', patch.verificationMethod);
+  }
+  if (patch.action === 'remove-capability-delegation') {
+    return removeVerificationMethodFromProperty('capabilityDelegation', patch.id)
+  }
+  if (patch.action === 'add-capability-invocation') {
+    return addVerificationMethodToProperty('capabilityInvocation', patch.verificationMethod);
+  }
+  if (patch.action === 'remove-capability-invocation') {
+    return removeVerificationMethodFromProperty('capabilityInvocation', patch.id)
+  }
+  if (patch.action === 'add-key-agreement') {
+    return addVerificationMethodToProperty('keyAgreement', patch.verificationMethod);
+  }
+  if (patch.action === 'remove-key-agreement') {
+    return removeVerificationMethodFromProperty('keyAgreement', patch.id)
+  }
+  if (patch.action === 'add-service-endpoint') {
+    const service = didDocument.service || [];
+    return {
+      ...didDocument,
+      service: [
+        ...service,
+        {
+          id: patch.id,
+          type: patch.type,
+          serviceEndpoint: patch.serviceEndpoint
+        }
+      ]
+    };
+  }
+  if (patch.action === 'remove-service-endpoint') {
+    const service = didDocument.service || [];
+    const filteredService = service.filter(s => s.id !== patch.id)
+    return {
+      ...didDocument,
+      service: filteredService,
+    }
+  }
   return didDocument;
 };
 

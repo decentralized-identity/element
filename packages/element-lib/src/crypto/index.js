@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const bip39 = require('bip39');
 const hdkey = require('hdkey');
 const ethUtil = require('ethereumjs-util');
+const X25519KeyPair = require('x25519-key-pair');
 
 const getCompressedPublicFromPrivate = privateKeyHex => secp256k1.publicKeyCreate(Buffer.from(privateKeyHex, 'hex')).toString('hex');
 
@@ -65,5 +66,6 @@ module.exports = {
   },
   ed25519: {
     createKeys: createEd25519Keys,
+    X25519KeyPair,
   },
 };

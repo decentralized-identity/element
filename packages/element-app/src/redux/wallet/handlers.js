@@ -1,10 +1,13 @@
 import { withHandlers } from 'recompose';
-
-const didWallet = require('@transmute/did-wallet');
-const _ = require('lodash');
+import didWallet from '@transmute/did-wallet';
+import element from '@transmute/element-lib';
 
 export default withHandlers({
   getEdvDidDocumentModel: () => (primaryKey, recoveryKey, edvKey) => {
+    const keyAgreement = element.crypto.ed25519.X25519KeyPair.fromEdKeyPair({
+      publicKeyBase58: edvKey.publicKey,
+    });
+    const edvKeyReference = edvKey.tags[1];
     const didDocumentModel = {
       '@context': 'https://w3id.org/did/v1',
       publicKey: [
@@ -25,6 +28,18 @@ export default withHandlers({
           id: edvKey.tags[1],
           usage: 'signing',
           publicKeyBase58: edvKey.publicKey,
+        },
+      ],
+      authentication: [edvKeyReference],
+      assertionMethod: [edvKeyReference],
+      capabilityDelegation: [edvKeyReference],
+      capabilityInvocation: [edvKeyReference],
+      keyAgreement: [
+        {
+          id: '#keyAgreement',
+          type: keyAgreement.type,
+          usage: 'signing',
+          publicKeyBase58: keyAgreement.publicKeyBase58,
         },
       ],
     };
@@ -78,7 +93,7 @@ export default withHandlers({
         message = 'Unlocked wallet.';
       } else {
         const wall = didWallet.create({
-          keys: _.values(wallet.data.keys),
+          keys: Object.values(wallet.data.keys),
         });
         wall.lock(password);
 
@@ -107,7 +122,7 @@ export default withHandlers({
   addKeyToWallet: ({ snackbarMessage, set, wallet }) => async (key) => {
     set({ resolving: true });
     const wall = didWallet.create({
-      keys: _.values(wallet.data.keys),
+      keys: Object.values(wallet.data.keys),
     });
     wall.addKey(key);
     set({ data: wall });
