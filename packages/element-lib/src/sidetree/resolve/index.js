@@ -47,7 +47,10 @@ const applyPatch = (didDocument, patch) => {
           ...currentState,
           publicKey: [
             ...currentState.publicKey,
-            { ...publicKey },
+            {
+              ...publicKey,
+              controller: didDocument.id,
+            },
           ],
         };
       }
