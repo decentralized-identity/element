@@ -64,7 +64,14 @@ describe('batchWrite with one operation', () => {
     expect(didDocument.id).toBe(did);
     const decodedPayload = decodeJson(createPayload.payload);
     expect(didDocument['@context']).toBe(decodedPayload['@context']);
-    expect(didDocument.publicKey).toEqual(decodedPayload.publicKey);
+    expect(didDocument.publicKey[0]).toEqual({
+      ...decodedPayload.publicKey[0],
+      controller: didDocument.id,
+    });
+    expect(didDocument.publicKey[1]).toEqual({
+      ...decodedPayload.publicKey[1],
+      controller: didDocument.id,
+    });
   });
 });
 
@@ -126,7 +133,14 @@ describe('batchWrite with several operations', () => {
     expect(didDocument.id).toBe(did);
     const decodedPayload = decodeJson(createPayload1.payload);
     expect(didDocument['@context']).toBe(decodedPayload['@context']);
-    expect(didDocument.publicKey).toEqual(decodedPayload.publicKey);
+    expect(didDocument.publicKey[0]).toEqual({
+      ...decodedPayload.publicKey[0],
+      controller: didDocument.id,
+    });
+    expect(didDocument.publicKey[1]).toEqual({
+      ...decodedPayload.publicKey[1],
+      controller: didDocument.id,
+    });
   });
 
   it('should resolve the second did when the observer synced the transaction', async () => {
@@ -135,7 +149,14 @@ describe('batchWrite with several operations', () => {
     expect(didDocument.id).toBe(did);
     const decodedPayload = decodeJson(createPayload2.payload);
     expect(didDocument['@context']).toBe(decodedPayload['@context']);
-    expect(didDocument.publicKey).toEqual(decodedPayload.publicKey);
+    expect(didDocument.publicKey[0]).toEqual({
+      ...decodedPayload.publicKey[0],
+      controller: didDocument.id,
+    });
+    expect(didDocument.publicKey[1]).toEqual({
+      ...decodedPayload.publicKey[1],
+      controller: didDocument.id,
+    });
   });
 });
 
