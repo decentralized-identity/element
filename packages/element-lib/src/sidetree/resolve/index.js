@@ -30,10 +30,16 @@ const create = async (state, operation, lastValidOperation) => {
   // Validate did document model
   isDidDocumentModelValid(originalDidDocument);
   await isSignatureValid(originalDidDocument, operation);
+  const did = `did:elem:${operation.operationHash}`;
+  // Add id to did doc and controller property to each public key
   return {
     ...operation.decodedOperationPayload,
-    id: `did:elem:${operation.operationHash}`,
-  };
+    publicKey: operation.decodedOperationPayload.publicKey.map(publicKey => ({
+      ...publicKey,
+      controller: did,
+    })),
+    id: did,
+  }
 };
 
 const applyPatch = (didDocument, patch) => {

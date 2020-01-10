@@ -75,7 +75,14 @@ describe('resolve', () => {
       expect(didDocument.id).toBe(did);
       const decodedPayload = decodeJson(createPayload.payload);
       expect(didDocument['@context']).toBe(decodedPayload['@context']);
-      expect(didDocument.publicKey).toEqual(decodedPayload.publicKey);
+      expect(didDocument.publicKey[0]).toEqual({
+        ...decodedPayload.publicKey[0],
+        controller: didDocument.id,
+      });
+      expect(didDocument.publicKey[1]).toEqual({
+        ...decodedPayload.publicKey[1],
+        controller: didDocument.id,
+      });
     });
 
     it('should populate the cache', async () => {
@@ -156,6 +163,7 @@ describe('resolve', () => {
       const didDocument = await resolve(sidetree)(didUniqueSuffix);
       expect(didDocument.publicKey).toHaveLength(3);
       expect(didDocument.publicKey[2].publicKeyHex).toBe(newKey.publicKey);
+      expect(didDocument.publicKey[2].controller).toBe(didDocument.id);
     });
 
     it('should remove a key', async () => {
