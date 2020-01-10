@@ -20,6 +20,11 @@ const isSignatureValid = async (didDocument, operation) => {
   }
 };
 
+const addControllerToPublicKey = (controller, publicKey) => ({
+  ...publicKey,
+  controller,
+});
+
 const create = async (state, operation, lastValidOperation) => {
   const previousOperationHash = lastValidOperation && lastValidOperation.operation.operationHash;
   if (previousOperationHash !== undefined || state) {
@@ -34,10 +39,8 @@ const create = async (state, operation, lastValidOperation) => {
   // Add id to did doc and controller property to each public key
   return {
     ...operation.decodedOperationPayload,
-    publicKey: operation.decodedOperationPayload.publicKey.map(publicKey => ({
-      ...publicKey,
-      controller: did,
-    })),
+    publicKey: operation.decodedOperationPayload.publicKey
+      .map(publicKey => addControllerToPublicKey(did, publicKey)),
     id: did,
   }
 };
@@ -53,10 +56,7 @@ const applyPatch = (didDocument, patch) => {
           ...currentState,
           publicKey: [
             ...currentState.publicKey,
-            {
-              ...publicKey,
-              controller: didDocument.id,
-            },
+            addControllerToPublicKey(didDocument.id, publicKey),
           ],
         };
       }
