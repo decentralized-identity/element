@@ -30,20 +30,6 @@ const addControllerToPublicKey = (controller, publicKey) => {
   };
 };
 
-// const fixPublicKeyId = (did, publicKey) => {
-//   if (typeof publicKey === 'string') {
-//     const isFragment = publicKey.startsWith('#');
-//     return isFragment ? `${did}${publicKey}` : publicKey;
-//   }
-//   const isFragmentId = publicKey.id.startsWith('#');
-//   // If public key is an object, add a controller qualified id 
-//   return {
-//     ...publicKey,
-//     id: isFragmentId ? `${did}${publicKey.id}` : publicKey.id,
-//   };
-//
-// };
-
 const transformDidDocument = (didDocument) => {
   const transformProperties = [
     'assertionMethod',
