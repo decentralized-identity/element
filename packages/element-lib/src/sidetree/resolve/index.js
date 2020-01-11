@@ -20,10 +20,53 @@ const isSignatureValid = async (didDocument, operation) => {
   }
 };
 
-const addControllerToPublicKey = (controller, publicKey) => ({
-  ...publicKey,
-  controller,
-});
+const addControllerToPublicKey = (controller, publicKey) => {
+  if (typeof publicKey === 'string' || Array.isArray(publicKey)) {
+    return publicKey;
+  }
+  return {
+    ...publicKey,
+    controller: publicKey.controller || controller,
+  };
+};
+
+// const fixPublicKeyId = (did, publicKey) => {
+//   if (typeof publicKey === 'string') {
+//     const isFragment = publicKey.startsWith('#');
+//     return isFragment ? `${did}${publicKey}` : publicKey;
+//   }
+//   const isFragmentId = publicKey.id.startsWith('#');
+//   // If public key is an object, add a controller qualified id 
+//   return {
+//     ...publicKey,
+//     id: isFragmentId ? `${did}${publicKey.id}` : publicKey.id,
+//   };
+//
+// };
+
+const transformDidDocument = (didDocument) => {
+  const transformProperties = [
+    'assertionMethod',
+    'authentication',
+    'capabilityDelegation',
+    'capabilityInvocation',
+    'publicKey',
+    'keyAgreement',
+  ];
+  const transformed = Object.entries(didDocument).reduce((acc, [property, value]) => {
+    if (transformProperties.includes(property)) {
+      return {
+        ...acc,
+        [property]: value.map(pk => addControllerToPublicKey(didDocument.id, pk)),
+      }
+    }
+    return {
+      ...acc,
+      [property]: value,
+    }
+  }, {});
+  return transformed;
+};
 
 const create = async (state, operation, lastValidOperation) => {
   const previousOperationHash = lastValidOperation && lastValidOperation.operation.operationHash;
@@ -36,13 +79,14 @@ const create = async (state, operation, lastValidOperation) => {
   isDidDocumentModelValid(originalDidDocument);
   await isSignatureValid(originalDidDocument, operation);
   const did = `did:elem:${operation.operationHash}`;
-  // Add id to did doc and controller property to each public key
-  return {
+  // Add id to did doc
+  const didDocument = {
     ...operation.decodedOperationPayload,
-    publicKey: operation.decodedOperationPayload.publicKey
-      .map(publicKey => addControllerToPublicKey(did, publicKey)),
     id: did,
-  }
+  };
+  // Add controller property to each public key
+  const transformedDidDocument = transformDidDocument(didDocument);
+  return transformedDidDocument;
 };
 
 const applyPatch = (didDocument, patch) => {
@@ -237,7 +281,7 @@ const resolve = sidetree => async (did, justInTime = false) => {
     const type = op.operation.decodedHeader.operation;
     return ['create', 'recover', 'delete'].includes(type);
   });
-  // Apply "full" operations first.
+  // Apply 'full' operations first.
   let lastValidFullOperation;
   let didDocument = await createAndRecoverAndRevokeOperations
     .reduce((promise, operation) => {
@@ -263,7 +307,7 @@ const resolve = sidetree => async (did, justInTime = false) => {
     return type === 'update' && op.transaction.transactionNumber > lastFullOperationNumber;
   });
 
-  // Apply "update/delta" operations.
+  // Apply 'update/delta' operations.
   let lastValidOperation = lastValidFullOperation;
   didDocument = await updateOperations
     .reduce((promise, operation) => {
