@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.2](https://github.com/decentralized-identity/element/compare/v0.4.1...v0.4.2) (2020-01-11)
+
+
+### Features
+
+* add controller property in did documents public keys ([7c64d8e](https://github.com/decentralized-identity/element/commit/7c64d8e))
+
+
+
+
+
 ## [0.4.1](https://github.com/decentralized-identity/element/compare/v0.4.0...v0.4.1) (2020-01-09)
 
 

@@ -7,6 +7,7 @@ describe('DID Document model', () => {
   let primaryKey;
   let recoveryKey;
   let didUniqueSuffix;
+  let did;
 
   it('should create a generic did', async () => {
     primaryKey = await element.crypto.secp256k1.createKeys();
@@ -18,7 +19,7 @@ describe('DID Document model', () => {
     const txn = await sidetree.batchScheduler.writeNow(createPayload);
     expect(txn).toBeDefined();
     didUniqueSuffix = sidetree.func.getDidUniqueSuffix(createPayload);
-    const did = `did:elem:${didUniqueSuffix}`;
+    did = `did:elem:${didUniqueSuffix}`;
     const didDocument = await sidetree.resolve(did, true);
     expect(didDocument.id).toBe(did);
     expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey.publicKey);
@@ -28,7 +29,6 @@ describe('DID Document model', () => {
   it('should add the edv payload', async () => {
     const newKey = await element.crypto.ed25519.createKeys();
     const previousOperation = await getLastOperation(sidetree, didUniqueSuffix);
-    const did = `did:elem:${didUniqueSuffix}`;
     const keyId = `${did}#edv`;
     const key = {
       id: `${did}#keyAgreement`,
@@ -96,5 +96,64 @@ describe('DID Document model', () => {
     expect(didDocument.capabilityDelegation).toEqual([keyId]);
     expect(didDocument.capabilityInvocation).toEqual([keyId]);
     expect(didDocument.keyAgreement).toEqual([key]);
+  });
+
+  it('should add controller property where necessay', async () => {
+    primaryKey = await element.crypto.secp256k1.createKeys();
+    recoveryKey = await element.crypto.secp256k1.createKeys();
+    const edvKey = await element.crypto.ed25519.createKeys();
+    const keyAgreement = element.crypto.ed25519.X25519KeyPair.fromEdKeyPair({
+      publicKeyBase58: edvKey.publicKeyBase58,
+    });
+    const didDocumentModel = {
+      '@context': 'https://w3id.org/did/v1',
+      publicKey: [
+        {
+          type: 'Secp256k1VerificationKey2018',
+          id: '#primary',
+          usage: 'signing',
+          publicKeyHex: primaryKey.publicKey,
+        },
+        {
+          type: 'Secp256k1VerificationKey2018',
+          id : '#recovery',
+          usage: 'recovery',
+          publicKeyHex: recoveryKey.publicKey,
+        },
+        {
+          type: 'Ed25519VerificationKey2018',
+          id : '#edv',
+          usage: 'signing',
+          publicKeyBase58: edvKey.publicKeyBase58,
+        },
+      ],
+      authentication: ['#edv'],
+      assertionMethod: ['#edv'],
+      capabilityDelegation: ['#edv'],
+      capabilityInvocation: ['#edv'],
+      keyAgreement: [
+        {
+          id: '#keyAgreement',
+          type: keyAgreement.type,
+          usage: 'signing',
+          publicKeyBase58: keyAgreement.publicKeyBase58,
+        },
+      ],
+    };
+    expect(didDocumentModel).toBeDefined();
+    const createPayload = await sidetree.op.getCreatePayload(didDocumentModel, primaryKey);
+    const txn = await sidetree.batchScheduler.writeNow(createPayload);
+    expect(txn).toBeDefined();
+    didUniqueSuffix = sidetree.func.getDidUniqueSuffix(createPayload);
+    did = `did:elem:${didUniqueSuffix}`;
+    const didDocument = await sidetree.resolve(did, true);
+    expect(didDocument.publicKey[0].controller).toBe(did);
+    expect(didDocument.publicKey[1].controller).toBe(did);
+    expect(didDocument.publicKey[2].controller).toBe(did);
+    expect(didDocument.keyAgreement[0].controller).toBe(did);
+    expect(didDocument.authentication[0]).toBe('#edv');
+    expect(didDocument.assertionMethod[0]).toBe('#edv');
+    expect(didDocument.capabilityDelegation[0]).toBe('#edv');
+    expect(didDocument.capabilityInvocation[0]).toBe('#edv');
   });
 });
