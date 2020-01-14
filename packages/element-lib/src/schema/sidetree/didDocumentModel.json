@@ -19,7 +19,7 @@
       "type": "array",
       "required": false,
       "items": {
-        "type": "string"
+        "anyOf": [{ "type": "string" }, { "$ref": "sidetree.key" }]
       }
     },
     "assertionMethod": {

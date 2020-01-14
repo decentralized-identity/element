@@ -45,6 +45,17 @@
       "example": [
         "-----BEGIN PUBLIC KEY-----\nMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA2FgP6ZzWXIPc3Ewl0Lfg\nib1XEHnlFbjXJ+id/PpfoKPIwBCwCGXi6Ux04NVFeUlagk94vSOkxhoZ+cfyvcBT\njnQeFxJyD4z60mmiAzYq6DUMTjW6x8823KMJd51PK3512N9ZAwIap+4JNYFXJt3V\n/ju2IfgGv2CusJmCrTsAe1pYM5WfvYG7W8GAeTUB6XGRjKOUIKxmGqyHekRhM4cd\nWdF0Smm68Zu6DULN3IpV/f7O9DUE55O+PSwZo8LIRyQE3dMufcY6/Pzv6uBdGi5Z\nHH3uchxoxwQMX2nmxEb/bSLtnH8r+j0ZkZHTfy7OE/k+rsWv223N3eTOrXzP1Gh5\n7seFaNLv+WclUggnX9OT1NZ7k9X2CgjgPg6swB/jeTxTIfO8gNM04RXwZmd8pxqL\n/pIILXKmAlusEv509bUsa0R6mFlJv/YRG8uCDv1dFLmnIYCajwjuUAUVwGcYvwuA\nVW+vn6Dl6vAT3EePqZseTBcaOE1t/VrmnGfJWe2GY2Jxdtfko7Wk3KhOF0SVyO+F\nP0cxt/24dcfqX88oBR9LzmrH2dm1JE4S1K8/r8qpBIBTToRAOlXuMvF010ckLSqb\nJ5QgnYYIHNlqUg6x0IkIsvvLYyBoWJeKXLinw0EwtqcL184sPpX0Q/NsudRoD8Hx\nQiuFKmtgYSV1d3mRERq4XCkCAwEAAQ==\n-----END PUBLIC KEY-----"
       ]
+    },
+    "publicKeyJwk": {
+      "type": "object",
+      "required": false,
+      "example": [{
+        "crv": "secp256k1",
+        "kid": "JUvpllMEYUZ2joO59UNui_XYDqxVqiFLLAJ8klWuPBw",
+        "kty": "EC",
+        "x": "dWCvM4fTdeM0KmloF57zxtBPXTOythHPMm1HCLrdd3A",
+        "y": "36uMVGM7hnw-N6GnjFcihWE3SkrhMLzzLCdPMXPEXlA"
+      }]
     }
   },
   "additionalProperties": false
