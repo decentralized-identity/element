@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.3](https://github.com/decentralized-identity/element/compare/v0.4.2...v0.4.3) (2020-01-14)
+
+
+### Bug Fixes
+
+* add publicKeyJwk to JSON schemas ([9b81717](https://github.com/decentralized-identity/element/commit/9b81717))
+
+
+
+
+
 ## [0.4.2](https://github.com/decentralized-identity/element/compare/v0.4.1...v0.4.2) (2020-01-11)
 
 
