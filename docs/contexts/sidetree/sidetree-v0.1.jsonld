@@ -10,6 +10,12 @@
       "type": "sec:type",
       "serviceEndpoint": "sec:serviceEndpoint",
       "publicKeyHex": "sec:publicKeyHex",
+      "publicKeyJwk": "sec:publicKeyJwk",
+      "crv": "sec:crv",
+      "kid": "sec:kid",
+      "kty": "sec:kty",
+      "x": "sec:x",
+      "y": "sec:y"
       "usage": "sidetree:usage"
     }
   ]
