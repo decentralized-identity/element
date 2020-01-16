@@ -15,7 +15,7 @@
       "kid": "sec:kid",
       "kty": "sec:kty",
       "x": "sec:x",
-      "y": "sec:y"
+      "y": "sec:y",
       "usage": "sidetree:usage"
     }
   ]
