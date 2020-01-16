@@ -1,0 +1,16 @@
+{
+  "@context": [
+    "https://w3id.org/security/v2",
+    {
+      "@version": 1.1,
+
+      "service": "sec:service",
+      "sidetree": "https://docs.element-did.com/contexts/sidetree/sidetree-v0.1#",
+
+      "type": "sec:type",
+      "serviceEndpoint": "sec:serviceEndpoint",
+      "publicKeyHex": "sec:publicKeyHex",
+      "usage": "sidetree:usage"
+    }
+  ]
+}
