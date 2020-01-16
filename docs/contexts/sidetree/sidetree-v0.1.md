@@ -1,6 +1,6 @@
 # Sidetree Context
 
-- [Associated JSON-LD Context](./sidetree-v0.0.jsonld)
+- [Associated JSON-LD Context](./sidetree-v0.1.jsonld)
 
 ### Terminology
 
