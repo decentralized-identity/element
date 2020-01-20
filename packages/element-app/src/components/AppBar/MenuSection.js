@@ -11,7 +11,13 @@ import { history } from '../../redux/store';
 
 const MenuSection = ({ items, subheader }) => (
   <List
-    subheader={subheader ? <ListSubheader component="div">{subheader}</ListSubheader> : undefined}
+    subheader={
+      subheader ? (
+        <ListSubheader component="div">{subheader}</ListSubheader>
+      ) : (
+        undefined
+      )
+    }
   >
     {items.map(({ label, icon, link }) => (
       <ListItem

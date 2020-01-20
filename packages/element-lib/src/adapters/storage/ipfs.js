@@ -2,7 +2,7 @@ const ipfsClient = require('ipfs-http-client');
 
 // https://italonascimento.github.io/applying-a-timeout-to-your-promises/
 const resolveValueOrNullInSeconds = (promise, seconds) => {
-  const timeout = new Promise((resolve) => {
+  const timeout = new Promise(resolve => {
     const id = setTimeout(() => {
       clearTimeout(id);
       resolve(null);
@@ -22,7 +22,11 @@ class IpfsStorage {
     }
 
     if (parts[1] === 'dns4') {
-      this.ipfs = ipfsClient({ host: parts[2], port: parts[4], protocol: parts[5] });
+      this.ipfs = ipfsClient({
+        host: parts[2],
+        port: parts[4],
+        protocol: parts[5],
+      });
     }
   }
 

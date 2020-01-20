@@ -18,7 +18,7 @@ let m0;
 let m1;
 let m2;
 
-const addRSAKey = async (actor) => {
+const addRSAKey = async actor => {
   const key = await protocol.generateKey();
   // eslint-disable-next-line
   actor.key = key;
@@ -49,7 +49,9 @@ const addRSAKey = async (actor) => {
     alg: 'ES256K',
   };
   const updatePayload = await sidetree.op.makeSignedOperation(
-    header, payload, actor.primaryKey.privateKey,
+    header,
+    payload,
+    actor.primaryKey.privateKey
   );
   await sidetree.operationQueue.enqueue(alice.didUniqueSuffix, updatePayload);
   await sidetree.batchWrite();
@@ -60,7 +62,10 @@ beforeAll(async () => {
   await generateActors(2);
   alice = getActorByIndex(0);
   bob = getActorByIndex(1);
-  await sidetree.operationQueue.enqueue(alice.didUniqueSuffix, alice.createPayload);
+  await sidetree.operationQueue.enqueue(
+    alice.didUniqueSuffix,
+    alice.createPayload
+  );
   await sidetree.operationQueue.enqueue(bob.didUniqueSuffix, bob.createPayload);
   await sidetree.batchWrite();
 });

@@ -32,7 +32,10 @@ export class DIDProfilePage extends Component {
       removeKeyFromDIDDocument,
     } = this.props;
     const {
-      myDidDocument, resolving, predictedDID, sidetreeOperations,
+      myDidDocument,
+      resolving,
+      predictedDID,
+      sidetreeOperations,
     } = nodeStore;
 
     const view = () => {
@@ -80,7 +83,11 @@ export class DIDProfilePage extends Component {
           <Typography variant="h5">{predictedDID}</Typography>
 
           <br />
-          <CreateDefaultDID createDID={createDID} wallet={wallet} resolving={resolving} />
+          <CreateDefaultDID
+            createDID={createDID}
+            wallet={wallet}
+            resolving={resolving}
+          />
         </React.Fragment>
       );
     };

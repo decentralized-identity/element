@@ -12,17 +12,18 @@ const { DAGNode, util } = require('ipld-dag-pb');
 //   - for loop with await is very bad apparently
 // Adapted from: https://stackoverflow.com/questions/20100245/how-can-i-execute-array-of-promises-in-sequential-order
 const executeSequentially = (f, array) => {
-  return array
-    .reduce((promise, value) => {
-      return promise.then(() => f(value));
-    }, Promise.resolve());
+  return array.reduce((promise, value) => {
+    return promise.then(() => f(value));
+  }, Promise.resolve());
 };
 
-const encodeJson = payload => base64url.encode(Buffer.from(JSON.stringify(payload)));
+const encodeJson = payload =>
+  base64url.encode(Buffer.from(JSON.stringify(payload)));
 
-const decodeJson = encodedPayload => JSON.parse(base64url.decode(encodedPayload));
+const decodeJson = encodedPayload =>
+  JSON.parse(base64url.decode(encodedPayload));
 
-const payloadToHash = (payload) => {
+const payloadToHash = payload => {
   const encodedPayload = encodeJson(payload);
   const encodedOperationPayloadBuffer = Buffer.from(encodedPayload);
   const hash = crypto
@@ -35,7 +36,7 @@ const payloadToHash = (payload) => {
   return encodedMultihash;
 };
 
-const getDidUniqueSuffix = (operation) => {
+const getDidUniqueSuffix = operation => {
   const header = decodeJson(operation.protected);
   switch (header.operation) {
     case 'create':
@@ -49,18 +50,19 @@ const getDidUniqueSuffix = (operation) => {
   }
 };
 
-const batchFileToOperations = batchFile => batchFile.operations.map((op) => {
-  const decodedOperation = decodeJson(op);
-  const operationHash = payloadToHash(decodedOperation.payload);
-  const decodedOperationPayload = decodeJson(decodedOperation.payload);
-  const decodedHeader = decodeJson(decodedOperation.protected);
-  return {
-    operationHash,
-    decodedOperation,
-    decodedOperationPayload,
-    decodedHeader,
-  };
-});
+const batchFileToOperations = batchFile =>
+  batchFile.operations.map(op => {
+    const decodedOperation = decodeJson(op);
+    const operationHash = payloadToHash(decodedOperation.payload);
+    const decodedOperationPayload = decodeJson(decodedOperation.payload);
+    const decodedHeader = decodeJson(decodedOperation.protected);
+    return {
+      operationHash,
+      decodedOperation,
+      decodedOperationPayload,
+      decodedHeader,
+    };
+  });
 
 const readThenWriteToCache = async (sidetree, hash) => {
   const cachedRecord = await sidetree.db.read(hash);
@@ -91,7 +93,7 @@ const verifyOperationSignature = (
   encodedHeader,
   encodedPayload,
   signature,
-  publicKey,
+  publicKey
 ) => {
   const toBeVerified = `${encodedHeader}.${encodedPayload}`;
   const hash = crypto
@@ -102,25 +104,26 @@ const verifyOperationSignature = (
   return secp256k1.verify(hash, base64url.toBuffer(signature), publicKeyBuffer);
 };
 
-const base58EncodedMultihashToBytes32 = base58EncodedMultihash => (
-  `0x${multihashes.toHexString(multihashes.fromB58String(base58EncodedMultihash)).substring(4)}`
-);
+const base58EncodedMultihashToBytes32 = base58EncodedMultihash =>
+  `0x${multihashes
+    .toHexString(multihashes.fromB58String(base58EncodedMultihash))
+    .substring(4)}`;
 
-const bytes32EnodedMultihashToBase58EncodedMultihash = bytes32EncodedMultihash => multihashes
-  .toB58String(
+const bytes32EnodedMultihashToBase58EncodedMultihash = bytes32EncodedMultihash =>
+  multihashes.toB58String(
     multihashes.fromHexString(
-      `1220${bytes32EncodedMultihash.replace('0x', '')}`,
-    ),
+      `1220${bytes32EncodedMultihash.replace('0x', '')}`
+    )
   );
 
-const objectToUnixFsBuffer = (object) => {
+const objectToUnixFsBuffer = object => {
   const objectBuffer = Buffer.from(JSON.stringify(object));
   const unixFs = new Unixfs('file', objectBuffer);
   const unixFsFileBuffer = unixFs.marshal();
   return unixFsFileBuffer;
 };
 
-const objectToMultihash = async (object) => {
+const objectToMultihash = async object => {
   const unixFsFileBuffer = objectToUnixFsBuffer(object);
   return new Promise((resolve, reject) => {
     DAGNode.create(unixFsFileBuffer, (createErr, node1) => {
@@ -137,7 +140,7 @@ const objectToMultihash = async (object) => {
   });
 };
 
-const toFullyQualifiedDidDocument = (didDocument) => {
+const toFullyQualifiedDidDocument = didDocument => {
   const did = didDocument.id;
   const stringified = JSON.stringify(didDocument);
   const expanded = stringified.replace(/"#/g, `"${did}#`);

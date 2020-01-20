@@ -12,7 +12,8 @@ const didDocument = {
     {
       id: '#key1',
       type: 'Secp256k1VerificationKey2018',
-      publicKeyHex: '0391990754cb15bb588c35ef8bee1092ceeac150f6fae8ae54b166b6f247bd4e75',
+      publicKeyHex:
+        '0391990754cb15bb588c35ef8bee1092ceeac150f6fae8ae54b166b6f247bd4e75',
     },
   ],
   service: [
@@ -33,8 +34,10 @@ const wallet = {
       '0lTVQcq9TmBiXao5luJ8SF_d7-lGk3-8NF3ftYz99EY': {
         type: 'assymetric',
         encoding: 'hex',
-        publicKey: '02fee307024caefca84373cbb664c327532092c8ef178cedf472a812525fad2835',
-        privateKey: 'cf30d38a1329b5c3dbc60a3d8154315f80296e6cdb393153c8fcb08109803050',
+        publicKey:
+          '02fee307024caefca84373cbb664c327532092c8ef178cedf472a812525fad2835',
+        privateKey:
+          'cf30d38a1329b5c3dbc60a3d8154315f80296e6cdb393153c8fcb08109803050',
         tags: ['Secp256k1VerificationKey2018', 'WebBrowser'],
         notes: '',
         kid: '0lTVQcq9TmBiXao5luJ8SF_d7-lGk3-8NF3ftYz99EY',
@@ -42,8 +45,10 @@ const wallet = {
       tiiPnPpFzZy74ZfxM25BfiH6Jrw6Z4_bxHRHt047Eio: {
         type: 'assymetric',
         encoding: 'hex',
-        publicKey: '038311c9ccabb41774c8459d624efe8cda0ed4cd538b0018ce308b5ecb7ab77d60',
-        privateKey: 'd3fd1191fa392e7c471f88e5f287e47d42f44b37a99573f5fada09eb211a0b02',
+        publicKey:
+          '038311c9ccabb41774c8459d624efe8cda0ed4cd538b0018ce308b5ecb7ab77d60',
+        privateKey:
+          'd3fd1191fa392e7c471f88e5f287e47d42f44b37a99573f5fada09eb211a0b02',
         tags: ['Secp256k1VerificationKey2018', 'WebBrowser'],
         notes: '',
         kid: 'tiiPnPpFzZy74ZfxM25BfiH6Jrw6Z4_bxHRHt047Eio',
@@ -51,8 +56,10 @@ const wallet = {
       lf0CUTWoyrqrypiwO12097QkVgA7OZz_yJqyqiSI3SU: {
         type: 'assymetric',
         encoding: 'hex',
-        publicKey: '0391990754cb15bb588c35ef8bee1092ceeac150f6fae8ae54b166b6f247bd4e75',
-        privateKey: '17123ab634b45c425bc869211214b5b100ecf30dead4c09e913e1bb82d0c8c26',
+        publicKey:
+          '0391990754cb15bb588c35ef8bee1092ceeac150f6fae8ae54b166b6f247bd4e75',
+        privateKey:
+          '17123ab634b45c425bc869211214b5b100ecf30dead4c09e913e1bb82d0c8c26',
         tags: ['Secp256k1VerificationKey2018', 'WebBrowser'],
         notes: '123',
         kid: 'lf0CUTWoyrqrypiwO12097QkVgA7OZz_yJqyqiSI3SU',
@@ -66,7 +73,7 @@ storiesOf('DID Document / View', module)
   .add('Read Only', () => (
     <DIDDocument
       didDocument={didDocument}
-      onCopyToClipboard={(item) => {
+      onCopyToClipboard={item => {
         action('copied to clipboard: ')(item);
       }}
     />
@@ -79,15 +86,15 @@ storiesOf('DID Document / View', module)
         <DIDDocumentEditorBar
           didDocument={didDocument}
           keys={wallet.data.keys}
-          handleAddKey={(key) => {
+          handleAddKey={key => {
             action('handle add key: ')(key);
           }}
-          handleRemoveKey={(key) => {
+          handleRemoveKey={key => {
             action('handle remove key: ')(key);
           }}
         />
       }
-      onCopyToClipboard={(item) => {
+      onCopyToClipboard={item => {
         action('copied to clipboard: ')(item);
       }}
     />

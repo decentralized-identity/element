@@ -32,7 +32,9 @@ class Notification extends Component {
 
   render() {
     const { message, variant } = this.props;
-    const handleClose = this.props.handleClose ? this.props.handleClose : this.handleClose;
+    const handleClose = this.props.handleClose
+      ? this.props.handleClose
+      : this.handleClose;
     return (
       <Snackbar
         anchorOrigin={{
@@ -42,7 +44,11 @@ class Notification extends Component {
         open={this.state.open}
         onClose={handleClose}
       >
-        <NotificationContent onClose={handleClose} variant={variant} message={message} />
+        <NotificationContent
+          onClose={handleClose}
+          variant={variant}
+          message={message}
+        />
       </Snackbar>
     );
   }

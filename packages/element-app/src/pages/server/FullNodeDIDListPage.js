@@ -20,7 +20,7 @@ FullNodeDIDListPage.propTypes = {
 
 const ConnectedPage = compose(
   withRouter,
-  fullNode.container,
+  fullNode.container
 )(FullNodeDIDListPage);
 
 export { ConnectedPage as FullNodeDIDListPage };

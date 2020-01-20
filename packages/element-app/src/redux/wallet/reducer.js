@@ -47,5 +47,5 @@ export default handleActions(
       ...payload,
     }),
   },
-  initialState,
+  initialState
 );

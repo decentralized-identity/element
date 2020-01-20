@@ -8,7 +8,7 @@ const { getBasePath, getBaseConfig, getAPIBaseUrl } = require('../../config');
 
 const { schemas } = element.schema;
 
-module.exports = (app) => {
+module.exports = app => {
   // Initialize swagger-jsdoc -> returns validated swagger spec in json format
   const swaggerDoc = swaggerJSDoc({
     definition: {
@@ -20,11 +20,14 @@ module.exports = (app) => {
       basePath: getBasePath(),
     },
     // Path to the API docs
-    apis: ['./src/express/routes/**/index.js', './src/express/routes/.well-known/index.js'],
+    apis: [
+      './src/express/routes/**/index.js',
+      './src/express/routes/.well-known/index.js',
+    ],
   });
 
   // Add all JSON schemas as definitions in the Swagger JS doc
-  Object.keys(schemas).forEach((schemaName) => {
+  Object.keys(schemas).forEach(schemaName => {
     // eslint-disable-next-line
     const jsonSchema = { ...schemas[schemaName] };
     const { $id } = jsonSchema;
@@ -61,6 +64,6 @@ module.exports = (app) => {
     swaggerUi.setup(null, {
       swaggerUrl: `${getAPIBaseUrl()}/swagger.json`,
       explorer: true,
-    }),
+    })
   );
 };

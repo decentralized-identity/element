@@ -11,9 +11,11 @@ class Attacker {
 
   async start() {
     const operationNumbers = [...Array(this.numberOfOperations).keys()];
-    const promises = operationNumbers.map(async (index) => {
+    const promises = operationNumbers.map(async index => {
       const createPayload = await getCreatePayloadForKeyIndex(this.mks, index);
-      const didUniqueSuffix = this.sidetree.func.getDidUniqueSuffix(createPayload);
+      const didUniqueSuffix = this.sidetree.func.getDidUniqueSuffix(
+        createPayload
+      );
       return { didUniqueSuffix, operationBuffer: createPayload };
     });
     this.queue = await Promise.all(promises);
@@ -31,7 +33,8 @@ const storage = element.storage.ipfs.configure({
 });
 
 const blockchain = element.blockchain.ethereum.configure({
-  mnemonic: 'hazard pride garment scout search divide solution argue wait avoid title cave',
+  mnemonic:
+    'hazard pride garment scout search divide solution argue wait avoid title cave',
   hdPath: "m/44'/60'/0'/0/0",
   providerUrl: 'http://localhost:8545',
 });
@@ -48,9 +51,8 @@ const sidetree = new element.Sidetree({
   parameters,
 });
 
-
 // eslint-disable-next-line no-unused-vars
-const attackFullSyncNode = async (n) => {
+const attackFullSyncNode = async n => {
   // Attacker created transactions
   let start = Date.now();
   const attacker = new Attacker(sidetree, n);
@@ -61,7 +63,9 @@ const attackFullSyncNode = async (n) => {
   start = Date.now();
   await sidetree.batchWrite();
   end = Date.now();
-  console.log(`sidetree wrote a batch of ${n} operations in ${(end - start) / 1000}s`);
+  console.log(
+    `sidetree wrote a batch of ${n} operations in ${(end - start) / 1000}s`
+  );
   // Observer should sync
   start = Date.now();
   await sidetree.sync();
@@ -75,7 +79,7 @@ const attackFullSyncNode = async (n) => {
   console.log(`user resolved a did in ${(end - start) / 1000}s`);
 };
 
-const attackJustInTimeSyncNode = async (n) => {
+const attackJustInTimeSyncNode = async n => {
   // Attacker created transactions
   let start = Date.now();
   const attacker = new Attacker(sidetree, n);
@@ -86,7 +90,9 @@ const attackJustInTimeSyncNode = async (n) => {
   start = Date.now();
   await sidetree.batchWrite();
   end = Date.now();
-  console.log(`sidetree wrote a batch of ${n} operations in ${(end - start) / 1000}s`);
+  console.log(
+    `sidetree wrote a batch of ${n} operations in ${(end - start) / 1000}s`
+  );
   // Resolver should sync did
   start = Date.now();
   const { didUniqueSuffix } = attacker.queue[0];
@@ -101,13 +107,13 @@ const attackJustInTimeSyncNode = async (n) => {
 };
 
 (async () => {
-//  await attackFullSyncNode(10);
-//  await attackFullSyncNode(100);
-//  await attackFullSyncNode(1000);
-//  await attackFullSyncNode(2000);
-//  await attackFullSyncNode(5000);
-//  await attackFullSyncNode(10000);
-//
+  //  await attackFullSyncNode(10);
+  //  await attackFullSyncNode(100);
+  //  await attackFullSyncNode(1000);
+  //  await attackFullSyncNode(2000);
+  //  await attackFullSyncNode(5000);
+  //  await attackFullSyncNode(10000);
+  //
   await attackJustInTimeSyncNode(10);
   await attackJustInTimeSyncNode(100);
   await attackJustInTimeSyncNode(1000);

@@ -21,9 +21,13 @@ describe('sidetree', () => {
     const primaryKey = actor.mks.getKeyForPurpose('primary', 0);
     const recoveryKey = actor.mks.getKeyForPurpose('recovery', 0);
     const didDocumentModel = element.op.getDidDocumentModel(
-      primaryKey.publicKey, recoveryKey.publicKey,
+      primaryKey.publicKey,
+      recoveryKey.publicKey
     );
-    const createPayload = await element.op.getCreatePayload(didDocumentModel, primaryKey);
+    const createPayload = await element.op.getCreatePayload(
+      didDocumentModel,
+      primaryKey
+    );
 
     res = await server
       .post('/api/v1/sidetree/requests')
@@ -36,7 +40,9 @@ describe('sidetree', () => {
   });
 
   it('docs', async () => {
-    res = await server.get('/api/v1/sidetree/docs').set('Accept', 'application/json');
+    res = await server
+      .get('/api/v1/sidetree/docs')
+      .set('Accept', 'application/json');
     expect(res.body.length).toBeDefined();
   });
 });

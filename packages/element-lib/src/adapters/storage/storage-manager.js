@@ -21,15 +21,15 @@ class StorageManager {
   }
 
   async getNotPersisted() {
-    return (await this.db.readCollection('element:sidetree:cas-cachable')).filter(
-      doc => doc.persisted === false,
-    );
+    return (await this.db.readCollection(
+      'element:sidetree:cas-cachable'
+    )).filter(doc => doc.persisted === false);
   }
 
   async retryAllNotPersisted() {
     const allUnPersisted = await this.getNotPersisted();
     await Promise.all(
-      allUnPersisted.map(async (item) => {
+      allUnPersisted.map(async item => {
         try {
           const cid = await this.storage.write(item.object);
           if (cid !== item.multihash) {
@@ -44,18 +44,21 @@ class StorageManager {
         } catch (e) {
           // console.log('still failing');
         }
-      }),
+      })
     );
   }
 
   async write(object) {
     const key = await objectToMultihash(object);
-    const cacheWriteResult = await this.db.write(`element:sidetree:cas-cachable:${key}`, {
-      type: 'element:sidetree:cas-cachable',
-      multihash: key,
-      object,
-      persisted: false,
-    });
+    const cacheWriteResult = await this.db.write(
+      `element:sidetree:cas-cachable:${key}`,
+      {
+        type: 'element:sidetree:cas-cachable',
+        multihash: key,
+        object,
+        persisted: false,
+      }
+    );
 
     // console.log('cacheWriteResult: ', cacheWriteResult);
 

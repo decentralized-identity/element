@@ -12,7 +12,7 @@ export class Ledger extends Component {
     if (window.web3) {
       // eslint-disable-next-line
       setTimeout(() => {
-        window.web3.eth.net.getNetworkType().then((networkVersion) => {
+        window.web3.eth.net.getNetworkType().then(networkVersion => {
           this.setState({
             networkVersion,
           });
@@ -38,7 +38,10 @@ export class Ledger extends Component {
 
   render() {
     return (
-      <Paper className="Ledger" style={{ padding: '8px', wordBreak: 'break-all' }}>
+      <Paper
+        className="Ledger"
+        style={{ padding: '8px', wordBreak: 'break-all' }}
+      >
         <Typography variant={'h5'}>Ethereum</Typography>
         <Typography>Network: {this.state.networkVersion}</Typography>
         <Typography>Contract: {config.ELEMENT_CONTRACT_ADDRESS}</Typography>

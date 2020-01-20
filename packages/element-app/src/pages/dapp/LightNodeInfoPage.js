@@ -14,7 +14,7 @@ class LightNodeInfoPage extends Component {
 const ConnectedPage = compose(
   withMetaMask,
   withRouter,
-  lightNode.container,
+  lightNode.container
 )(LightNodeInfoPage);
 
 export { ConnectedPage as LightNodeInfoPage };

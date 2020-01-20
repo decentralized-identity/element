@@ -27,7 +27,7 @@ class ElementFirestoreAdapter {
       .where('type', '==', type)
       .get();
     const res = [];
-    querySnapshot.forEach((doc) => {
+    querySnapshot.forEach(doc => {
       res.push(doc.data());
     });
     return res;
@@ -36,10 +36,12 @@ class ElementFirestoreAdapter {
   async deleteDB() {
     const querySnapshot = await this.db.collection('element-adapter').get();
     return Promise.all(
-      querySnapshot.docs.map(doc => this.db
-        .collection('element-adapter')
-        .doc(doc.id)
-        .delete()),
+      querySnapshot.docs.map(doc =>
+        this.db
+          .collection('element-adapter')
+          .doc(doc.id)
+          .delete()
+      )
     );
   }
 }

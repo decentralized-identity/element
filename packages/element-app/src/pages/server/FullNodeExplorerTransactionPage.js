@@ -10,7 +10,12 @@ import { ExplorerTransactionPage } from '../../components/Pages/ExplorerTransact
 
 class FullNodeExplorerTransactionPage extends Component {
   render() {
-    return <ExplorerTransactionPage {...this.props} nodeStore={this.props.fullNode} />;
+    return (
+      <ExplorerTransactionPage
+        {...this.props}
+        nodeStore={this.props.fullNode}
+      />
+    );
   }
 }
 
@@ -25,7 +30,7 @@ FullNodeExplorerTransactionPage.propTypes = {
 
 const ConnectedPage = compose(
   withRouter,
-  fullNode.container,
+  fullNode.container
 )(FullNodeExplorerTransactionPage);
 
 export { ConnectedPage as FullNodeExplorerTransactionPage };

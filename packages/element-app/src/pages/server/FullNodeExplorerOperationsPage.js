@@ -10,7 +10,9 @@ import { ExplorerOperationsPage } from '../../components/Pages/ExplorerOperation
 
 class FullNodeExplorerOperationsPage extends Component {
   render() {
-    return <ExplorerOperationsPage {...this.props} nodeStore={this.props.fullNode} />;
+    return (
+      <ExplorerOperationsPage {...this.props} nodeStore={this.props.fullNode} />
+    );
   }
 }
 
@@ -25,7 +27,7 @@ FullNodeExplorerOperationsPage.propTypes = {
 
 const ConnectedPage = compose(
   withRouter,
-  ligthNode.container,
+  ligthNode.container
 )(FullNodeExplorerOperationsPage);
 
 export { ConnectedPage as FullNodeExplorerOperationsPage };

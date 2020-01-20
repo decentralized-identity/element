@@ -9,7 +9,8 @@ const didDocument = {
     {
       id: '#key1',
       type: 'Secp256k1VerificationKey2018',
-      publicKeyHex: '02c7689c4e8d6deda60f2e87ad235ee1e7e25f8685910b44f3c66188313e6f4532',
+      publicKeyHex:
+        '02c7689c4e8d6deda60f2e87ad235ee1e7e25f8685910b44f3c66188313e6f4532',
     },
   ],
   service: [
@@ -23,7 +24,10 @@ const didDocument = {
 };
 
 storiesOf('DID Document ', module).add('Header', () => (
-  <DIDDocumentHeader did={didDocument.id} onCopyToClipboard={(item) => {
-    action('copied to clipboard: ')(item);
-  }} />
+  <DIDDocumentHeader
+    did={didDocument.id}
+    onCopyToClipboard={item => {
+      action('copied to clipboard: ')(item);
+    }}
+  />
 ));

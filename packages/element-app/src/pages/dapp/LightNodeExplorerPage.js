@@ -27,7 +27,7 @@ LightNodeExplorerPage.propTypes = {
 const ConnectedPage = compose(
   withMetaMask,
   withRouter,
-  ligthNode.container,
+  ligthNode.container
 )(LightNodeExplorerPage);
 
 export { ConnectedPage as LightNodeExplorerPage };

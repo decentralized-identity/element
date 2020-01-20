@@ -71,7 +71,7 @@
     "x25519-key-pair": "digitalbazaar/x25519-key-pair#initial"
   },
   "devDependencies": {
-    "@transmute/eslint-config": "0.0.7",
+    "@transmute/eslint-config": "0.1.0",
     "dotenv": "^7.0.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^14.0.0",

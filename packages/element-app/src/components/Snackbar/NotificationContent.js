@@ -48,9 +48,7 @@ const styles = theme => ({
 
 class NotificationContent extends Component {
   render() {
-    const {
-      classes, message, onClose, variant, ...other
-    } = this.props;
+    const { classes, message, onClose, variant, ...other } = this.props;
     const Icon = variantIcon[variant];
     return (
       <SnackbarContent

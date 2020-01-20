@@ -25,7 +25,7 @@ class WalletLockDialog extends React.Component {
     });
   }
 
-  handleChange = name => (event) => {
+  handleChange = name => event => {
     this.setState({ [name]: event.target.value });
   };
 
@@ -42,10 +42,13 @@ class WalletLockDialog extends React.Component {
           onClose={this.handleClose}
           aria-labelledby="form-dialog-title"
         >
-          <DialogTitle id="form-dialog-title">Enter Wallet Password</DialogTitle>
+          <DialogTitle id="form-dialog-title">
+            Enter Wallet Password
+          </DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Enter the password you used to create the wallet with the github-did cli.
+              Enter the password you used to create the wallet with the
+              github-did cli.
             </DialogContentText>
             <TextField
               autoFocus
@@ -62,7 +65,11 @@ class WalletLockDialog extends React.Component {
             <Button onClick={this.handleClose} color="primary">
               Cancel
             </Button>
-            <Button onClick={this.handleUnlock} color="primary" variant="contained">
+            <Button
+              onClick={this.handleUnlock}
+              color="primary"
+              variant="contained"
+            >
               {this.props.walletState === 'locked' ? 'Unlock' : 'Lock'} Wallet
             </Button>
           </DialogActions>

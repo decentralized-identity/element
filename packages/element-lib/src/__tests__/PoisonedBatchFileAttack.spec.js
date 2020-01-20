@@ -26,11 +26,15 @@ describe('Poisoned Batch File Attack', () => {
     anchorFile.batchFileHash = wrongBatchFileHash;
     const brokenAnchorFileHash = await sidetree.storage.write(anchorFile);
     // Insert poison
-    const poisonedTransaction = await sidetree.blockchain.write(brokenAnchorFileHash);
+    const poisonedTransaction = await sidetree.blockchain.write(
+      brokenAnchorFileHash
+    );
     const didDoc = await sidetree.resolve(actor.didUniqueSuffix, true);
     expect(didDoc.id).toBe(`did:elem:${actor.didUniqueSuffix}`);
 
-    const cachedTransaction = await sidetree.db.read(`transaction:${poisonedTransaction.transactionNumber}`);
+    const cachedTransaction = await sidetree.db.read(
+      `transaction:${poisonedTransaction.transactionNumber}`
+    );
     expect(cachedTransaction.error).toBeDefined();
     expect(cachedTransaction.error).toContain('Error: Invalid JSON');
   });

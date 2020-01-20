@@ -126,16 +126,19 @@ router.get('/transactions', async (req, res, next) => {
  *         '200':
  *           description: sidetree transaction summary.
  */
-router.get('/transaction/:transactionTimeHash/summary', async (req, res, next) => {
-  try {
-    const { transactionTimeHash } = req.params;
-    const sidetree = req.app.get('sidetree');
-    const result = await sidetree.getTransactionSummary(transactionTimeHash);
-    res.status(200).json(result);
-  } catch (e) {
-    next(e);
+router.get(
+  '/transaction/:transactionTimeHash/summary',
+  async (req, res, next) => {
+    try {
+      const { transactionTimeHash } = req.params;
+      const sidetree = req.app.get('sidetree');
+      const result = await sidetree.getTransactionSummary(transactionTimeHash);
+      res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
   }
-});
+);
 
 /**
  * @swagger

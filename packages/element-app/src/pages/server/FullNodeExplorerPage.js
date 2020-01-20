@@ -20,7 +20,7 @@ FullNodeExplorerPage.propTypes = {
 
 const ConnectedPage = compose(
   withRouter,
-  fullNode.container,
+  fullNode.container
 )(FullNodeExplorerPage);
 
 export { ConnectedPage as FullNodeExplorerPage };

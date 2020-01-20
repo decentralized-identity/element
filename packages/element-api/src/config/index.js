@@ -31,7 +31,9 @@ const getBasePath = () => {
     case 'production':
       return '/api/v1';
     default:
-      return `/${process.env.GCLOUD_PROJECT}/us-central1/${process.env.FUNCTION_NAME}/api/v1`;
+      return `/${process.env.GCLOUD_PROJECT}/us-central1/${
+        process.env.FUNCTION_NAME
+      }/api/v1`;
   }
 };
 

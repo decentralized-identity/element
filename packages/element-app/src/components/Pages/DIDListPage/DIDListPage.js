@@ -23,15 +23,21 @@ export class DIDListPage extends Component {
           <div>
             <Typography variant="h6">DID List</Typography>
             <br />
-            <Typography variant="body1">{'Only displaying DIDs that have been resolved at least once on this node'}</Typography>
+            <Typography variant="body1">
+              {
+                'Only displaying DIDs that have been resolved at least once on this node'
+              }
+            </Typography>
             <br />
 
             {documentRecords.map(dr => (
               <div key={dr.record.doc.id} style={{ marginBottom: '8px' }}>
                 <DIDListItem
                   record={dr.record}
-                  onClick={(item) => {
-                    this.props.history.push(`${prefix}/operations/${item.doc.id.split(':').pop()}`);
+                  onClick={item => {
+                    this.props.history.push(
+                      `${prefix}/operations/${item.doc.id.split(':').pop()}`
+                    );
                   }}
                 />
               </div>

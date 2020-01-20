@@ -31,7 +31,7 @@ const styles = theme => ({
   },
 });
 
-const getKeyValue = (publicKey) => {
+const getKeyValue = publicKey => {
   if (publicKey.publicKeyHex) {
     return publicKey.publicKeyHex;
   }
@@ -43,13 +43,14 @@ const getKeyValue = (publicKey) => {
 
 class DIDDocument extends Component {
   render() {
-    const {
-      classes, didDocument, onCopyToClipboard, editor,
-    } = this.props;
+    const { classes, didDocument, onCopyToClipboard, editor } = this.props;
 
     return (
       <React.Fragment>
-        <DIDDocumentHeader did={didDocument.id} onCopyToClipboard={onCopyToClipboard} />
+        <DIDDocumentHeader
+          did={didDocument.id}
+          onCopyToClipboard={onCopyToClipboard}
+        />
 
         {!!editor && editor}
 
@@ -59,7 +60,9 @@ class DIDDocument extends Component {
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <CopyToClipboard
-              text={`${window.location.origin}/server/resolver/${didDocument.id}`}
+              text={`${window.location.origin}/server/resolver/${
+                didDocument.id
+              }`}
               key={'did'}
               onCopy={onCopyToClipboard}
               style={{ cursor: 'pointer' }}
@@ -69,8 +72,8 @@ class DIDDocument extends Component {
           </ExpansionPanelDetails>
         </ExpansionPanel>
 
-        {didDocument.publicKey
-          && didDocument.publicKey.map(publicKey => (
+        {didDocument.publicKey &&
+          didDocument.publicKey.map(publicKey => (
             <ExpansionPanel style={{ width: '100%' }} key={publicKey.id}>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography>
@@ -156,8 +159,8 @@ class DIDDocument extends Component {
               </ExpansionPanelDetails>
             </ExpansionPanel>
           ))}
-        {didDocument.service
-          && didDocument.service.map(service => (
+        {didDocument.service &&
+          didDocument.service.map(service => (
             <ExpansionPanel style={{ width: '100%' }} key={service.id}>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography>{service.id}</Typography>

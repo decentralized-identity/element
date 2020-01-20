@@ -27,7 +27,11 @@ class App extends React.Component {
               <TrackedSwitch>
                 <Route exact path="/" render={() => <Pages.Landing />} />
                 <Route exact path="/wallet" render={() => <Pages.Wallet />} />
-                <Route exact path="/dapp/explore" render={() => <Pages.LightNodeExplorerPage />} />
+                <Route
+                  exact
+                  path="/dapp/explore"
+                  render={() => <Pages.LightNodeExplorerPage />}
+                />
                 <Route
                   exact
                   path="/dapp/transactions/:transactionHash"
@@ -59,11 +63,23 @@ class App extends React.Component {
                   path="/dapp/resolver/:did"
                   render={() => <Pages.LightNodeDIDResolverPage />}
                 />
-                <Route exact path="/dapp/did/all" render={() => <Pages.LightNodeDIDListPage />} />
+                <Route
+                  exact
+                  path="/dapp/did/all"
+                  render={() => <Pages.LightNodeDIDListPage />}
+                />
 
-                <Route exact path="/dapp/info" render={() => <Pages.LightNodeInfoPage />} />
+                <Route
+                  exact
+                  path="/dapp/info"
+                  render={() => <Pages.LightNodeInfoPage />}
+                />
 
-                <Route exact path="/server/info" render={() => <Pages.FullNodeInfoPage />} />
+                <Route
+                  exact
+                  path="/server/info"
+                  render={() => <Pages.FullNodeInfoPage />}
+                />
 
                 <Route
                   exact
@@ -81,7 +97,11 @@ class App extends React.Component {
                   path="/server/resolver/:did"
                   render={() => <Pages.FullNodeResolverPage />}
                 />
-                <Route exact path="/explorer" render={() => <Pages.FullNodeExplorerPage />} />
+                <Route
+                  exact
+                  path="/explorer"
+                  render={() => <Pages.FullNodeExplorerPage />}
+                />
                 <Route
                   exact
                   path="/server/transactions/:transactionHash"
@@ -98,7 +118,11 @@ class App extends React.Component {
                   render={() => <Pages.FullNodeExplorerOperationsPage />}
                 />
 
-                <Route exact path="/server/did/all" render={() => <Pages.FullNodeDIDListPage />} />
+                <Route
+                  exact
+                  path="/server/did/all"
+                  render={() => <Pages.FullNodeDIDListPage />}
+                />
 
                 <Route exact path="/credits" render={() => <Pages.Credits />} />
 
