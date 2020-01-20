@@ -1,7 +1,9 @@
 const ElementCouchDBAdapter = require('./ElementCouchDBAdapter');
 
+jest.setTimeout(10 * 1000);
+
 // Needs a prod cloudant URL to run
-describe.skip('ElementCouchDBAdapter', () => {
+describe('ElementCouchDBAdapter', () => {
   const id1 = 'id1';
   const id2 = 'id2';
   const id3 = 'id3';
@@ -15,11 +17,11 @@ describe.skip('ElementCouchDBAdapter', () => {
   const dbName = 'test';
 
   beforeAll(async () => {
-    const remote = process.env.ELEMENT_COUCHDB_REMOTE;
+    // const remote = process.env.ELEMENT_COUCHDB_REMOTE;
 
     db = new ElementCouchDBAdapter({
       name: dbName,
-      remote,
+      remote: null,
     });
     await db.reset();
   });
@@ -40,19 +42,22 @@ describe.skip('ElementCouchDBAdapter', () => {
 
   describe('write', () => {
     it('should create a record', async () => {
-      const record = await db.write(id1, {
+      const result = await db.write(id1, {
         anchorFileHash: anchorFileHash1,
       });
+      const record = await db.read(id1);
+      expect(result).toBeTruthy();
       expect(record.id).toBe(id1);
       expect(record.anchorFileHash).toBe(anchorFileHash1);
     });
 
     it('overwrite the record if same id is specified', async () => {
-      const record = await db.write(id1, {
+      const result = await db.write(id1, {
         anchorFileHash: anchorFileHash2,
         type: type1,
       });
-      expect(record.id).toBe(id1);
+      const record = await db.read(id1);
+      expect(result).toBeTruthy();
       expect(record.anchorFileHash).toBe(anchorFileHash2);
       expect(record.type).toBe(type1);
     });
