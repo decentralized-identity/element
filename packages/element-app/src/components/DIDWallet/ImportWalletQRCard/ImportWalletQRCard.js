@@ -42,7 +42,8 @@ class ImportWalletQRCodeCard extends React.Component {
               Import Wallet QR Code
             </Typography>
             <Typography component="p">
-              If you have an encrypted wallet QR Code already, you can import it using this card.
+              If you have an encrypted wallet QR Code already, you can import it
+              using this card.
             </Typography>
           </CardContent>
         </CardActionArea>
@@ -66,7 +67,7 @@ class ImportWalletQRCodeCard extends React.Component {
               dialogIsOpen: false,
             });
           }}
-          onScan={(data) => {
+          onScan={data => {
             this.props.importCipherTextWallet(data);
           }}
         />

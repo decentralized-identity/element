@@ -21,12 +21,24 @@ it('can write from 2 services to 2 contracts', async () => {
   });
   await blockchain2.resolving;
 
-  const txn1 = await blockchain1.write('Qmc9Asse4CvAuQJ77vMARRqLYTrL4ZzWK8BKb2FHRAYcuD');
-  const txn2 = await blockchain1.write('Qmc9Asse4CvAuQJ77vMARRqLYTrL4ZzWK8BKb2FHRAYcuD');
-  const txn3 = await blockchain2.write('Qmc9Asse4CvAuQJ77vMARRqLYTrL4ZzWK8BKb2FHRAYcuD');
-  const txn4 = await blockchain2.write('Qmc9Asse4CvAuQJ77vMARRqLYTrL4ZzWK8BKb2FHRAYcuD');
-  const txn5 = await blockchain1.write('Qmc9Asse4CvAuQJ77vMARRqLYTrL4ZzWK8BKb2FHRAYcuD');
-  const txn6 = await blockchain1.write('Qmc9Asse4CvAuQJ77vMARRqLYTrL4ZzWK8BKb2FHRAYcuD');
+  const txn1 = await blockchain1.write(
+    'Qmc9Asse4CvAuQJ77vMARRqLYTrL4ZzWK8BKb2FHRAYcuD'
+  );
+  const txn2 = await blockchain1.write(
+    'Qmc9Asse4CvAuQJ77vMARRqLYTrL4ZzWK8BKb2FHRAYcuD'
+  );
+  const txn3 = await blockchain2.write(
+    'Qmc9Asse4CvAuQJ77vMARRqLYTrL4ZzWK8BKb2FHRAYcuD'
+  );
+  const txn4 = await blockchain2.write(
+    'Qmc9Asse4CvAuQJ77vMARRqLYTrL4ZzWK8BKb2FHRAYcuD'
+  );
+  const txn5 = await blockchain1.write(
+    'Qmc9Asse4CvAuQJ77vMARRqLYTrL4ZzWK8BKb2FHRAYcuD'
+  );
+  const txn6 = await blockchain1.write(
+    'Qmc9Asse4CvAuQJ77vMARRqLYTrL4ZzWK8BKb2FHRAYcuD'
+  );
 
   const c1Txns = await blockchain1.getTransactions(0, 'latest', {
     omitTimestamp: true,
@@ -56,12 +68,24 @@ it('can write from 2 services to 1 contracts', async () => {
     anchorContractAddress: blockchain1.anchorContractAddress,
   });
 
-  const txn1 = await blockchain1.write('Qmc9Asse4CvAuQJ77vMARRqLYTrL4ZzWK8BKb2FHRAYcuD');
-  const txn2 = await blockchain1.write('Qmc9Asse4CvAuQJ77vMARRqLYTrL4ZzWK8BKb2FHRAYcuD');
-  const txn3 = await blockchain2.write('Qmc9Asse4CvAuQJ77vMARRqLYTrL4ZzWK8BKb2FHRAYcuD');
-  const txn4 = await blockchain2.write('Qmc9Asse4CvAuQJ77vMARRqLYTrL4ZzWK8BKb2FHRAYcuD');
-  const txn5 = await blockchain1.write('Qmc9Asse4CvAuQJ77vMARRqLYTrL4ZzWK8BKb2FHRAYcuD');
-  const txn6 = await blockchain1.write('Qmc9Asse4CvAuQJ77vMARRqLYTrL4ZzWK8BKb2FHRAYcuD');
+  const txn1 = await blockchain1.write(
+    'Qmc9Asse4CvAuQJ77vMARRqLYTrL4ZzWK8BKb2FHRAYcuD'
+  );
+  const txn2 = await blockchain1.write(
+    'Qmc9Asse4CvAuQJ77vMARRqLYTrL4ZzWK8BKb2FHRAYcuD'
+  );
+  const txn3 = await blockchain2.write(
+    'Qmc9Asse4CvAuQJ77vMARRqLYTrL4ZzWK8BKb2FHRAYcuD'
+  );
+  const txn4 = await blockchain2.write(
+    'Qmc9Asse4CvAuQJ77vMARRqLYTrL4ZzWK8BKb2FHRAYcuD'
+  );
+  const txn5 = await blockchain1.write(
+    'Qmc9Asse4CvAuQJ77vMARRqLYTrL4ZzWK8BKb2FHRAYcuD'
+  );
+  const txn6 = await blockchain1.write(
+    'Qmc9Asse4CvAuQJ77vMARRqLYTrL4ZzWK8BKb2FHRAYcuD'
+  );
 
   const c1Txns = await blockchain1.getTransactions(0, 'latest', {
     omitTimestamp: true,

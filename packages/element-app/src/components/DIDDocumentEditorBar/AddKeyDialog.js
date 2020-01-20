@@ -29,7 +29,12 @@ export class AddKeyDialog extends React.Component {
       value: key,
     }));
     return (
-      <Dialog fullWidth open={open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
+      <Dialog
+        fullWidth
+        open={open}
+        onClose={this.handleClose}
+        aria-labelledby="form-dialog-title"
+      >
         <DialogTitle id="form-dialog-title">Add Key</DialogTitle>
         <DialogContent style={{ minHeight: '200px' }}>
           <SelectOne
@@ -37,7 +42,7 @@ export class AddKeyDialog extends React.Component {
             placeholder={'Choose from this list or create your own'}
             suggestions={suggestions}
             value={this.state.selected}
-            onChange={(item) => {
+            onChange={item => {
               this.setState({
                 selected: item,
               });

@@ -49,15 +49,27 @@ export class SidetreeTransaction extends Component {
   }
 
   render() {
-    const {
-      transaction, blockchain, network, anchorFileBase,
-    } = this.props;
+    const { transaction, blockchain, network, anchorFileBase } = this.props;
 
     const { expanded } = this.state;
 
-    const { transactionHash, transactionTimeHash, anchorFileHash } = transaction;
-    const blochHashUrl = getBlockExplorerUrl('block/', transactionTimeHash, blockchain, network);
-    const transactionHashUrl = getBlockExplorerUrl('tx/', transactionHash, blockchain, network);
+    const {
+      transactionHash,
+      transactionTimeHash,
+      anchorFileHash,
+    } = transaction;
+    const blochHashUrl = getBlockExplorerUrl(
+      'block/',
+      transactionTimeHash,
+      blockchain,
+      network
+    );
+    const transactionHashUrl = getBlockExplorerUrl(
+      'tx/',
+      transactionHash,
+      blockchain,
+      network
+    );
     const ipfsUrl = getIpfsUrl(anchorFileBase, anchorFileHash);
     return (
       <ExpansionPanel expanded={expanded}>
@@ -79,10 +91,15 @@ export class SidetreeTransaction extends Component {
               </Typography>
             </Grid>
             <Grid item xs={12} sm={3}>
-              <Typography style={{ paddingTop: '8px' }} variant={'subtitle2'}>{`${
+              <Typography
+                style={{ paddingTop: '8px' }}
+                variant={'subtitle2'}
+              >{`${
                 !transaction.transactionTimestamp
                   ? `Transaction ${transaction.transactionNumber}`
-                  : `${moment(transaction.transactionTimestamp * 1000).fromNow()}`
+                  : `${moment(
+                      transaction.transactionTimestamp * 1000
+                    ).fromNow()}`
               }`}</Typography>
             </Grid>
           </Grid>
@@ -98,11 +115,15 @@ export class SidetreeTransaction extends Component {
                 </ListItemAvatar>
                 <ListItemText
                   style={{ wordBreak: 'break-all', marginRight: '2px' }}
-                  primary={`Sidetree Transaction ${transaction.transactionNumber}`}
+                  primary={`Sidetree Transaction ${
+                    transaction.transactionNumber
+                  }`}
                   secondary={
                     !transaction.transactionTimestamp
                       ? ''
-                      : `${moment(transaction.transactionTimestamp * 1000).fromNow()}`
+                      : `${moment(
+                          transaction.transactionTimestamp * 1000
+                        ).fromNow()}`
                   }
                 />
                 {this.props.onClick && (
@@ -150,7 +171,7 @@ export class SidetreeTransaction extends Component {
                 </ListItemAvatar>
                 <ListItemText
                   style={{ wordBreak: 'break-all', marginRight: '2px' }}
-                  primary={'Ethereum transaction' }
+                  primary={'Ethereum transaction'}
                   secondary={transaction.transactionHash}
                 />
                 <ListItemSecondaryAction>

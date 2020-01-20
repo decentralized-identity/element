@@ -8,5 +8,5 @@ import snackbarRedux from '../snackbar/redux';
 export default compose(
   withRedux,
   snackbarRedux,
-  withHandlers,
+  withHandlers
 );

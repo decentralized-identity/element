@@ -20,8 +20,8 @@ const styles = theme => ({
 function ExpansionPanelList({ classes, panels }) {
   return (
     <div className={classes.root}>
-      {panels
-        && panels.map(panel => (
+      {panels &&
+        panels.map(panel => (
           <ExpansionPanel disabled={panel.disabled} key={panel.title}>
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
               <Typography className={classes.heading}>{panel.title}</Typography>

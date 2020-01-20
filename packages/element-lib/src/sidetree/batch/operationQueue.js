@@ -20,10 +20,13 @@ class OperationQueue {
       throw new Error('there already is an operation for the did');
     }
     await this.db.write(this.type, {
-      queue: [...queue, {
-        didUniqueSuffix,
-        operationBuffer,
-      }],
+      queue: [
+        ...queue,
+        {
+          didUniqueSuffix,
+          operationBuffer,
+        },
+      ],
     });
     return true;
   }

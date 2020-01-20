@@ -1,3 +1,6 @@
 {
-  "extends": ["@transmute/eslint-config/eslint.config.react.json"]
+  "extends": ["@transmute/eslint-config/eslint.config.react.json"],
+  "rules": {
+    "class-methods-use-this": 0
+  }
 }

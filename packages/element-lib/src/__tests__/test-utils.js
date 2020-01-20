@@ -16,7 +16,8 @@ const getTestSideTree = () => {
   });
 
   const blockchain = element.blockchain.ethereum.configure({
-    mnemonic: 'hazard pride garment scout search divide solution argue wait avoid title cave',
+    mnemonic:
+      'hazard pride garment scout search divide solution argue wait avoid title cave',
     hdPath: "m/44'/60'/0'/0/0",
     providerUrl: 'http://localhost:8545',
     anchorContractAddress: '0x1DABA81D326Ae274d5b18111440a05cD9581b305',
@@ -58,13 +59,18 @@ const getDidDocumentForPayload = async (sidetree, payload, didUniqueSuffix) => {
 const getCreatePayloadForKeyIndex = async (mks, index) => {
   const primaryKey = await mks.getKeyForPurpose('primary', index);
   const recoveryKey = await mks.getKeyForPurpose('recovery', index);
-  const didDocumentModel = getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
+  const didDocumentModel = getDidDocumentModel(
+    primaryKey.publicKey,
+    recoveryKey.publicKey
+  );
   return getCreatePayload(didDocumentModel, primaryKey);
 };
 
 const getLastOperation = async (sidetree, didUniqueSuffix) => {
   const operations = await sidetree.db.readCollection(didUniqueSuffix);
-  operations.sort((o1, o2) => o1.transaction.transactionTime - o2.transaction.transactionTime);
+  operations.sort(
+    (o1, o2) => o1.transaction.transactionTime - o2.transaction.transactionTime
+  );
   const last = operations.pop();
   return last;
 };
@@ -76,15 +82,20 @@ const getActorByIndex = index => actors[Object.keys(actors)[index]];
 const generateActors = async count => {
   // eslint-disable-next-line
   for (let i = 0; i < count; i++) {
-    const mks = new element.MnemonicKeySystem(element.MnemonicKeySystem.generateMnemonic());
+    const mks = new element.MnemonicKeySystem(
+      element.MnemonicKeySystem.generateMnemonic()
+    );
     const primaryKey = mks.getKeyForPurpose('primary', 0);
     const recoveryKey = mks.getKeyForPurpose('recovery', 0);
     const didDocumentModel = element.op.getDidDocumentModel(
       primaryKey.publicKey,
-      recoveryKey.publicKey,
+      recoveryKey.publicKey
     );
     // eslint-disable-next-line no-await-in-loop
-    const createPayload = await element.op.getCreatePayload(didDocumentModel, primaryKey);
+    const createPayload = await element.op.getCreatePayload(
+      didDocumentModel,
+      primaryKey
+    );
     const didUniqueSuffix = element.func.getDidUniqueSuffix(createPayload);
     const actor = {
       '@context': 'https://schema.org',
@@ -116,7 +127,7 @@ const createByActorIndex = async actorIndex => {
   const recoveryKey = actor.mks.getKeyForPurpose('recovery', 0);
   const didDocumentModel = element.op.getDidDocumentModel(
     primaryKey.publicKey,
-    recoveryKey.publicKey,
+    recoveryKey.publicKey
   );
   return element.op.getCreatePayload(didDocumentModel, primaryKey);
 };
@@ -126,9 +137,11 @@ const assertCreateSucceeded = async (sidetree, actorIndex) => {
   const did = `did:elem:${actor.didUniqueSuffix}`;
   const didDoc = await sidetree.resolve(did, true);
   expect(didDoc.id).toBe(did);
-  expect(didDoc.publicKey[0].publicKeyHex).toBe(actor.mks.getKeyForPurpose('primary', 0).publicKey);
+  expect(didDoc.publicKey[0].publicKeyHex).toBe(
+    actor.mks.getKeyForPurpose('primary', 0).publicKey
+  );
   expect(didDoc.publicKey[1].publicKeyHex).toBe(
-    actor.mks.getKeyForPurpose('recovery', 0).publicKey,
+    actor.mks.getKeyForPurpose('recovery', 0).publicKey
   );
 };
 
@@ -149,30 +162,35 @@ const updateByActorIndex = async (sidetree, actorIndex) => {
   return element.op.getUpdatePayloadForAddingAKey(
     lastOperation,
     newPublicKey,
-    actor.primaryKey.privateKey,
+    actor.primaryKey.privateKey
   );
 };
 
 const recoverByActorIndex = async (sidetree, actorIndex) => {
   const actor = getActorByIndex(actorIndex);
   const { didUniqueSuffix } = getActorByIndex(actorIndex);
-  const newPrimaryPublicKey = actor.mks.getKeyForPurpose('primary', 20).publicKey;
-  const newRecoveryPublicKey = actor.mks.getKeyForPurpose('recovery', 20).publicKey;
+  const newPrimaryPublicKey = actor.mks.getKeyForPurpose('primary', 20)
+    .publicKey;
+  const newRecoveryPublicKey = actor.mks.getKeyForPurpose('recovery', 20)
+    .publicKey;
   const didDocumentModel = sidetree.op.getDidDocumentModel(
     newPrimaryPublicKey,
-    newRecoveryPublicKey,
+    newRecoveryPublicKey
   );
   return sidetree.op.getRecoverPayload(
     didUniqueSuffix,
     didDocumentModel,
-    actor.recoveryKey.privateKey,
+    actor.recoveryKey.privateKey
   );
 };
 
 const assertUpdateSucceeded = async (sidetree, actorIndex) => {
   const actor = getActorByIndex(actorIndex);
   const newKey = actor.mks.getKeyForPurpose('primary', 10);
-  const didDoc = await sidetree.resolve(`did:elem:${actor.didUniqueSuffix}`, true);
+  const didDoc = await sidetree.resolve(
+    `did:elem:${actor.didUniqueSuffix}`,
+    true
+  );
   expect(didDoc.id).toBe(`did:elem:${actor.didUniqueSuffix}`);
   expect(didDoc.publicKey[2].id).toBe('#newKey');
   expect(didDoc.publicKey[2].publicKeyHex).toBe(newKey.publicKey);
@@ -180,13 +198,16 @@ const assertUpdateSucceeded = async (sidetree, actorIndex) => {
 
 const assertRecoverSucceeded = async (sidetree, actorIndex) => {
   const actor = getActorByIndex(actorIndex);
-  const didDoc = await sidetree.resolve(`did:elem:${actor.didUniqueSuffix}`, true);
+  const didDoc = await sidetree.resolve(
+    `did:elem:${actor.didUniqueSuffix}`,
+    true
+  );
   expect(didDoc.id).toBe(`did:elem:${actor.didUniqueSuffix}`);
   expect(didDoc.publicKey[0].publicKeyHex).toBe(
-    actor.mks.getKeyForPurpose('primary', 20).publicKey,
+    actor.mks.getKeyForPurpose('primary', 20).publicKey
   );
   expect(didDoc.publicKey[1].publicKeyHex).toBe(
-    actor.mks.getKeyForPurpose('recovery', 20).publicKey,
+    actor.mks.getKeyForPurpose('recovery', 20).publicKey
   );
 };
 
@@ -194,13 +215,16 @@ const assertRecoverSucceeded = async (sidetree, actorIndex) => {
 const deactivateByActorIndex = async actorIndex => {
   const actor = getActorByIndex(actorIndex);
   const { didUniqueSuffix } = getActorByIndex(actorIndex);
-  return element.op.getDeletePayload(didUniqueSuffix, actor.recoveryKey.privateKey);
+  return element.op.getDeletePayload(
+    didUniqueSuffix,
+    actor.recoveryKey.privateKey
+  );
 };
 
 const assertDeactivateSucceeded = async (sidetree, actorIndex) => {
   const didDoc = await sidetree.resolve(
     `did:elem:${getActorByIndex(actorIndex).didUniqueSuffix}`,
-    true,
+    true
   );
   expect(didDoc).not.toBeDefined();
 };

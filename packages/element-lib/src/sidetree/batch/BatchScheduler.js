@@ -31,22 +31,38 @@ class BatchScheduler {
    */
   async writeOperationBatch() {
     const start = Date.now(); // For calculating time taken to write operations.
-    const { batchingIntervalInSeconds, maxOperationsPerBatch } = this.sidetree.parameters;
-    const operationCount = (await this.sidetree.operationQueue.peek(maxOperationsPerBatch)).length;
+    const {
+      batchingIntervalInSeconds,
+      maxOperationsPerBatch,
+    } = this.sidetree.parameters;
+    const operationCount = (await this.sidetree.operationQueue.peek(
+      maxOperationsPerBatch
+    )).length;
 
     try {
       console.info('Start batch writing...');
       await this.sidetree.batchWrite();
     } catch (error) {
-      console.error('Unexpected and unhandled error during batch writing, investigate and fix:');
+      console.error(
+        'Unexpected and unhandled error during batch writing, investigate and fix:'
+      );
       console.error(error);
     } finally {
       const end = Date.now();
-      console.info(`End batch writing of ${operationCount} operations. Duration: ${(end - start) / 1000} ms.`);
+      console.info(
+        `End batch writing of ${operationCount} operations. Duration: ${(end -
+          start) /
+          1000} ms.`
+      );
 
       if (this.continuePeriodicBatchWriting) {
-        console.info(`Waiting for ${batchingIntervalInSeconds} seconds before writing another batch.`);
-        setTimeout(async () => this.writeOperationBatch(), batchingIntervalInSeconds * 1000);
+        console.info(
+          `Waiting for ${batchingIntervalInSeconds} seconds before writing another batch.`
+        );
+        setTimeout(
+          async () => this.writeOperationBatch(),
+          batchingIntervalInSeconds * 1000
+        );
       }
     }
   }
@@ -59,7 +75,7 @@ class BatchScheduler {
     const didUniqueSuffix = getDidUniqueSuffix(payload);
     try {
       await this.sidetree.operationQueue.enqueue(didUniqueSuffix, payload);
-    } catch(e) {
+    } catch (e) {
       console.error(e);
     }
     return this.sidetree.batchWrite();

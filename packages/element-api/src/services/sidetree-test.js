@@ -10,7 +10,8 @@ const storage = element.storage.ipfs.configure({
 });
 
 const blockchain = element.blockchain.ethereum.configure({
-  mnemonic: 'hazard pride garment scout search divide solution argue wait avoid title cave',
+  mnemonic:
+    'hazard pride garment scout search divide solution argue wait avoid title cave',
   hdPath: "m/44'/60'/0'/0/0",
   providerUrl: 'http://localhost:8545',
   anchorContractAddress: '0x1DABA81D326Ae274d5b18111440a05cD9581b305',

@@ -23,7 +23,7 @@ const rootReducer = {
   router: connectRouter(history),
 };
 
-export default (appReducers) => {
+export default appReducers => {
   // Persistance configuration
   const persistConfig = {
     key: 'elementDID',
@@ -36,7 +36,7 @@ export default (appReducers) => {
   const reducers = combineReducers({ ...rootReducer, ...appReducers });
   const store = createStore(
     persistReducer(persistConfig, reducers),
-    composeWithDevTools(applyMiddleware(thunk, routerMiddleware(history))),
+    composeWithDevTools(applyMiddleware(thunk, routerMiddleware(history)))
   );
 
   // Persistor.

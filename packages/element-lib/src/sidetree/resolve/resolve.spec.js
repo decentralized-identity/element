@@ -34,7 +34,10 @@ describe('resolve', () => {
     beforeAll(async () => {
       primaryKey = await mks.getKeyForPurpose('primary', 0);
       recoveryKey = await mks.getKeyForPurpose('recovery', 0);
-      didDocumentModel = getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
+      didDocumentModel = getDidDocumentModel(
+        primaryKey.publicKey,
+        recoveryKey.publicKey
+      );
       createPayload = await getCreatePayload(didDocumentModel, primaryKey);
       createTransaction = await sidetree.batchScheduler.writeNow(createPayload);
       didUniqueSuffix = getDidUniqueSuffix(createPayload);
@@ -42,13 +45,24 @@ describe('resolve', () => {
 
     it('should not work if specified kid does not exist in did document', async () => {
       const invalidCreatePayload = changeKid(createPayload, '#invalidKid');
-      const didDocument = await getDidDocumentForPayload(sidetree, invalidCreatePayload, didUniqueSuffix);
+      const didDocument = await getDidDocumentForPayload(
+        sidetree,
+        invalidCreatePayload,
+        didUniqueSuffix
+      );
       expect(didDocument).not.toBeDefined();
     });
 
     it('should not work if signature is not valid', async () => {
-      const invalidCreatePayload = await getCreatePayload(didDocumentModel, recoveryKey);
-      const didDocument = await getDidDocumentForPayload(sidetree, invalidCreatePayload, didUniqueSuffix);
+      const invalidCreatePayload = await getCreatePayload(
+        didDocumentModel,
+        recoveryKey
+      );
+      const didDocument = await getDidDocumentForPayload(
+        sidetree,
+        invalidCreatePayload,
+        didUniqueSuffix
+      );
       expect(didDocument).not.toBeDefined();
     });
 
@@ -58,8 +72,16 @@ describe('resolve', () => {
         '@context': undefined,
       };
       const header = decodeJson(createPayload.protected);
-      const invalidCreatePayload = makeSignedOperation(header, invalidDidDocumentModel, primaryKey.privateKey);
-      const didDocument = await getDidDocumentForPayload(sidetree, invalidCreatePayload, didUniqueSuffix);
+      const invalidCreatePayload = makeSignedOperation(
+        header,
+        invalidDidDocumentModel,
+        primaryKey.privateKey
+      );
+      const didDocument = await getDidDocumentForPayload(
+        sidetree,
+        invalidCreatePayload,
+        didUniqueSuffix
+      );
       expect(didDocument).not.toBeDefined();
     });
 
@@ -113,10 +135,15 @@ describe('resolve', () => {
     beforeAll(async () => {
       primaryKey = await mks.getKeyForPurpose('primary', 0);
       recoveryKey = await mks.getKeyForPurpose('recovery', 0);
-      const didDocumentModel = getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
+      const didDocumentModel = getDidDocumentModel(
+        primaryKey.publicKey,
+        recoveryKey.publicKey
+      );
       createPayload = await getCreatePayload(didDocumentModel, primaryKey);
       didUniqueSuffix = getDidUniqueSuffix(createPayload);
-      const createTransaction = await sidetree.batchScheduler.writeNow(createPayload);
+      const createTransaction = await sidetree.batchScheduler.writeNow(
+        createPayload
+      );
       await sidetree.syncTransaction(createTransaction);
       lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
     });
@@ -129,9 +156,17 @@ describe('resolve', () => {
         type: 'Secp256k1VerificationKey2018',
         publicKeyHex: newKey.publicKey,
       };
-      const updatePayload = await getUpdatePayloadForAddingAKey(lastOperation, newPublicKey, primaryKey.privateKey);
+      const updatePayload = await getUpdatePayloadForAddingAKey(
+        lastOperation,
+        newPublicKey,
+        primaryKey.privateKey
+      );
       const invalidUpdatePayload = changeKid(updatePayload);
-      const didDocument = await getDidDocumentForPayload(sidetree, invalidUpdatePayload, didUniqueSuffix);
+      const didDocument = await getDidDocumentForPayload(
+        sidetree,
+        invalidUpdatePayload,
+        didUniqueSuffix
+      );
       expect(didDocument.publicKey).toHaveLength(2);
     });
 
@@ -143,8 +178,16 @@ describe('resolve', () => {
         type: 'Secp256k1VerificationKey2018',
         publicKeyHex: newKey.publicKey,
       };
-      const invalidUpdatePayload = await getUpdatePayloadForAddingAKey(lastOperation, newPublicKey, recoveryKey.privateKey);
-      const didDocument = await getDidDocumentForPayload(sidetree, invalidUpdatePayload, didUniqueSuffix);
+      const invalidUpdatePayload = await getUpdatePayloadForAddingAKey(
+        lastOperation,
+        newPublicKey,
+        recoveryKey.privateKey
+      );
+      const didDocument = await getDidDocumentForPayload(
+        sidetree,
+        invalidUpdatePayload,
+        didUniqueSuffix
+      );
       expect(didDocument.publicKey).toHaveLength(2);
     });
 
@@ -156,7 +199,11 @@ describe('resolve', () => {
         type: 'Secp256k1VerificationKey2018',
         publicKeyHex: newKey.publicKey,
       };
-      const payload = await getUpdatePayloadForAddingAKey(lastOperation, newPublicKey, primaryKey.privateKey);
+      const payload = await getUpdatePayloadForAddingAKey(
+        lastOperation,
+        newPublicKey,
+        primaryKey.privateKey
+      );
       const transaction = await sidetree.batchScheduler.writeNow(payload);
       await sidetree.syncTransaction(transaction);
       lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
@@ -167,7 +214,11 @@ describe('resolve', () => {
     });
 
     it('should remove a key', async () => {
-      const payload = await getUpdatePayloadForRemovingAKey(lastOperation, '#newKey', primaryKey.privateKey);
+      const payload = await getUpdatePayloadForRemovingAKey(
+        lastOperation,
+        '#newKey',
+        primaryKey.privateKey
+      );
       const transaction = await sidetree.batchScheduler.writeNow(payload);
       await sidetree.syncTransaction(transaction);
       lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
@@ -200,7 +251,8 @@ describe('resolve', () => {
                 publicKeyHex: newKey3.publicKey,
               },
             ],
-          }, {
+          },
+          {
             action: 'remove-public-keys',
             publicKeys: ['#primary'],
           },
@@ -211,7 +263,11 @@ describe('resolve', () => {
         kid: '#primary',
         alg: 'ES256K',
       };
-      const operation = makeSignedOperation(header, payload, primaryKey.privateKey);
+      const operation = makeSignedOperation(
+        header,
+        payload,
+        primaryKey.privateKey
+      );
       const transaction = await sidetree.batchScheduler.writeNow(operation);
       await sidetree.syncTransaction(transaction);
       lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
@@ -223,7 +279,11 @@ describe('resolve', () => {
     });
 
     it('should not process a patch removing the recovery key', async () => {
-      const payload = await getUpdatePayloadForRemovingAKey(lastOperation, '#recovery', primaryKey.privateKey);
+      const payload = await getUpdatePayloadForRemovingAKey(
+        lastOperation,
+        '#recovery',
+        primaryKey.privateKey
+      );
       const transaction = await sidetree.batchScheduler.writeNow(payload);
       await sidetree.syncTransaction(transaction);
       const didDocument = await resolve(sidetree)(didUniqueSuffix);
@@ -232,7 +292,11 @@ describe('resolve', () => {
     });
 
     it('should do nothing if removing a key that does not exist', async () => {
-      const payload = await getUpdatePayloadForRemovingAKey(lastOperation, '#fakekid', primaryKey.privateKey);
+      const payload = await getUpdatePayloadForRemovingAKey(
+        lastOperation,
+        '#fakekid',
+        primaryKey.privateKey
+      );
       const transaction = await sidetree.batchScheduler.writeNow(payload);
       await sidetree.syncTransaction(transaction);
       lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
@@ -242,7 +306,9 @@ describe('resolve', () => {
     });
 
     it('should not process another create operation after update', async () => {
-      const createTransaction = await sidetree.batchScheduler.writeNow(createPayload);
+      const createTransaction = await sidetree.batchScheduler.writeNow(
+        createPayload
+      );
       await sidetree.syncTransaction(createTransaction);
       const didDocument = await resolve(sidetree)(didUniqueSuffix);
       expect(didDocument.publicKey).toHaveLength(3);
@@ -262,27 +328,54 @@ describe('resolve', () => {
     beforeAll(async () => {
       primaryKey = await mks.getKeyForPurpose('primary', 0);
       recoveryKey = await mks.getKeyForPurpose('recovery', 0);
-      const didDocumentModel = getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
-      const createPayload = await getCreatePayload(didDocumentModel, primaryKey);
-      const createTransaction = await sidetree.batchScheduler.writeNow(createPayload);
+      const didDocumentModel = getDidDocumentModel(
+        primaryKey.publicKey,
+        recoveryKey.publicKey
+      );
+      const createPayload = await getCreatePayload(
+        didDocumentModel,
+        primaryKey
+      );
+      const createTransaction = await sidetree.batchScheduler.writeNow(
+        createPayload
+      );
       await sidetree.syncTransaction(createTransaction);
       didUniqueSuffix = getDidUniqueSuffix(createPayload);
       primaryKey2 = await mks.getKeyForPurpose('primary', 1);
       recoveryKey2 = await mks.getKeyForPurpose('recovery', 1);
-      didDocumentModel2 = getDidDocumentModel(primaryKey2.publicKey, recoveryKey2.publicKey);
+      didDocumentModel2 = getDidDocumentModel(
+        primaryKey2.publicKey,
+        recoveryKey2.publicKey
+      );
     });
 
     it('should not work if specified kid does not exist in did document', async () => {
-      const recoverPayload = await getRecoverPayload(didUniqueSuffix, didDocumentModel2, recoveryKey.privateKey);
+      const recoverPayload = await getRecoverPayload(
+        didUniqueSuffix,
+        didDocumentModel2,
+        recoveryKey.privateKey
+      );
       const invalidRecoverPayload = changeKid(recoverPayload, '#invalidKid');
-      const didDocument = await getDidDocumentForPayload(sidetree, invalidRecoverPayload, didUniqueSuffix);
+      const didDocument = await getDidDocumentForPayload(
+        sidetree,
+        invalidRecoverPayload,
+        didUniqueSuffix
+      );
       expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey.publicKey);
       expect(didDocument.publicKey[1].publicKeyHex).toBe(recoveryKey.publicKey);
     });
 
     it('should not work if signature is not valid', async () => {
-      const invalidRecoverPayload = await getRecoverPayload(didUniqueSuffix, didDocumentModel2, primaryKey.privateKey);
-      const didDocument = await getDidDocumentForPayload(sidetree, invalidRecoverPayload, didUniqueSuffix);
+      const invalidRecoverPayload = await getRecoverPayload(
+        didUniqueSuffix,
+        didDocumentModel2,
+        primaryKey.privateKey
+      );
+      const didDocument = await getDidDocumentForPayload(
+        sidetree,
+        invalidRecoverPayload,
+        didUniqueSuffix
+      );
       expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey.publicKey);
       expect(didDocument.publicKey[1].publicKeyHex).toBe(recoveryKey.publicKey);
     });
@@ -301,28 +394,48 @@ describe('resolve', () => {
         kid: '#recovery',
         alg: 'ES256K',
       };
-      const invalidRecoverPayload = makeSignedOperation(header, payload, recoveryKey.privateKey);
-      const didDocument = await getDidDocumentForPayload(sidetree, invalidRecoverPayload, didUniqueSuffix);
+      const invalidRecoverPayload = makeSignedOperation(
+        header,
+        payload,
+        recoveryKey.privateKey
+      );
+      const didDocument = await getDidDocumentForPayload(
+        sidetree,
+        invalidRecoverPayload,
+        didUniqueSuffix
+      );
       expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey.publicKey);
       expect(didDocument.publicKey[1].publicKeyHex).toBe(recoveryKey.publicKey);
     });
 
     it('should not work if there is no corresponding create operation', async () => {
       const fakeDidUniqueSuffix = 'fakediduniquesuffix';
-      const invalidPayload = await getRecoverPayload(fakeDidUniqueSuffix, didDocumentModel2, recoveryKey.privateKey);
-      const invalidTransaction = await sidetree.batchScheduler.writeNow(invalidPayload);
+      const invalidPayload = await getRecoverPayload(
+        fakeDidUniqueSuffix,
+        didDocumentModel2,
+        recoveryKey.privateKey
+      );
+      const invalidTransaction = await sidetree.batchScheduler.writeNow(
+        invalidPayload
+      );
       await sidetree.syncTransaction(invalidTransaction);
       const didDocument = await resolve(sidetree)(fakeDidUniqueSuffix);
       expect(didDocument).not.toBeDefined();
     });
 
     it('should replace the did document with the one provided in the payload', async () => {
-      const payload = await getRecoverPayload(didUniqueSuffix, didDocumentModel2, recoveryKey.privateKey);
+      const payload = await getRecoverPayload(
+        didUniqueSuffix,
+        didDocumentModel2,
+        recoveryKey.privateKey
+      );
       const transaction = await sidetree.batchScheduler.writeNow(payload);
       await sidetree.syncTransaction(transaction);
       const didDocument = await resolve(sidetree)(didUniqueSuffix);
       expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey2.publicKey);
-      expect(didDocument.publicKey[1].publicKeyHex).toBe(recoveryKey2.publicKey);
+      expect(didDocument.publicKey[1].publicKeyHex).toBe(
+        recoveryKey2.publicKey
+      );
       expect(didDocument.id).toContain(didUniqueSuffix);
     });
   });
@@ -336,46 +449,83 @@ describe('resolve', () => {
     beforeAll(async () => {
       primaryKey = await mks.getKeyForPurpose('primary', 0);
       recoveryKey = await mks.getKeyForPurpose('recovery', 0);
-      const didDocumentModel = getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
-      const createPayload = await getCreatePayload(didDocumentModel, primaryKey);
-      const createTransaction = await sidetree.batchScheduler.writeNow(createPayload);
+      const didDocumentModel = getDidDocumentModel(
+        primaryKey.publicKey,
+        recoveryKey.publicKey
+      );
+      const createPayload = await getCreatePayload(
+        didDocumentModel,
+        primaryKey
+      );
+      const createTransaction = await sidetree.batchScheduler.writeNow(
+        createPayload
+      );
       await sidetree.syncTransaction(createTransaction);
       didUniqueSuffix = getDidUniqueSuffix(createPayload);
     });
 
     it('should not work if specified kid does not exist in did document', async () => {
-      const deletePayload = await getDeletePayload(didUniqueSuffix, recoveryKey.privateKey);
+      const deletePayload = await getDeletePayload(
+        didUniqueSuffix,
+        recoveryKey.privateKey
+      );
       const invalidDeletePayload = changeKid(deletePayload, '#invalidKid');
-      const didDocument = await getDidDocumentForPayload(sidetree, invalidDeletePayload, didUniqueSuffix);
+      const didDocument = await getDidDocumentForPayload(
+        sidetree,
+        invalidDeletePayload,
+        didUniqueSuffix
+      );
       expect(didDocument.id).toBeDefined();
     });
 
     it('should not work if signature is not valid', async () => {
-      const invalidDeletePayload = await getDeletePayload(didUniqueSuffix, primaryKey.privateKey);
-      const didDocument = await getDidDocumentForPayload(sidetree, invalidDeletePayload, didUniqueSuffix);
+      const invalidDeletePayload = await getDeletePayload(
+        didUniqueSuffix,
+        primaryKey.privateKey
+      );
+      const didDocument = await getDidDocumentForPayload(
+        sidetree,
+        invalidDeletePayload,
+        didUniqueSuffix
+      );
       expect(didDocument.id).toBeDefined();
     });
 
     it('should not work if there is no corresponding create operation', async () => {
       const fakeDidUniqueSuffix = 'fakediduniquesuffix';
-      const invalidDeletePayload = await getDeletePayload(fakeDidUniqueSuffix, recoveryKey.privateKey);
-      const invalidDeleteTransaction = await sidetree.batchScheduler.writeNow(invalidDeletePayload);
+      const invalidDeletePayload = await getDeletePayload(
+        fakeDidUniqueSuffix,
+        recoveryKey.privateKey
+      );
+      const invalidDeleteTransaction = await sidetree.batchScheduler.writeNow(
+        invalidDeletePayload
+      );
       await sidetree.syncTransaction(invalidDeleteTransaction);
       const didDocument = await resolve(sidetree)(fakeDidUniqueSuffix);
       expect(didDocument).not.toBeDefined();
     });
 
     it('should delete a did document', async () => {
-      const deletePayload = await getDeletePayload(didUniqueSuffix, recoveryKey.privateKey);
-      const deleteTransaction = await sidetree.batchScheduler.writeNow(deletePayload);
+      const deletePayload = await getDeletePayload(
+        didUniqueSuffix,
+        recoveryKey.privateKey
+      );
+      const deleteTransaction = await sidetree.batchScheduler.writeNow(
+        deletePayload
+      );
       await sidetree.syncTransaction(deleteTransaction);
       const didDocument = await resolve(sidetree)(didUniqueSuffix);
       expect(didDocument).not.toBeDefined();
     });
 
     it('should return null if two delete operations are sent for the same did', async () => {
-      const secondDeletePayload = await getDeletePayload(didUniqueSuffix, recoveryKey.privateKey);
-      const secondDeleteTransaction = await sidetree.batchScheduler.writeNow(secondDeletePayload);
+      const secondDeletePayload = await getDeletePayload(
+        didUniqueSuffix,
+        recoveryKey.privateKey
+      );
+      const secondDeleteTransaction = await sidetree.batchScheduler.writeNow(
+        secondDeletePayload
+      );
       await sidetree.syncTransaction(secondDeleteTransaction);
       const didDocument = await resolve(sidetree)(didUniqueSuffix);
       expect(didDocument).not.toBeDefined();

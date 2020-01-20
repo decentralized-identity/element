@@ -16,7 +16,7 @@ class FullNodeInfoPage extends Component {
 
 const ConnectedPage = compose(
   withRouter,
-  fullNode.container,
+  fullNode.container
 )(FullNodeInfoPage);
 
 export { ConnectedPage as FullNodeInfoPage };

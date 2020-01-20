@@ -13,5 +13,5 @@ export default handleActions(
   {
     [snackbarMessage]: (state, { payload }) => ({ ...state, ...payload }),
   },
-  initialState,
+  initialState
 );

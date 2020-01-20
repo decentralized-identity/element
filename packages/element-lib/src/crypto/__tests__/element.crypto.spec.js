@@ -11,17 +11,18 @@ describe('element.crypto', () => {
       const hdKeypair = {
         publicKey:
           'ccb779691f3599247f9a0ca3c9739ec966ead243aa7e0d312413ce2461d60233c25def15dd8a3608df8f14269e3af4bcf1783567fdaec15dd61c8d77b6ae9c4d',
-        privateKey: 'bfa1480820ff65158467cc9e4e62f6cf46416aebc196e562405f51ed1d86f20b',
+        privateKey:
+          'bfa1480820ff65158467cc9e4e62f6cf46416aebc196e562405f51ed1d86f20b',
       };
 
       // compress public key
       const compressedPublicKey = element.crypto.secp256k1.getCompressedPublicFromPrivate(
-        hdKeypair.privateKey,
+        hdKeypair.privateKey
       );
 
       // decompress from compress public key...
       const maybeCorrect = element.crypto.secp256k1.getUncompressedPublicKeyFromCompressedPublicKey(
-        compressedPublicKey,
+        compressedPublicKey
       );
 
       expect(maybeCorrect).toBe(hdKeypair.publicKey);

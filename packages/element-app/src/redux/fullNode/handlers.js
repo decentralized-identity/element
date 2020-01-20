@@ -15,15 +15,20 @@ export default withHandlers({
     res = await axios.get(`${API_BASE}/sidetree/operations/${didUniqueSuffix}`);
     set({ sidetreeOperations: res.data });
   },
-  getOperationsForDidUniqueSuffix: ({ set }) => async (didUniqueSuffix) => {
+  getOperationsForDidUniqueSuffix: ({ set }) => async didUniqueSuffix => {
     set({ loading: true });
-    let res = await axios.get(`${API_BASE}/sidetree/did:elem:${didUniqueSuffix}`);
+    let res = await axios.get(
+      `${API_BASE}/sidetree/did:elem:${didUniqueSuffix}`
+    );
     set({ didDocumentForOperations: res.data });
     res = await axios.get(`${API_BASE}/sidetree/operations/${didUniqueSuffix}`);
     set({ sidetreeOperations: res.data, loading: false });
   },
   createDID: ({
-    snackbarMessage, createDIDRequest, getMyDidUniqueSuffix, set,
+    snackbarMessage,
+    createDIDRequest,
+    getMyDidUniqueSuffix,
+    set,
   }) => async () => {
     const didUniqueSuffix = await getMyDidUniqueSuffix();
     let res;
@@ -64,17 +69,19 @@ export default withHandlers({
     createAddKeyRequest,
     getDidDocumentKey,
     set,
-  }) => async (newKey) => {
+  }) => async newKey => {
     set({ resolving: true });
     const newPublicKey = getDidDocumentKey(newKey);
     const didUniqueSuffix = await getMyDidUniqueSuffix();
-    const res = await axios.get(`${API_BASE}/sidetree/operations/${didUniqueSuffix}`);
+    const res = await axios.get(
+      `${API_BASE}/sidetree/operations/${didUniqueSuffix}`
+    );
     const lastOperation = res.data.pop();
     const { operationHash } = lastOperation.operation;
     const updatePayload = await createAddKeyRequest(
       newPublicKey,
       didUniqueSuffix,
-      operationHash,
+      operationHash
     );
     axios.post(`${API_BASE}/sidetree/requests`, updatePayload);
     snackbarMessage({
@@ -90,13 +97,19 @@ export default withHandlers({
     getMyDidUniqueSuffix,
     createRemoveKeyRequest,
     set,
-  }) => async (kid) => {
+  }) => async kid => {
     set({ resolving: true });
     const didUniqueSuffix = await getMyDidUniqueSuffix();
-    const res = await axios.get(`${API_BASE}/sidetree/operations/${didUniqueSuffix}`);
+    const res = await axios.get(
+      `${API_BASE}/sidetree/operations/${didUniqueSuffix}`
+    );
     const lastOperation = res.data.pop();
     const { operationHash } = lastOperation.operation;
-    const updatePayload = await createRemoveKeyRequest(kid, didUniqueSuffix, operationHash);
+    const updatePayload = await createRemoveKeyRequest(
+      kid,
+      didUniqueSuffix,
+      operationHash
+    );
     axios.post(`${API_BASE}/sidetree/requests`, updatePayload);
     snackbarMessage({
       snackbarMessage: {
@@ -126,14 +139,17 @@ export default withHandlers({
   },
   getSidetreeTransactions: ({ set }) => async ({ limit }) => {
     set({ loading: true });
-    const { data } = await axios.get(`${API_BASE}/sidetree/transactions?limit=${limit}`);
+    const { data } = await axios.get(
+      `${API_BASE}/sidetree/transactions?limit=${limit}`
+    );
     set({ sidetreeTxns: data.reverse(), loading: false });
   },
   getAll: ({ snackbarMessage, set }) => async () => {
     set({ resolving: true });
     try {
       const { data } = await axios.get(`${API_BASE}/sidetree/docs`);
-      const getTransactionTime = record => record.record.lastTransaction.transactionTime;
+      const getTransactionTime = record =>
+        record.record.lastTransaction.transactionTime;
       data.sort((a, b) => getTransactionTime(b) - getTransactionTime(a));
       set({ documentRecords: data });
       snackbarMessage({
@@ -155,7 +171,7 @@ export default withHandlers({
     }
     set({ resolving: false });
   },
-  resolveDID: ({ didResolved, snackbarMessage, set }) => async (did) => {
+  resolveDID: ({ didResolved, snackbarMessage, set }) => async did => {
     set({ resolving: true });
     try {
       const { data } = await axios.get(`${API_BASE}/sidetree/${did}`);
@@ -171,7 +187,8 @@ export default withHandlers({
       console.error(e);
       snackbarMessage({
         snackbarMessage: {
-          message: 'Could not resolve DID, make sure it is of the form did:elem:didUniqueSuffix.',
+          message:
+            'Could not resolve DID, make sure it is of the form did:elem:didUniqueSuffix.',
           variant: 'error',
           open: true,
         },
@@ -179,10 +196,12 @@ export default withHandlers({
     }
     set({ resolving: false });
   },
-  getSidetreeOperationsFromTransactionHash: ({ set }) => async (transactionHash) => {
+  getSidetreeOperationsFromTransactionHash: ({
+    set,
+  }) => async transactionHash => {
     set({ loading: true });
     const { data } = await axios.get(
-      `${API_BASE}/sidetree/transaction/${transactionHash}/summary`,
+      `${API_BASE}/sidetree/transaction/${transactionHash}/summary`
     );
     set({ sidetreeTransactionSummary: data, loading: false });
   },

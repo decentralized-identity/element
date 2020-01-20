@@ -5,7 +5,8 @@ describe('isKeyValid', () => {
     const key = {
       usage: 'signing',
       type: 'Secp256k1VerificationKey2018',
-      publicKeyHex: '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
+      publicKeyHex:
+        '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
     };
     expect(() => isKeyValid(key)).toThrow();
   });
@@ -14,7 +15,8 @@ describe('isKeyValid', () => {
     const key = {
       id: '#primary',
       usage: 'signing',
-      publicKeyHex: '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
+      publicKeyHex:
+        '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
     };
     expect(() => isKeyValid(key)).toThrow();
   });
@@ -24,7 +26,8 @@ describe('isKeyValid', () => {
       id: '#primary',
       usage: 'signing',
       type: 'invalidType',
-      publicKeyHex: '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
+      publicKeyHex:
+        '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
     };
     expect(() => isKeyValid(key)).toThrow();
   });
@@ -33,7 +36,8 @@ describe('isKeyValid', () => {
     const key = {
       id: '#primary',
       type: 'Secp256k1VerificationKey2018',
-      publicKeyHex: '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
+      publicKeyHex:
+        '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
     };
     expect(() => isKeyValid(key)).toThrow();
   });
@@ -43,7 +47,8 @@ describe('isKeyValid', () => {
       id: '#primary',
       usage: 'invalidUsage',
       type: 'Secp256k1VerificationKey2018',
-      publicKeyHex: '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
+      publicKeyHex:
+        '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
     };
     expect(() => isKeyValid(key)).toThrow();
   });
@@ -53,7 +58,8 @@ describe('isKeyValid', () => {
       id: '#primary',
       usage: 'signing',
       type: 'Secp256k1VerificationKey2018',
-      publicKeyWrongEncoding: '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
+      publicKeyWrongEncoding:
+        '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
     };
     expect(() => isKeyValid(key)).toThrow();
   });
@@ -63,7 +69,8 @@ describe('isKeyValid', () => {
       id: '#primary',
       usage: 'signing',
       type: 'Secp256k1VerificationKey2018',
-      publicKeyHex: '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
+      publicKeyHex:
+        '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
       other: 'property',
     };
     expect(() => isKeyValid(key)).toThrow();
@@ -74,7 +81,8 @@ describe('isKeyValid', () => {
       id: '#primary',
       usage: 'signing',
       type: 'Secp256k1VerificationKey2018',
-      publicKeyHex: '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
+      publicKeyHex:
+        '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
     };
     expect(isKeyValid(key)).toBeTruthy();
   });
@@ -85,7 +93,8 @@ describe('isKeyValid', () => {
       usage: 'signing',
       controller: 'did:foo:bar',
       type: 'Secp256k1VerificationKey2018',
-      publicKeyHex: '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
+      publicKeyHex:
+        '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
     };
     expect(isKeyValid(key)).toBeTruthy();
   });
@@ -99,13 +108,15 @@ describe('isDidDocumentValid', () => {
           id: '#primary',
           usage: 'signing',
           type: 'Secp256k1VerificationKey2018',
-          publicKeyHex: '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
+          publicKeyHex:
+            '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
         },
         {
           id: '#recovery',
           usage: 'recovery',
           type: 'Secp256k1VerificationKey2018',
-          publicKeyHex: '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
+          publicKeyHex:
+            '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
         },
       ],
     };
@@ -120,13 +131,15 @@ describe('isDidDocumentValid', () => {
           id: '#primary',
           usage: 'signing',
           type: 'Secp256k1VerificationKey2018',
-          publicKeyHex: '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
+          publicKeyHex:
+            '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
         },
         {
           id: '#recovery',
           usage: 'recovery',
           type: 'Secp256k1VerificationKey2018',
-          publicKeyHex: '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
+          publicKeyHex:
+            '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
         },
       ],
     };
@@ -148,13 +161,15 @@ describe('isDidDocumentValid', () => {
           id: '#primary',
           usage: 'signing',
           type: 'Secp256k1VerificationKey2018',
-          publicKeyHex: '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
+          publicKeyHex:
+            '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
         },
         {
           id: '#recovery',
           // Missing usage property
           type: 'Secp256k1VerificationKey2018',
-          publicKeyHex: '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
+          publicKeyHex:
+            '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
         },
       ],
     };
@@ -169,13 +184,15 @@ describe('isDidDocumentValid', () => {
           id: '#primary',
           usage: 'signing',
           type: 'Secp256k1VerificationKey2018',
-          publicKeyHex: '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
+          publicKeyHex:
+            '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
         },
         {
           id: '#recovery',
           usage: 'recovery',
           type: 'Secp256k1VerificationKey2018',
-          publicKeyHex: '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
+          publicKeyHex:
+            '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
         },
       ],
       other: 'property',
@@ -191,13 +208,15 @@ describe('isDidDocumentValid', () => {
           id: '#primary',
           usage: 'signing',
           type: 'Secp256k1VerificationKey2018',
-          publicKeyHex: '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
+          publicKeyHex:
+            '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
         },
         {
           id: '#recovery',
           usage: 'recovery',
           type: 'Secp256k1VerificationKey2018',
-          publicKeyHex: '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
+          publicKeyHex:
+            '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
         },
       ],
     };

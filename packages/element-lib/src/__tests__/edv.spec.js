@@ -13,9 +13,13 @@ describe('DID Document model', () => {
     primaryKey = await element.crypto.secp256k1.createKeys();
     recoveryKey = await element.crypto.secp256k1.createKeys();
     const didDocumentModel = sidetree.op.getDidDocumentModel(
-      primaryKey.publicKey, recoveryKey.publicKey,
+      primaryKey.publicKey,
+      recoveryKey.publicKey
     );
-    const createPayload = await sidetree.op.getCreatePayload(didDocumentModel, primaryKey);
+    const createPayload = await sidetree.op.getCreatePayload(
+      didDocumentModel,
+      primaryKey
+    );
     const txn = await sidetree.batchScheduler.writeNow(createPayload);
     expect(txn).toBeDefined();
     didUniqueSuffix = sidetree.func.getDidUniqueSuffix(createPayload);
@@ -83,14 +87,20 @@ describe('DID Document model', () => {
       kid: '#primary',
       alg: 'ES256K',
     };
-    const updatePayload = await sidetree.op.makeSignedOperation(header, payload, primaryKey.privateKey);
+    const updatePayload = await sidetree.op.makeSignedOperation(
+      header,
+      payload,
+      primaryKey.privateKey
+    );
     const txn = await sidetree.batchScheduler.writeNow(updatePayload);
     expect(txn).toBeDefined();
     const didDocument = await sidetree.resolve(didUniqueSuffix, true);
     expect(didDocument.publicKey).toHaveLength(3);
     expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey.publicKey);
     expect(didDocument.publicKey[1].publicKeyHex).toBe(recoveryKey.publicKey);
-    expect(didDocument.publicKey[2].publicKeyBase58).toBe(newKey.publicKeyBase58);
+    expect(didDocument.publicKey[2].publicKeyBase58).toBe(
+      newKey.publicKeyBase58
+    );
     expect(didDocument.authentication).toEqual([keyId]);
     expect(didDocument.assertionMethod).toEqual([keyId]);
     expect(didDocument.capabilityDelegation).toEqual([keyId]);
@@ -116,13 +126,13 @@ describe('DID Document model', () => {
         },
         {
           type: 'Secp256k1VerificationKey2018',
-          id : '#recovery',
+          id: '#recovery',
           usage: 'recovery',
           publicKeyHex: recoveryKey.publicKey,
         },
         {
           type: 'Ed25519VerificationKey2018',
-          id : '#edv',
+          id: '#edv',
           usage: 'signing',
           publicKeyBase58: edvKey.publicKeyBase58,
         },
@@ -141,7 +151,10 @@ describe('DID Document model', () => {
       ],
     };
     expect(didDocumentModel).toBeDefined();
-    const createPayload = await sidetree.op.getCreatePayload(didDocumentModel, primaryKey);
+    const createPayload = await sidetree.op.getCreatePayload(
+      didDocumentModel,
+      primaryKey
+    );
     const txn = await sidetree.batchScheduler.writeNow(createPayload);
     expect(txn).toBeDefined();
     didUniqueSuffix = sidetree.func.getDidUniqueSuffix(createPayload);

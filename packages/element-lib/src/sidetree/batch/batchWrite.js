@@ -4,7 +4,9 @@ const { encodeJson, getDidUniqueSuffix } = require('../../func');
 const batchWrite = sidetree => async () => {
   // Get the batch of operations to be anchored on the blockchain.
   const { maxOperationsPerBatch } = sidetree.parameters;
-  const decodedOperations = await sidetree.operationQueue.peek(maxOperationsPerBatch);
+  const decodedOperations = await sidetree.operationQueue.peek(
+    maxOperationsPerBatch
+  );
 
   // Do nothing if there is nothing to batch together.
   if (decodedOperations.length === 0) {

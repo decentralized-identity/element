@@ -23,15 +23,15 @@ class ScanQRCodeDialog extends React.Component {
     });
   }
 
-  handleChange = name => (event) => {
+  handleChange = name => event => {
     this.setState({ [name]: event.target.value });
   };
 
-  handleError = (err) => {
+  handleError = err => {
     console.error(err);
   };
 
-  handleScan = (data) => {
+  handleScan = data => {
     if (data) {
       this.props.onScan(data);
       this.handleClose();

@@ -11,7 +11,12 @@ import { ExplorerTransactionPage } from '../../components/Pages/ExplorerTransact
 
 class LightNodeExplorerTransactionPage extends Component {
   render() {
-    return <ExplorerTransactionPage {...this.props} nodeStore={this.props.lightNode} />;
+    return (
+      <ExplorerTransactionPage
+        {...this.props}
+        nodeStore={this.props.lightNode}
+      />
+    );
   }
 }
 
@@ -27,7 +32,7 @@ LightNodeExplorerTransactionPage.propTypes = {
 const ConnectedPage = compose(
   withMetaMask,
   withRouter,
-  ligthNode.container,
+  ligthNode.container
 )(LightNodeExplorerTransactionPage);
 
 export { ConnectedPage as LightNodeExplorerTransactionPage };

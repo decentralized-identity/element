@@ -21,7 +21,7 @@ const storage = new element.adapters.storage.StorageManager(
   {
     autoPersist: false,
     retryIntervalSeconds: 5,
-  },
+  }
 );
 
 const parameters = {

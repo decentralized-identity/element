@@ -49,11 +49,14 @@ describe.skip('Production Tests', () => {
 
   describe('storage', () => {
     it('anchor file is resolvable', async () => {
-      const anchorFile = await storage.read('QmPyAucuooAEMbdw1uT8veXrLSfBjdNoTqfDRsnt5hrzbS');
+      const anchorFile = await storage.read(
+        'QmPyAucuooAEMbdw1uT8veXrLSfBjdNoTqfDRsnt5hrzbS'
+      );
       expect(anchorFile).toEqual({
         batchFileHash: 'QmZxFCGwiYfutyXDR2TcWs728GrCeAsbVkM7Dazphf35QF',
         didUniqueSuffixes: ['WJl6h_dz3bvJscpWceWoK7AbD5khKdob0W92zh1sx7M'],
-        merkleRoot: 'f0e895ea0791e90f3687498d16824299c9346dab93e6463c182b5b649d3e26ab',
+        merkleRoot:
+          'f0e895ea0791e90f3687498d16824299c9346dab93e6463c182b5b649d3e26ab',
       });
     });
   });
@@ -61,17 +64,20 @@ describe.skip('Production Tests', () => {
   describe('cloudant', () => {
     it('can await sync', async () => {
       const record = await db.read(
-        'element:sidetree:cas-cachable:QmPyAucuooAEMbdw1uT8veXrLSfBjdNoTqfDRsnt5hrzbS',
+        'element:sidetree:cas-cachable:QmPyAucuooAEMbdw1uT8veXrLSfBjdNoTqfDRsnt5hrzbS'
       );
       expect(record).toBe(null);
-      const record1 = await manager.read('QmPyAucuooAEMbdw1uT8veXrLSfBjdNoTqfDRsnt5hrzbS');
+      const record1 = await manager.read(
+        'QmPyAucuooAEMbdw1uT8veXrLSfBjdNoTqfDRsnt5hrzbS'
+      );
       expect(record1).toEqual({
         batchFileHash: 'QmZxFCGwiYfutyXDR2TcWs728GrCeAsbVkM7Dazphf35QF',
         didUniqueSuffixes: ['WJl6h_dz3bvJscpWceWoK7AbD5khKdob0W92zh1sx7M'],
-        merkleRoot: 'f0e895ea0791e90f3687498d16824299c9346dab93e6463c182b5b649d3e26ab',
+        merkleRoot:
+          'f0e895ea0791e90f3687498d16824299c9346dab93e6463c182b5b649d3e26ab',
       });
       const record2 = await db.read(
-        'element:sidetree:cas-cachable:QmPyAucuooAEMbdw1uT8veXrLSfBjdNoTqfDRsnt5hrzbS',
+        'element:sidetree:cas-cachable:QmPyAucuooAEMbdw1uT8veXrLSfBjdNoTqfDRsnt5hrzbS'
       );
       expect(record2.persisted).toBe(true);
     });
@@ -80,17 +86,21 @@ describe.skip('Production Tests', () => {
       // Delete test remote DB to start fresh
       await fetch(db.remote, { method: 'DELETE' }).then(res => res.json());
       // Make sure record does not exist yet in the remote DB
-      const error = await fetch(`${db.remote}/element:sidetree:cas-cachable:QmPyAucuooAEMbdw1uT8veXrLSfBjdNoTqfDRsnt5hrzbS`)
-        .then(res => res.json());
+      const error = await fetch(
+        `${db.remote}/element:sidetree:cas-cachable:QmPyAucuooAEMbdw1uT8veXrLSfBjdNoTqfDRsnt5hrzbS`
+      ).then(res => res.json());
       expect(error).toBeDefined();
       expect(error.error).toBe('not_found');
       // Sync DB
       await manager.db.awaitableSync();
       // Now record exists
-      const record = await fetch(`${db.remote}/element:sidetree:cas-cachable:QmPyAucuooAEMbdw1uT8veXrLSfBjdNoTqfDRsnt5hrzbS`)
-        .then(res => res.json());
+      const record = await fetch(
+        `${db.remote}/element:sidetree:cas-cachable:QmPyAucuooAEMbdw1uT8veXrLSfBjdNoTqfDRsnt5hrzbS`
+      ).then(res => res.json());
       expect(record).toBeDefined();
-      expect(record.id).toBe('element:sidetree:cas-cachable:QmPyAucuooAEMbdw1uT8veXrLSfBjdNoTqfDRsnt5hrzbS');
+      expect(record.id).toBe(
+        'element:sidetree:cas-cachable:QmPyAucuooAEMbdw1uT8veXrLSfBjdNoTqfDRsnt5hrzbS'
+      );
     });
   });
 

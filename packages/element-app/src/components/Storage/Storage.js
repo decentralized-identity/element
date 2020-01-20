@@ -20,7 +20,10 @@ export class Storage extends Component {
     const { info } = this.state;
 
     return (
-      <Paper className="Storage" style={{ padding: '8px', wordBreak: 'break-all' }}>
+      <Paper
+        className="Storage"
+        style={{ padding: '8px', wordBreak: 'break-all' }}
+      >
         <Typography variant={'h5'}>IPFS</Typography>
         {info === undefined ? (
           <Typography variant={'h6'}>Loading...</Typography>

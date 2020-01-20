@@ -1,6 +1,9 @@
 const batchWrite = require('./batchWrite');
 const resolve = require('../resolve');
-const { getTestSideTree, getCreatePayloadForKeyIndex } = require('../../__tests__/test-utils');
+const {
+  getTestSideTree,
+  getCreatePayloadForKeyIndex,
+} = require('../../__tests__/test-utils');
 const { getDidDocumentModel, getCreatePayload } = require('../op');
 const {
   batchFileToOperations,
@@ -22,7 +25,10 @@ describe('batchWrite with one operation', () => {
   beforeAll(async () => {
     const primaryKey = await mks.getKeyForPurpose('primary', 0);
     const recoveryKey = await mks.getKeyForPurpose('recovery', 0);
-    const didDocumentModel = getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
+    const didDocumentModel = getDidDocumentModel(
+      primaryKey.publicKey,
+      recoveryKey.publicKey
+    );
     createPayload = await getCreatePayload(didDocumentModel, primaryKey);
     didUniqueSuffix = getDidUniqueSuffix(createPayload);
     await sidetree.operationQueue.enqueue(didUniqueSuffix, createPayload);
@@ -85,7 +91,6 @@ describe('batchWrite with several operations', () => {
   let anchorFile;
   let batchFile;
 
-
   beforeAll(async () => {
     createPayload1 = await getCreatePayloadForKeyIndex(mks, 0);
     createPayload2 = await getCreatePayloadForKeyIndex(mks, 1);
@@ -103,7 +108,10 @@ describe('batchWrite with several operations', () => {
   it('should publish anchorFile to IPFS', async () => {
     anchorFile = await sidetree.storage.read(transaction.anchorFileHash);
     expect(anchorFile.batchFileHash).toBeDefined();
-    expect(anchorFile.didUniqueSuffixes).toEqual([didUniqueSuffix1, didUniqueSuffix2]);
+    expect(anchorFile.didUniqueSuffixes).toEqual([
+      didUniqueSuffix1,
+      didUniqueSuffix2,
+    ]);
     expect(anchorFile.merkleRoot).toBeDefined();
   });
 

@@ -28,9 +28,7 @@ class DIDDocumentHeader extends Component {
               <Avatar>
                 <VerifiedUser />
               </Avatar>
-              <ListItemText
-                primary={did}
-              />
+              <ListItemText primary={did} />
               <ListItemSecondaryAction>
                 <CopyToClipboard
                   text={did}

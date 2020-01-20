@@ -12,7 +12,9 @@ class Theme extends Component {
       splashImage: '',
       typography: {
         useNextVariants: true,
-        fontFamily: ['"Lato"', '"Helvetica"', '"Arial"', 'sans-serif'].join(','),
+        fontFamily: ['"Lato"', '"Helvetica"', '"Arial"', 'sans-serif'].join(
+          ','
+        ),
         button: {
           fontFamily: ['"Rajdhani"', 'sans-serif'].join(','),
           fontWeight: 700,

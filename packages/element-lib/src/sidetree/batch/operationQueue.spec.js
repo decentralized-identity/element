@@ -1,4 +1,7 @@
-const { getTestSideTree, getCreatePayloadForKeyIndex } = require('../../__tests__/test-utils');
+const {
+  getTestSideTree,
+  getCreatePayloadForKeyIndex,
+} = require('../../__tests__/test-utils');
 const OperationQueue = require('./operationQueue');
 const { MnemonicKeySystem } = require('../../../index');
 const { getDidUniqueSuffix } = require('../../func');
@@ -25,9 +28,15 @@ describe('operationQueue', () => {
   });
 
   it('should queue operations', async () => {
-    expect(await operationQueue.enqueue(didUniqueSuffix1, createPayload1)).toBeTruthy();
-    expect(await operationQueue.enqueue(didUniqueSuffix2, createPayload2)).toBeTruthy();
-    expect(await operationQueue.enqueue(didUniqueSuffix3, createPayload3)).toBeTruthy();
+    expect(
+      await operationQueue.enqueue(didUniqueSuffix1, createPayload1)
+    ).toBeTruthy();
+    expect(
+      await operationQueue.enqueue(didUniqueSuffix2, createPayload2)
+    ).toBeTruthy();
+    expect(
+      await operationQueue.enqueue(didUniqueSuffix3, createPayload3)
+    ).toBeTruthy();
   });
 
   it('should peek the operations in the right order', async () => {
@@ -81,7 +90,8 @@ describe('operationQueue', () => {
 
   it('should throw if already an operation in the queue for this did', () => {
     const errorMessage = 'there already is an operation for the did';
-    return expect(operationQueue.enqueue(didUniqueSuffix1, createPayload1))
-      .rejects.toMatchObject(Error(errorMessage));
+    return expect(
+      operationQueue.enqueue(didUniqueSuffix1, createPayload1)
+    ).rejects.toMatchObject(Error(errorMessage));
   });
 });

@@ -49,7 +49,10 @@ class SidetreeOperation extends Component {
   }
 
   render() {
-    const { operation: { operation, transaction }, classes } = this.props;
+    const {
+      operation: { operation, transaction },
+      classes,
+    } = this.props;
     const { expanded } = this.state;
     const { decodedOperationPayload } = operation;
     const { transactionTimestamp } = transaction;

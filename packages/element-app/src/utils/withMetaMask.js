@@ -6,7 +6,7 @@ import Web3 from 'web3';
 
 import { initSidetree } from '../services/sidetree';
 
-const withMetaMask = (WrappedComponent) => {
+const withMetaMask = WrappedComponent => {
   // eslint-disable-next-line
   const HOC = class extends Component {
     state = {

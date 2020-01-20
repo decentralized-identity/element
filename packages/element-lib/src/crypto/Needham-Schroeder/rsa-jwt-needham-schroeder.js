@@ -5,36 +5,41 @@ const jwt = require('jsonwebtoken');
 const { generateKeyPair } = require('crypto');
 
 const aud = 'https://element-did.com';
-const getAuthKey = didDoc => didDoc.publicKey.find(k => k.id === `${didDoc.id}#auth`);
+const getAuthKey = didDoc =>
+  didDoc.publicKey.find(k => k.id === `${didDoc.id}#auth`);
 
-const generateKey = () => new Promise((resolve, reject) => {
-  generateKeyPair(
-    'rsa',
-    {
-      modulusLength: 4096,
-      publicKeyEncoding: {
-        type: 'spki',
-        format: 'pem',
+const generateKey = () =>
+  new Promise((resolve, reject) => {
+    generateKeyPair(
+      'rsa',
+      {
+        modulusLength: 4096,
+        publicKeyEncoding: {
+          type: 'spki',
+          format: 'pem',
+        },
+        privateKeyEncoding: {
+          type: 'pkcs8',
+          format: 'pem',
+          // cipher: 'aes-256-cbc',
+          // passphrase: 'top secret',
+        },
       },
-      privateKeyEncoding: {
-        type: 'pkcs8',
-        format: 'pem',
-        // cipher: 'aes-256-cbc',
-        // passphrase: 'top secret',
-      },
-    },
-    (err, publicKey, privateKey) => {
-      // Handle errors and use the generated key pair.
-      if (err) {
-        return reject(err);
+      (err, publicKey, privateKey) => {
+        // Handle errors and use the generated key pair.
+        if (err) {
+          return reject(err);
+        }
+        return resolve({ publicKey, privateKey });
       }
-      return resolve({ publicKey, privateKey });
-    },
-  );
-});
+    );
+  });
 
 const createM0 = async ({
-  resolve, initiatorDid, responderDid, initiatorPrivateKey,
+  resolve,
+  initiatorDid,
+  responderDid,
+  initiatorPrivateKey,
 }) => {
   const initiatorDidDoc = await resolve(initiatorDid);
   const responderDidDoc = await resolve(responderDid);
@@ -45,7 +50,7 @@ const createM0 = async ({
   const dataBuffer = Buffer.from(
     JSON.stringify({
       Na,
-    }),
+    })
   );
   const token = jwt.sign(
     {
@@ -63,7 +68,7 @@ const createM0 = async ({
       audience: aud,
       expiresIn: '1h',
       algorithm: 'RS256',
-    },
+    }
   );
 
   return {
@@ -73,7 +78,11 @@ const createM0 = async ({
 };
 
 const createM1 = async ({
-  resolve, m0, initiatorDid, responderDid, responderPrivateKey,
+  resolve,
+  m0,
+  initiatorDid,
+  responderDid,
+  responderPrivateKey,
 }) => {
   const decoded = jwt.decode(m0);
   if (decoded.protocolMessage !== 'm0') {
@@ -98,7 +107,12 @@ const createM1 = async ({
     algorithm: ['RS256'],
   });
   const decrypted = JSON.parse(
-    crypto.privateDecrypt(responderPrivateKey, Buffer.from(verified.message, 'base64')).toString(),
+    crypto
+      .privateDecrypt(
+        responderPrivateKey,
+        Buffer.from(verified.message, 'base64')
+      )
+      .toString()
   );
   if (!decrypted.Na) {
     throw new Error('Na must be present in m0.message');
@@ -109,7 +123,7 @@ const createM1 = async ({
       Nb,
       Na: decrypted.Na,
       did: responderDid,
-    }),
+    })
   );
 
   const m1 = jwt.sign(
@@ -117,7 +131,9 @@ const createM1 = async ({
       from: responderDidAuthKey.id,
       to: initiatorAuthKey.id,
       protocolMessage: 'm1',
-      message: crypto.publicEncrypt(initiatorAuthKey.publicKeyPem, dataBuffer).toString('base64'),
+      message: crypto
+        .publicEncrypt(initiatorAuthKey.publicKeyPem, dataBuffer)
+        .toString('base64'),
     },
     responderPrivateKey,
     {
@@ -126,7 +142,7 @@ const createM1 = async ({
       audience: aud,
       expiresIn: '1h',
       algorithm: 'RS256',
-    },
+    }
   );
 
   return {
@@ -136,7 +152,12 @@ const createM1 = async ({
 };
 
 const createM2 = async ({
-  resolve, m1, initiatorDid, responderDid, initiatorPrivateKey, Na,
+  resolve,
+  m1,
+  initiatorDid,
+  responderDid,
+  initiatorPrivateKey,
+  Na,
 }) => {
   const decoded = jwt.decode(m1);
   if (decoded.protocolMessage !== 'm1') {
@@ -164,7 +185,12 @@ const createM2 = async ({
   });
 
   const decrypted = JSON.parse(
-    crypto.privateDecrypt(initiatorPrivateKey, Buffer.from(verified.message, 'base64')).toString(),
+    crypto
+      .privateDecrypt(
+        initiatorPrivateKey,
+        Buffer.from(verified.message, 'base64')
+      )
+      .toString()
   );
   if (decrypted.Na !== Na) {
     throw new Error('m1 contained incorrect Na.');
@@ -181,7 +207,7 @@ const createM2 = async ({
   const dataBuffer = Buffer.from(
     JSON.stringify({
       Nb: decrypted.Nb,
-    }),
+    })
   );
   const m2 = jwt.sign(
     {
@@ -199,7 +225,7 @@ const createM2 = async ({
       audience: aud,
       expiresIn: '1h',
       algorithm: 'RS256',
-    },
+    }
   );
 
   return {
@@ -210,7 +236,12 @@ const createM2 = async ({
 };
 
 const verifyM2 = async ({
-  m2, resolve, initiatorDid, responderDid, responderPrivateKey, Nb,
+  m2,
+  resolve,
+  initiatorDid,
+  responderDid,
+  responderPrivateKey,
+  Nb,
 }) => {
   const decoded = jwt.decode(m2);
   if (decoded.protocolMessage !== 'm2') {
@@ -233,7 +264,12 @@ const verifyM2 = async ({
   });
 
   const decrypted = JSON.parse(
-    crypto.privateDecrypt(responderPrivateKey, Buffer.from(verified.message, 'base64')).toString(),
+    crypto
+      .privateDecrypt(
+        responderPrivateKey,
+        Buffer.from(verified.message, 'base64')
+      )
+      .toString()
   );
   if (decrypted.Nb !== Nb) {
     throw new Error('m2 contained incorrect Nb.');

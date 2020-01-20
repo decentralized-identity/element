@@ -47,7 +47,7 @@ class DIDResolver extends Component {
             value={currentDID}
             placeholder={'Enter a DID (did:elem:...)'}
             fullWidth
-            onChange={(event) => {
+            onChange={event => {
               this.setState({
                 currentDID: event.target.value,
               });

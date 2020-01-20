@@ -15,7 +15,9 @@ afterAll(async () => {
 
 describe('nodeInfo', () => {
   it('should return a public json config', async () => {
-    res = await server.get('/api/v1/sidetree/node').set('Accept', 'application/json');
+    res = await server
+      .get('/api/v1/sidetree/node')
+      .set('Accept', 'application/json');
     expect(res.body.ipfs).toBeDefined();
     expect(res.body.ethereum).toBeDefined();
     expect(res.body.sidetree).toBeDefined();

@@ -2,7 +2,7 @@ import { withHandlers } from 'recompose';
 import { func, op } from '@transmute/element-lib';
 
 export default withHandlers({
-  getDidDocumentKey: () => (walletKey) => {
+  getDidDocumentKey: () => walletKey => {
     const { publicKey, tags, encoding } = walletKey;
     const [type, kid] = tags;
     let publicKeyType;
@@ -25,10 +25,14 @@ export default withHandlers({
     const primaryKey = getKey('#primary');
     const recoveryKey = getKey('#recovery');
     const edvKey = getKey('#edv');
-    const didDocumentModel = getEdvDidDocumentModel(primaryKey, recoveryKey, edvKey);
+    const didDocumentModel = getEdvDidDocumentModel(
+      primaryKey,
+      recoveryKey,
+      edvKey
+    );
     const createPayload = await op.getCreatePayload(
       didDocumentModel,
-      primaryKey,
+      primaryKey
     );
     const didUniqueSuffix = func.getDidUniqueSuffix(createPayload);
     return didUniqueSuffix;
@@ -37,17 +41,21 @@ export default withHandlers({
     const primaryKey = getKey('#primary');
     const recoveryKey = getKey('#recovery');
     const edvKey = getKey('#edv');
-    const didDocumentModel = getEdvDidDocumentModel(primaryKey, recoveryKey, edvKey);
+    const didDocumentModel = getEdvDidDocumentModel(
+      primaryKey,
+      recoveryKey,
+      edvKey
+    );
     const createPayload = await op.getCreatePayload(
       didDocumentModel,
-      primaryKey,
+      primaryKey
     );
     return createPayload;
   },
   createAddKeyRequest: ({ getKey }) => async (
     newKey,
     didUniqueSuffix,
-    operationHash,
+    operationHash
   ) => {
     const lastOperation = {
       didUniqueSuffix,
@@ -57,14 +65,14 @@ export default withHandlers({
     const payload = await op.getUpdatePayloadForAddingAKey(
       lastOperation,
       newKey,
-      primaryKey.privateKey,
+      primaryKey.privateKey
     );
     return payload;
   },
   createRemoveKeyRequest: ({ getKey }) => async (
     kid,
     didUniqueSuffix,
-    operationHash,
+    operationHash
   ) => {
     const lastOperation = {
       didUniqueSuffix,
@@ -74,7 +82,7 @@ export default withHandlers({
     const payload = await op.getUpdatePayloadForRemovingAKey(
       lastOperation,
       kid,
-      primaryKey.privateKey,
+      primaryKey.privateKey
     );
     return payload;
   },

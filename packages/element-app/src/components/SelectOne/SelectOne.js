@@ -110,7 +110,11 @@ Placeholder.propTypes = {
 
 function ValueContainer(props) {
   return (
-    <div className={`${props.selectProps.classes.valueContainer} force-color-valueContainer`}>
+    <div
+      className={`${
+        props.selectProps.classes.valueContainer
+      } force-color-valueContainer`}
+    >
       {props.children}
     </div>
   );
@@ -145,7 +149,11 @@ MultiValue.propTypes = {
 
 function Menu(props) {
   return (
-    <Paper square className={props.selectProps.classes.paper} {...props.innerProps}>
+    <Paper
+      square
+      className={props.selectProps.classes.paper}
+      {...props.innerProps}
+    >
       {props.children}
     </Paper>
   );
@@ -172,7 +180,7 @@ class IntegrationReactSelect extends React.Component {
     multi: null,
   };
 
-  handleChange = name => (value) => {
+  handleChange = name => value => {
     this.setState({
       [name]: value,
     });
@@ -180,9 +188,7 @@ class IntegrationReactSelect extends React.Component {
   };
 
   render() {
-    const {
-      classes, theme, label, placeholder, suggestions,
-    } = this.props;
+    const { classes, theme, label, placeholder, suggestions } = this.props;
 
     const selectStyles = {
       input: base => ({

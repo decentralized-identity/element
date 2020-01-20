@@ -13,7 +13,7 @@ import { SidetreeBatchFile } from '../../SidetreeBatchFile';
 export class ExplorerTransactionPage extends Component {
   componentWillMount() {
     this.props.getSidetreeOperationsFromTransactionHash(
-      this.props.match.params.transactionHash,
+      this.props.match.params.transactionHash
     );
   }
 
@@ -42,16 +42,22 @@ export class ExplorerTransactionPage extends Component {
                 />
 
                 <SidetreeAnchorFile
-                  anchorFileHash={sidetreeTransactionSummary.transaction.anchorFileHash}
+                  anchorFileHash={
+                    sidetreeTransactionSummary.transaction.anchorFileHash
+                  }
                   anchorFile={sidetreeTransactionSummary.anchorFile}
-                  onClickUID={(didUniqueSuffix) => {
-                    this.props.history.push(`${prefix}/operations/${didUniqueSuffix}`);
+                  onClickUID={didUniqueSuffix => {
+                    this.props.history.push(
+                      `${prefix}/operations/${didUniqueSuffix}`
+                    );
                   }}
                   expanded={true}
                 />
 
                 <SidetreeBatchFile
-                  batchFileHash={sidetreeTransactionSummary.anchorFile.batchFileHash}
+                  batchFileHash={
+                    sidetreeTransactionSummary.anchorFile.batchFileHash
+                  }
                   batchFile={sidetreeTransactionSummary.batchFile}
                   operations={sidetreeTransactionSummary.operations}
                   transaction={sidetreeTransactionSummary.transaction}

@@ -31,7 +31,7 @@ FullNodeResolverPage.propTypes = {
 const ConnectedDAppDIDResolverPage = compose(
   withRouter,
   wallet.container,
-  fullNode.container,
+  fullNode.container
 )(FullNodeResolverPage);
 
 export { ConnectedDAppDIDResolverPage as FullNodeResolverPage };
