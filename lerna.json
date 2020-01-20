@@ -1,7 +1,9 @@
 {
   "version": "0.4.3",
   "packages": [
-    "packages/*"
+    "packages/element-api",
+    "packages/element-app",
+    "packages/element-lib"
   ],
   "command": {
     "publish": {
@@ -11,9 +13,6 @@
         "*.md"
       ],
       "message": "chore(release): publish"
-    },
-    "bootstrap": {
-      "ignore": "component-*"
     }
   }
 }
