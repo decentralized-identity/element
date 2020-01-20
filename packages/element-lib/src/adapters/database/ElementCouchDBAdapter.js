@@ -2,18 +2,23 @@ const NodeCouchDb = require('node-couchdb');
 
 class ElementCouchDBAdapter {
   constructor({ name, remote }) {
-    const urlRegex = /https:\/\/(.*):(.*)@(.*)\/(.*)/;
-    const parts = urlRegex.exec(remote);
-    this.name = name;
-    this.couch = new NodeCouchDb({
-      host: parts[3],
-      protocol: 'https',
-      port: 443,
-      auth: {
-        user: parts[1],
-        pass: parts[2],
-      },
-    });
+    if (remote) {
+      const urlRegex = /https:\/\/(.*):(.*)@(.*)\/(.*)/;
+      const parts = urlRegex.exec(remote);
+      this.name = name;
+      this.couch = new NodeCouchDb({
+        host: parts[3],
+        protocol: 'https',
+        port: 443,
+        auth: {
+          user: parts[1],
+          pass: parts[2],
+        },
+      });
+    } else {
+      this.name = name;
+      this.couch = new NodeCouchDb();
+    }
   }
 
   async init() {
