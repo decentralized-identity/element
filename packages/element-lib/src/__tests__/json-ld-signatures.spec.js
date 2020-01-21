@@ -1,10 +1,10 @@
 const jsonld = require('jsonld');
 const jsigs = require('jsonld-signatures');
-const { Ed25519KeyPair } = require("crypto-ld");
+const { Ed25519KeyPair } = require('crypto-ld');
 
 const { AssertionProofPurpose } = jsigs.purposes;
 const { Ed25519Signature2018 } = jsigs.suites;
-const didDocumentWithCustomContext = require('./__fixtures__/didDocumentWithCustomContext')
+const didDocumentWithCustomContext = require('./__fixtures__/didDocumentWithCustomContext');
 
 jest.setTimeout(10 * 1000);
 
@@ -24,11 +24,11 @@ describe('JSON LD Signatures', () => {
       [keyPair.controller]: {
         '@context': 'https://w3id.org/security/v2',
         id: keyPair.controller,
-        assertionMethod: [keyPair.id]
+        assertionMethod: [keyPair.id],
       },
     };
 
-    documentLoader = async (url) => {
+    documentLoader = async url => {
       const context = contexts[url];
       if (context) {
         return {
@@ -38,10 +38,10 @@ describe('JSON LD Signatures', () => {
         };
       }
       return jsonld.documentLoaders.node()(url);
-    }
+    };
     suite = new Ed25519Signature2018({
       verificationMethod: keyPair.id,
-      key: keyPair
+      key: keyPair,
     });
   });
 
@@ -58,8 +58,8 @@ describe('JSON LD Signatures', () => {
     const result = await jsigs.verify(signed, {
       purpose,
       documentLoader,
-      suite
+      suite,
     });
     expect(result.verified).toBeTruthy();
-  })
+  });
 });
