@@ -1,6 +1,6 @@
 {
   "@context": [
-    "https://w3id.org/did/v1",
+    "https://w3id.org/security/v2",
     {
       "@version": 1.1,
 
@@ -16,12 +16,6 @@
       "kty": "sec:kty",
       "x": "sec:x",
       "y": "sec:y",
-      "assertionMethod": "sec:assertionMethod",
-      "capabilityDelegation": "sec:capabilityDelegation",
-      "capabilityInvocation": "sec:capabilityInvocation",
-      "keyAgreement": "sec:keyAgreement",
-      "controller": "sec:controller",
-      "publicKeyBase58": "sec:publicKeyBase58",
       "usage": "sidetree:usage"
     }
   ],
