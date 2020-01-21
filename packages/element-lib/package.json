@@ -72,7 +72,6 @@
   },
   "devDependencies": {
     "@transmute/eslint-config": "0.1.0",
-    "did-method-key": "^0.3.0",
     "dotenv": "^7.0.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^14.0.0",
