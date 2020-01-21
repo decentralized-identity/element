@@ -13,7 +13,7 @@ const isSignatureValid = async (didDocument, operation) => {
     operation.decodedOperation.protected,
     operation.decodedOperation.payload,
     operation.decodedOperation.signature,
-    signingKey.publicKeyHex,
+    signingKey.publicKeyHex
   );
   if (!valid) {
     throw new Error('signature is not valid');
@@ -30,7 +30,7 @@ const addControllerToPublicKey = (controller, publicKey) => {
   };
 };
 
-const transformDidDocument = (didDocument) => {
+const transformDidDocument = didDocument => {
   const transformProperties = [
     'assertionMethod',
     'authentication',
@@ -39,23 +39,29 @@ const transformDidDocument = (didDocument) => {
     'publicKey',
     'keyAgreement',
   ];
-  const transformed = Object.entries(didDocument).reduce((acc, [property, value]) => {
-    if (transformProperties.includes(property)) {
+  const transformed = Object.entries(didDocument).reduce(
+    (acc, [property, value]) => {
+      if (transformProperties.includes(property)) {
+        return {
+          ...acc,
+          [property]: value.map(pk =>
+            addControllerToPublicKey(didDocument.id, pk)
+          ),
+        };
+      }
       return {
         ...acc,
-        [property]: value.map(pk => addControllerToPublicKey(didDocument.id, pk)),
-      }
-    }
-    return {
-      ...acc,
-      [property]: value,
-    }
-  }, {});
+        [property]: value,
+      };
+    },
+    {}
+  );
   return transformed;
 };
 
 const create = async (state, operation, lastValidOperation) => {
-  const previousOperationHash = lastValidOperation && lastValidOperation.operation.operationHash;
+  const previousOperationHash =
+    lastValidOperation && lastValidOperation.operation.operationHash;
   if (previousOperationHash !== undefined || state) {
     throw new Error('cannot have another operation before a create operation');
   }
@@ -94,7 +100,9 @@ const applyPatch = (didDocument, patch) => {
     }, didDocument);
   }
   if (patch.action === 'remove-public-keys') {
-    const publicKeyMap = new Map(didDocument.publicKey.map(publicKey => [publicKey.id, publicKey]));
+    const publicKeyMap = new Map(
+      didDocument.publicKey.map(publicKey => [publicKey.id, publicKey])
+    );
     return patch.publicKeys.reduce((currentState, publicKey) => {
       const existingKey = publicKeyMap.get(publicKey);
       // Deleting recovery key is NOT allowed.
@@ -108,62 +116,83 @@ const applyPatch = (didDocument, patch) => {
       return currentState;
     }, didDocument);
   }
-  const addVerificationMethodToProperty = (propertyName, verificationMethod) => {
+  const addVerificationMethodToProperty = (
+    propertyName,
+    verificationMethod
+  ) => {
     // eslint-disable-next-line security/detect-object-injection
     const property = didDocument[propertyName] || [];
     return {
       ...didDocument,
-      [propertyName]: [
-        ...property,
-        verificationMethod,
-      ],
+      [propertyName]: [...property, verificationMethod],
     };
   };
 
   const removeVerificationMethodFromProperty = (propertyName, id) => {
     // eslint-disable-next-line security/detect-object-injection
     const property = didDocument[propertyName] || [];
-    const filtered = property.filter((verificationMethod) => {
+    const filtered = property.filter(verificationMethod => {
       if (typeof verificationMethod === 'string') {
         return verificationMethod !== id;
       }
       return verificationMethod.id !== id;
-    })
+    });
     return {
       ...didDocument,
       [propertyName]: filtered,
-    }
+    };
   };
 
   if (patch.action === 'add-authentication') {
-    return addVerificationMethodToProperty('authentication', patch.verificationMethod);
+    return addVerificationMethodToProperty(
+      'authentication',
+      patch.verificationMethod
+    );
   }
   if (patch.action === 'remove-authentication') {
-    return removeVerificationMethodFromProperty('authentication', patch.id)
+    return removeVerificationMethodFromProperty('authentication', patch.id);
   }
   if (patch.action === 'add-assertion-method') {
-    return addVerificationMethodToProperty('assertionMethod', patch.verificationMethod);
+    return addVerificationMethodToProperty(
+      'assertionMethod',
+      patch.verificationMethod
+    );
   }
   if (patch.action === 'remove-assertion-method') {
-    return removeVerificationMethodFromProperty('assertionMethod', patch.id)
+    return removeVerificationMethodFromProperty('assertionMethod', patch.id);
   }
   if (patch.action === 'add-capability-delegation') {
-    return addVerificationMethodToProperty('capabilityDelegation', patch.verificationMethod);
+    return addVerificationMethodToProperty(
+      'capabilityDelegation',
+      patch.verificationMethod
+    );
   }
   if (patch.action === 'remove-capability-delegation') {
-    return removeVerificationMethodFromProperty('capabilityDelegation', patch.id)
+    return removeVerificationMethodFromProperty(
+      'capabilityDelegation',
+      patch.id
+    );
   }
   if (patch.action === 'add-capability-invocation') {
-    return addVerificationMethodToProperty('capabilityInvocation', patch.verificationMethod);
+    return addVerificationMethodToProperty(
+      'capabilityInvocation',
+      patch.verificationMethod
+    );
   }
   if (patch.action === 'remove-capability-invocation') {
-    return removeVerificationMethodFromProperty('capabilityInvocation', patch.id)
+    return removeVerificationMethodFromProperty(
+      'capabilityInvocation',
+      patch.id
+    );
   }
   if (patch.action === 'add-key-agreement') {
-    return addVerificationMethodToProperty('keyAgreement', patch.verificationMethod);
+    return addVerificationMethodToProperty(
+      'keyAgreement',
+      patch.verificationMethod
+    );
   }
   if (patch.action === 'remove-key-agreement') {
-    return removeVerificationMethodFromProperty('keyAgreement', patch.id)
+    return removeVerificationMethodFromProperty('keyAgreement', patch.id);
   }
   if (patch.action === 'add-service-endpoint') {
     const service = didDocument.service || [];
@@ -174,18 +203,18 @@ const applyPatch = (didDocument, patch) => {
         {
           id: patch.id,
           type: patch.type,
-          serviceEndpoint: patch.serviceEndpoint
-        }
-      ]
+          serviceEndpoint: patch.serviceEndpoint,
+        },
+      ],
     };
   }
   if (patch.action === 'remove-service-endpoint') {
     const service = didDocument.service || [];
-    const filteredService = service.filter(s => s.id !== patch.id)
+    const filteredService = service.filter(s => s.id !== patch.id);
     return {
       ...didDocument,
       service: filteredService,
-    }
+    };
   }
   return didDocument;
 };
@@ -198,7 +227,9 @@ const update = async (state, operation, lastValidOperation) => {
 
   const { decodedOperationPayload } = operation;
   if (decodedOperationPayload.previousOperationHash !== previousOperationHash) {
-    throw new Error('previous operation hash should match the hash of the latest valid operation');
+    throw new Error(
+      'previous operation hash should match the hash of the latest valid operation'
+    );
   }
 
   await isSignatureValid(state, operation);
@@ -262,51 +293,63 @@ const resolve = sidetree => async (did, justInTime = false) => {
   }
   const operations = await sidetree.db.readCollection(didUniqueSuffix);
   // eslint-disable-next-line max-len
-  operations.sort((op1, op2) => op1.transaction.transactionNumber - op2.transaction.transactionNumber);
-  const createAndRecoverAndRevokeOperations = operations.filter((op) => {
+  operations.sort(
+    (op1, op2) =>
+      op1.transaction.transactionNumber - op2.transaction.transactionNumber
+  );
+  const createAndRecoverAndRevokeOperations = operations.filter(op => {
     const type = op.operation.decodedHeader.operation;
     return ['create', 'recover', 'delete'].includes(type);
   });
   // Apply 'full' operations first.
   let lastValidFullOperation;
-  let didDocument = await createAndRecoverAndRevokeOperations
-    .reduce((promise, operation) => {
-      return promise.then(async (acc) => {
+  let didDocument = await createAndRecoverAndRevokeOperations.reduce(
+    (promise, operation) => {
+      return promise.then(async acc => {
         const { valid, newState } = await applyOperation(
-          acc, operation.operation, lastValidFullOperation,
+          acc,
+          operation.operation,
+          lastValidFullOperation
         );
         if (valid) {
           lastValidFullOperation = operation;
         }
         return newState;
       });
-    }, Promise.resolve(undefined));
+    },
+    Promise.resolve(undefined)
+  );
   // If no full operation found at all, the DID is not anchored.
   if (lastValidFullOperation === undefined) {
     return undefined;
   }
 
   // Get only update operations that came after the create or last recovery operation.
-  const lastFullOperationNumber = lastValidFullOperation.transaction.transactionNumber;
-  const updateOperations = operations.filter((op) => {
+  const lastFullOperationNumber =
+    lastValidFullOperation.transaction.transactionNumber;
+  const updateOperations = operations.filter(op => {
     const type = op.operation.decodedHeader.operation;
-    return type === 'update' && op.transaction.transactionNumber > lastFullOperationNumber;
+    return (
+      type === 'update' &&
+      op.transaction.transactionNumber > lastFullOperationNumber
+    );
   });
 
   // Apply 'update/delta' operations.
   let lastValidOperation = lastValidFullOperation;
-  didDocument = await updateOperations
-    .reduce((promise, operation) => {
-      return promise.then(async (acc) => {
-        const { valid, newState } = await applyOperation(
-          acc, operation.operation, lastValidOperation,
-        );
-        if (valid) {
-          lastValidOperation = operation;
-        }
-        return newState;
-      });
-    }, Promise.resolve(didDocument));
+  didDocument = await updateOperations.reduce((promise, operation) => {
+    return promise.then(async acc => {
+      const { valid, newState } = await applyOperation(
+        acc,
+        operation.operation,
+        lastValidOperation
+      );
+      if (valid) {
+        lastValidOperation = operation;
+      }
+      return newState;
+    });
+  }, Promise.resolve(didDocument));
 
   if (didDocument) {
     await sidetree.db.write(didDocument.id, {

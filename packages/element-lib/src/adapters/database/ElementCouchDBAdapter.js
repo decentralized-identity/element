@@ -2,30 +2,33 @@ const NodeCouchDb = require('node-couchdb');
 
 class ElementCouchDBAdapter {
   constructor({ name, remote }) {
-    const urlRegex = /https:\/\/(.*):(.*)@(.*)\/(.*)/;
-    const parts = urlRegex.exec(remote);
-    this.name = name;
-    this.couch = new NodeCouchDb({
-      host: parts[3],
-      protocol: 'https',
-      port: 443,
-      auth: {
-        user: parts[1],
-        pass: parts[2],
-      },
-    });
+    if (remote) {
+      const urlRegex = /https:\/\/(.*):(.*)@(.*)\/(.*)/;
+      const parts = urlRegex.exec(remote);
+      this.name = name;
+      this.couch = new NodeCouchDb({
+        host: parts[3],
+        protocol: 'https',
+        port: 443,
+        auth: {
+          user: parts[1],
+          pass: parts[2],
+        },
+      });
+    } else {
+      this.name = name;
+      this.couch = new NodeCouchDb();
+    }
   }
 
   async init() {
     if (!this.created) {
-      await this.couch
-        .createDatabase(this.name)
-        .catch((err) => {
-          // Sometimes the db already exists
-          if (err.body.error !== 'file_exists') {
-            throw err;
-          }
-        });
+      await this.couch.createDatabase(this.name).catch(err => {
+        // Sometimes the db already exists
+        if (err.body.error !== 'file_exists') {
+          throw err;
+        }
+      });
       this.created = true;
     }
   }
@@ -40,7 +43,9 @@ class ElementCouchDBAdapter {
     try {
       await this.couch.insert(this.name, payload);
     } catch (e) {
-      const { data: { _rev } } = await this.couch.get(this.name, id);
+      const {
+        data: { _rev },
+      } = await this.couch.get(this.name, id);
       await this.couch.update(this.name, { _rev, ...payload });
     }
     return true;

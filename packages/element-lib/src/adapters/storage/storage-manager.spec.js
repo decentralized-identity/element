@@ -4,13 +4,15 @@ const config = require('../json/config.local.json');
 const StorageManager = require('./storage-manager');
 
 const anchorFile = {
-  merkleRoot: '2fd0f5e87f72d787235ee6c1673500c9929a2559edfcdf3637ba9ab05a827a16',
+  merkleRoot:
+    '2fd0f5e87f72d787235ee6c1673500c9929a2559edfcdf3637ba9ab05a827a16',
   batchFileHash: 'QmTT6BwuEeDgNs3ixQ2G29izoPawSjAh8wT97uZek5BQVG',
   didUniqueSuffixes: ['MRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI'],
 };
 
 const anchorFile2 = {
-  merkleRoot: '2fd0f5e87f72d787235ee6c1673500c9929a2559edfcdf3637ba9ab05a827a16',
+  merkleRoot:
+    '2fd0f5e87f72d787235ee6c1673500c9929a2559edfcdf3637ba9ab05a827a16',
   batchFileHash: 'QmTT6BwuEeDgNs3ixQ2G29izoPawSjAh8wT97uZek5BQVG',
   didUniqueSuffixes: ['XRO_nAwc19U1pusMn5PXd_5iY6ATvCyeuFU-bO0XUkI'],
 };
@@ -50,7 +52,9 @@ describe('StorageManager', () => {
       });
       const cid = await manager.write(anchorFile);
       expect(cid).toBe('QmXRoAeyBTKA3N8D4NLR6wtEes4iwzeMien78cZy2YP3ba');
-      const record = await manager.db.read(`element:sidetree:cas-cachable:${cid}`);
+      const record = await manager.db.read(
+        `element:sidetree:cas-cachable:${cid}`
+      );
       expect(record.id).toBe(`element:sidetree:cas-cachable:${cid}`);
       const data = await manager.storage.read(cid);
       expect(data).toEqual(anchorFile);
@@ -80,26 +84,36 @@ describe('StorageManager', () => {
       await mockedManager.retryAllNotPersisted();
 
       const allUnPersisted2 = await mockedManager.db.collection
-        .find({ type: { $eq: 'element:sidetree:cas-cachable' }, persisted: { $eq: false } })
+        .find({
+          type: { $eq: 'element:sidetree:cas-cachable' },
+          persisted: { $eq: false },
+        })
         .exec()
         .then(arrayOfDocs => arrayOfDocs.map(doc => doc.toJSON()));
 
       expect(allUnPersisted2.length).toBe(1);
 
       // can read without persistence
-      const obj = await manager.read('Qma4AeAHhwkFJNHGZ59KpShSmCbnT2JUSCNjffk3h5dm3f');
+      const obj = await manager.read(
+        'Qma4AeAHhwkFJNHGZ59KpShSmCbnT2JUSCNjffk3h5dm3f'
+      );
       expect(obj).toEqual(anchorFile2);
 
       await mockedManager.retryAllNotPersisted();
 
       const allUnPersisted3 = await mockedManager.db.collection
-        .find({ type: { $eq: 'element:sidetree:cas-cachable' }, persisted: { $eq: false } })
+        .find({
+          type: { $eq: 'element:sidetree:cas-cachable' },
+          persisted: { $eq: false },
+        })
         .exec()
         .then(arrayOfDocs => arrayOfDocs.map(doc => doc.toJSON()));
 
       expect(allUnPersisted3.length).toBe(0);
 
-      const record = await manager.db.read(`element:sidetree:cas-cachable:${cid}`);
+      const record = await manager.db.read(
+        `element:sidetree:cas-cachable:${cid}`
+      );
       expect(record.id).toBe(`element:sidetree:cas-cachable:${cid}`);
       const data = await manager.storage.read(cid);
       expect(data).toEqual(anchorFile2);
@@ -130,7 +144,9 @@ describe('StorageManager', () => {
     });
 
     it('can read after persisted', async () => {
-      const obj = await storage.read('Qma4AeAHhwkFJNHGZ59KpShSmCbnT2JUSCNjffk3h5dm3f');
+      const obj = await storage.read(
+        'Qma4AeAHhwkFJNHGZ59KpShSmCbnT2JUSCNjffk3h5dm3f'
+      );
       expect(obj).toEqual(anchorFile2);
     });
   });

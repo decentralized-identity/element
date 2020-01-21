@@ -33,8 +33,14 @@ describe('CRUD.One', () => {
     const txn = await sidetree.batchScheduler.writeNow(recoverPayload);
     expect(txn).toBeDefined();
     await assertRecoverSucceeded(sidetree, 0);
-    actors[alice.didUniqueSuffix].primaryKey = alice.mks.getKeyForPurpose('primary', 20);
-    actors[alice.didUniqueSuffix].recoveryKey = alice.mks.getKeyForPurpose('recovery', 20);
+    actors[alice.didUniqueSuffix].primaryKey = alice.mks.getKeyForPurpose(
+      'primary',
+      20
+    );
+    actors[alice.didUniqueSuffix].recoveryKey = alice.mks.getKeyForPurpose(
+      'recovery',
+      20
+    );
   });
 
   it('update', async () => {

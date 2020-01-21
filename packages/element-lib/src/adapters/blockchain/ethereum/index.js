@@ -21,7 +21,7 @@ const getWeb3 = ({ mnemonic, hdPath, providerUrl }) => {
     providerUrl,
     accountIndex,
     1,
-    hdPathWithoutAccountIndex,
+    hdPathWithoutAccountIndex
   );
   return new Web3(provider);
 };
@@ -31,17 +31,20 @@ const eventLogToSidetreeTransaction = log => ({
   transactionTimeHash: log.blockHash,
   transactionHash: log.transactionHash,
   transactionNumber: log.args.transactionNumber.toNumber(),
-  anchorFileHash: bytes32EnodedMultihashToBase58EncodedMultihash(log.args.anchorFileHash),
+  anchorFileHash: bytes32EnodedMultihashToBase58EncodedMultihash(
+    log.args.anchorFileHash
+  ),
 });
 
-const getAccounts = web3 => new Promise((resolve, reject) => {
-  web3.eth.getAccounts((err, accounts) => {
-    if (err) {
-      reject(err);
-    }
-    resolve(accounts);
+const getAccounts = web3 =>
+  new Promise((resolve, reject) => {
+    web3.eth.getAccounts((err, accounts) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(accounts);
+    });
   });
-});
 
 class EthereumBlockchain {
   constructor(web3, contractAddress) {
@@ -63,8 +66,10 @@ class EthereumBlockchain {
     return Promise.all(
       txns.map(async txn => ({
         ...txn,
-        transactionTimestamp: (await this.getBlockchainTime(txn.transactionTime)).timestamp,
-      })),
+        transactionTimestamp: (await this.getBlockchainTime(
+          txn.transactionTime
+        )).timestamp,
+      }))
     );
   }
 
@@ -116,11 +121,15 @@ class EthereumBlockchain {
       [fromAddress] = await getAccounts(this.web3);
     }
 
-    const instance = await this.retryWithLatestTransactionCount(this.anchorContract.new, [], {
-      from: fromAddress,
-      // TODO: Bad hard coded value, use gasEstimate
-      gas: 4712388,
-    });
+    const instance = await this.retryWithLatestTransactionCount(
+      this.anchorContract.new,
+      [],
+      {
+        from: fromAddress,
+        // TODO: Bad hard coded value, use gasEstimate
+        gas: 4712388,
+      }
+    );
 
     this.anchorContractAddress = instance.address;
     return instance;
@@ -193,7 +202,7 @@ class EthereumBlockchain {
         {
           from,
           gasPrice: '100000000000',
-        },
+        }
       );
       return eventLogToSidetreeTransaction(receipt.logs[0]);
     } catch (e) {
@@ -204,7 +213,10 @@ class EthereumBlockchain {
 }
 
 const configure = ({
-  mnemonic, hdPath, providerUrl, anchorContractAddress,
+  mnemonic,
+  hdPath,
+  providerUrl,
+  anchorContractAddress,
 }) => {
   const web3 = getWeb3({ mnemonic, hdPath, providerUrl });
   return new EthereumBlockchain(web3, anchorContractAddress);

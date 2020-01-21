@@ -31,7 +31,7 @@ LightNodeDIDResolverPage.propTypes = {
 const ConnectedLightNodeDIDResolverPage = compose(
   withMetaMask,
   withRouter,
-  ligthNode.container,
+  ligthNode.container
 )(LightNodeDIDResolverPage);
 
 export { ConnectedLightNodeDIDResolverPage as LightNodeDIDResolverPage };

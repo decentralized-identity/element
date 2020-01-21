@@ -6,5 +6,5 @@ export default connect(
   ({ wallet }) => ({ wallet }),
   {
     ...actions,
-  },
+  }
 );

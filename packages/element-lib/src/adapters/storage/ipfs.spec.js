@@ -43,17 +43,23 @@ describe('storage.ipfs', () => {
 
   describe('read', () => {
     it('should read a JSON', async () => {
-      const obj = await storage.read('QmNrEidQrAbxx3FzxNt9E6qjEDZrtvzxUVh47BXm55Zuen');
+      const obj = await storage.read(
+        'QmNrEidQrAbxx3FzxNt9E6qjEDZrtvzxUVh47BXm55Zuen'
+      );
       expect(obj).toEqual(testObj);
     });
 
     it('should read a string', async () => {
-      const obj = await storage.read('QmT2PFvRp4VXeBtFRWJUfJpssK6UqTZ5eHpaYQNcEXfNn8');
+      const obj = await storage.read(
+        'QmT2PFvRp4VXeBtFRWJUfJpssK6UqTZ5eHpaYQNcEXfNn8'
+      );
       expect(obj).toEqual(testString);
     });
 
     it('should read an integer', async () => {
-      const obj = await storage.read('QmWYddCPs7uR9EvHNCZzpguVFVNfHc6aM3hPVzPdAEESMc');
+      const obj = await storage.read(
+        'QmWYddCPs7uR9EvHNCZzpguVFVNfHc6aM3hPVzPdAEESMc'
+      );
       expect(obj).toEqual(testInteger);
     });
   });

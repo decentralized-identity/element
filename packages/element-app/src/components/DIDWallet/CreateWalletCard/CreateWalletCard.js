@@ -42,14 +42,16 @@ class CreateWalletCard extends React.Component {
               Create a DID Wallet
             </Typography>
             <Typography component="p">
-              A wallet is used to store <i>some</i> of the private keys associated with public keys
-              listed in a DID Document. Its not advisable to store all keys (especially recovery
-              keys), in the same wallet.
+              A wallet is used to store <i>some</i> of the private keys
+              associated with public keys listed in a DID Document. Its not
+              advisable to store all keys (especially recovery keys), in the
+              same wallet.
             </Typography>
             <br />
             <Typography component="p">
-              You can print out the QR Code that is visible when your wallet has been locked, and
-              use it to import your wallet later, be sure to remember your wallet password!
+              You can print out the QR Code that is visible when your wallet has
+              been locked, and use it to import your wallet later, be sure to
+              remember your wallet password!
             </Typography>
           </CardContent>
         </CardActionArea>

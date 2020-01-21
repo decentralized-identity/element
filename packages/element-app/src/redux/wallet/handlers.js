@@ -45,13 +45,15 @@ export default withHandlers({
     };
     return didDocumentModel;
   },
-  getKey: ({ wallet }) => kid => Object.values(wallet.data.keys)
-    .find(walletKey => walletKey.tags.includes(kid)),
+  getKey: ({ wallet }) => kid =>
+    Object.values(wallet.data.keys).find(walletKey =>
+      walletKey.tags.includes(kid)
+    ),
   importCipherTextWallet: ({
     cipherTextWalletImported,
     snackbarMessage,
     set,
-  }) => async (cipherTextWallet) => {
+  }) => async cipherTextWallet => {
     set({ loading: true });
     try {
       cipherTextWalletImported({ data: cipherTextWallet });
@@ -80,7 +82,7 @@ export default withHandlers({
     walletEncrypted,
     snackbarMessage,
     set,
-  }) => async (password) => {
+  }) => async password => {
     set({ loading: true });
     try {
       let message;
@@ -119,7 +121,7 @@ export default withHandlers({
     }
     set({ loading: false });
   },
-  addKeyToWallet: ({ snackbarMessage, set, wallet }) => async (key) => {
+  addKeyToWallet: ({ snackbarMessage, set, wallet }) => async key => {
     set({ resolving: true });
     const wall = didWallet.create({
       keys: Object.values(wallet.data.keys),

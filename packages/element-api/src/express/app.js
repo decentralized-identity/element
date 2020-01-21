@@ -31,7 +31,7 @@ app.use(onErrorResponse);
 if (process.env.NODE_ENV === 'development') {
   // eslint-disable-next-line
   console.log(
-    '\n🔥 API DOCS: http://localhost:5002/element-did/us-central1/main/docs\n',
+    '\n🔥 API DOCS: http://localhost:5002/element-did/us-central1/main/docs\n'
   );
 }
 

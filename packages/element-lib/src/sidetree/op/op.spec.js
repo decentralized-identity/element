@@ -13,7 +13,10 @@ describe('getDidDocumentModel', () => {
   });
 
   it('should return a valid did document', async () => {
-    const didDocumentModel = getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
+    const didDocumentModel = getDidDocumentModel(
+      primaryKey.publicKey,
+      recoveryKey.publicKey
+    );
     expect(didDocumentModel).toBeDefined();
     expect(isDidDocumentModelValid(didDocumentModel)).toBeTruthy();
   });

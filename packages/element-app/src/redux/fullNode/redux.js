@@ -6,5 +6,5 @@ export default connect(
   ({ fullNode }) => ({ fullNode }),
   {
     ...actions,
-  },
+  }
 );

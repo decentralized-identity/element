@@ -6,7 +6,7 @@ import { withRouter } from 'react-router';
 GoogleAnalytics.initialize('UA-117945399-5');
 
 const withTracker = (WrappedComponent, options = {}) => {
-  const trackPage = (page) => {
+  const trackPage = page => {
     GoogleAnalytics.set({
       page,
       ...options,
@@ -23,7 +23,8 @@ const withTracker = (WrappedComponent, options = {}) => {
     }
 
     componentDidUpdate(prevProps) {
-      const currentPage = prevProps.location.pathname + prevProps.location.search;
+      const currentPage =
+        prevProps.location.pathname + prevProps.location.search;
       const nextPage = window.location.pathname + window.location.search;
 
       if (currentPage !== nextPage) {

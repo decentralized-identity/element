@@ -14,16 +14,19 @@ import element from '@transmute/element-lib';
 import didWallet from '@transmute/did-wallet';
 
 function download(filename, text) {
-  const element = document.createElement('a');
-  element.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(text)}`);
-  element.setAttribute('download', filename);
+  const el = document.createElement('a');
+  el.setAttribute(
+    'href',
+    `data:text/plain;charset=utf-8,${encodeURIComponent(text)}`
+  );
+  el.setAttribute('download', filename);
 
-  element.style.display = 'none';
-  document.body.appendChild(element);
+  el.style.display = 'none';
+  document.body.appendChild(el);
 
-  element.click();
+  el.click();
 
-  document.body.removeChild(element);
+  document.body.removeChild(el);
 }
 
 class CreateWalletDialog extends React.Component {
@@ -72,10 +75,14 @@ class CreateWalletDialog extends React.Component {
       tags: ['Ed25519VerificationKey2018', '#edv'],
     };
     const keys = [walletKey1, walletKey2, walletKey3];
-    const didDocumentModel = getEdvDidDocumentModel(walletKey1, walletKey2, walletKey3);
+    const didDocumentModel = getEdvDidDocumentModel(
+      walletKey1,
+      walletKey2,
+      walletKey3
+    );
     const createPayload = await element.op.getCreatePayload(
       didDocumentModel,
-      primaryKey,
+      primaryKey
     );
     const didUniqueSuffix = element.func.getDidUniqueSuffix(createPayload);
     walletKey3.tags = [...walletKey3.tags, `did:elem:${didUniqueSuffix}#edv`];
@@ -83,7 +90,7 @@ class CreateWalletDialog extends React.Component {
     this.wallet = wallet;
   }
 
-  handleChange = name => (event) => {
+  handleChange = name => event => {
     this.setState({ [name]: event.target.value });
   };
 
@@ -106,7 +113,9 @@ class CreateWalletDialog extends React.Component {
         >
           <DialogTitle id="form-dialog-title">Create A DID Wallet</DialogTitle>
           <DialogContent>
-            <DialogContentText>Enter a password to protect your wallet.</DialogContentText>
+            <DialogContentText>
+              Enter a password to protect your wallet.
+            </DialogContentText>
             <br />
             <TextField
               autoFocus
@@ -131,7 +140,10 @@ class CreateWalletDialog extends React.Component {
             />
 
             {ciphered !== '' && (
-              <QRCode value={ciphered} style={{ width: '100%', height: '100%' }} />
+              <QRCode
+                value={ciphered}
+                style={{ width: '100%', height: '100%' }}
+              />
             )}
           </DialogContent>
           <DialogActions>

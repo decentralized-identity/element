@@ -66,7 +66,7 @@ export class AddKeyDialog extends React.Component {
             disabled
             name="signatureEditor"
             value={jsonEditorValue}
-            onChange={(newValue) => {
+            onChange={newValue => {
               this.setState({
                 jsonEditorValue: newValue,
               });
@@ -78,7 +78,11 @@ export class AddKeyDialog extends React.Component {
           <Button onClick={this.handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={this.handleSubmit} color="primary" variant="contained">
+          <Button
+            onClick={this.handleSubmit}
+            color="primary"
+            variant="contained"
+          >
             Add Key
           </Button>
         </DialogActions>

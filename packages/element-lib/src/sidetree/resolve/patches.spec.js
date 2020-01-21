@@ -19,11 +19,19 @@ describe('patches', () => {
     mks = new MnemonicKeySystem(MnemonicKeySystem.generateMnemonic());
     primaryKey = await mks.getKeyForPurpose('primary', 0);
     recoveryKey = await mks.getKeyForPurpose('recovery', 0);
-    const didDocumentModel = await sidetree.op.getDidDocumentModel(primaryKey.publicKey, recoveryKey.publicKey);
-    createPayload = await await sidetree.op.getCreatePayload(didDocumentModel, primaryKey);
+    const didDocumentModel = await sidetree.op.getDidDocumentModel(
+      primaryKey.publicKey,
+      recoveryKey.publicKey
+    );
+    createPayload = await await sidetree.op.getCreatePayload(
+      didDocumentModel,
+      primaryKey
+    );
     didUniqueSuffix = await sidetree.func.getDidUniqueSuffix(createPayload);
     did = `did:elem${didUniqueSuffix}`;
-    const createTransaction = await sidetree.batchScheduler.writeNow(createPayload);
+    const createTransaction = await sidetree.batchScheduler.writeNow(
+      createPayload
+    );
     await sidetree.syncTransaction(createTransaction);
   });
 
@@ -51,7 +59,11 @@ describe('patches', () => {
       kid: '#primary',
       alg: 'ES256K',
     };
-    const updatePayload = await sidetree.op.makeSignedOperation(header, payload, primaryKey.privateKey);
+    const updatePayload = await sidetree.op.makeSignedOperation(
+      header,
+      payload,
+      primaryKey.privateKey
+    );
     const transaction = await sidetree.batchScheduler.writeNow(updatePayload);
     expect(transaction).toBeDefined();
     const didDocument = await sidetree.resolve(didUniqueSuffix, true);
@@ -77,7 +89,11 @@ describe('patches', () => {
       kid: '#primary',
       alg: 'ES256K',
     };
-    const updatePayload = await sidetree.op.makeSignedOperation(header, payload, primaryKey.privateKey);
+    const updatePayload = await sidetree.op.makeSignedOperation(
+      header,
+      payload,
+      primaryKey.privateKey
+    );
     const transaction = await sidetree.batchScheduler.writeNow(updatePayload);
     expect(transaction).toBeDefined();
     const didDocument = await sidetree.resolve(didUniqueSuffix, true);
@@ -101,7 +117,11 @@ describe('patches', () => {
       kid: '#primary',
       alg: 'ES256K',
     };
-    const updatePayload = await sidetree.op.makeSignedOperation(header, payload, primaryKey.privateKey);
+    const updatePayload = await sidetree.op.makeSignedOperation(
+      header,
+      payload,
+      primaryKey.privateKey
+    );
     const transaction = await sidetree.batchScheduler.writeNow(updatePayload);
     expect(transaction).toBeDefined();
     const didDocument = await sidetree.resolve(didUniqueSuffix, true);
@@ -125,7 +145,11 @@ describe('patches', () => {
       kid: '#primary',
       alg: 'ES256K',
     };
-    const updatePayload = await sidetree.op.makeSignedOperation(header, payload, primaryKey.privateKey);
+    const updatePayload = await sidetree.op.makeSignedOperation(
+      header,
+      payload,
+      primaryKey.privateKey
+    );
     const transaction = await sidetree.batchScheduler.writeNow(updatePayload);
     expect(transaction).toBeDefined();
     const didDocument = await sidetree.resolve(didUniqueSuffix, true);
@@ -149,7 +173,11 @@ describe('patches', () => {
       kid: '#primary',
       alg: 'ES256K',
     };
-    const updatePayload = await sidetree.op.makeSignedOperation(header, payload, primaryKey.privateKey);
+    const updatePayload = await sidetree.op.makeSignedOperation(
+      header,
+      payload,
+      primaryKey.privateKey
+    );
     const transaction = await sidetree.batchScheduler.writeNow(updatePayload);
     expect(transaction).toBeDefined();
     const didDocument = await sidetree.resolve(didUniqueSuffix, true);
@@ -173,7 +201,11 @@ describe('patches', () => {
       kid: '#primary',
       alg: 'ES256K',
     };
-    const updatePayload = await sidetree.op.makeSignedOperation(header, payload, primaryKey.privateKey);
+    const updatePayload = await sidetree.op.makeSignedOperation(
+      header,
+      payload,
+      primaryKey.privateKey
+    );
     const transaction = await sidetree.batchScheduler.writeNow(updatePayload);
     expect(transaction).toBeDefined();
     const didDocument = await sidetree.resolve(didUniqueSuffix, true);
@@ -197,7 +229,11 @@ describe('patches', () => {
       kid: '#primary',
       alg: 'ES256K',
     };
-    const updatePayload = await sidetree.op.makeSignedOperation(header, payload, primaryKey.privateKey);
+    const updatePayload = await sidetree.op.makeSignedOperation(
+      header,
+      payload,
+      primaryKey.privateKey
+    );
     const transaction = await sidetree.batchScheduler.writeNow(updatePayload);
     expect(transaction).toBeDefined();
     const didDocument = await sidetree.resolve(didUniqueSuffix, true);
@@ -221,7 +257,11 @@ describe('patches', () => {
       kid: '#primary',
       alg: 'ES256K',
     };
-    const updatePayload = await sidetree.op.makeSignedOperation(header, payload, primaryKey.privateKey);
+    const updatePayload = await sidetree.op.makeSignedOperation(
+      header,
+      payload,
+      primaryKey.privateKey
+    );
     const transaction = await sidetree.batchScheduler.writeNow(updatePayload);
     expect(transaction).toBeDefined();
     const didDocument = await sidetree.resolve(didUniqueSuffix, true);
@@ -245,7 +285,11 @@ describe('patches', () => {
       kid: '#primary',
       alg: 'ES256K',
     };
-    const updatePayload = await sidetree.op.makeSignedOperation(header, payload, primaryKey.privateKey);
+    const updatePayload = await sidetree.op.makeSignedOperation(
+      header,
+      payload,
+      primaryKey.privateKey
+    );
     const transaction = await sidetree.batchScheduler.writeNow(updatePayload);
     expect(transaction).toBeDefined();
     const didDocument = await sidetree.resolve(didUniqueSuffix, true);
@@ -275,7 +319,11 @@ describe('patches', () => {
       kid: '#primary',
       alg: 'ES256K',
     };
-    const updatePayload = await sidetree.op.makeSignedOperation(header, payload, primaryKey.privateKey);
+    const updatePayload = await sidetree.op.makeSignedOperation(
+      header,
+      payload,
+      primaryKey.privateKey
+    );
     const transaction = await sidetree.batchScheduler.writeNow(updatePayload);
     expect(transaction).toBeDefined();
     const didDocument = await sidetree.resolve(didUniqueSuffix, true);
@@ -299,7 +347,11 @@ describe('patches', () => {
       kid: '#primary',
       alg: 'ES256K',
     };
-    const updatePayload = await sidetree.op.makeSignedOperation(header, payload, primaryKey.privateKey);
+    const updatePayload = await sidetree.op.makeSignedOperation(
+      header,
+      payload,
+      primaryKey.privateKey
+    );
     const transaction = await sidetree.batchScheduler.writeNow(updatePayload);
     expect(transaction).toBeDefined();
     const didDocument = await sidetree.resolve(didUniqueSuffix, true);
@@ -311,7 +363,7 @@ describe('patches', () => {
     const endpoint = {
       id: '#endpoint1',
       type: 'UserServiceEndpoint',
-      serviceEndpoint: 'https://example.com'
+      serviceEndpoint: 'https://example.com',
     };
     const payload = {
       didUniqueSuffix: lastOperation.didUniqueSuffix,
@@ -328,7 +380,11 @@ describe('patches', () => {
       kid: '#primary',
       alg: 'ES256K',
     };
-    const updatePayload = await sidetree.op.makeSignedOperation(header, payload, primaryKey.privateKey);
+    const updatePayload = await sidetree.op.makeSignedOperation(
+      header,
+      payload,
+      primaryKey.privateKey
+    );
     const transaction = await sidetree.batchScheduler.writeNow(updatePayload);
     expect(transaction).toBeDefined();
     const didDocument = await sidetree.resolve(didUniqueSuffix, true);
@@ -343,7 +399,7 @@ describe('patches', () => {
       patches: [
         {
           action: 'remove-service-endpoint',
-          id: '#endpoint1'
+          id: '#endpoint1',
         },
       ],
     };
@@ -352,7 +408,11 @@ describe('patches', () => {
       kid: '#primary',
       alg: 'ES256K',
     };
-    const updatePayload = await sidetree.op.makeSignedOperation(header, payload, primaryKey.privateKey);
+    const updatePayload = await sidetree.op.makeSignedOperation(
+      header,
+      payload,
+      primaryKey.privateKey
+    );
     const transaction = await sidetree.batchScheduler.writeNow(updatePayload);
     expect(transaction).toBeDefined();
     const didDocument = await sidetree.resolve(didUniqueSuffix, true);

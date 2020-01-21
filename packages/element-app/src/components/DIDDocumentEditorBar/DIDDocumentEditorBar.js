@@ -15,7 +15,7 @@ const styles = () => ({
   },
 });
 
-const getKeyValue = (publicKey) => {
+const getKeyValue = publicKey => {
   if (publicKey.publicKeyHex) {
     return publicKey.publicKeyHex;
   }
@@ -31,7 +31,7 @@ class DIDDocumentEditorBar extends Component {
     isRemoveKeyDialogOpen: false,
   };
 
-  handleAddKey = (item) => {
+  handleAddKey = item => {
     this.props.handleAddKey(item.value);
     this.setState({
       isAddKeyDialogOpen: false,
@@ -39,7 +39,7 @@ class DIDDocumentEditorBar extends Component {
     });
   };
 
-  handleRemoveKey = (item) => {
+  handleRemoveKey = item => {
     this.props.handleRemoveKey(item.value);
     this.setState({
       isAddKeyDialogOpen: false,
@@ -49,8 +49,7 @@ class DIDDocumentEditorBar extends Component {
 
   onlyNewKeys = () => {
     const { didDocument, keys } = this.props;
-    const didDocumentPublicKeys = didDocument.publicKey
-      .map(getKeyValue);
+    const didDocumentPublicKeys = didDocument.publicKey.map(getKeyValue);
     const res = Object.values(keys)
       .filter(key => !didDocumentPublicKeys.includes(key.publicKey))
       .reduce((acc, key) => ({ ...acc, [key.kid]: key }), {});
@@ -59,8 +58,7 @@ class DIDDocumentEditorBar extends Component {
 
   onlyExistingKeys = () => {
     const { didDocument, keys } = this.props;
-    const walletPublicKeys = Object.values(keys)
-      .map(key => key.publicKey);
+    const walletPublicKeys = Object.values(keys).map(key => key.publicKey);
     const res = didDocument.publicKey
       .filter(key => walletPublicKeys.includes(getKeyValue(key)))
       // Cannot remove the recovery key (enforced by server element-lib as well)

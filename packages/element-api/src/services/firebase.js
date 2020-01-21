@@ -8,7 +8,7 @@ require('firebase/firestore');
 let serviceAccountKey = false;
 const serviceAccountPath = path.resolve(
   __dirname,
-  '../../element-did-firebase-adminsdk.json',
+  '../../element-did-firebase-adminsdk.json'
 );
 
 if (fs.existsSync(serviceAccountPath)) {

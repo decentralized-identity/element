@@ -21,7 +21,11 @@ const getDidDocumentModel = (primaryPublicKey, recoveryPublicKey) => ({
 const makeSignedOperation = (header, payload, privateKey) => {
   const encodedHeader = encodeJson(header);
   const encodedPayload = encodeJson(payload);
-  const signature = signEncodedPayload(encodedHeader, encodedPayload, privateKey);
+  const signature = signEncodedPayload(
+    encodedHeader,
+    encodedPayload,
+    privateKey
+  );
   const operation = {
     protected: encodedHeader,
     payload: encodedPayload,
@@ -43,7 +47,7 @@ const getCreatePayload = async (didDocumentModel, primaryKey) => {
 const getUpdatePayloadForAddingAKey = async (
   previousOperation,
   newPublicKey,
-  primaryPrivateKey,
+  primaryPrivateKey
 ) => {
   const payload = {
     didUniqueSuffix: previousOperation.didUniqueSuffix,
@@ -66,15 +70,17 @@ const getUpdatePayloadForAddingAKey = async (
 const getUpdatePayloadForRemovingAKey = async (
   previousOperation,
   kid,
-  primaryPrivateKey,
+  primaryPrivateKey
 ) => {
   const payload = {
     didUniqueSuffix: previousOperation.didUniqueSuffix,
     previousOperationHash: previousOperation.operation.operationHash,
-    patches: [{
-      action: 'remove-public-keys',
-      publicKeys: [kid],
-    }],
+    patches: [
+      {
+        action: 'remove-public-keys',
+        publicKeys: [kid],
+      },
+    ],
   };
   const header = {
     operation: 'update',
@@ -84,7 +90,11 @@ const getUpdatePayloadForRemovingAKey = async (
   return makeSignedOperation(header, payload, primaryPrivateKey);
 };
 
-const getRecoverPayload = async (didUniqueSuffix, newDidDocument, recoveryPrivateKey) => {
+const getRecoverPayload = async (
+  didUniqueSuffix,
+  newDidDocument,
+  recoveryPrivateKey
+) => {
   const payload = {
     didUniqueSuffix,
     newDidDocument,

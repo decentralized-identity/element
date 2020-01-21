@@ -21,11 +21,11 @@ class ImportWalletFileCard extends React.Component {
     dialogIsOpen: false,
   };
 
-  handleFileChange = (event) => {
-    Object.keys(event.target.files).map((index) => {
+  handleFileChange = event => {
+    Object.keys(event.target.files).map(index => {
       const file = event.target.files[index];
       const reader = new FileReader();
-      reader.onload = (upload) => {
+      reader.onload = upload => {
         this.props.importCipherTextWallet(upload.target.result);
       };
       return reader.readAsText(file);
@@ -47,7 +47,8 @@ class ImportWalletFileCard extends React.Component {
               Import Wallet File
             </Typography>
             <Typography component="p">
-              If you have an encrypted wallet file already, you can import it using this card.
+              If you have an encrypted wallet file already, you can import it
+              using this card.
             </Typography>
           </CardContent>
         </CardActionArea>

@@ -34,7 +34,7 @@ class DIDWallet extends Component {
     });
   };
 
-  handleUnlock = (password) => {
+  handleUnlock = password => {
     this.setState({
       isWalletLockDialogOpen: false,
       isAddKeyDialogOpen: false,
@@ -45,7 +45,10 @@ class DIDWallet extends Component {
 
   render() {
     const {
-      importCipherTextWallet, wallet, addKeyToWallet, getEdvDidDocumentModel,
+      importCipherTextWallet,
+      wallet,
+      addKeyToWallet,
+      getEdvDidDocumentModel,
     } = this.props;
     const { isWalletLockDialogOpen, isAddKeyDialogOpen } = this.state;
     const walletIsLocked = typeof wallet.data === 'string';
@@ -54,8 +57,9 @@ class DIDWallet extends Component {
     return (
       <div>
         <Typography variant="h6">
-          A DID Wallet is required to store keys used to sign Sidetree Operations, whether you are
-          anchoring them to a blockchain yourself, or using a server / full node.
+          A DID Wallet is required to store keys used to sign Sidetree
+          Operations, whether you are anchoring them to a blockchain yourself,
+          or using a server / full node.
         </Typography>
         <br />
         <Grid container spacing={24}>
@@ -92,7 +96,10 @@ class DIDWallet extends Component {
                     <FormGroup>
                       <FormControlLabel
                         control={
-                          <Switch checked={walletIsLocked} onChange={this.handleChange('locked')} />
+                          <Switch
+                            checked={walletIsLocked}
+                            onChange={this.handleChange('locked')}
+                          />
                         }
                         label={walletIsLocked ? 'Locked' : 'Unlocked!'}
                       />
@@ -100,23 +107,31 @@ class DIDWallet extends Component {
                   </FormControl>
                   <FormControl component="fieldset" disabled>
                     {walletIsLocked && (
-                      <QRCode value={wallet.data} style={{ width: '100%', height: '100%' }} />
+                      <QRCode
+                        value={wallet.data}
+                        style={{ width: '100%', height: '100%' }}
+                      />
                     )}
                   </FormControl>
 
                   <FormControl component="fieldset" disabled>
-                    {!walletIsLocked
-                      && Object.keys(wallet.data.keys).map((kid) => {
+                    {!walletIsLocked &&
+                      Object.keys(wallet.data.keys).map(kid => {
                         const key = wallet.data.keys[kid];
                         return (
                           <React.Fragment key={kid}>
                             <ExpansionPanelList
                               panels={[
                                 {
-                                  title: `${key.tags[0]} ${kid.substring(0, 8)}...`,
+                                  title: `${key.tags[0]} ${kid.substring(
+                                    0,
+                                    8
+                                  )}...`,
                                   children: (
                                     <div style={{ width: '100%' }}>
-                                      <Typography variant="body2">{key.notes}</Typography>
+                                      <Typography variant="body2">
+                                        {key.notes}
+                                      </Typography>
                                       <br />
                                       <div>
                                         {key.tags.map(t => (
@@ -136,7 +151,7 @@ class DIDWallet extends Component {
                                             snackbarMessage: {
                                               message: `Copied Public Key: ${key.publicKey.substring(
                                                 0,
-                                                32,
+                                                32
                                               )} ...`,
                                               variant: 'success',
                                               open: true,
@@ -144,7 +159,10 @@ class DIDWallet extends Component {
                                           });
                                         }}
                                       >
-                                        <Button style={{ marginTop: '16px' }} variant="contained">
+                                        <Button
+                                          style={{ marginTop: '16px' }}
+                                          variant="contained"
+                                        >
                                           Copy Public Key
                                         </Button>
                                       </CopyToClipboard>{' '}
@@ -176,7 +194,7 @@ class DIDWallet extends Component {
                   </Button>
                   <AddKeyDialog
                     open={isAddKeyDialogOpen}
-                    onSubmit={(data) => {
+                    onSubmit={data => {
                       addKeyToWallet(data);
                       this.setState({
                         isAddKeyDialogOpen: false,
@@ -189,13 +207,17 @@ class DIDWallet extends Component {
           )}
 
           <Grid item xs={12} md={4}>
-            <CreateWalletCard getEdvDidDocumentModel={getEdvDidDocumentModel}/>
+            <CreateWalletCard getEdvDidDocumentModel={getEdvDidDocumentModel} />
           </Grid>
           <Grid item xs={12} md={4}>
-            <ImportWalletFileCard importCipherTextWallet={importCipherTextWallet} />
+            <ImportWalletFileCard
+              importCipherTextWallet={importCipherTextWallet}
+            />
           </Grid>
           <Grid item xs={12} md={4}>
-            <ImportWalletQRCard importCipherTextWallet={importCipherTextWallet} />
+            <ImportWalletQRCard
+              importCipherTextWallet={importCipherTextWallet}
+            />
           </Grid>
         </Grid>
       </div>

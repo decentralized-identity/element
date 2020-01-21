@@ -45,10 +45,16 @@ describe('blockchain.ethereum', () => {
 
   describe('write', () => {
     it('should return a element transaction for an anchorFileHash', async () => {
-      const txn = await blockchain.write('Qmc9Asse4CvAuQJ77vMARRqLYTrL4ZzWK8BKb2FHRAYcuD');
-      expect(txn.anchorFileHash).toBe('Qmc9Asse4CvAuQJ77vMARRqLYTrL4ZzWK8BKb2FHRAYcuD');
+      const txn = await blockchain.write(
+        'Qmc9Asse4CvAuQJ77vMARRqLYTrL4ZzWK8BKb2FHRAYcuD'
+      );
+      expect(txn.anchorFileHash).toBe(
+        'Qmc9Asse4CvAuQJ77vMARRqLYTrL4ZzWK8BKb2FHRAYcuD'
+      );
       const txns = await blockchain.getTransactions(0);
-      expect(txns[0].anchorFileHash).toBe('Qmc9Asse4CvAuQJ77vMARRqLYTrL4ZzWK8BKb2FHRAYcuD');
+      expect(txns[0].anchorFileHash).toBe(
+        'Qmc9Asse4CvAuQJ77vMARRqLYTrL4ZzWK8BKb2FHRAYcuD'
+      );
     });
   });
 });

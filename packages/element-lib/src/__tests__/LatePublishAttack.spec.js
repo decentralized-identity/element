@@ -57,7 +57,9 @@ describe('LatePublishAttack', () => {
     batchFileHash = await sidetree.func.objectToMultihash(batchFile);
 
     // Write anchorFile to storage
-    const didUniqueSuffixes = decodedOperations.map(sidetree.func.getDidUniqueSuffix);
+    const didUniqueSuffixes = decodedOperations.map(
+      sidetree.func.getDidUniqueSuffix
+    );
     const merkleTools = new MerkleTools({
       hashType: 'sha256', // optional, defaults to 'sha256'
     });
@@ -77,7 +79,10 @@ describe('LatePublishAttack', () => {
   });
 
   it('pretend to transfer', async () => {
-    const lastOperation = await getLastOperation(sidetree, actor.didUniqueSuffix);
+    const lastOperation = await getLastOperation(
+      sidetree,
+      actor.didUniqueSuffix
+    );
     newKey = await actor.mks.getKeyForPurpose('primary', 2);
     const payload = {
       didUniqueSuffix: lastOperation.didUniqueSuffix,
@@ -93,7 +98,8 @@ describe('LatePublishAttack', () => {
               publicKeyHex: newKey.publicKey,
             },
           ],
-        }, {
+        },
+        {
           action: 'remove-public-keys',
           publicKeys: ['#primary'],
         },
@@ -104,7 +110,11 @@ describe('LatePublishAttack', () => {
       kid: '#primary',
       alg: 'ES256K',
     };
-    const operation = sidetree.op.makeSignedOperation(header, payload, actor.primaryKey.privateKey);
+    const operation = sidetree.op.makeSignedOperation(
+      header,
+      payload,
+      actor.primaryKey.privateKey
+    );
     const txn = await sidetree.batchScheduler.writeNow(operation);
     expect(txn.transactionTime).toBeDefined();
   });

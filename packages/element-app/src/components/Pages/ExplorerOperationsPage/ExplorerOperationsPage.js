@@ -10,7 +10,9 @@ import { DIDDocument } from '../../DIDDocument';
 export class ExplorerOperationsPage extends Component {
   async componentWillMount() {
     if (this.props.match.params.didUniqueSuffix) {
-      this.props.getOperationsForDidUniqueSuffix(this.props.match.params.didUniqueSuffix);
+      this.props.getOperationsForDidUniqueSuffix(
+        this.props.match.params.didUniqueSuffix
+      );
     }
   }
 
@@ -28,7 +30,7 @@ export class ExplorerOperationsPage extends Component {
             <Grid item xs={12}>
               <DIDDocument
                 didDocument={didDocumentForOperations}
-                onCopyToClipboard={(item) => {
+                onCopyToClipboard={item => {
                   snackbarMessage({
                     snackbarMessage: {
                       message: `Copied ${item}`,

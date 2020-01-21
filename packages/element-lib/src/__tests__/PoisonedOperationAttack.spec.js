@@ -31,18 +31,25 @@ describe('Poisoned Operation Attack', () => {
     const signature = sidetree.func.signEncodedPayload(
       encodedHeader,
       encodedPayload,
-      actor.primaryKey.privateKey,
+      actor.primaryKey.privateKey
     );
     const requestBody = {
       protected: encodedHeader,
       payload: encodedPayload,
       signature,
     };
-    const poisonedTransaction = await sidetree.batchScheduler.writeNow(requestBody);
-    const anchorFile = await sidetree.storage.read(poisonedTransaction.anchorFileHash);
+    const poisonedTransaction = await sidetree.batchScheduler.writeNow(
+      requestBody
+    );
+    const anchorFile = await sidetree.storage.read(
+      poisonedTransaction.anchorFileHash
+    );
     const didDoc = await sidetree.resolve(actor.didUniqueSuffix, true);
     expect(didDoc.id).toBe(`did:elem:${actor.didUniqueSuffix}`);
-    const badDidDoc = await sidetree.resolve(anchorFile.didUniqueSuffixes[0], true);
+    const badDidDoc = await sidetree.resolve(
+      anchorFile.didUniqueSuffixes[0],
+      true
+    );
     expect(badDidDoc).not.toBeDefined();
   });
 });

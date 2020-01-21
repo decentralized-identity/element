@@ -11,7 +11,10 @@ export default withHandlers({
     const operations = await sidetree.db.readCollection(didUniqueSuffix);
     set({ sidetreeOperations: operations });
   },
-  getOperationsForDidUniqueSuffix: ({ sidetree, set }) => async (didUniqueSuffix) => {
+  getOperationsForDidUniqueSuffix: ({
+    sidetree,
+    set,
+  }) => async didUniqueSuffix => {
     set({ loading: true });
     const myDidDocument = await sidetree.resolve(didUniqueSuffix, true);
     set({ didDocumentForOperations: myDidDocument });
@@ -61,7 +64,7 @@ export default withHandlers({
     getDidDocumentKey,
     set,
     sidetree,
-  }) => async (newKey) => {
+  }) => async newKey => {
     set({ resolving: true });
     const newPublicKey = getDidDocumentKey(newKey);
     const didUniqueSuffix = await getMyDidUniqueSuffix();
@@ -71,7 +74,7 @@ export default withHandlers({
     const updatePayload = await createAddKeyRequest(
       newPublicKey,
       didUniqueSuffix,
-      operationHash,
+      operationHash
     );
     snackbarMessage({
       snackbarMessage: {
@@ -98,13 +101,17 @@ export default withHandlers({
     createRemoveKeyRequest,
     set,
     sidetree,
-  }) => async (kid) => {
+  }) => async kid => {
     set({ resolving: true });
     const didUniqueSuffix = await getMyDidUniqueSuffix();
     const operations = await sidetree.db.readCollection(didUniqueSuffix);
     const lastOperation = operations.pop();
     const { operationHash } = lastOperation.operation;
-    const updatePayload = await createRemoveKeyRequest(kid, didUniqueSuffix, operationHash);
+    const updatePayload = await createRemoveKeyRequest(
+      kid,
+      didUniqueSuffix,
+      operationHash
+    );
     snackbarMessage({
       snackbarMessage: {
         message: 'This will take a few minutes....',
@@ -133,7 +140,8 @@ export default withHandlers({
     set({ resolving: true });
     try {
       const data = await sidetree.db.readCollection('did:documentRecord');
-      const getTransactionTime = record => record.record.lastTransaction.transactionTime;
+      const getTransactionTime = record =>
+        record.record.lastTransaction.transactionTime;
       data.sort((a, b) => getTransactionTime(b) - getTransactionTime(a));
       set({ documentRecords: data });
       snackbarMessage({
@@ -160,7 +168,7 @@ export default withHandlers({
     sidetree,
     snackbarMessage,
     set,
-  }) => async (did) => {
+  }) => async did => {
     set({ resolving: true });
     try {
       const doc = await sidetree.resolve(did, true);
@@ -178,7 +186,8 @@ export default withHandlers({
       console.error(e);
       snackbarMessage({
         snackbarMessage: {
-          message: 'Could not resolve DID, make sure it is of the form did:elem:didUniqueSuffix.',
+          message:
+            'Could not resolve DID, make sure it is of the form did:elem:didUniqueSuffix.',
           variant: 'error',
           open: true,
         },
@@ -189,7 +198,7 @@ export default withHandlers({
   getSidetreeOperationsFromTransactionHash: ({
     sidetree,
     set,
-  }) => async (transactionHash) => {
+  }) => async transactionHash => {
     set({ loading: true });
     const summary = await sidetree.getTransactionSummary(transactionHash);
     set({ sidetreeTransactionSummary: summary, loading: false });

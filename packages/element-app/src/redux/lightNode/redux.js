@@ -6,5 +6,5 @@ export default connect(
   ({ lightNode }) => ({ lightNode }),
   {
     ...actions,
-  },
+  }
 );

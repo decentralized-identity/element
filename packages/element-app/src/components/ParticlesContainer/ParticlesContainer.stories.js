@@ -117,5 +117,9 @@ const imgParams = {
 
 storiesOf('Particles Container', module)
   .add('basic', () => <ParticlesContainer>Basic</ParticlesContainer>)
-  .add('svg', () => <ParticlesContainer params={svgParams}>SVG</ParticlesContainer>)
-  .add('image', () => <ParticlesContainer params={imgParams}>SVG</ParticlesContainer>);
+  .add('svg', () => (
+    <ParticlesContainer params={svgParams}>SVG</ParticlesContainer>
+  ))
+  .add('image', () => (
+    <ParticlesContainer params={imgParams}>SVG</ParticlesContainer>
+  ));

@@ -6,16 +6,20 @@ const hdkey = require('hdkey');
 const ethUtil = require('ethereumjs-util');
 const X25519KeyPair = require('x25519-key-pair');
 
-const getCompressedPublicFromPrivate = privateKeyHex => secp256k1.publicKeyCreate(Buffer.from(privateKeyHex, 'hex')).toString('hex');
+const getCompressedPublicFromPrivate = privateKeyHex =>
+  secp256k1.publicKeyCreate(Buffer.from(privateKeyHex, 'hex')).toString('hex');
 
-const getUncompressedPublicKeyFromCompressedPublicKey = compressedPublicKeyHex => secp256k1
-  .publicKeyConvert(Buffer.from(compressedPublicKeyHex, 'hex'), false)
-  .slice(1)
-  .toString('hex');
+const getUncompressedPublicKeyFromCompressedPublicKey = compressedPublicKeyHex =>
+  secp256k1
+    .publicKeyConvert(Buffer.from(compressedPublicKeyHex, 'hex'), false)
+    .slice(1)
+    .toString('hex');
 
 // Might need to expand the public key before converting it to address
-const publicKeyToAddress = (pubKey) => {
-  const addr = ethUtil.publicToAddress(Buffer.from(pubKey, 'hex')).toString('hex');
+const publicKeyToAddress = pubKey => {
+  const addr = ethUtil
+    .publicToAddress(Buffer.from(pubKey, 'hex'))
+    .toString('hex');
   const address = ethUtil.toChecksumAddress(addr);
   return address;
 };
@@ -45,7 +49,6 @@ const createKeys = () => {
     privateKey: privKey.toString('hex'),
   };
 };
-
 
 const createEd25519Keys = async () => {
   const key = await Ed25519KeyPair.generate();

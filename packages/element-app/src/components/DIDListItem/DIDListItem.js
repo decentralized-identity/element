@@ -33,7 +33,7 @@ class DIDListItem extends Component {
                   <React.Fragment>
                     <Typography component="span">
                       {`Updated ${moment(
-                        record.lastTransaction.transactionTimestamp * 1000,
+                        record.lastTransaction.transactionTimestamp * 1000
                       ).fromNow()}`}
                     </Typography>
                   </React.Fragment>

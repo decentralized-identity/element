@@ -10,5 +10,5 @@ export default compose(
   sidetreeWallet.container,
   withRedux,
   snackbarRedux,
-  withHandlers,
+  withHandlers
 );

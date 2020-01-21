@@ -5,5 +5,5 @@ import wallet from '../wallet';
 
 export default compose(
   wallet.container,
-  withSidetreeHandlers,
+  withSidetreeHandlers
 );

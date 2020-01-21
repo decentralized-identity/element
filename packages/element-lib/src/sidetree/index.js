@@ -1,6 +1,9 @@
 const resolve = require('./resolve');
 const { sync, syncTransaction } = require('./sync');
-const { getTransactions, getTransactionSummary } = require('./utils/transactions');
+const {
+  getTransactions,
+  getTransactionSummary,
+} = require('./utils/transactions');
 const getNodeInfo = require('./utils/getNodeInfo');
 const OperationQueue = require('./batch/operationQueue');
 const BatchScheduler = require('./batch/BatchScheduler');
@@ -9,12 +12,7 @@ const op = require('./op');
 const func = require('../func');
 
 class Sidetree {
-  constructor({
-    db,
-    blockchain,
-    storage,
-    parameters,
-  } = {}) {
+  constructor({ db, blockchain, storage, parameters } = {}) {
     const operationQueue = new OperationQueue(db);
     // Utils for sidetree
     this.blockchain = blockchain;
