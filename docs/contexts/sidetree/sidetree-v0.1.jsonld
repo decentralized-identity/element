@@ -1,22 +1,21 @@
 {
-  "@context": [
-    "https://w3id.org/security/v2",
-    {
-      "@version": 1.1,
-
-      "service": "sec:service",
-      "sidetree": "https://docs.element-did.com/contexts/sidetree/sidetree-v0.1#",
-
-      "type": "sec:type",
-      "serviceEndpoint": "sec:serviceEndpoint",
-      "publicKeyHex": "sec:publicKeyHex",
-      "publicKeyJwk": "sec:publicKeyJwk",
-      "crv": "sec:crv",
-      "kid": "sec:kid",
-      "kty": "sec:kty",
-      "x": "sec:x",
-      "y": "sec:y",
-      "usage": "sidetree:usage"
-    }
-  ]
+  "@context": {
+    "sidetree": "https://docs.element-did.com/contexts/sidetree/sidetree-v0.1#",
+    "assertionMethod": "sec:assertionMethod",
+    "capabilityDelegation": "sec:capabilityDelegation",
+    "capabilityInvocation": "sec:capabilityInvocation",
+    "keyAgreement": "sec:keyAgreement",
+    "controller": "sec:controller",
+    "publicKeyBase58": "sec:publicKeyBase58",
+    "type": "sec:type",
+    "serviceEndpoint": "sec:serviceEndpoint",
+    "publicKeyHex": "sec:publicKeyHex",
+    "publicKeyJwk": "sec:publicKeyJwk",
+    "crv": "sec:crv",
+    "kid": "sec:kid",
+    "kty": "sec:kty",
+    "x": "sec:x",
+    "y": "sec:y",
+    "usage": "sidetree:usage"
+  }
 }
