@@ -1,0 +1,56 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    "https://docs.element-did.com/contexts/sidetree/sidetree-v0.1.jsonld"
+  ],
+  "keyAgreement": [
+    {
+      "type": "X25519KeyAgreementKey2019",
+      "publicKeyBase58": "EbPdihmxXDLJXKgb7YnB5r6b26YsqgGkLt1uJS3M9pca",
+      "id": "#keyAgreement",
+      "usage": "signing",
+      "controller": "did:elem:EiC_H1NwXPlS5C-JSPJJtdZpHUzbIcOW_w0dUc5jv5ZO7Q"
+    }
+  ],
+  "assertionMethod": ["#edv"],
+  "publicKey": [
+    {
+      "type": "Secp256k1VerificationKey2018",
+      "id": "#primary",
+      "usage": "signing",
+      "publicKeyHex": "034009814b352c0c831e1b87b5dd6da6dc660b099cac004d7e1ad61b17d39bba77",
+      "controller": "did:elem:EiC_H1NwXPlS5C-JSPJJtdZpHUzbIcOW_w0dUc5jv5ZO7Q"
+    },
+    {
+      "type": "Secp256k1VerificationKey2018",
+      "id": "#recovery",
+      "usage": "recovery",
+      "publicKeyHex": "02caa8dbaa23186b6936b009e19cd28846c86f8612ffc8cd3790c02afca7cc3ec8",
+      "controller": "did:elem:EiC_H1NwXPlS5C-JSPJJtdZpHUzbIcOW_w0dUc5jv5ZO7Q"
+    },
+    {
+      "id": "#edv",
+      "usage": "signing",
+      "type": "Ed25519VerificationKey2018",
+      "publicKeyBase58": "DCqCE3a16KUqzAEQyhPmUp1QvhyiASPjVUEVNmxYhYS7",
+      "controller": "did:elem:EiC_H1NwXPlS5C-JSPJJtdZpHUzbIcOW_w0dUc5jv5ZO7Q"
+    },
+    {
+      "id": "#exampleJwk",
+      "usage": "signing",
+      "type": "Ed25519VerificationKey2018",
+      "controller": "did:elem:EiC_H1NwXPlS5C-JSPJJtdZpHUzbIcOW_w0dUc5jv5ZO7Q",
+      "publicKeyJwk": {
+        "crv": "secp256k1",
+        "kid": "JUvpllMEYUZ2joO59UNui_XYDqxVqiFLLAJ8klWuPBw",
+        "kty": "EC",
+        "x": "dWCvM4fTdeM0KmloF57zxtBPXTOythHPMm1HCLrdd3A",
+        "y": "36uMVGM7hnw-N6GnjFcihWE3SkrhMLzzLCdPMXPEXlA"
+      }
+    }
+  ],
+  "capabilityInvocation": ["#edv"],
+  "authentication": ["#edv"],
+  "capabilityDelegation": ["#edv"],
+  "id": "did:elem:EiC_H1NwXPlS5C-JSPJJtdZpHUzbIcOW_w0dUc5jv5ZO7Q"
+}
