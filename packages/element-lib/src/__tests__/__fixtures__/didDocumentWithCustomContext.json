@@ -1,12 +1,14 @@
 {
   "@context": [
-    "https://w3id.org/security/v2",
+    "https://www.w3.org/ns/did/v1",
     {
-      "@version": 1.1,
-
-      "service": "sec:service",
       "sidetree": "https://docs.element-did.com/contexts/sidetree/sidetree-v0.1#",
-
+      "assertionMethod": "sec:assertionMethod",
+      "capabilityDelegation": "sec:capabilityDelegation",
+      "capabilityInvocation": "sec:capabilityInvocation",
+      "keyAgreement": "sec:keyAgreement",
+      "controller": "sec:controller",
+      "publicKeyBase58": "sec:publicKeyBase58",
       "type": "sec:type",
       "serviceEndpoint": "sec:serviceEndpoint",
       "publicKeyHex": "sec:publicKeyHex",
