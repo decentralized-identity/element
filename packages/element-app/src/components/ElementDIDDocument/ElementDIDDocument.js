@@ -29,11 +29,14 @@ class ElementDIDDocument extends Component {
       <DIDDocument
         didDocument={didDocument}
         onCopyToClipboard={item => {
-          this.props.snackbarMessage({
-            snackbarMessage: {
-              message: `Copied ${item}`,
-              variant: 'success',
+          this.props.doSetTmuiProp({
+            snackBarMessage: {
               open: true,
+              variant: 'success',
+              message: `Copied ${item}`,
+              vertical: 'bottom',
+              horizontal: 'right',
+              autoHideDuration: 5000,
             },
           });
         }}
@@ -44,7 +47,7 @@ class ElementDIDDocument extends Component {
 
 ElementDIDDocument.propTypes = {
   classes: PropTypes.object.isRequired,
-  snackbarMessage: PropTypes.func.isRequired,
+  doSetTmuiProp: PropTypes.func.isRequired,
   didDocument: PropTypes.object.isRequired,
 };
 

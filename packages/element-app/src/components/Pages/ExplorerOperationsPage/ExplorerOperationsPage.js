@@ -17,7 +17,7 @@ export class ExplorerOperationsPage extends Component {
   }
 
   render() {
-    const { nodeStore, snackbarMessage } = this.props;
+    const { nodeStore } = this.props;
     const { sidetreeOperations, loading, didDocumentForOperations } = nodeStore;
 
     const content = () => {
@@ -31,11 +31,14 @@ export class ExplorerOperationsPage extends Component {
               <DIDDocument
                 didDocument={didDocumentForOperations}
                 onCopyToClipboard={item => {
-                  snackbarMessage({
-                    snackbarMessage: {
-                      message: `Copied ${item}`,
-                      variant: 'success',
+                  this.props.doSetTmuiProp({
+                    snackBarMessage: {
                       open: true,
+                      variant: 'success',
+                      message: `Copied ${item}`,
+                      vertical: 'bottom',
+                      horizontal: 'right',
+                      autoHideDuration: 5000,
                     },
                   });
                 }}
@@ -54,7 +57,7 @@ export class ExplorerOperationsPage extends Component {
     };
     return (
       <Pages.WithNavigation>
-        <Grid container spacing={24}>
+        <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography variant="h3" style={{ marginBottom: '8px' }}>
               Element Operations
@@ -71,5 +74,5 @@ ExplorerOperationsPage.propTypes = {
   nodeStore: PropTypes.object.isRequired,
   getOperationsForDidUniqueSuffix: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired,
-  snackbarMessage: PropTypes.func.isRequired,
+  doSetTmuiProp: PropTypes.func.isRequired,
 };

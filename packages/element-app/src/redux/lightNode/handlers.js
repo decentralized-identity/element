@@ -22,43 +22,52 @@ export default withHandlers({
     set({ sidetreeOperations: operations, loading: false });
   },
   createDID: ({
-    snackbarMessage,
+    doSetTmuiProp,
     sidetree,
     createDIDRequest,
     getMyDidUniqueSuffix,
     set,
   }) => async () => {
     set({ resolving: true });
-    snackbarMessage({
-      snackbarMessage: {
+    doSetTmuiProp({
+      snackBarMessage: {
         message: 'Creating your DID will take a few minutes....',
         variant: 'info',
         open: true,
+        vertical: 'bottom',
+        horizontal: 'right',
+        autoHideDuration: 5000,
       },
     });
     const createReq = await createDIDRequest();
     await sidetree.batchScheduler.writeNow(createReq);
-    snackbarMessage({
-      snackbarMessage: {
+    doSetTmuiProp({
+      snackBarMessage: {
         message: 'DID Created. Resolving....',
         variant: 'info',
         open: true,
+        vertical: 'bottom',
+        horizontal: 'right',
+        autoHideDuration: 5000,
       },
     });
     const didUniqueSuffix = await getMyDidUniqueSuffix();
     const myDidDocument = await sidetree.resolve(didUniqueSuffix, true);
     set({ myDidDocument });
-    snackbarMessage({
-      snackbarMessage: {
+    doSetTmuiProp({
+      snackBarMessage: {
         message: `Resolved did:elem:${didUniqueSuffix}`,
         variant: 'success',
         open: true,
+        vertical: 'bottom',
+        horizontal: 'right',
+        autoHideDuration: 5000,
       },
     });
     set({ resolving: false });
   },
   addKeyToDIDDocument: ({
-    snackbarMessage,
+    doSetTmuiProp,
     getMyDidUniqueSuffix,
     createAddKeyRequest,
     getDidDocumentKey,
@@ -76,27 +85,33 @@ export default withHandlers({
       didUniqueSuffix,
       operationHash
     );
-    snackbarMessage({
-      snackbarMessage: {
+    doSetTmuiProp({
+      snackBarMessage: {
         message: 'This will take a few minutes....',
         variant: 'info',
         open: true,
+        vertical: 'bottom',
+        horizontal: 'right',
+        autoHideDuration: 5000,
       },
     });
     await sidetree.batchScheduler.writeNow(updatePayload);
     const myDidDocument = await sidetree.resolve(didUniqueSuffix, true);
     set({ myDidDocument });
-    snackbarMessage({
-      snackbarMessage: {
+    doSetTmuiProp({
+      snackBarMessage: {
         message: 'Key added.',
         variant: 'success',
         open: true,
+        vertical: 'bottom',
+        horizontal: 'right',
+        autoHideDuration: 5000,
       },
     });
     set({ resolving: false });
   },
   removeKeyFromDIDDocument: ({
-    snackbarMessage,
+    doSetTmuiProp,
     getMyDidUniqueSuffix,
     createRemoveKeyRequest,
     set,
@@ -112,21 +127,27 @@ export default withHandlers({
       didUniqueSuffix,
       operationHash
     );
-    snackbarMessage({
-      snackbarMessage: {
+    doSetTmuiProp({
+      snackBarMessage: {
         message: 'This will take a few minutes....',
         variant: 'info',
         open: true,
+        vertical: 'bottom',
+        horizontal: 'right',
+        autoHideDuration: 5000,
       },
     });
     await sidetree.batchScheduler.writeNow(updatePayload);
     const myDidDocument = await sidetree.resolve(didUniqueSuffix, true);
     set({ myDidDocument });
-    snackbarMessage({
-      snackbarMessage: {
+    doSetTmuiProp({
+      snackBarMessage: {
         message: 'Key removed.',
         variant: 'success',
         open: true,
+        vertical: 'bottom',
+        horizontal: 'right',
+        autoHideDuration: 5000,
       },
     });
     set({ resolving: false });
@@ -136,7 +157,7 @@ export default withHandlers({
     const data = await sidetree.getTransactions({ limit });
     set({ sidetreeTxns: data.reverse(), loading: false });
   },
-  getAll: ({ snackbarMessage, sidetree, set }) => async () => {
+  getAll: ({ doSetTmuiProp, sidetree, set }) => async () => {
     set({ resolving: true });
     try {
       const data = await sidetree.db.readCollection('did:documentRecord');
@@ -144,52 +165,59 @@ export default withHandlers({
         record.record.lastTransaction.transactionTime;
       data.sort((a, b) => getTransactionTime(b) - getTransactionTime(a));
       set({ documentRecords: data });
-      snackbarMessage({
-        snackbarMessage: {
+      doSetTmuiProp({
+        snackBarMessage: {
           message: 'Resolved sidetree.',
           variant: 'success',
           open: true,
+          vertical: 'bottom',
+          horizontal: 'right',
+          autoHideDuration: 5000,
         },
       });
     } catch (e) {
       console.error(e);
-      snackbarMessage({
-        snackbarMessage: {
+      doSetTmuiProp({
+        snackBarMessage: {
           message: 'Could not resolve sidetree.',
           variant: 'error',
           open: true,
+          vertical: 'bottom',
+          horizontal: 'right',
+          autoHideDuration: 5000,
         },
       });
     }
     set({ resolving: false });
   },
-  resolveDID: ({
-    didResolved,
-    sidetree,
-    snackbarMessage,
-    set,
-  }) => async did => {
+  resolveDID: ({ didResolved, sidetree, doSetTmuiProp, set }) => async did => {
     set({ resolving: true });
     try {
       const doc = await sidetree.resolve(did, true);
       if (doc) {
         didResolved({ didDocument: doc });
-        snackbarMessage({
-          snackbarMessage: {
+        doSetTmuiProp({
+          snackBarMessage: {
             message: `Resolved ${doc.id}`,
             variant: 'success',
             open: true,
+            vertical: 'bottom',
+            horizontal: 'right',
+            autoHideDuration: 5000,
           },
         });
       }
     } catch (e) {
       console.error(e);
-      snackbarMessage({
-        snackbarMessage: {
+      doSetTmuiProp({
+        snackBarMessage: {
           message:
             'Could not resolve DID, make sure it is of the form did:elem:didUniqueSuffix.',
           variant: 'error',
           open: true,
+          vertical: 'bottom',
+          horizontal: 'right',
+          autoHideDuration: 5000,
         },
       });
     }

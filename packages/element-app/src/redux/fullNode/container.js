@@ -4,11 +4,12 @@ import withRedux from './redux';
 import withHandlers from './handlers';
 
 import sidetreeWallet from '../sidetreeWallet';
-import snackbarRedux from '../snackbar/redux';
+import tmui from '../tmui';
 
 export default compose(
+  tmui.container,
   sidetreeWallet.container,
+
   withRedux,
-  snackbarRedux,
   withHandlers
 );

@@ -23,7 +23,7 @@ class LightNodeExplorerOperationsPage extends Component {
 LightNodeExplorerOperationsPage.propTypes = {
   lightNode: PropTypes.object.isRequired,
   resolveDID: PropTypes.func.isRequired,
-  snackbarMessage: PropTypes.func.isRequired,
+  doSetTmuiProp: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired,
   history: PropTypes.any.isRequired,
   getAll: PropTypes.func.isRequired,

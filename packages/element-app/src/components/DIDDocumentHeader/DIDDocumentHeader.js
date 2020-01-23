@@ -25,7 +25,7 @@ class DIDDocumentHeader extends Component {
         <Paper style={{ width: '100%', wordBreak: 'break-all' }}>
           <List>
             <ListItem>
-              <Avatar>
+              <Avatar style={{ marginRight: '8px' }}>
                 <VerifiedUser />
               </Avatar>
               <ListItemText primary={did} />

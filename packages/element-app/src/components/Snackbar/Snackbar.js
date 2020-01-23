@@ -1,50 +1,61 @@
-/* eslint-disable no-underscore-dangle */
-import React, { Component } from 'react';
-import _ from 'lodash';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
-import Notification from './Notification';
+import Snackbar from "@material-ui/core/Snackbar";
 
-class Snackbar extends Component {
-  _isMounted = false;
+import MySnackbarContentWrapper from "./MySnackbarContentWrapper";
 
-  state = {
-    message: '',
-    variant: '',
-    open: false,
+function TSnackbar(props) {
+  const {
+    open,
+    variant,
+    message,
+    autoHideDuration,
+    vertical,
+    horizontal
+  } = props.tmui.snackBarMessage || {
+    variant: "default",
+    vertical: "bottom",
+    horizontal: "right"
   };
 
-  componentDidMount() {
-    this._isMounted = true;
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false;
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (!_.isEqual(nextProps, this.props) || !this.state.open) {
-      this.setState({
-        ...nextProps.snackbar.snackbarMessage,
-      });
-      setTimeout(() => {
-        if (this._isMounted) {
-          this.setState({
-            open: false,
-          });
-        }
-      }, 3 * 1000);
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
     }
-  }
+    props.doSetTmuiProp({
+      snackBarMessage: {
+        ...props.tmui.snackBarMessage,
+        open: false
+      }
+    });
+  };
 
-  render() {
-    const { message, variant, open } = this.state;
-    return <Notification message={message} variant={variant} open={open} />;
-  }
+  return (
+    <div>
+      <Snackbar
+        anchorOrigin={{
+          vertical,
+          horizontal
+        }}
+        open={open}
+        autoHideDuration={autoHideDuration}
+        onClose={handleClose}
+      >
+        <MySnackbarContentWrapper
+          onClose={handleClose}
+          variant={variant}
+          message={message}
+        />
+      </Snackbar>
+    </div>
+  );
 }
 
-Snackbar.propTypes = {
-  snackbar: PropTypes.any,
+TSnackbar.propTypes = {
+  tmui: PropTypes.object.isRequired,
+  doSetTmuiProp: PropTypes.func.isRequired
 };
 
-export default Snackbar;
+export { TSnackbar as Snackbar };
+export default TSnackbar;

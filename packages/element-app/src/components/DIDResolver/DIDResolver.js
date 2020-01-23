@@ -40,7 +40,7 @@ class DIDResolver extends Component {
     const didDocument = store.dids[currentDID];
 
     return (
-      <Grid container spacing={24}>
+      <Grid container spacing={2}>
         <Grid item xs={12} sm={10}>
           <TextField
             label="Element Resolver"

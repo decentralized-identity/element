@@ -25,7 +25,7 @@ export default withHandlers({
     set({ sidetreeOperations: res.data, loading: false });
   },
   createDID: ({
-    snackbarMessage,
+    doSetTmuiProp,
     createDIDRequest,
     getMyDidUniqueSuffix,
     set,
@@ -36,35 +36,44 @@ export default withHandlers({
 
     const createReq = await createDIDRequest();
     axios.post(`${API_BASE}/sidetree/requests`, createReq);
-    snackbarMessage({
-      snackbarMessage: {
+    doSetTmuiProp({
+      snackBarMessage: {
         message: 'This will take a few minutes....',
         variant: 'info',
         open: true,
+        vertical: 'bottom',
+        horizontal: 'right',
+        autoHideDuration: 5000,
       },
     });
     setTimeout(async () => {
-      snackbarMessage({
-        snackbarMessage: {
+      doSetTmuiProp({
+        snackBarMessage: {
           message: 'Resolving....',
           variant: 'info',
           open: true,
+          vertical: 'bottom',
+          horizontal: 'right',
+          autoHideDuration: 5000,
         },
       });
       res = await axios.get(`${API_BASE}/sidetree/did:elem:${didUniqueSuffix}`);
       set({ myDidDocument: res.data });
-      snackbarMessage({
-        snackbarMessage: {
+      doSetTmuiProp({
+        snackBarMessage: {
           message: `Resolved did:elem:${didUniqueSuffix}`,
           variant: 'success',
           open: true,
+          vertical: 'bottom',
+          horizontal: 'right',
+          autoHideDuration: 5000,
         },
       });
       set({ resolving: false });
     }, 1.5 * 60 * 1000);
   },
   addKeyToDIDDocument: ({
-    snackbarMessage,
+    doSetTmuiProp,
     getMyDidUniqueSuffix,
     createAddKeyRequest,
     getDidDocumentKey,
@@ -84,16 +93,19 @@ export default withHandlers({
       operationHash
     );
     axios.post(`${API_BASE}/sidetree/requests`, updatePayload);
-    snackbarMessage({
-      snackbarMessage: {
+    doSetTmuiProp({
+      snackBarMessage: {
         message: 'This will take a few minutes....',
         variant: 'info',
         open: true,
+        vertical: 'bottom',
+        horizontal: 'right',
+        autoHideDuration: 5000,
       },
     });
   },
   removeKeyFromDIDDocument: ({
-    snackbarMessage,
+    doSetTmuiProp,
     getMyDidUniqueSuffix,
     createRemoveKeyRequest,
     set,
@@ -111,15 +123,18 @@ export default withHandlers({
       operationHash
     );
     axios.post(`${API_BASE}/sidetree/requests`, updatePayload);
-    snackbarMessage({
-      snackbarMessage: {
+    doSetTmuiProp({
+      snackBarMessage: {
         message: 'This will take a few minutes....',
         variant: 'info',
         open: true,
+        vertical: 'bottom',
+        horizontal: 'right',
+        autoHideDuration: 5000,
       },
     });
   },
-  getNodeInfo: ({ snackbarMessage, set }) => async () => {
+  getNodeInfo: ({ doSetTmuiProp, set }) => async () => {
     set({ resolving: true });
     try {
       const { data } = await axios.get(`${API_BASE}/sidetree/node`);
@@ -127,11 +142,14 @@ export default withHandlers({
       set({ nodeInfo: data });
     } catch (e) {
       console.error(e);
-      snackbarMessage({
-        snackbarMessage: {
+      doSetTmuiProp({
+        snackBarMessage: {
           message: 'Could not retrieve node info.',
           variant: 'error',
           open: true,
+          vertical: 'bottom',
+          horizontal: 'right',
+          autoHideDuration: 5000,
         },
       });
     }
@@ -144,7 +162,7 @@ export default withHandlers({
     );
     set({ sidetreeTxns: data.reverse(), loading: false });
   },
-  getAll: ({ snackbarMessage, set }) => async () => {
+  getAll: ({ doSetTmuiProp, set }) => async () => {
     set({ resolving: true });
     try {
       const { data } = await axios.get(`${API_BASE}/sidetree/docs`);
@@ -152,45 +170,57 @@ export default withHandlers({
         record.record.lastTransaction.transactionTime;
       data.sort((a, b) => getTransactionTime(b) - getTransactionTime(a));
       set({ documentRecords: data });
-      snackbarMessage({
-        snackbarMessage: {
+      doSetTmuiProp({
+        snackBarMessage: {
           message: 'Resolved sidetree.',
           variant: 'success',
           open: true,
+          vertical: 'bottom',
+          horizontal: 'right',
+          autoHideDuration: 5000,
         },
       });
     } catch (e) {
       console.error(e);
-      snackbarMessage({
-        snackbarMessage: {
+      doSetTmuiProp({
+        snackBarMessage: {
           message: 'Could not resolve sidetree.',
           variant: 'error',
           open: true,
+          vertical: 'bottom',
+          horizontal: 'right',
+          autoHideDuration: 5000,
         },
       });
     }
     set({ resolving: false });
   },
-  resolveDID: ({ didResolved, snackbarMessage, set }) => async did => {
+  resolveDID: ({ didResolved, doSetTmuiProp, set }) => async did => {
     set({ resolving: true });
     try {
       const { data } = await axios.get(`${API_BASE}/sidetree/${did}`);
       didResolved({ didDocument: data });
-      snackbarMessage({
-        snackbarMessage: {
+      doSetTmuiProp({
+        snackBarMessage: {
           message: `Resolved: ...${data.id}...`,
           variant: 'success',
           open: true,
+          vertical: 'bottom',
+          horizontal: 'right',
+          autoHideDuration: 5000,
         },
       });
     } catch (e) {
       console.error(e);
-      snackbarMessage({
-        snackbarMessage: {
+      doSetTmuiProp({
+        snackBarMessage: {
           message:
             'Could not resolve DID, make sure it is of the form did:elem:didUniqueSuffix.',
           variant: 'error',
           open: true,
+          vertical: 'bottom',
+          horizontal: 'right',
+          autoHideDuration: 5000,
         },
       });
     }

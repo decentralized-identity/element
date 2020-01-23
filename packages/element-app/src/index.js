@@ -26,7 +26,11 @@ class App extends React.Component {
             <ConnectedRouter history={history}>
               <TrackedSwitch>
                 <Route exact path="/" render={() => <Pages.Landing />} />
-                <Route exact path="/wallet" render={() => <Pages.Wallet />} />
+                <Route
+                  exact
+                  path="/keystore"
+                  render={() => <Pages.KeystorePage />}
+                />
                 <Route
                   exact
                   path="/dapp/explore"

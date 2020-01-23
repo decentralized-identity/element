@@ -13,7 +13,7 @@ export class BrowserNodeInfoPage extends Component {
     const { sidetree } = this.props;
     return (
       <Pages.WithNavigation>
-        <Grid container spacing={24}>
+        <Grid container spacing={2}>
           <Grid item xs={12} sm={9}>
             <Ledger />
           </Grid>

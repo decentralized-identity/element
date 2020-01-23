@@ -13,21 +13,24 @@ import { SidetreeOperation } from '../../SidetreeOperation';
 
 export class DIDProfilePage extends Component {
   componentWillMount() {
-    if (!this.props.wallet.data || !this.props.wallet.data.keys) {
+    if (
+      !this.props.keystore.keystore.data ||
+      !this.props.keystore.keystore.data.keys
+    ) {
       //   eslint-disable-next-line
-      alert('You must create and unlock a wallet to test sidetree.');
-      this.props.history.push('/wallet');
+      alert('You must create and unlock a keystore to test sidetree.');
+      this.props.history.push('/keystore');
     } else {
-      this.props.predictDID(this.props.wallet);
+      this.props.predictDID(this.props.keystore);
     }
   }
 
   render() {
     const {
       nodeStore,
-      wallet,
+      keystore,
       createDID,
-      snackbarMessage,
+
       addKeyToDIDDocument,
       removeKeyFromDIDDocument,
     } = this.props;
@@ -39,7 +42,10 @@ export class DIDProfilePage extends Component {
     } = nodeStore;
 
     const view = () => {
-      if (!this.props.wallet.data || !this.props.wallet.data.keys) {
+      if (
+        !this.props.keystore.keystore.data ||
+        !this.props.keystore.keystore.data.keys
+      ) {
         return <LinearProgress color="primary" variant="query" />;
       }
       if (myDidDocument) {
@@ -56,17 +62,20 @@ export class DIDProfilePage extends Component {
                 editor={
                   <DIDDocumentEditorBar
                     didDocument={myDidDocument}
-                    keys={wallet.data.keys}
+                    keys={this.props.keystore.keystore.data.keys}
                     handleAddKey={addKeyToDIDDocument}
                     handleRemoveKey={removeKeyFromDIDDocument}
                   />
                 }
                 onCopyToClipboard={() => {
-                  snackbarMessage({
-                    snackbarMessage: {
-                      message: 'Copied to clipboard.',
-                      variant: 'success',
+                  this.props.doSetTmuiProp({
+                    snackBarMessage: {
                       open: true,
+                      variant: 'success',
+                      message: 'Copied to clipboard.',
+                      vertical: 'bottom',
+                      horizontal: 'right',
+                      autoHideDuration: 5000,
                     },
                   });
                 }}
@@ -85,7 +94,7 @@ export class DIDProfilePage extends Component {
           <br />
           <CreateDefaultDID
             createDID={createDID}
-            wallet={wallet}
+            keystore={keystore}
             resolving={resolving}
           />
         </React.Fragment>
@@ -94,7 +103,7 @@ export class DIDProfilePage extends Component {
 
     return (
       <Pages.WithNavigation>
-        <Grid container spacing={24}>
+        <Grid container spacing={2}>
           <Grid item xs={12}>
             {view()}
           </Grid>
@@ -117,12 +126,12 @@ export class DIDProfilePage extends Component {
 }
 
 DIDProfilePage.propTypes = {
-  wallet: PropTypes.object.isRequired,
+  keystore: PropTypes.object.isRequired,
   nodeStore: PropTypes.object.isRequired,
   predictDID: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired,
   createDID: PropTypes.func.isRequired,
-  snackbarMessage: PropTypes.func.isRequired,
+  doSetTmuiProp: PropTypes.func.isRequired,
   addKeyToDIDDocument: PropTypes.func.isRequired,
   removeKeyFromDIDDocument: PropTypes.func.isRequired,
   history: PropTypes.any.isRequired,

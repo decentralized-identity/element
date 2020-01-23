@@ -45,9 +45,9 @@ class DrawerContent extends React.Component {
               link: '/',
             },
             {
-              label: 'DID Wallet',
+              label: 'DID Keystore',
               icon: <VpnKey />,
-              link: '/wallet',
+              link: '/keystore',
             },
           ]}
         />

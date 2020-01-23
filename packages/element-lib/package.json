@@ -36,6 +36,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@transmute/did-wallet": "0.0.0-6",
+    "@transmute/es256k-jws-ts": "0.0.4",
     "@truffle/contract": "^4.0.39",
     "@truffle/hdwallet-provider": "^1.0.24",
     "base64url": "^3.0.1",

@@ -18,7 +18,7 @@ export class ServerNodeInfoPage extends Component {
 
     return (
       <Pages.WithNavigation>
-        <Grid container spacing={24}>
+        <Grid container spacing={2}>
           <Grid item xs={12}>
             <Button variant={'contained'} size={'small'} href={SWAGGER_UI}>
               Swagger API Docs

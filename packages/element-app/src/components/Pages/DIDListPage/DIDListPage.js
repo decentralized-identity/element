@@ -52,7 +52,7 @@ export class DIDListPage extends Component {
 DIDListPage.propTypes = {
   nodeStore: PropTypes.object.isRequired,
   resolveDID: PropTypes.func.isRequired,
-  snackbarMessage: PropTypes.func.isRequired,
+
   match: PropTypes.object.isRequired,
   history: PropTypes.any.isRequired,
   getAll: PropTypes.func.isRequired,

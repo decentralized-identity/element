@@ -1,6 +1,8 @@
 import { withHandlers } from 'recompose';
 import { func, op } from '@transmute/element-lib';
 
+const DIDWallet = require('@transmute/did-wallet');
+
 export default withHandlers({
   getDidDocumentKey: () => walletKey => {
     const { publicKey, tags, encoding } = walletKey;
@@ -9,6 +11,9 @@ export default withHandlers({
     switch (encoding) {
       case 'base58':
         publicKeyType = 'publicKeyBase58';
+        break;
+      case 'jwk':
+        publicKeyType = 'publicKeyJwk';
         break;
       case 'hex':
       default:
@@ -21,15 +26,15 @@ export default withHandlers({
       [publicKeyType]: publicKey,
     };
   },
-  getMyDidUniqueSuffix: ({ getKey, getEdvDidDocumentModel }) => async () => {
-    const primaryKey = getKey('#primary');
-    const recoveryKey = getKey('#recovery');
-    const edvKey = getKey('#edv');
-    const didDocumentModel = getEdvDidDocumentModel(
-      primaryKey,
-      recoveryKey,
-      edvKey
-    );
+  getMyDidUniqueSuffix: ({ keystore }) => async () => {
+    const keys = Object.values(keystore.keystore.data.keys);
+    const wall = DIDWallet.create({
+      keys,
+    });
+    const primaryKey = keys.find(k => {
+      return k.tags.indexOf('#primary') !== -1;
+    });
+    const didDocumentModel = op.walletToInitionalDIDDoc(wall);
     const createPayload = await op.getCreatePayload(
       didDocumentModel,
       primaryKey
@@ -37,22 +42,22 @@ export default withHandlers({
     const didUniqueSuffix = func.getDidUniqueSuffix(createPayload);
     return didUniqueSuffix;
   },
-  createDIDRequest: ({ getKey, getEdvDidDocumentModel }) => async () => {
-    const primaryKey = getKey('#primary');
-    const recoveryKey = getKey('#recovery');
-    const edvKey = getKey('#edv');
-    const didDocumentModel = getEdvDidDocumentModel(
-      primaryKey,
-      recoveryKey,
-      edvKey
-    );
+  createDIDRequest: ({ keystore }) => async () => {
+    const keys = Object.values(keystore.keystore.data.keys);
+    const wall = DIDWallet.create({
+      keys,
+    });
+    const primaryKey = keys.find(k => {
+      return k.tags.indexOf('#primary') !== -1;
+    });
+    const didDocumentModel = op.walletToInitionalDIDDoc(wall);
     const createPayload = await op.getCreatePayload(
       didDocumentModel,
       primaryKey
     );
     return createPayload;
   },
-  createAddKeyRequest: ({ getKey }) => async (
+  createAddKeyRequest: ({ keystore }) => async (
     newKey,
     didUniqueSuffix,
     operationHash
@@ -61,7 +66,10 @@ export default withHandlers({
       didUniqueSuffix,
       operation: { operationHash },
     };
-    const primaryKey = getKey('#primary');
+    const keys = Object.values(keystore.keystore.data.keys);
+    const primaryKey = keys.find(k => {
+      return k.tags.indexOf('#primary') !== -1;
+    });
     const payload = await op.getUpdatePayloadForAddingAKey(
       lastOperation,
       newKey,
@@ -69,7 +77,7 @@ export default withHandlers({
     );
     return payload;
   },
-  createRemoveKeyRequest: ({ getKey }) => async (
+  createRemoveKeyRequest: ({ keystore }) => async (
     kid,
     didUniqueSuffix,
     operationHash
@@ -78,7 +86,10 @@ export default withHandlers({
       didUniqueSuffix,
       operation: { operationHash },
     };
-    const primaryKey = getKey('#primary');
+    const keys = Object.values(keystore.keystore.data.keys);
+    const primaryKey = keys.find(k => {
+      return k.tags.indexOf('#primary') !== -1;
+    });
     const payload = await op.getUpdatePayloadForRemovingAKey(
       lastOperation,
       kid,

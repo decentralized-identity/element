@@ -23,7 +23,7 @@ export class ExplorerTransactionPage extends Component {
     const prefix = this.props.fullNode ? '/server' : '/dapp';
     return (
       <Pages.WithNavigation>
-        <Grid container spacing={24}>
+        <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography variant="h3" style={{ marginBottom: '8px' }}>
               Element Transaction
