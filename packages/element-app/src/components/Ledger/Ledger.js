@@ -21,6 +21,7 @@ export class Ledger extends Component {
 
       window.web3.eth.getAccounts(async (err, accounts) => {
         if (err) {
+          // eslint-disable-next-line no-console
           console.error(err);
           return;
         }

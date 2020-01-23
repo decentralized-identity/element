@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import LinearProgress from '@material-ui/core/LinearProgress';
 
 import { Pages } from '../../index';
+
+import Loading from '../../Loading/Loading';
 
 import { SidetreeTransaction } from '../../SidetreeTransaction';
 import { SidetreeAnchorFile } from '../../SidetreeAnchorFile';
@@ -31,7 +32,9 @@ export class ExplorerTransactionPage extends Component {
           </Grid>
           <Grid item xs={12}>
             {!sidetreeTransactionSummary ? (
-              <LinearProgress color="primary" variant="query" />
+              <div style={{ marginTop: '15%' }}>
+                <Loading message={'Resolving...'} />
+              </div>
             ) : (
               <React.Fragment>
                 <SidetreeTransaction

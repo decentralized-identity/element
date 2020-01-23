@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import LinearProgress from '@material-ui/core/LinearProgress';
+
 import { Pages } from '../../index';
 import { SidetreeOperation } from '../../SidetreeOperation';
 import { DIDDocument } from '../../DIDDocument';
+import Loading from '../../Loading/Loading';
 
 export class ExplorerOperationsPage extends Component {
   async componentWillMount() {
@@ -22,7 +23,11 @@ export class ExplorerOperationsPage extends Component {
 
     const content = () => {
       if (loading || !sidetreeOperations) {
-        return <LinearProgress color="primary" variant="query" />;
+        return (
+          <div style={{ marginTop: '15%' }}>
+            <Loading message={'Resolving...'} />
+          </div>
+        );
       }
       return (
         <React.Fragment>

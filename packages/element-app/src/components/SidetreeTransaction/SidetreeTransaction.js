@@ -155,6 +155,7 @@ export class SidetreeTransaction extends Component {
                   <IconButton
                     aria-label="Link"
                     onClick={() => {
+                      // eslint-disable-next-line security/detect-non-literal-fs-filename
                       window.open(blochHashUrl);
                     }}
                   >
@@ -178,6 +179,7 @@ export class SidetreeTransaction extends Component {
                   <IconButton
                     aria-label="Link"
                     onClick={() => {
+                      // eslint-disable-next-line security/detect-non-literal-fs-filename
                       window.open(transactionHashUrl);
                     }}
                   >

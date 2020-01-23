@@ -9,9 +9,11 @@ export class KeystorePage extends Component {
     return (
       <Pages.WithNavigation>
         <Typography variant="h6" gutterBottom>
-          A DID Keystore is required to store keys used to sign Sidetree
-          Operations, whether you are anchoring them to a blockchain yourself,
-          or using a server / full node.
+          DID Keystore
+        </Typography>
+        <Typography variant="subtitle1" gutterBottom>
+          These keys enable you to control your DID or create verifiable
+          credentials.
         </Typography>
         <br />
         <KeystoreContainer />

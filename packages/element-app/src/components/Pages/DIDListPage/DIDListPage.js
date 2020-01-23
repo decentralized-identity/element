@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
-import LinearProgress from '@material-ui/core/LinearProgress';
+import Loading from '../../Loading/Loading';
 
 import { Pages } from '../../index';
 
@@ -18,7 +18,9 @@ export class DIDListPage extends Component {
     return (
       <Pages.WithNavigation>
         {resolving || !documentRecords ? (
-          <LinearProgress color="primary" variant="query" />
+          <div style={{ marginTop: '15%' }}>
+            <Loading message={'Resolving...'} />
+          </div>
         ) : (
           <div>
             <Typography variant="h6">DID List</Typography>

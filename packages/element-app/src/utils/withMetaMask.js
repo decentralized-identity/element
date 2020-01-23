@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
@@ -32,7 +33,9 @@ const withMetaMask = WrappedComponent => {
 
       if (!sidetree && this.props.match.path !== '/dapp/info') {
         // eslint-disable-next-line
-        alert('MetaMask is required to use this demo, please use the LATEST VERSION.');
+        alert(
+          'MetaMask is required to use this demo, please use the LATEST VERSION.'
+        );
         this.props.history.push('/dapp/info');
       }
     }

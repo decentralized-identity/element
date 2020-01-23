@@ -172,7 +172,7 @@ export default withHandlers({
       doSetTmuiProp({
         snackBarMessage: {
           message: 'Resolved sidetree.',
-          variant: 'success',
+          variant: 'info',
           open: true,
           vertical: 'bottom',
           horizontal: 'right',
@@ -180,7 +180,6 @@ export default withHandlers({
         },
       });
     } catch (e) {
-      console.error(e);
       doSetTmuiProp({
         snackBarMessage: {
           message: 'Could not resolve sidetree.',
@@ -212,7 +211,6 @@ export default withHandlers({
         });
       }
     } catch (e) {
-      console.error(e);
       doSetTmuiProp({
         snackBarMessage: {
           message:

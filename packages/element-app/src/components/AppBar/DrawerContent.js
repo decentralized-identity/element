@@ -77,7 +77,7 @@ class DrawerContent extends React.Component {
               link: '/server/did/all',
             },
             {
-              label: 'Node Info',
+              label: 'Sidetree Node',
               icon: <DeveloperBoard />,
               link: '/server/info',
             },
@@ -127,7 +127,7 @@ class DrawerContent extends React.Component {
                 link: '/dapp/did/all',
               },
               {
-                label: 'Node Info',
+                label: 'Sidetree Node',
                 icon: <DeveloperBoard />,
                 link: '/dapp/info',
               },

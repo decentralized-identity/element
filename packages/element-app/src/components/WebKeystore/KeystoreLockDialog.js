@@ -77,6 +77,8 @@ class KeystoreLockDialog extends React.Component {
 KeystoreLockDialog.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
+  doToggleKeystore: PropTypes.func,
+  message: PropTypes.any,
   keystoreState: PropTypes.string.isRequired,
 };
 

@@ -6,6 +6,8 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
+import Typography from '@material-ui/core/Typography';
+
 import { ElementDIDDocument } from '../index';
 
 const styles = theme => ({
@@ -37,10 +39,20 @@ class DIDResolver extends Component {
     const { currentDID } = this.state;
 
     const showProgress = currentDID && store.resolving;
+    // eslint-disable-next-line security/detect-object-injection
     const didDocument = store.dids[currentDID];
 
     return (
       <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Typography variant="h6" style={{ marginBottom: '8px' }}>
+            DID Resolver
+          </Typography>
+
+          <Typography variant="subtitle1" style={{ marginBottom: '8px' }}>
+            Use this page to resolve Element DIDs.
+          </Typography>
+        </Grid>
         <Grid item xs={12} sm={10}>
           <TextField
             label="Element Resolver"

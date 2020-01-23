@@ -28,6 +28,7 @@ const MenuSection = ({ items, subheader }) => (
           if (link.indexOf('http') === -1) {
             history.push(link);
           } else {
+            // eslint-disable-next-line security/detect-non-literal-fs-filename
             window.open(link);
           }
         }}

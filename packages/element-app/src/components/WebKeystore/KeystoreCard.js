@@ -1,5 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
 import Menu from '@material-ui/core/Menu';
@@ -89,6 +90,10 @@ function KeystoreStatusIcon({ status }) {
   }
 }
 
+KeystoreStatusIcon.propTypes = {
+  status: PropTypes.any,
+};
+
 function keyStoreStatusColor({ status }) {
   switch (status) {
     case 'empty':
@@ -102,7 +107,7 @@ function keyStoreStatusColor({ status }) {
   }
 }
 
-export default function KeystoreCard({
+function KeystoreCard({
   status,
   title,
   subheader,
@@ -139,6 +144,7 @@ export default function KeystoreCard({
         multiple
         onChange={event => {
           Object.keys(event.target.files).map(index => {
+            // eslint-disable-next-line security/detect-object-injection
             const file = event.target.files[index];
             const reader = new FileReader();
             reader.onload = upload => {
@@ -285,6 +291,7 @@ export default function KeystoreCard({
             <CardContent>
               {status === 'unlocked' &&
                 Object.keys(keystore.data.keys).map(kid => {
+                  // eslint-disable-next-line security/detect-object-injection
                   const key = keystore.data.keys[kid];
 
                   return (
@@ -306,6 +313,7 @@ export default function KeystoreCard({
                                     key={t}
                                     text={t}
                                     onCopy={() => {
+                                      // eslint-disable-next-line no-alert
                                       alert(`Copied ${t} to clipboard`);
                                     }}
                                   >
@@ -322,6 +330,7 @@ export default function KeystoreCard({
                               <CopyToClipboard
                                 text={key.publicKey}
                                 onCopy={() => {
+                                  // eslint-disable-next-line no-alert
                                   alert('Copied public key to clipboard');
                                 }}
                               >
@@ -347,3 +356,17 @@ export default function KeystoreCard({
     </Card>
   );
 }
+
+KeystoreCard.propTypes = {
+  status: PropTypes.any,
+  title: PropTypes.any,
+  subheader: PropTypes.any,
+  keystore: PropTypes.any,
+  doImportKeystore: PropTypes.any,
+  doDeleteKeystore: PropTypes.any,
+  doCreateWalletKeystore: PropTypes.any,
+  onOpenKeystoreLockDialog: PropTypes.any,
+  onOpenKeystoreEditDialog: PropTypes.any,
+};
+
+export default KeystoreCard;

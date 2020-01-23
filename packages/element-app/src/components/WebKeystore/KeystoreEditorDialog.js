@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Button from '@material-ui/core/Button';
 
@@ -89,9 +90,10 @@ class KeystoreEditorDialog extends React.Component {
 }
 
 KeystoreEditorDialog.propTypes = {
-  // open: PropTypes.bool,
-  // onClose: PropTypes.func,
-  // keystoreState: PropTypes.string.isRequired
+  open: PropTypes.bool,
+  onClose: PropTypes.func,
+  keystore: PropTypes.string.isRequired,
+  doUpdateKeystore: PropTypes.any.isRequired,
 };
 
 export default KeystoreEditorDialog;

@@ -76,7 +76,7 @@ class DIDDocumentEditorBar extends Component {
             <Grid container>
               <Grid item>
                 <Button
-                  color="primary"
+                  color="secondary"
                   onClick={() => {
                     this.setState({
                       isAddKeyDialogOpen: true,
@@ -88,7 +88,7 @@ class DIDDocumentEditorBar extends Component {
               </Grid>
               <Grid item>
                 <Button
-                  color="primary"
+                  color="secondary"
                   onClick={() => {
                     this.setState({
                       isRemoveKeyDialogOpen: true,

@@ -39,7 +39,6 @@ export default withHandlers({
   doToggleKeystore: ({ keystore, setKeystoreProp }) => async password => {
     setKeystoreProp({ loading: true });
     try {
-      let message;
       if (typeof keystore.keystore.data === 'string') {
         const wall = DIDWallet.create(keystore.keystore.data);
         wall.unlock(password);
@@ -50,7 +49,6 @@ export default withHandlers({
             },
           },
         });
-        message = 'Unlocked keystore.';
       } else {
         const wall = DIDWallet.create({
           keys: Object.values(keystore.keystore.data.keys),
@@ -61,10 +59,9 @@ export default withHandlers({
             data: wall.ciphered,
           },
         });
-        message = 'Locked keystore.';
       }
-      console.log(message);
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.error(e);
     }
     setKeystoreProp({ loading: false });

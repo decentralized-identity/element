@@ -1,5 +1,7 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
+import PropTypes from 'prop-types';
+
 import loadingGif from './transmute-loading-white.gif';
 
 function Loading({ message }) {
@@ -18,7 +20,7 @@ function Loading({ message }) {
         alt="transmute loading..."
         src={loadingGif}
         style={{
-          filter: 'brightness(25%) sepia(1) hue-rotate(-150deg)',
+          // filter: 'brightness(25%) sepia(1) hue-rotate(-150deg)',
           marginBottom: '32px',
         }}
       />
@@ -26,5 +28,10 @@ function Loading({ message }) {
     </div>
   );
 }
+
+Loading.propTypes = {
+  message: PropTypes.string,
+};
+
 export { Loading };
 export default Loading;

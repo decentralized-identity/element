@@ -5,6 +5,9 @@ const API_BASE = process.env.REACT_APP_API_URL;
 
 export default withHandlers({
   predictDID: ({ set, getMyDidUniqueSuffix }) => async () => {
+    set({
+      resolving: true,
+    });
     const didUniqueSuffix = await getMyDidUniqueSuffix();
     const did = `did:elem:${didUniqueSuffix}`;
     set({
@@ -13,7 +16,7 @@ export default withHandlers({
     let res = await axios.get(`${API_BASE}/sidetree/${did}`);
     set({ myDidDocument: res.data });
     res = await axios.get(`${API_BASE}/sidetree/operations/${didUniqueSuffix}`);
-    set({ sidetreeOperations: res.data });
+    set({ sidetreeOperations: res.data, resolving: false });
   },
   getOperationsForDidUniqueSuffix: ({ set }) => async didUniqueSuffix => {
     set({ loading: true });
@@ -141,7 +144,6 @@ export default withHandlers({
 
       set({ nodeInfo: data });
     } catch (e) {
-      console.error(e);
       doSetTmuiProp({
         snackBarMessage: {
           message: 'Could not retrieve node info.',
@@ -173,7 +175,7 @@ export default withHandlers({
       doSetTmuiProp({
         snackBarMessage: {
           message: 'Resolved sidetree.',
-          variant: 'success',
+          variant: 'info',
           open: true,
           vertical: 'bottom',
           horizontal: 'right',
@@ -181,7 +183,6 @@ export default withHandlers({
         },
       });
     } catch (e) {
-      console.error(e);
       doSetTmuiProp({
         snackBarMessage: {
           message: 'Could not resolve sidetree.',
@@ -211,7 +212,6 @@ export default withHandlers({
         },
       });
     } catch (e) {
-      console.error(e);
       doSetTmuiProp({
         snackBarMessage: {
           message:

@@ -7,7 +7,55 @@ export class Credits extends Component {
   render() {
     return (
       <Pages.WithNavigation>
-        <Typography variant="h2">Credits</Typography>
+        <Typography variant="h1" gutterBottom>
+          h1. Rajdhani
+        </Typography>
+        <Typography variant="h2" gutterBottom>
+          h2. Rajdhani
+        </Typography>
+        <Typography variant="h3" gutterBottom>
+          h3. Rajdhani
+        </Typography>
+        <Typography variant="h4" gutterBottom>
+          h4. ROBOTO CONDENSED
+        </Typography>
+        <Typography variant="h5" gutterBottom>
+          h5. ROBOTO CONDENSED
+        </Typography>
+        <Typography variant="h6" gutterBottom>
+          h6. ROBOTO CONDENSED
+        </Typography>
+        <Typography variant="subtitle1" gutterBottom>
+          subtitle1. Lato Lorem ipsum dolor sit amet, consectetur adipisicing
+          elit. Quos blanditiis tenetur
+        </Typography>
+        <Typography variant="subtitle2" gutterBottom>
+          subtitle2. Lato Lorem ipsum dolor sit amet, consectetur adipisicing
+          elit. Quos blanditiis tenetur
+        </Typography>
+        <Typography variant="body1" gutterBottom>
+          body1. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos
+          blanditiis tenetur unde suscipit, quam beatae rerum inventore
+          consectetur, neque doloribus, cupiditate numquam dignissimos laborum
+          fugiat deleniti? Eum quasi quidem quibusdam.
+        </Typography>
+        <Typography variant="body2" gutterBottom>
+          body2. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos
+          blanditiis tenetur unde suscipit, quam beatae rerum inventore
+          consectetur, neque doloribus, cupiditate numquam dignissimos laborum
+          fugiat deleniti? Eum quasi quidem quibusdam.
+        </Typography>
+        <Typography variant="button" display="block" gutterBottom>
+          button text
+        </Typography>
+        <Typography variant="caption" display="block" gutterBottom>
+          caption text
+        </Typography>
+        <Typography variant="overline" display="block" gutterBottom>
+          overline text
+        </Typography>
+
+        {/* <Typography variant="h2">Credits</Typography>
         <br />
         <Typography variant="body1">
           {
@@ -15,7 +63,6 @@ export class Credits extends Component {
           }
         </Typography>
         <br />
-
         <Typography variant="h3">{'Icons'}</Typography>
         <br />
 
@@ -65,7 +112,7 @@ export class Credits extends Component {
           >
             CC 3.0 BY
           </a>
-        </Typography>
+        </Typography> */}
       </Pages.WithNavigation>
     );
   }
