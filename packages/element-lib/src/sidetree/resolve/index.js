@@ -292,7 +292,6 @@ const resolve = sidetree => async (did, justInTime = false) => {
     await sidetree.sync(didUniqueSuffix);
   }
   const operations = await sidetree.db.readCollection(didUniqueSuffix);
-  // eslint-disable-next-line max-len
   operations.sort(
     (op1, op2) =>
       op1.transaction.transactionNumber - op2.transaction.transactionNumber
