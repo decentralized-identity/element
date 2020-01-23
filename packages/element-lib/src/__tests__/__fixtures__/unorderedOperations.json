@@ -1,0 +1,149 @@
+[
+  {
+    "operation": {
+      "decodedHeader": {
+        "kid": "#primary",
+        "operation": "update",
+        "alg": "ES256K"
+      },
+      "operationHash": "EiB9uXtqPgPVTVFto_zslX_CpOE7xzV7xhuP_oF_0Usxdw",
+      "decodedOperation": {
+        "protected": "eyJvcGVyYXRpb24iOiJ1cGRhdGUiLCJraWQiOiIjcHJpbWFyeSIsImFsZyI6IkVTMjU2SyJ9",
+        "signature": "DZTdKxXRDyC8bQc-I4eZIs8lg_1zWef5Ou20CUHA46E4cIjG4FoZJAoDZMpzjTVltDR-D8DW_HvmnKUewIJD9g",
+        "payload": "eyJkaWRVbmlxdWVTdWZmaXgiOiJFaUMxVGdvc3VpNU82aWtURlFXcklNZURhMlNRZHhKWmpHU1pDak51LUFBclZBIiwicHJldmlvdXNPcGVyYXRpb25IYXNoIjoiRWlELU5hdnVKRFpuMDlnWlNPRk1qNWhrVk5fcE0xYlJDLUVWVGZydmpKRk8xZyIsInBhdGNoZXMiOlt7ImFjdGlvbiI6ImFkZC1wdWJsaWMta2V5cyIsInB1YmxpY0tleXMiOlt7ImlkIjoiI2VkdiIsInVzYWdlIjoic2lnbmluZyIsInR5cGUiOiJFZDI1NTE5VmVyaWZpY2F0aW9uS2V5MjAxOCIsInB1YmxpY0tleUJhc2U1OCI6ImF0RUJ1SHlwU2tReDc0ODZ4VDVGVWtvQkxxdk5jV3lOSzJYejlFUGpkTXkifV19XX0"
+      },
+      "decodedOperationPayload": {
+        "patches": [
+          {
+            "action": "add-public-keys",
+            "publicKeys": [
+              {
+                "type": "Ed25519VerificationKey2018",
+                "publicKeyBase58": "atEBuHypSkQx7486xT5FUkoBLqvNcWyNK2Xz9EPjdMy",
+                "id": "#edv",
+                "usage": "signing"
+              }
+            ]
+          }
+        ],
+        "previousOperationHash": "EiD-NavuJDZn09gZSOFMj5hkVN_pM1bRC-EVTfrvjJFO1g",
+        "didUniqueSuffix": "EiC1Tgosui5O6ikTFQWrIMeDa2SQdxJZjGSZCjNu-AArVA"
+      }
+    },
+    "didUniqueSuffix": "EiC1Tgosui5O6ikTFQWrIMeDa2SQdxJZjGSZCjNu-AArVA",
+    "type": "EiC1Tgosui5O6ikTFQWrIMeDa2SQdxJZjGSZCjNu-AArVA",
+    "transaction": {
+      "transactionNumber": 814,
+      "anchorFileHash": "QmZ5ufPfRRbAAFe1HTww6Ad3RMqj7wwYWNJNN3WDH7oqWx",
+      "transactionTimeHash": "0x5656dcc58267d438b9d19d2f3ce0d83e98b4350a7853ecd56af17d9f7452a91b",
+      "transactionTime": 7177660,
+      "transactionHash": "0x140c67b1f00ec84d3f569972d67ad6b0f23dddf23976dc0205cb23b71f96d285",
+      "transactionTimestamp": 1579761608
+    }
+  },
+  {
+    "operation": {
+      "decodedHeader": {
+        "operation": "create",
+        "alg": "ES256K",
+        "kid": "#primary"
+      },
+      "operationHash": "EiC1Tgosui5O6ikTFQWrIMeDa2SQdxJZjGSZCjNu-AArVA",
+      "decodedOperation": {
+        "signature": "xvuj1RYdpD333U9r3Egae5OltPDNuP6XgdttX7EumksBp_MSWXXbLTApokOL60HLePdnAyENHMnqkB9sgDLt6A",
+        "payload": "eyJAY29udGV4dCI6Imh0dHBzOi8vdzNpZC5vcmcvZGlkL3YxIiwicHVibGljS2V5IjpbeyJ0eXBlIjoiU2VjcDI1NmsxVmVyaWZpY2F0aW9uS2V5MjAxOCIsImlkIjoiI3ByaW1hcnkiLCJ1c2FnZSI6InNpZ25pbmciLCJwdWJsaWNLZXlIZXgiOiIwMzYxZjI4NmFkYTJhNmIyYzc0YmM2ZWQ0NGE3MWVmNTlmYjlkZDE1ZWNhOTI4M2NiZTU2MDhhZWI1MTY3MzBmMzMifSx7InR5cGUiOiJTZWNwMjU2azFWZXJpZmljYXRpb25LZXkyMDE4IiwiaWQiOiIjcmVjb3ZlcnkiLCJ1c2FnZSI6InJlY292ZXJ5IiwicHVibGljS2V5SGV4IjoiMDJjMDA5ODI2ODEwODEzNzJjYmI5NDFjZDJjOTc0NTkwODMxNmUxMzczYWMzMzM0NzlmMGRlYWJjYWQwZTlkNTc0In0seyJ0eXBlIjoiRWQyNTUxOVZlcmlmaWNhdGlvbktleTIwMTgiLCJpZCI6IiNlZHYiLCJ1c2FnZSI6InNpZ25pbmciLCJwdWJsaWNLZXlCYXNlNTgiOiJhdEVCdUh5cFNrUXg3NDg2eFQ1RlVrb0JMcXZOY1d5TksyWHo5RVBqZE15In1dLCJhdXRoZW50aWNhdGlvbiI6WyIjZWR2Il0sImFzc2VydGlvbk1ldGhvZCI6WyIjZWR2Il0sImNhcGFiaWxpdHlEZWxlZ2F0aW9uIjpbIiNlZHYiXSwiY2FwYWJpbGl0eUludm9jYXRpb24iOlsiI2VkdiJdLCJrZXlBZ3JlZW1lbnQiOlt7ImlkIjoiI2tleUFncmVlbWVudCIsInR5cGUiOiJYMjU1MTlLZXlBZ3JlZW1lbnRLZXkyMDE5IiwidXNhZ2UiOiJzaWduaW5nIiwicHVibGljS2V5QmFzZTU4IjoiRU5wZms5SzlKNnVzczVxdTZCckFzemlvRTczMm1ZQ29ibU1QU3B2QjNmYU0ifV19",
+        "protected": "eyJvcGVyYXRpb24iOiJjcmVhdGUiLCJraWQiOiIjcHJpbWFyeSIsImFsZyI6IkVTMjU2SyJ9"
+      },
+      "decodedOperationPayload": {
+        "authentication": [
+          "#edv"
+        ],
+        "capabilityDelegation": [
+          "#edv"
+        ],
+        "keyAgreement": [
+          {
+            "id": "#keyAgreement",
+            "usage": "signing",
+            "type": "X25519KeyAgreementKey2019",
+            "publicKeyBase58": "ENpfk9K9J6uss5qu6BrAszioE732mYCobmMPSpvB3faM"
+          }
+        ],
+        "assertionMethod": [
+          "#edv"
+        ],
+        "@context": "https://w3id.org/did/v1",
+        "publicKey": [
+          {
+            "id": "#primary",
+            "usage": "signing",
+            "publicKeyHex": "0361f286ada2a6b2c74bc6ed44a71ef59fb9dd15eca9283cbe5608aeb516730f33",
+            "type": "Secp256k1VerificationKey2018"
+          },
+          {
+            "publicKeyHex": "02c00982681081372cbb941cd2c9745908316e1373ac333479f0deabcad0e9d574",
+            "type": "Secp256k1VerificationKey2018",
+            "id": "#recovery",
+            "usage": "recovery"
+          },
+          {
+            "type": "Ed25519VerificationKey2018",
+            "publicKeyBase58": "atEBuHypSkQx7486xT5FUkoBLqvNcWyNK2Xz9EPjdMy",
+            "id": "#edv",
+            "usage": "signing"
+          }
+        ],
+        "capabilityInvocation": [
+          "#edv"
+        ]
+      }
+    },
+    "didUniqueSuffix": "EiC1Tgosui5O6ikTFQWrIMeDa2SQdxJZjGSZCjNu-AArVA",
+    "type": "EiC1Tgosui5O6ikTFQWrIMeDa2SQdxJZjGSZCjNu-AArVA",
+    "transaction": {
+      "transactionTimestamp": 1579761380,
+      "transactionNumber": 812,
+      "anchorFileHash": "QmfHpVe9cHZpr1W5AVzcjMVp5WCHUBpTL7NTFHC2kW2oJN",
+      "transactionTimeHash": "0x2274b4aafb9a877e90483cb1441e7de8f531bd5044ce6648a7d3ba2921b36e9b",
+      "transactionTime": 7177639,
+      "transactionHash": "0xcc4cdf2e575ca955a7aa8cb2494383001fbf3457d40be54204e4edb69647d648"
+    }
+  },
+  {
+    "type": "EiC1Tgosui5O6ikTFQWrIMeDa2SQdxJZjGSZCjNu-AArVA",
+    "transaction": {
+      "transactionTime": 7177649,
+      "transactionHash": "0x8a435c21fa612f67da8d85e54c4e4de4a04104a9b2d8ae90e4e3fa7a7089b8c3",
+      "transactionTimestamp": 1579761487,
+      "transactionNumber": 813,
+      "anchorFileHash": "QmckxVkH1KUg1srDAAPvw5i74qYRzCvnqL1AJTJcwADEFy",
+      "transactionTimeHash": "0xa1d780d9636436b2be48330d8737bf8b99b5e125c38a381066236bb63e8ec29f"
+    },
+    "operation": {
+      "decodedHeader": {
+        "operation": "update",
+        "alg": "ES256K",
+        "kid": "#primary"
+      },
+      "operationHash": "EiD-NavuJDZn09gZSOFMj5hkVN_pM1bRC-EVTfrvjJFO1g",
+      "decodedOperation": {
+        "signature": "0C_QOVB8eSVC2xhb-LfkCgeIbqsmn85e276LvpWDoR16_Jk5Sv8MF030VxQ9A7ldE2qmiYUrCQzp3Epu0sWILQ",
+        "payload": "eyJkaWRVbmlxdWVTdWZmaXgiOiJFaUMxVGdvc3VpNU82aWtURlFXcklNZURhMlNRZHhKWmpHU1pDak51LUFBclZBIiwicHJldmlvdXNPcGVyYXRpb25IYXNoIjoiRWlDMVRnb3N1aTVPNmlrVEZRV3JJTWVEYTJTUWR4SlpqR1NaQ2pOdS1BQXJWQSIsInBhdGNoZXMiOlt7ImFjdGlvbiI6InJlbW92ZS1wdWJsaWMta2V5cyIsInB1YmxpY0tleXMiOlsiI2VkdiJdfV19",
+        "protected": "eyJvcGVyYXRpb24iOiJ1cGRhdGUiLCJraWQiOiIjcHJpbWFyeSIsImFsZyI6IkVTMjU2SyJ9"
+      },
+      "decodedOperationPayload": {
+        "didUniqueSuffix": "EiC1Tgosui5O6ikTFQWrIMeDa2SQdxJZjGSZCjNu-AArVA",
+        "patches": [
+          {
+            "publicKeys": [
+              "#edv"
+            ],
+            "action": "remove-public-keys"
+          }
+        ],
+        "previousOperationHash": "EiC1Tgosui5O6ikTFQWrIMeDa2SQdxJZjGSZCjNu-AArVA"
+      }
+    },
+    "didUniqueSuffix": "EiC1Tgosui5O6ikTFQWrIMeDa2SQdxJZjGSZCjNu-AArVA"
+  }
+]

@@ -7,11 +7,13 @@ const {
   bytes32EnodedMultihashToBase58EncodedMultihash,
   objectToMultihash,
   toFullyQualifiedDidDocument,
+  getOrderedOperations,
 } = require('.');
 const { MnemonicKeySystem } = require('../../index');
 const sidetreeCreatePayload = require('../__tests__/__fixtures__/sidetreeCreatePayload');
 const fullyQualifiedEdvDidDoc = require('../__tests__/__fixtures__/fullyQualifiedEdvDidDoc.json');
 const unqualifiedEdvDidDoc = require('../__tests__/__fixtures__/unqualifiedEdvDidDoc.json');
+const unorderedOperations = require('../__tests__/__fixtures__/unorderedOperations.json');
 
 describe('payloadToHash', () => {
   it('should compute the right encodedHash', async () => {
@@ -84,5 +86,17 @@ describe('toFullyQualifiedDidDocument', () => {
       unqualifiedEdvDidDoc
     );
     expect(fullyQualifiedDidDoc).toEqual(fullyQualifiedEdvDidDoc);
+  });
+});
+
+describe('getOrderedOperations', () => {
+  it('should order a list of operations', async () => {
+    expect(unorderedOperations[0].transaction.transactionNumber).toBe(814);
+    expect(unorderedOperations[1].transaction.transactionNumber).toBe(812);
+    expect(unorderedOperations[2].transaction.transactionNumber).toBe(813);
+    const orderedOperations = getOrderedOperations(unorderedOperations);
+    expect(orderedOperations[0].transaction.transactionNumber).toBe(812);
+    expect(orderedOperations[1].transaction.transactionNumber).toBe(813);
+    expect(orderedOperations[2].transaction.transactionNumber).toBe(814);
   });
 });

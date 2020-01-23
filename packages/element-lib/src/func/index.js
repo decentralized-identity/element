@@ -147,6 +147,15 @@ const toFullyQualifiedDidDocument = didDocument => {
   return JSON.parse(expanded);
 };
 
+const getOrderedOperations = operations => {
+  const orderedOperations = [...operations];
+  orderedOperations.sort(
+    (op1, op2) =>
+      op1.transaction.transactionNumber - op2.transaction.transactionNumber
+  );
+  return orderedOperations;
+};
+
 module.exports = {
   executeSequentially,
   encodeJson,
@@ -161,4 +170,5 @@ module.exports = {
   bytes32EnodedMultihashToBase58EncodedMultihash,
   objectToMultihash,
   toFullyQualifiedDidDocument,
+  getOrderedOperations,
 };
