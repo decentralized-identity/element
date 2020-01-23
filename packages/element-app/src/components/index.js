@@ -7,7 +7,7 @@ export { default as AppBar } from './AppBar';
 
 export { default as ElementDIDDocument } from './ElementDIDDocument';
 export { default as ExpansionPanelList } from './ExpansionPanelList';
-export { default as DIDWallet } from './DIDWallet';
+
 export { default as Pages } from './Pages';
 
 export { WebKeystore } from './WebKeystore/WebKeystore';

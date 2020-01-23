@@ -1,7 +1,7 @@
-import React from "react";
+import React from 'react';
 
-import { storiesOf } from "@storybook/react";
+import { storiesOf } from '@storybook/react';
 
-import Loading from "./Loading";
+import Loading from './Loading';
 
-storiesOf("Components", module).add("Loading", () => <Loading />);
+storiesOf('Components', module).add('Loading', () => <Loading />);

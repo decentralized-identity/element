@@ -1,9 +1,9 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import Snackbar from "@material-ui/core/Snackbar";
+import Snackbar from '@material-ui/core/Snackbar';
 
-import MySnackbarContentWrapper from "./MySnackbarContentWrapper";
+import MySnackbarContentWrapper from './MySnackbarContentWrapper';
 
 function TSnackbar(props) {
   const {
@@ -12,22 +12,22 @@ function TSnackbar(props) {
     message,
     autoHideDuration,
     vertical,
-    horizontal
+    horizontal,
   } = props.tmui.snackBarMessage || {
-    variant: "default",
-    vertical: "bottom",
-    horizontal: "right"
+    variant: 'default',
+    vertical: 'bottom',
+    horizontal: 'right',
   };
 
   const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
+    if (reason === 'clickaway') {
       return;
     }
     props.doSetTmuiProp({
       snackBarMessage: {
         ...props.tmui.snackBarMessage,
-        open: false
-      }
+        open: false,
+      },
     });
   };
 
@@ -36,7 +36,7 @@ function TSnackbar(props) {
       <Snackbar
         anchorOrigin={{
           vertical,
-          horizontal
+          horizontal,
         }}
         open={open}
         autoHideDuration={autoHideDuration}
@@ -54,7 +54,7 @@ function TSnackbar(props) {
 
 TSnackbar.propTypes = {
   tmui: PropTypes.object.isRequired,
-  doSetTmuiProp: PropTypes.func.isRequired
+  doSetTmuiProp: PropTypes.func.isRequired,
 };
 
 export { TSnackbar as Snackbar };
