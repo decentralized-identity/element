@@ -6,9 +6,6 @@ node_js:
 services:
   - docker
 
-before_install:
-  - docker run -p 5984:5984 -d couchdb
-
 install:
   - npm i
 
