@@ -11,7 +11,7 @@ class SnackbarContainer extends React.Component {
   //         open: true,
   //         variant: 'success',
   //         message: 'Changes saved.',
-  //         vertical: 'bottom',
+  //         vertical: 'top',
   //         horizontal: 'right',
   //         autoHideDuration: 5000,
   //       },

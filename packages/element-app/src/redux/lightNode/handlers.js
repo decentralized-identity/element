@@ -36,7 +36,7 @@ export default withHandlers({
         message: 'Creating your DID will take a few minutes....',
         variant: 'info',
         open: true,
-        vertical: 'bottom',
+        vertical: 'top',
         horizontal: 'right',
         autoHideDuration: 5000,
       },
@@ -45,10 +45,10 @@ export default withHandlers({
     await sidetree.batchScheduler.writeNow(createReq);
     doSetTmuiProp({
       snackBarMessage: {
-        message: 'DID Created. Resolving....',
+        message: 'DID Created... Resolving....',
         variant: 'info',
         open: true,
-        vertical: 'bottom',
+        vertical: 'top',
         horizontal: 'right',
         autoHideDuration: 5000,
       },
@@ -58,10 +58,10 @@ export default withHandlers({
     set({ myDidDocument });
     doSetTmuiProp({
       snackBarMessage: {
-        message: `Resolved did:elem:${didUniqueSuffix}`,
+        message: `Resolved ${myDidDocument.id.substring(0, 24)}...`,
         variant: 'success',
         open: true,
-        vertical: 'bottom',
+        vertical: 'top',
         horizontal: 'right',
         autoHideDuration: 5000,
       },
@@ -93,7 +93,7 @@ export default withHandlers({
         message: 'This will take a few minutes....',
         variant: 'info',
         open: true,
-        vertical: 'bottom',
+        vertical: 'top',
         horizontal: 'right',
         autoHideDuration: 5000,
       },
@@ -106,7 +106,7 @@ export default withHandlers({
         message: 'Key added.',
         variant: 'success',
         open: true,
-        vertical: 'bottom',
+        vertical: 'top',
         horizontal: 'right',
         autoHideDuration: 5000,
       },
@@ -136,7 +136,7 @@ export default withHandlers({
         message: 'This will take a few minutes....',
         variant: 'info',
         open: true,
-        vertical: 'bottom',
+        vertical: 'top',
         horizontal: 'right',
         autoHideDuration: 5000,
       },
@@ -149,7 +149,7 @@ export default withHandlers({
         message: 'Key removed.',
         variant: 'success',
         open: true,
-        vertical: 'bottom',
+        vertical: 'top',
         horizontal: 'right',
         autoHideDuration: 5000,
       },
@@ -174,7 +174,7 @@ export default withHandlers({
           message: 'Resolved sidetree.',
           variant: 'info',
           open: true,
-          vertical: 'bottom',
+          vertical: 'top',
           horizontal: 'right',
           autoHideDuration: 5000,
         },
@@ -185,7 +185,7 @@ export default withHandlers({
           message: 'Could not resolve sidetree.',
           variant: 'error',
           open: true,
-          vertical: 'bottom',
+          vertical: 'top',
           horizontal: 'right',
           autoHideDuration: 5000,
         },
@@ -201,14 +201,22 @@ export default withHandlers({
         didResolved({ didDocument: doc });
         doSetTmuiProp({
           snackBarMessage: {
-            message: `Resolved ${doc.id}`,
+            message: `Resolved ${doc.id.substring(0, 24)}...`,
             variant: 'success',
             open: true,
-            vertical: 'bottom',
+            vertical: 'top',
             horizontal: 'right',
             autoHideDuration: 5000,
           },
         });
+
+        const operations = await sidetree.db.readCollection(
+          doc.id.split(':').pop()
+        );
+        const orderedOperations = sidetree.func.getOrderedOperations(
+          operations
+        );
+        set({ sidetreeOperations: orderedOperations });
       }
     } catch (e) {
       doSetTmuiProp({
@@ -217,7 +225,7 @@ export default withHandlers({
             'Could not resolve DID, make sure it is of the form did:elem:didUniqueSuffix.',
           variant: 'error',
           open: true,
-          vertical: 'bottom',
+          vertical: 'top',
           horizontal: 'right',
           autoHideDuration: 5000,
         },

@@ -13,13 +13,14 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+
 import FilterNone from '@material-ui/icons/FilterNone';
 import DeviceHub from '@material-ui/icons/DeviceHub';
 import Fingerprint from '@material-ui/icons/Fingerprint';
 import VpnKey from '@material-ui/icons/VpnKey';
 import Https from '@material-ui/icons/Https';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import QRCode from 'qrcode.react';
+
 import { DIDDocumentHeader } from '../DIDDocumentHeader';
 
 // eslint-disable-next-line
@@ -43,7 +44,7 @@ const getKeyValue = publicKey => {
 
 class DIDDocument extends Component {
   render() {
-    const { classes, didDocument, onCopyToClipboard, editor } = this.props;
+    const { didDocument, onCopyToClipboard, editor } = this.props;
 
     return (
       <React.Fragment>
@@ -53,24 +54,6 @@ class DIDDocument extends Component {
         />
 
         {!!editor && editor}
-
-        <ExpansionPanel style={{ width: '100%' }}>
-          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography>Scan QRCode DID</Typography>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            <CopyToClipboard
-              text={`${window.location.origin}/server/resolver/${
-                didDocument.id
-              }`}
-              key={'did'}
-              onCopy={onCopyToClipboard}
-              style={{ cursor: 'pointer' }}
-            >
-              <QRCode value={didDocument.id} className={classes.didQRCode} />
-            </CopyToClipboard>
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
 
         {didDocument.publicKey &&
           didDocument.publicKey.map(publicKey => (

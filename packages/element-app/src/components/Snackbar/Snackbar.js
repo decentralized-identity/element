@@ -15,7 +15,7 @@ function TSnackbar(props) {
     horizontal,
   } = props.tmui.snackBarMessage || {
     variant: 'default',
-    vertical: 'bottom',
+    vertical: 'top',
     horizontal: 'right',
   };
 

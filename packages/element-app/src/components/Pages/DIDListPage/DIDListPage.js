@@ -38,7 +38,7 @@ export class DIDListPage extends Component {
                   record={dr.record}
                   onClick={item => {
                     this.props.history.push(
-                      `${prefix}/operations/${item.doc.id.split(':').pop()}`
+                      `${prefix}/resolver/${item.doc.id}`
                     );
                   }}
                 />

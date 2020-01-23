@@ -10,6 +10,7 @@ body,
 html {
   margin: 0;
   padding: 0;
+  color: #f5f7fd;
 }
 
 a:link {
@@ -24,7 +25,6 @@ a:visited {
 /* div {
   word-break: break-all;
 } */
-
 
 div.force-color-valueContainer > div {
   color: white;

@@ -55,7 +55,7 @@ export class DIDProfilePage extends Component {
           <React.Fragment>
             <Grid item xs={12}>
               <Typography variant="h6">My DID</Typography>
-              <Typography variant="subtitle1" style={{ marginBottom: '8px' }}>
+              <Typography variant="subtitle1" style={{ marginBottom: '16px' }}>
                 Use this page to manage your DID.
               </Typography>
             </Grid>
@@ -77,7 +77,7 @@ export class DIDProfilePage extends Component {
                       open: true,
                       variant: 'success',
                       message: 'Copied to clipboard.',
-                      vertical: 'bottom',
+                      vertical: 'top',
                       horizontal: 'right',
                       autoHideDuration: 5000,
                     },

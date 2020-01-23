@@ -34,7 +34,7 @@ class ElementDIDDocument extends Component {
               open: true,
               variant: 'success',
               message: `Copied ${item}`,
-              vertical: 'bottom',
+              vertical: 'top',
               horizontal: 'right',
               autoHideDuration: 5000,
             },

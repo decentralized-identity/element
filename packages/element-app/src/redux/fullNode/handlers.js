@@ -44,7 +44,7 @@ export default withHandlers({
         message: 'This will take a few minutes....',
         variant: 'info',
         open: true,
-        vertical: 'bottom',
+        vertical: 'top',
         horizontal: 'right',
         autoHideDuration: 5000,
       },
@@ -55,7 +55,7 @@ export default withHandlers({
           message: 'Resolving....',
           variant: 'info',
           open: true,
-          vertical: 'bottom',
+          vertical: 'top',
           horizontal: 'right',
           autoHideDuration: 5000,
         },
@@ -64,10 +64,10 @@ export default withHandlers({
       set({ myDidDocument: res.data });
       doSetTmuiProp({
         snackBarMessage: {
-          message: `Resolved did:elem:${didUniqueSuffix}`,
+          message: `Resolved ${res.data.id.substring(0, 24)}...`,
           variant: 'success',
           open: true,
-          vertical: 'bottom',
+          vertical: 'top',
           horizontal: 'right',
           autoHideDuration: 5000,
         },
@@ -101,7 +101,7 @@ export default withHandlers({
         message: 'This will take a few minutes....',
         variant: 'info',
         open: true,
-        vertical: 'bottom',
+        vertical: 'top',
         horizontal: 'right',
         autoHideDuration: 5000,
       },
@@ -131,7 +131,7 @@ export default withHandlers({
         message: 'This will take a few minutes....',
         variant: 'info',
         open: true,
-        vertical: 'bottom',
+        vertical: 'top',
         horizontal: 'right',
         autoHideDuration: 5000,
       },
@@ -149,7 +149,7 @@ export default withHandlers({
           message: 'Could not retrieve node info.',
           variant: 'error',
           open: true,
-          vertical: 'bottom',
+          vertical: 'top',
           horizontal: 'right',
           autoHideDuration: 5000,
         },
@@ -177,7 +177,7 @@ export default withHandlers({
           message: 'Resolved sidetree.',
           variant: 'info',
           open: true,
-          vertical: 'bottom',
+          vertical: 'top',
           horizontal: 'right',
           autoHideDuration: 5000,
         },
@@ -188,7 +188,7 @@ export default withHandlers({
           message: 'Could not resolve sidetree.',
           variant: 'error',
           open: true,
-          vertical: 'bottom',
+          vertical: 'top',
           horizontal: 'right',
           autoHideDuration: 5000,
         },
@@ -201,12 +201,17 @@ export default withHandlers({
     try {
       const { data } = await axios.get(`${API_BASE}/sidetree/${did}`);
       didResolved({ didDocument: data });
+
+      const res = await axios.get(
+        `${API_BASE}/sidetree/operations/${data.id.split(':').pop()}`
+      );
+      set({ sidetreeOperations: res.data, resolving: false });
       doSetTmuiProp({
         snackBarMessage: {
-          message: `Resolved: ...${data.id}...`,
+          message: `Resolved ${data.id.substring(0, 24)}...`,
           variant: 'success',
           open: true,
-          vertical: 'bottom',
+          vertical: 'top',
           horizontal: 'right',
           autoHideDuration: 5000,
         },
@@ -218,7 +223,7 @@ export default withHandlers({
             'Could not resolve DID, make sure it is of the form did:elem:didUniqueSuffix.',
           variant: 'error',
           open: true,
-          vertical: 'bottom',
+          vertical: 'top',
           horizontal: 'right',
           autoHideDuration: 5000,
         },

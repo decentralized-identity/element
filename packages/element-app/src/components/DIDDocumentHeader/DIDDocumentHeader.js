@@ -8,21 +8,41 @@ import Avatar from '@material-ui/core/Avatar';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
-import FilterNone from '@material-ui/icons/FilterNone';
 import VerifiedUser from '@material-ui/icons/VerifiedUser';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+
+import DisplayQRCodeDialog from './DisplayQRCodeDialog';
 
 // eslint-disable-next-line
 const styles = theme => ({});
 
 class DIDDocumentHeader extends Component {
+  state = {
+    anchorEl: null,
+    isDisplayQrCodeDialogOpen: false,
+  };
+
   render() {
     const { did, onCopyToClipboard } = this.props;
+
+    const { anchorEl, isDisplayQrCodeDialogOpen } = this.state;
 
     return (
       <React.Fragment>
         <Paper style={{ width: '100%', wordBreak: 'break-all' }}>
+          <DisplayQRCodeDialog
+            did={did}
+            open={isDisplayQrCodeDialogOpen}
+            onClose={() => {
+              this.setState({
+                isDisplayQrCodeDialogOpen: false,
+              });
+            }}
+          />
           <List>
             <ListItem>
               <Avatar style={{ marginRight: '8px' }}>
@@ -30,16 +50,57 @@ class DIDDocumentHeader extends Component {
               </Avatar>
               <ListItemText primary={did} />
               <ListItemSecondaryAction>
-                <CopyToClipboard
-                  text={did}
-                  key={'did'}
-                  onCopy={onCopyToClipboard}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <IconButton aria-label="Copy">
-                    <FilterNone />
+                <React.Fragment>
+                  <IconButton
+                    aria-label="did menu"
+                    aria-controls="simple-menu"
+                    aria-haspopup="true"
+                    variant="contained"
+                    onClick={event => {
+                      this.setState({
+                        anchorEl: event.currentTarget,
+                      });
+                    }}
+                  >
+                    <MoreVertIcon />
                   </IconButton>
-                </CopyToClipboard>
+                  <Menu
+                    id="simple-menu"
+                    keepMounted
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={() => {
+                      this.setState({
+                        anchorEl: null,
+                      });
+                    }}
+                  >
+                    <CopyToClipboard
+                      text={did}
+                      key={'did'}
+                      onCopy={() => {
+                        onCopyToClipboard();
+                        this.setState({
+                          anchorEl: null,
+                        });
+                      }}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <MenuItem>Copy DID to Clipboard</MenuItem>
+                    </CopyToClipboard>
+
+                    <MenuItem
+                      onClick={() => {
+                        this.setState({
+                          isDisplayQrCodeDialogOpen: true,
+                          isMenuOpen: false,
+                        });
+                      }}
+                    >
+                      Display DID as QR Code
+                    </MenuItem>
+                  </Menu>
+                </React.Fragment>
               </ListItemSecondaryAction>
             </ListItem>
           </List>

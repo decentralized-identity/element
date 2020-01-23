@@ -9,9 +9,13 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import Tooltip from '@material-ui/core/Tooltip';
+import CameraAltIcon from '@material-ui/icons/CameraAlt';
 import { withStyles } from '@material-ui/core/styles';
 
 import DrawerContent from './DrawerContent';
+
+import ScanQRCodeDialog from './ScanQRCodeDialog';
 
 const drawerWidth = 240;
 
@@ -50,6 +54,7 @@ const styles = theme => ({
 class ResponsiveDrawer extends React.Component {
   state = {
     mobileOpen: false,
+    isScanQrCodeDialogOpen: false,
   };
 
   handleDrawerToggle = () => {
@@ -58,6 +63,8 @@ class ResponsiveDrawer extends React.Component {
 
   render() {
     const { classes, theme, children } = this.props;
+
+    const { isScanQrCodeDialogOpen } = this.state;
 
     const drawer = <DrawerContent classes={classes} />;
 
@@ -77,6 +84,18 @@ class ResponsiveDrawer extends React.Component {
             <Typography variant="h6" color="inherit" noWrap>
               Element
             </Typography>
+            <div style={{ flexGrow: 1 }} />
+            <Tooltip title="Scan QR Code" aria-label="scan qr code">
+              <IconButton
+                onClick={() => {
+                  this.setState({
+                    isScanQrCodeDialogOpen: true,
+                  });
+                }}
+              >
+                <CameraAltIcon />
+              </IconButton>
+            </Tooltip>
           </Toolbar>
         </AppBar>
         <nav className={classes.drawer}>
@@ -107,6 +126,14 @@ class ResponsiveDrawer extends React.Component {
             </Drawer>
           </Hidden>
         </nav>
+        <ScanQRCodeDialog
+          open={isScanQrCodeDialogOpen}
+          onClose={() => {
+            this.setState({
+              isScanQrCodeDialogOpen: false,
+            });
+          }}
+        />
         <main className={classes.content}>
           <div className={classes.toolbar} />
           {children}
