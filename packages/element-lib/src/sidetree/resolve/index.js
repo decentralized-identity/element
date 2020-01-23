@@ -292,11 +292,8 @@ const resolve = sidetree => async (did, justInTime = false) => {
     await sidetree.sync(didUniqueSuffix);
   }
   const operations = await sidetree.db.readCollection(didUniqueSuffix);
-  operations.sort(
-    (op1, op2) =>
-      op1.transaction.transactionNumber - op2.transaction.transactionNumber
-  );
-  const createAndRecoverAndRevokeOperations = operations.filter(op => {
+  const orderedOperations = sidetree.func.getOrderedOperations(operations);
+  const createAndRecoverAndRevokeOperations = orderedOperations.filter(op => {
     const type = op.operation.decodedHeader.operation;
     return ['create', 'recover', 'delete'].includes(type);
   });
@@ -326,7 +323,7 @@ const resolve = sidetree => async (did, justInTime = false) => {
   // Get only update operations that came after the create or last recovery operation.
   const lastFullOperationNumber =
     lastValidFullOperation.transaction.transactionNumber;
-  const updateOperations = operations.filter(op => {
+  const updateOperations = orderedOperations.filter(op => {
     const type = op.operation.decodedHeader.operation;
     return (
       type === 'update' &&

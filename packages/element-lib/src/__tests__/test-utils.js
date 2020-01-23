@@ -68,10 +68,8 @@ const getCreatePayloadForKeyIndex = async (mks, index) => {
 
 const getLastOperation = async (sidetree, didUniqueSuffix) => {
   const operations = await sidetree.db.readCollection(didUniqueSuffix);
-  operations.sort(
-    (o1, o2) => o1.transaction.transactionTime - o2.transaction.transactionTime
-  );
-  const last = operations.pop();
+  const orderedOperations = sidetree.func.getOrderedOperations(operations);
+  const last = orderedOperations.pop();
   return last;
 };
 
