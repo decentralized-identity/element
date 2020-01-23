@@ -47,7 +47,7 @@ export class ExplorerOperationsPage extends Component {
             </Grid>
           )}
           {sidetreeOperations.map(op => (
-            <Grid item xs={12} key={op.operation.operationHash}>
+            <Grid item xs={12} key={op.transaction.transactionNumber}>
               <SidetreeOperation operation={op} expanded={false} />
               <br />
             </Grid>

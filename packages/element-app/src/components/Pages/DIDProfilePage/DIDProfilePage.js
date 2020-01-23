@@ -113,7 +113,7 @@ export class DIDProfilePage extends Component {
                 <Typography variant="h5">My Operations</Typography>
               </Grid>
               {sidetreeOperations.map(op => (
-                <Grid item xs={12} key={op.operation.operationHash}>
+                <Grid item xs={12} key={op.transaction.transactionNumber}>
                   <SidetreeOperation operation={op} expanded={false} />
                 </Grid>
               ))}

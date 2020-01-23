@@ -159,7 +159,8 @@ router.get('/operations/:didUniqueSuffix', async (req, res, next) => {
     const didUniqueSuffix = req.params.didUniqueSuffix.split(':').pop();
     const sidetree = req.app.get('sidetree');
     const operations = await sidetree.db.readCollection(didUniqueSuffix);
-    res.status(200).json(operations);
+    const orderedOperations = sidetree.func.getOrderedOperations(operations);
+    res.status(200).json(orderedOperations);
   } catch (e) {
     next(e);
   }

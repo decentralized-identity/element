@@ -9,7 +9,8 @@ export default withHandlers({
     const myDidDocument = await sidetree.resolve(didUniqueSuffix, true);
     set({ myDidDocument });
     const operations = await sidetree.db.readCollection(didUniqueSuffix);
-    set({ sidetreeOperations: operations });
+    const orderedOperations = sidetree.func.getOrderedOperations(operations);
+    set({ sidetreeOperations: orderedOperations });
   },
   getOperationsForDidUniqueSuffix: ({
     sidetree,
@@ -19,7 +20,8 @@ export default withHandlers({
     const myDidDocument = await sidetree.resolve(didUniqueSuffix, true);
     set({ didDocumentForOperations: myDidDocument });
     const operations = await sidetree.db.readCollection(didUniqueSuffix);
-    set({ sidetreeOperations: operations, loading: false });
+    const orderedOperations = sidetree.func.getOrderedOperations(operations);
+    set({ sidetreeOperations: orderedOperations, loading: false });
   },
   createDID: ({
     doSetTmuiProp,
@@ -78,7 +80,8 @@ export default withHandlers({
     const newPublicKey = getDidDocumentKey(newKey);
     const didUniqueSuffix = await getMyDidUniqueSuffix();
     const operations = await sidetree.db.readCollection(didUniqueSuffix);
-    const lastOperation = operations.pop();
+    const orderedOperations = sidetree.func.getOrderedOperations(operations);
+    const lastOperation = orderedOperations.pop();
     const { operationHash } = lastOperation.operation;
     const updatePayload = await createAddKeyRequest(
       newPublicKey,
@@ -120,7 +123,8 @@ export default withHandlers({
     set({ resolving: true });
     const didUniqueSuffix = await getMyDidUniqueSuffix();
     const operations = await sidetree.db.readCollection(didUniqueSuffix);
-    const lastOperation = operations.pop();
+    const orderedOperations = sidetree.func.getOrderedOperations(operations);
+    const lastOperation = orderedOperations.pop();
     const { operationHash } = lastOperation.operation;
     const updatePayload = await createRemoveKeyRequest(
       kid,

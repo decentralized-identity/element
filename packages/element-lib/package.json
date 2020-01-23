@@ -15,6 +15,8 @@
     "ipfs:stop": "./scripts/ipfs/stop.sh",
     "ganache:start": "./scripts/ganache/start.sh",
     "ganache:stop": "./scripts/ganache/stop.sh",
+    "couchdb:start": "./scripts/couchdb/start.sh",
+    "couchdb:stop": "./scripts/couchdb/stop.sh",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
     "pretest": "npm run services:start",
