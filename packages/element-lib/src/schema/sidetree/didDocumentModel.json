@@ -3,7 +3,11 @@
   "type": "object",
   "properties": {
     "@context": {
-      "type": "array",
+      "anyOf": [
+        { "type": "string" },
+        { "type": "array" },
+        { "type": "object" }
+      ],
       "required": true
     },
     "publicKey": {

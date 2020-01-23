@@ -123,29 +123,6 @@ describe('isDidDocumentValid', () => {
     expect(() => isDidDocumentModelValid(didDocumentModel)).toThrow();
   });
 
-  it('should fail is doc contains an invalid @context', async () => {
-    const didDocumentModel = {
-      '@context': 'invalidContext',
-      publicKey: [
-        {
-          id: '#primary',
-          usage: 'signing',
-          type: 'Secp256k1VerificationKey2018',
-          publicKeyHex:
-            '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
-        },
-        {
-          id: '#recovery',
-          usage: 'recovery',
-          type: 'Secp256k1VerificationKey2018',
-          publicKeyHex:
-            '025aad7a926a2c86f98b7687e1a6a8207aad49babc7d6f7d659f3e4304f980a124',
-        },
-      ],
-    };
-    expect(() => isDidDocumentModelValid(didDocumentModel)).toThrow();
-  });
-
   it('should fail is doc does not contain a publicKey array', async () => {
     const didDocumentModel = {
       '@context': 'https://w3id.org/did/v1',
