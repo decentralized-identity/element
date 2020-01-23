@@ -2,6 +2,8 @@
 
 Element is an implementation of the Sidetree protocol that uses the Ethereum blockchain as the ledger layer and IPFS as the Content-addressable storage layer
 
+For more information, see [the reference protocol documentation](https://github.com/decentralized-identity/sidetree/blob/master/docs/protocol.md)
+
 ## Method syntax
 
 The namestring identifying this did method is `elem`
@@ -131,7 +133,14 @@ An update payload SHOULD look like this
 
 ### Delete
 
+The `payload` for a DELETE operation MUST be:
 
+```json
+{
+  "didUniqueSuffix": "The did unique suffix (the did without the did:elem part)"
+}
+```
 
 ## Security and privacy considerations
 
+A Sidetree did document need not contain a `proof` property. Indeed, all operations are authenticated with the `signature` field of the payload sent to the Sidetree node. This signature is generaged using a key specified in the corresponding DID Document.
