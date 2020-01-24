@@ -1,4 +1,5 @@
-jest.setTimeout(10 * 1000);
+/* eslint-disable jest/expect-expect */
+jest.setTimeout(20 * 1000);
 
 const {
   getTestSideTree,
