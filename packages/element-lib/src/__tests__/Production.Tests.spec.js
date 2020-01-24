@@ -87,7 +87,9 @@ describe.skip('Production Tests', () => {
       await fetch(db.remote, { method: 'DELETE' }).then(res => res.json());
       // Make sure record does not exist yet in the remote DB
       const error = await fetch(
-        `${db.remote}/element:sidetree:cas-cachable:QmPyAucuooAEMbdw1uT8veXrLSfBjdNoTqfDRsnt5hrzbS`
+        `${
+          db.remote
+        }/element:sidetree:cas-cachable:QmPyAucuooAEMbdw1uT8veXrLSfBjdNoTqfDRsnt5hrzbS`
       ).then(res => res.json());
       expect(error).toBeDefined();
       expect(error.error).toBe('not_found');
@@ -95,7 +97,9 @@ describe.skip('Production Tests', () => {
       await manager.db.awaitableSync();
       // Now record exists
       const record = await fetch(
-        `${db.remote}/element:sidetree:cas-cachable:QmPyAucuooAEMbdw1uT8veXrLSfBjdNoTqfDRsnt5hrzbS`
+        `${
+          db.remote
+        }/element:sidetree:cas-cachable:QmPyAucuooAEMbdw1uT8veXrLSfBjdNoTqfDRsnt5hrzbS`
       ).then(res => res.json());
       expect(record).toBeDefined();
       expect(record.id).toBe(
