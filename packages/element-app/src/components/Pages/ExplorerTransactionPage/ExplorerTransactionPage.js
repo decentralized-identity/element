@@ -12,7 +12,7 @@ import { SidetreeAnchorFile } from '../../SidetreeAnchorFile';
 import { SidetreeBatchFile } from '../../SidetreeBatchFile';
 
 export class ExplorerTransactionPage extends Component {
-  componentWillMount() {
+  componentDidMount() {
     this.props.getSidetreeOperationsFromTransactionHash(
       this.props.match.params.transactionHash
     );

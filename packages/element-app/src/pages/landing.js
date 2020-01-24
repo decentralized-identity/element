@@ -21,7 +21,7 @@ class Landing extends Component {
     isCarouselOpen: !localStorage.getItem('hasClosedTour'),
   };
 
-  componentWillMount() {
+  componentDidMount() {
     const setMobile = () => {
       this.setState({
         mobile: window.innerWidth < 640,

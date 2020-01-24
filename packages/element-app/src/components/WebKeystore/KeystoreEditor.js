@@ -29,7 +29,7 @@ class KeystoreEditor extends React.Component {
 }
 
 KeystoreEditor.propTypes = {
-  value: PropTypes.string,
+  value: PropTypes.any,
   onChange: PropTypes.func,
 };
 

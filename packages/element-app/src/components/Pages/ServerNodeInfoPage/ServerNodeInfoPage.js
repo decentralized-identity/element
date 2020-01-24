@@ -11,7 +11,7 @@ import { Pages } from '../../index';
 const SWAGGER_UI = process.env.REACT_APP_SWAGGER_URL;
 
 export class ServerNodeInfoPage extends Component {
-  componentWillMount() {
+  componentDidMount() {
     this.props.getNodeInfo();
   }
 

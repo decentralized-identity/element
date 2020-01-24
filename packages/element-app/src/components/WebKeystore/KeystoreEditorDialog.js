@@ -92,7 +92,7 @@ class KeystoreEditorDialog extends React.Component {
 KeystoreEditorDialog.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
-  keystore: PropTypes.string.isRequired,
+  keystore: PropTypes.object.isRequired,
   doUpdateKeystore: PropTypes.any.isRequired,
 };
 

@@ -46,6 +46,9 @@ class ScanQRCodeDialog extends React.Component {
               <Grid item xs={4}>
                 <QrReader
                   delay={300}
+                  onError={() => {
+                    // do nothing
+                  }}
                   onScan={data => {
                     if (data && data.indexOf('did:elem:') !== -1) {
                       this.setState({

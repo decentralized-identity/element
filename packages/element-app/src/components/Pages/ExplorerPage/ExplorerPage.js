@@ -9,7 +9,7 @@ import { SidetreeTransaction } from '../../SidetreeTransaction';
 import Loading from '../../Loading/Loading';
 
 export class ExplorerPage extends Component {
-  componentWillMount() {
+  componentDidMount() {
     // Only get the last 20 transactions to avoid crashing the page
     this.props.getSidetreeTransactions({ limit: 20 });
   }

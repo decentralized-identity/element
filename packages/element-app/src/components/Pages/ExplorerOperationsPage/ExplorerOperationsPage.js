@@ -9,7 +9,7 @@ import { DIDDocument } from '../../DIDDocument';
 import Loading from '../../Loading/Loading';
 
 export class ExplorerOperationsPage extends Component {
-  async componentWillMount() {
+  async componentDidMount() {
     if (this.props.match.params.didUniqueSuffix) {
       this.props.getOperationsForDidUniqueSuffix(
         this.props.match.params.didUniqueSuffix

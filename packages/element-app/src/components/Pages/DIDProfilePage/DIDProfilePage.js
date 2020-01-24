@@ -13,7 +13,7 @@ import { DIDDocumentEditorBar } from '../../DIDDocumentEditorBar';
 import { SidetreeOperation } from '../../SidetreeOperation';
 
 export class DIDProfilePage extends Component {
-  componentWillMount() {
+  componentDidMount() {
     if (
       !this.props.keystore.keystore ||
       !this.props.keystore.keystore.data ||

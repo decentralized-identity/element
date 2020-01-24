@@ -27,7 +27,7 @@ class DIDResolver extends Component {
     this.props.resolveDID(this.state.currentDID);
   };
 
-  componentWillMount() {
+  componentDidMount() {
     if (this.props.did) {
       this.setState({
         currentDID: this.props.did,

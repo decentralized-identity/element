@@ -8,7 +8,7 @@ import { Pages } from '../../index';
 import { DIDListItem } from '../../DIDListItem';
 
 export class DIDListPage extends Component {
-  componentWillMount() {
+  componentDidMount() {
     this.props.getAll();
   }
 

@@ -15,7 +15,7 @@ export class SidetreeBatchFile extends Component {
     expanded: false,
   };
 
-  componentWillMount() {
+  componentDidMount() {
     this.setState({
       expanded: this.props.expanded,
     });
