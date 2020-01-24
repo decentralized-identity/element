@@ -14,6 +14,8 @@ const { MnemonicKeySystem } = require('../../../index');
 
 const sidetree = getTestSideTree();
 
+jest.setTimeout(10 * 1000);
+
 describe('batchWrite with one operation', () => {
   const mks = new MnemonicKeySystem(MnemonicKeySystem.generateMnemonic());
   let createPayload;

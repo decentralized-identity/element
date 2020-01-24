@@ -21,7 +21,7 @@
   "author": "Orie Steele <orie@transmute.industries>",
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=8.5",
+    "node": ">=10.0.0",
     "npm": ">=6.0",
     "yarn": "^1.0"
   },
