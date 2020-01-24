@@ -15,6 +15,7 @@ import { SidetreeOperation } from '../../SidetreeOperation';
 export class DIDProfilePage extends Component {
   componentWillMount() {
     if (
+      !this.props.keystore.keystore ||
       !this.props.keystore.keystore.data ||
       !this.props.keystore.keystore.data.keys
     ) {
