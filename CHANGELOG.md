@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.4](https://github.com/decentralized-identity/element/compare/v0.4.3...v0.4.4) (2020-01-24)
+
+
+### Bug Fixes
+
+* fix key of operation list to be unique ([79ba1f3](https://github.com/decentralized-identity/element/commit/79ba1f3))
+* lint errors and warnings ([f0b4097](https://github.com/decentralized-identity/element/commit/f0b4097))
+* page crash with no keystore ([50cd780](https://github.com/decentralized-identity/element/commit/50cd780))
+
+
+### Features
+
+* add a sidetree func to order operations by transactionNumber ([38534b0](https://github.com/decentralized-identity/element/commit/38534b0))
+* add publicKeyJwk IRIs ([a113d49](https://github.com/decentralized-identity/element/commit/a113d49))
+* add scripts for the couchdb service ([43618e3](https://github.com/decentralized-identity/element/commit/43618e3))
+* order transactions after reading them from cache ([ac4db39](https://github.com/decentralized-identity/element/commit/ac4db39))
+* update ElementCouchDBAdapter to default to local couchdb ([7f4eafe](https://github.com/decentralized-identity/element/commit/7f4eafe))
+* update json ld context ([010b27e](https://github.com/decentralized-identity/element/commit/010b27e))
+
+
+
+
+
 ## [0.4.3](https://github.com/decentralized-identity/element/compare/v0.4.2...v0.4.3) (2020-01-14)
 
 

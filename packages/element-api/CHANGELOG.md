@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.4](https://github.com/decentralized-identity/element/compare/v0.4.3...v0.4.4) (2020-01-24)
+
+
+### Features
+
+* order transactions after reading them from cache ([ac4db39](https://github.com/decentralized-identity/element/commit/ac4db39))
+
+
+
+
+
 ## [0.4.3](https://github.com/decentralized-identity/element/compare/v0.4.2...v0.4.3) (2020-01-14)
 
 **Note:** Version bump only for package @transmute/element-api
