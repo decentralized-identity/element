@@ -3,4 +3,4 @@ export * from './server';
 export * from './landing';
 export * from './error';
 export * from './credits';
-export * from './wallet';
+export * from './keystore';

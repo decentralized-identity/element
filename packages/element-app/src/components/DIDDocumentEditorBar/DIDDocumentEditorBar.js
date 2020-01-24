@@ -49,9 +49,27 @@ class DIDDocumentEditorBar extends Component {
 
   onlyNewKeys = () => {
     const { didDocument, keys } = this.props;
-    const didDocumentPublicKeys = didDocument.publicKey.map(getKeyValue);
+    const didDocumentPublicIds = didDocument.publicKey.map(k => {
+      return k.id;
+    });
     const res = Object.values(keys)
-      .filter(key => !didDocumentPublicKeys.includes(key.publicKey))
+      .filter(key => {
+        return (
+          key.tags.indexOf('BIP39 Mnemonic') === -1 &&
+          key.tags.indexOf('X25519KeyAgreementKey2019') === -1
+        );
+      })
+      .filter(key => {
+        let isMissing = true;
+        key.tags.forEach(t => {
+          didDocumentPublicIds.forEach(id => {
+            if (t === id) {
+              isMissing = false;
+            }
+          });
+        });
+        return isMissing;
+      })
       .reduce((acc, key) => ({ ...acc, [key.kid]: key }), {});
     return res;
   };
@@ -76,7 +94,7 @@ class DIDDocumentEditorBar extends Component {
             <Grid container>
               <Grid item>
                 <Button
-                  color="primary"
+                  color="secondary"
                   onClick={() => {
                     this.setState({
                       isAddKeyDialogOpen: true,
@@ -88,7 +106,7 @@ class DIDDocumentEditorBar extends Component {
               </Grid>
               <Grid item>
                 <Button
-                  color="primary"
+                  color="secondary"
                   onClick={() => {
                     this.setState({
                       isRemoveKeyDialogOpen: true,

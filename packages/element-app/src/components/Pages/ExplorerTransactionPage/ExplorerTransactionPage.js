@@ -2,16 +2,17 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import LinearProgress from '@material-ui/core/LinearProgress';
 
 import { Pages } from '../../index';
+
+import Loading from '../../Loading/Loading';
 
 import { SidetreeTransaction } from '../../SidetreeTransaction';
 import { SidetreeAnchorFile } from '../../SidetreeAnchorFile';
 import { SidetreeBatchFile } from '../../SidetreeBatchFile';
 
 export class ExplorerTransactionPage extends Component {
-  componentWillMount() {
+  componentDidMount() {
     this.props.getSidetreeOperationsFromTransactionHash(
       this.props.match.params.transactionHash
     );
@@ -23,7 +24,7 @@ export class ExplorerTransactionPage extends Component {
     const prefix = this.props.fullNode ? '/server' : '/dapp';
     return (
       <Pages.WithNavigation>
-        <Grid container spacing={24}>
+        <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography variant="h3" style={{ marginBottom: '8px' }}>
               Element Transaction
@@ -31,7 +32,9 @@ export class ExplorerTransactionPage extends Component {
           </Grid>
           <Grid item xs={12}>
             {!sidetreeTransactionSummary ? (
-              <LinearProgress color="primary" variant="query" />
+              <div style={{ marginTop: '15%' }}>
+                <Loading message={'Resolving...'} />
+              </div>
             ) : (
               <React.Fragment>
                 <SidetreeTransaction

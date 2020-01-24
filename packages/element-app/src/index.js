@@ -26,7 +26,11 @@ class App extends React.Component {
             <ConnectedRouter history={history}>
               <TrackedSwitch>
                 <Route exact path="/" render={() => <Pages.Landing />} />
-                <Route exact path="/wallet" render={() => <Pages.Wallet />} />
+                <Route
+                  exact
+                  path="/keystore"
+                  render={() => <Pages.KeystorePage />}
+                />
                 <Route
                   exact
                   path="/dapp/explore"
@@ -143,4 +147,5 @@ ReactDOM.render(<App />, document.getElementById('root'));
 // Learn more about service workers: http://bit.ly/CRA-PWA
 serviceWorker.unregister();
 
+// eslint-disable-next-line no-console
 console.log('🤖  Welcome to Element DID!');

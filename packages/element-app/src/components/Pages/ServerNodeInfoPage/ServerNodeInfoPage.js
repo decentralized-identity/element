@@ -3,13 +3,15 @@ import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 
+import Typography from '@material-ui/core/Typography';
+
 import AceEditor from 'react-ace';
 import { Pages } from '../../index';
 
 const SWAGGER_UI = process.env.REACT_APP_SWAGGER_URL;
 
 export class ServerNodeInfoPage extends Component {
-  componentWillMount() {
+  componentDidMount() {
     this.props.getNodeInfo();
   }
 
@@ -18,10 +20,16 @@ export class ServerNodeInfoPage extends Component {
 
     return (
       <Pages.WithNavigation>
-        <Grid container spacing={24}>
+        <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Button variant={'contained'} size={'small'} href={SWAGGER_UI}>
-              Swagger API Docs
+            <Typography variant="h6">Sidetree Server Node</Typography>
+            <Typography variant="subtitle1" style={{ marginBottom: '8px' }}>
+              This page displays information about our sidetree node.
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Button size={'small'} href={SWAGGER_UI}>
+              View Swagger API
             </Button>
           </Grid>
           {fullNode.nodeInfo && (

@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import LinearProgress from '@material-ui/core/LinearProgress';
+
 import Button from '@material-ui/core/Button';
+
+import Loading from '../Loading/Loading';
 
 export class CreateDefaultDID extends Component {
   handleCreate = () => {
@@ -12,7 +14,11 @@ export class CreateDefaultDID extends Component {
     const { resolving } = this.props;
 
     if (resolving) {
-      return <LinearProgress color="primary" variant="query" />;
+      return (
+        <div style={{ marginTop: '15%' }}>
+          <Loading message={'Resolving...'} />
+        </div>
+      );
     }
 
     return (

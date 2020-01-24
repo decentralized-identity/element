@@ -6,15 +6,15 @@ import { DIDDocument } from '../DIDDocument';
 
 const styles = theme => ({
   container: {
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing(2),
     width: '100%',
   },
   progress: {
-    margin: `${theme.spacing.unit * 2}px auto`,
+    margin: `${theme.spacing(2)}px auto`,
   },
   textField: {},
   publicKeysHeading: {
-    marginBottom: theme.spacing.unit * 1,
+    marginBottom: theme.spacing(1),
   },
 });
 
@@ -29,11 +29,14 @@ class ElementDIDDocument extends Component {
       <DIDDocument
         didDocument={didDocument}
         onCopyToClipboard={item => {
-          this.props.snackbarMessage({
-            snackbarMessage: {
-              message: `Copied ${item}`,
-              variant: 'success',
+          this.props.doSetTmuiProp({
+            snackBarMessage: {
               open: true,
+              variant: 'success',
+              message: `Copied ${item}`,
+              vertical: 'top',
+              horizontal: 'right',
+              autoHideDuration: 5000,
             },
           });
         }}
@@ -44,7 +47,7 @@ class ElementDIDDocument extends Component {
 
 ElementDIDDocument.propTypes = {
   classes: PropTypes.object.isRequired,
-  snackbarMessage: PropTypes.func.isRequired,
+  doSetTmuiProp: PropTypes.func.isRequired,
   didDocument: PropTypes.object.isRequired,
 };
 

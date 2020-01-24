@@ -3,88 +3,114 @@ import PropTypes from 'prop-types';
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
-import { amber, deepPurple } from '@material-ui/core/colors';
+import { darken, lighten } from '@material-ui/core/styles/colorManipulator';
+
+const primaryColor = '#594aa8';
+const secondaryColor = '#fcb373';
+
+const font1 = '"Rajdhani"';
+const font2 = '"Roboto Condensed"';
+const font3 = '"Lato"';
+
+const fontWeightLight = 300;
+const fontWeightRegular = 400;
+const fontWeightMedium = 600;
 
 class Theme extends Component {
   render() {
     const { children } = this.props;
     const theme = createMuiTheme({
       splashImage: '',
-      typography: {
-        useNextVariants: true,
-        fontFamily: ['"Lato"', '"Helvetica"', '"Arial"', 'sans-serif'].join(
-          ','
-        ),
-        button: {
-          fontFamily: ['"Rajdhani"', 'sans-serif'].join(','),
-          fontWeight: 700,
-        },
-        h1: {
-          fontFamily: '"Rajdhani"',
-          fontWeight: 700,
-        },
-
-        h2: {
-          fontFamily: '"Rajdhani"',
-          fontWeight: 700,
-        },
-        h3: {
-          fontFamily: '"Rajdhani"',
-          fontWeight: 700,
-        },
-        h4: {
-          fontFamily: '"Roboto Condensed"',
-          fontWeight: 500,
-        },
-        h5: {
-          fontFamily: '"Roboto Condensed"',
-          fontWeight: 500,
-        },
-        h6: {
-          fontFamily: '"Lato"',
-          fontWeight: 700,
-        },
-        subtitle1: {
-          fontFamily: '"Roboto Condensed"',
-          fontWeight: 500,
-        },
-        subtitle2: {
-          fontFamily: '"Roboto Condensed"',
-          fontWeight: 500,
-        },
-        captionNext: {
-          fontFamily: '"Roboto Condensed"',
-          fontWeight: 500,
-        },
-        overline: {
-          fontFamily: '"Roboto Condensed"',
-          fontWeight: 700,
-        },
-      },
       palette: {
         type: 'dark',
         primary: {
-          light: amber[600],
-          main: amber[700],
-          dark: amber[800],
+          light: lighten(primaryColor, 0.07),
+          main: primaryColor,
+          dark: darken(primaryColor, 0.07),
         },
         secondary: {
-          light: deepPurple[300],
-          main: deepPurple[400],
-          dark: deepPurple[500],
+          light: lighten(secondaryColor, 0.07),
+          main: secondaryColor,
+          dark: darken(secondaryColor, 0.07),
         },
       },
+      typography: {
+        useNextVariants: true,
+        fontSize: 16,
+        fontFamily: [font1, font2, font3].join(','),
+        h1: {
+          fontFamily: font1,
+          fontWeight: fontWeightMedium,
+        },
+        h2: {
+          fontFamily: font1,
+          fontWeight: fontWeightMedium,
+        },
+        h3: {
+          fontFamily: font1,
+          fontWeight: fontWeightMedium,
+        },
+        h4: {
+          fontFamily: font2,
+          textTransform: 'uppercase',
+          letterSpacing: '0.1em',
+          fontWeight: fontWeightRegular,
+        },
+        h5: {
+          fontFamily: font2,
+          textTransform: 'uppercase',
+          letterSpacing: '0.1em',
+          fontWeight: fontWeightRegular,
+        },
+        h6: {
+          fontFamily: font2,
+          textTransform: 'uppercase',
+          letterSpacing: '0.1em',
+          fontWeight: fontWeightRegular,
+        },
+        subtitle1: {
+          fontFamily: font1,
+          fontWeight: fontWeightRegular,
+        },
+        subtitle2: {
+          fontFamily: font2,
+          fontWeight: fontWeightRegular,
+        },
+        body1: {
+          fontFamily: font3,
+          fontWeight: fontWeightRegular,
+        },
+        body2: {
+          fontFamily: font3,
+          fontWeight: fontWeightRegular,
+        },
+        button: {
+          fontFamily: font2,
+          fontWeight: fontWeightRegular,
+        },
+        caption: {
+          fontFamily: font2,
+          fontWeight: fontWeightRegular,
+        },
+        overline: {
+          fontFamily: font2,
+          letterSpacing: '0.15em',
+          textTransform: 'uppercase',
+          fontWeight: fontWeightLight,
+        },
+      },
+
       overrides: {
         MuiInput: {
           // Name of the component ⚛️ / style sheet
           input: {
-            fontFamily: '"Roboto Condensed"',
+            fontFamily: font3,
           },
         },
         MuiInputLabel: {
           // Name of the component ⚛️ / style sheet
           root: {
-            fontFamily: '"Roboto Condensed"',
+            fontFamily: font2,
           },
         },
         MuiAppBar: {

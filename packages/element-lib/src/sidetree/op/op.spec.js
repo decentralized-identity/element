@@ -1,23 +1,13 @@
-const { getDidDocumentModel } = require('./');
 const { isDidDocumentModelValid } = require('../utils/validation');
-const { MnemonicKeySystem } = require('../../../index');
+const element = require('../../../index');
 
-describe('getDidDocumentModel', () => {
-  const mks = new MnemonicKeySystem(MnemonicKeySystem.generateMnemonic());
-  let primaryKey;
-  let recoveryKey;
+describe('op', () => {
+  it('getNewWallet', async () => {
+    const wallet = await element.op.getNewWallet();
+    expect(Object.values(wallet.keys)[1].tags.length).toBe(3);
+    expect(wallet).toBeDefined();
 
-  beforeAll(async () => {
-    primaryKey = await mks.getKeyForPurpose('primary', 0);
-    recoveryKey = await mks.getKeyForPurpose('recovery', 0);
-  });
-
-  it('should return a valid did document', async () => {
-    const didDocumentModel = getDidDocumentModel(
-      primaryKey.publicKey,
-      recoveryKey.publicKey
-    );
-    expect(didDocumentModel).toBeDefined();
-    expect(isDidDocumentModelValid(didDocumentModel)).toBeTruthy();
+    const didDoc = element.op.walletToInitionalDIDDoc(wallet);
+    expect(isDidDocumentModelValid(didDoc)).toBeTruthy();
   });
 });

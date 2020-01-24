@@ -42,9 +42,9 @@ export class SidetreeTransaction extends Component {
     expanded: false,
   };
 
-  componentWillMount() {
+  componentDidMount() {
     this.setState({
-      expanded: this.props.expanded,
+      expanded: this.props.expanded || false,
     });
   }
 
@@ -155,6 +155,7 @@ export class SidetreeTransaction extends Component {
                   <IconButton
                     aria-label="Link"
                     onClick={() => {
+                      // eslint-disable-next-line security/detect-non-literal-fs-filename
                       window.open(blochHashUrl);
                     }}
                   >
@@ -178,6 +179,7 @@ export class SidetreeTransaction extends Component {
                   <IconButton
                     aria-label="Link"
                     onClick={() => {
+                      // eslint-disable-next-line security/detect-non-literal-fs-filename
                       window.open(transactionHashUrl);
                     }}
                   >

@@ -1,5 +1,5 @@
 import ElementDIDDocument from './ElementDIDDocument';
 
-import snackbar from '../../redux/snackbar';
+import tmui from '../../redux/tmui';
 
-export default snackbar.container(ElementDIDDocument);
+export default tmui.container(ElementDIDDocument);

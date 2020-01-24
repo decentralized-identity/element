@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 export class Storage extends Component {
   state = {};
 
-  async componentWillMount() {
+  async componentDidMount() {
     if (this.props.sidetree) {
       const info = await this.props.sidetree.storage.ipfs.version();
       this.setState({

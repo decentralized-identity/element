@@ -5,7 +5,7 @@ import { withRouter } from 'react-router';
 import { compose } from 'recompose';
 import { DIDResolver, Pages } from '../../components/index';
 
-import wallet from '../../redux/wallet';
+import keystore from '../../redux/keystore';
 import fullNode from '../../redux/fullNode';
 
 class FullNodeResolverPage extends Component {
@@ -30,7 +30,7 @@ FullNodeResolverPage.propTypes = {
 
 const ConnectedDAppDIDResolverPage = compose(
   withRouter,
-  wallet.container,
+  keystore.container,
   fullNode.container
 )(FullNodeResolverPage);
 

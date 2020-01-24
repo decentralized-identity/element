@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import LinearProgress from '@material-ui/core/LinearProgress';
+
 import { Pages } from '../../index';
 import { SidetreeOperation } from '../../SidetreeOperation';
 import { DIDDocument } from '../../DIDDocument';
+import Loading from '../../Loading/Loading';
 
 export class ExplorerOperationsPage extends Component {
-  async componentWillMount() {
+  async componentDidMount() {
     if (this.props.match.params.didUniqueSuffix) {
       this.props.getOperationsForDidUniqueSuffix(
         this.props.match.params.didUniqueSuffix
@@ -17,12 +18,16 @@ export class ExplorerOperationsPage extends Component {
   }
 
   render() {
-    const { nodeStore, snackbarMessage } = this.props;
+    const { nodeStore } = this.props;
     const { sidetreeOperations, loading, didDocumentForOperations } = nodeStore;
 
     const content = () => {
       if (loading || !sidetreeOperations) {
-        return <LinearProgress color="primary" variant="query" />;
+        return (
+          <div style={{ marginTop: '15%' }}>
+            <Loading message={'Resolving...'} />
+          </div>
+        );
       }
       return (
         <React.Fragment>
@@ -31,11 +36,14 @@ export class ExplorerOperationsPage extends Component {
               <DIDDocument
                 didDocument={didDocumentForOperations}
                 onCopyToClipboard={item => {
-                  snackbarMessage({
-                    snackbarMessage: {
-                      message: `Copied ${item}`,
-                      variant: 'success',
+                  this.props.doSetTmuiProp({
+                    snackBarMessage: {
                       open: true,
+                      variant: 'success',
+                      message: `Copied ${item}`,
+                      vertical: 'top',
+                      horizontal: 'right',
+                      autoHideDuration: 5000,
                     },
                   });
                 }}
@@ -54,7 +62,7 @@ export class ExplorerOperationsPage extends Component {
     };
     return (
       <Pages.WithNavigation>
-        <Grid container spacing={24}>
+        <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography variant="h3" style={{ marginBottom: '8px' }}>
               Element Operations
@@ -71,5 +79,5 @@ ExplorerOperationsPage.propTypes = {
   nodeStore: PropTypes.object.isRequired,
   getOperationsForDidUniqueSuffix: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired,
-  snackbarMessage: PropTypes.func.isRequired,
+  doSetTmuiProp: PropTypes.func.isRequired,
 };

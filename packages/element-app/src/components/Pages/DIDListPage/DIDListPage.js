@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
-import LinearProgress from '@material-ui/core/LinearProgress';
+import Loading from '../../Loading/Loading';
 
 import { Pages } from '../../index';
 
 import { DIDListItem } from '../../DIDListItem';
 
 export class DIDListPage extends Component {
-  componentWillMount() {
+  componentDidMount() {
     this.props.getAll();
   }
 
@@ -18,7 +18,9 @@ export class DIDListPage extends Component {
     return (
       <Pages.WithNavigation>
         {resolving || !documentRecords ? (
-          <LinearProgress color="primary" variant="query" />
+          <div style={{ marginTop: '15%' }}>
+            <Loading message={'Resolving...'} />
+          </div>
         ) : (
           <div>
             <Typography variant="h6">DID List</Typography>
@@ -36,7 +38,7 @@ export class DIDListPage extends Component {
                   record={dr.record}
                   onClick={item => {
                     this.props.history.push(
-                      `${prefix}/operations/${item.doc.id.split(':').pop()}`
+                      `${prefix}/resolver/${item.doc.id}`
                     );
                   }}
                 />
@@ -52,7 +54,7 @@ export class DIDListPage extends Component {
 DIDListPage.propTypes = {
   nodeStore: PropTypes.object.isRequired,
   resolveDID: PropTypes.func.isRequired,
-  snackbarMessage: PropTypes.func.isRequired,
+
   match: PropTypes.object.isRequired,
   history: PropTypes.any.isRequired,
   getAll: PropTypes.func.isRequired,

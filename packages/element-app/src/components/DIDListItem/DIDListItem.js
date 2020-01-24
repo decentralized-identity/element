@@ -24,7 +24,7 @@ class DIDListItem extends Component {
         <Paper style={{ width: '100%', wordBreak: 'break-all' }}>
           <List>
             <ListItem>
-              <Avatar>
+              <Avatar style={{ marginRight: '16px' }}>
                 <VerifiedUser />
               </Avatar>
               <ListItemText

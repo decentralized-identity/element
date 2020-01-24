@@ -1,9 +1,9 @@
 import { compose } from 'recompose';
 
 import withSidetreeHandlers from './handlers';
-import wallet from '../wallet';
+import keystore from '../keystore';
 
 export default compose(
-  wallet.container,
+  keystore.container,
   withSidetreeHandlers
 );

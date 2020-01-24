@@ -43,14 +43,15 @@ const isKeyValid = key => {
 };
 
 const isDidDocumentModelValid = didDocumentModel => {
-  const valid = schema.validator.isValid(
+  schema.validator.validate(
     didDocumentModel,
-    schema.schemas.sidetreeDidDocumentModel
+    schema.schemas.sidetreeDidDocumentModel,
+    {
+      throwError: true,
+    }
   );
-  if (!valid) {
-    throw new Error('did document model is not valid', didDocumentModel);
-  }
-  return valid;
+
+  return true;
 };
 
 module.exports = {

@@ -35,7 +35,7 @@ export class SidetreeAnchorFile extends Component {
     expanded: false,
   };
 
-  componentWillMount() {
+  componentDidMount() {
     this.setState({
       expanded: this.props.expanded,
     });

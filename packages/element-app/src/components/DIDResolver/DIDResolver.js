@@ -4,13 +4,17 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-import CircularProgress from '@material-ui/core/CircularProgress';
+
+import Typography from '@material-ui/core/Typography';
 
 import { ElementDIDDocument } from '../index';
 
+import { Loading } from '../Loading/Loading';
+import { SidetreeOperation } from '../SidetreeOperation';
+
 const styles = theme => ({
   progress: {
-    margin: `${theme.spacing.unit * 2}px auto`,
+    margin: `${theme.spacing(2)}px auto`,
   },
 });
 
@@ -23,7 +27,7 @@ class DIDResolver extends Component {
     this.props.resolveDID(this.state.currentDID);
   };
 
-  componentWillMount() {
+  componentDidMount() {
     if (this.props.did) {
       this.setState({
         currentDID: this.props.did,
@@ -33,14 +37,26 @@ class DIDResolver extends Component {
   }
 
   render() {
-    const { store, classes } = this.props;
+    const { store } = this.props;
     const { currentDID } = this.state;
 
     const showProgress = currentDID && store.resolving;
+    // eslint-disable-next-line security/detect-object-injection
     const didDocument = store.dids[currentDID];
 
+    const { sidetreeOperations } = store;
+
     return (
-      <Grid container spacing={24}>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Typography variant="h6" style={{ marginBottom: '8px' }}>
+            DID Resolver
+          </Typography>
+
+          <Typography variant="subtitle1" style={{ marginBottom: '8px' }}>
+            Use this page to resolve Element DIDs.
+          </Typography>
+        </Grid>
         <Grid item xs={12} sm={10}>
           <TextField
             label="Element Resolver"
@@ -69,11 +85,47 @@ class DIDResolver extends Component {
           </Button>
         </Grid>
 
-        {showProgress ? (
-          <CircularProgress className={classes.progress} color="secondary" />
-        ) : (
-          didDocument && <ElementDIDDocument didDocument={didDocument} />
-        )}
+        <div style={{ marginTop: '16px', width: '100%', padding: '8px' }}>
+          {showProgress ? (
+            <div style={{ marginTop: '15%' }}>
+              <Loading message={'Resolving...'} />
+            </div>
+          ) : (
+            didDocument && (
+              <React.Fragment>
+                <Typography variant="h6" style={{ marginBottom: '8px' }}>
+                  DID Document
+                </Typography>
+                <ElementDIDDocument didDocument={didDocument} />
+
+                <Typography
+                  variant="h6"
+                  style={{ marginTop: '24px', marginBottom: '8px' }}
+                >
+                  Operations
+                </Typography>
+
+                {sidetreeOperations
+                  .sort((a, b) => {
+                    return a.transaction.transactionNumber <=
+                      b.transaction.transactionNumber
+                      ? 1
+                      : -1;
+                  })
+                  .map(op => (
+                    <Grid
+                      item
+                      xs={12}
+                      key={op.transaction.transactionNumber}
+                      style={{ marginBottom: '8px' }}
+                    >
+                      <SidetreeOperation operation={op} expanded={false} />
+                    </Grid>
+                  ))}
+              </React.Fragment>
+            )
+          )}
+        </div>
       </Grid>
     );
   }

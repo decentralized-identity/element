@@ -21,7 +21,7 @@ class Landing extends Component {
     isCarouselOpen: !localStorage.getItem('hasClosedTour'),
   };
 
-  componentWillMount() {
+  componentDidMount() {
     const setMobile = () => {
       this.setState({
         mobile: window.innerWidth < 640,
@@ -113,7 +113,7 @@ class Landing extends Component {
         <Typography variant="body1">
           {`Remember, this is a demo, and element is under active development. 
           In order to control a DID you must control private keys associated with it. 
-          For testing and development purposes, we created a browser wallet system, 
+          For testing and development purposes, we created a browser keystore system, 
           which you can use to create and manage your DID.`}
         </Typography>
         <br />
@@ -122,7 +122,7 @@ class Landing extends Component {
           variant="contained"
           color={'secondary'}
           onClick={() => {
-            this.props.history.push('/wallet');
+            this.props.history.push('/keystore');
           }}
         >
           Create Wallet

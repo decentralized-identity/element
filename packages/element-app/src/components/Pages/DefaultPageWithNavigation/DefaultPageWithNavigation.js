@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { AppBar, Pages, Snackbar } from '../../index';
+import { AppBar, Pages } from '../../index';
+
+import SnackbarContainer from '../../../containers/SnackbarContainer';
 
 class DefaultPageWithNavigation extends Component {
   render() {
@@ -9,7 +11,7 @@ class DefaultPageWithNavigation extends Component {
     return (
       <Pages.Default>
         <AppBar>{children}</AppBar>
-        <Snackbar />
+        <SnackbarContainer />
       </Pages.Default>
     );
   }
