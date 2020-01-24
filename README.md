@@ -85,6 +85,7 @@ npm run coverage
 If you have 2fa enabled for npm (and you should!).
 
 ```
+lerna version patch
 NPM_CONFIG_OTP=123456 lerna publish
 ```
 
