@@ -124,7 +124,7 @@ export class DIDProfilePage extends Component {
         <React.Fragment>
           <Typography variant="h6">Your DID will be:</Typography>
           <br />
-          <Typography variant="h5">{predictedDID}</Typography>
+          <Typography variant="subtitle1">{predictedDID}</Typography>
           <br />
           <CreateDefaultDID
             createDID={createDID}

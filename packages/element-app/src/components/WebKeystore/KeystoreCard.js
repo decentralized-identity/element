@@ -327,21 +327,26 @@ function KeystoreCard({
                                 ))}
                               </div>
                               <br />
-                              <CopyToClipboard
-                                text={key.publicKey}
-                                onCopy={() => {
-                                  // eslint-disable-next-line no-alert
-                                  alert('Copied public key to clipboard');
-                                }}
-                              >
-                                <Button
-                                  style={{ marginTop: '16px' }}
-                                  fullWidth
-                                  variant="contained"
+
+                              {key.tags.indexOf('BIP39 Mnemonic') === -1 ? (
+                                <CopyToClipboard
+                                  text={key.publicKey}
+                                  onCopy={() => {
+                                    // eslint-disable-next-line no-alert
+                                    alert('Copied public key to clipboard');
+                                  }}
                                 >
-                                  Copy Public Key
-                                </Button>
-                              </CopyToClipboard>
+                                  <Button
+                                    style={{ marginTop: '16px' }}
+                                    fullWidth
+                                    variant="contained"
+                                  >
+                                    Copy Public Key
+                                  </Button>
+                                </CopyToClipboard>
+                              ) : (
+                                ''
+                              )}
                             </div>
                           ),
                         },

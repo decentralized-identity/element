@@ -6,15 +6,15 @@ import { DIDDocument } from '../DIDDocument';
 
 const styles = theme => ({
   container: {
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing(2),
     width: '100%',
   },
   progress: {
-    margin: `${theme.spacing.unit * 2}px auto`,
+    margin: `${theme.spacing(2)}px auto`,
   },
   textField: {},
   publicKeysHeading: {
-    marginBottom: theme.spacing.unit * 1,
+    marginBottom: theme.spacing(1),
   },
 });
 

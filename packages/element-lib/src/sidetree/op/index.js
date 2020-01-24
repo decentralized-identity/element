@@ -172,7 +172,7 @@ const walletToInitionalDIDDoc = wallet => {
           });
         }
 
-        commonVerificationMethods.push(`#${walletKey.kid}`);
+        commonVerificationMethods.push(publicKeys[publicKeys.length - 1].id);
       }
     }
   });
@@ -293,9 +293,6 @@ const getNewWallet = async () => {
   const predictedDID = `did:elem:${didUniqueSuffix}`;
 
   addDIDToWallet(predictedDID, wall);
-
-  // console.log(JSON.stringify(didDocumentModel, null, 2));
-  // console.log(JSON.stringify(wall.keys, null, 2));
 
   return wall;
 };

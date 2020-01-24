@@ -14,7 +14,7 @@ import { SidetreeOperation } from '../SidetreeOperation';
 
 const styles = theme => ({
   progress: {
-    margin: `${theme.spacing.unit * 2}px auto`,
+    margin: `${theme.spacing(2)}px auto`,
   },
 });
 

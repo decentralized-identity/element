@@ -9,6 +9,5 @@ describe('op', () => {
 
     const didDoc = element.op.walletToInitionalDIDDoc(wallet);
     expect(isDidDocumentModelValid(didDoc)).toBeTruthy();
-    // console.log(didDoc);
   });
 });

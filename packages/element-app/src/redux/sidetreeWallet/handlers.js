@@ -1,7 +1,6 @@
 import { withHandlers } from 'recompose';
 import { func, op } from '@transmute/element-lib';
-
-const DIDWallet = require('@transmute/did-wallet');
+import DIDWallet from '@transmute/did-wallet';
 
 export default withHandlers({
   getDidDocumentKey: () => walletKey => {

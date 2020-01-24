@@ -13,6 +13,7 @@ import SnackbarContent from '@material-ui/core/SnackbarContent';
 import WarningIcon from '@material-ui/icons/Warning';
 import { makeStyles } from '@material-ui/core/styles';
 
+// For non branded use:
 // import { red, yellow, green, blue } from '@material-ui/core/colors';
 
 const variantIcon = {

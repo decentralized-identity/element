@@ -7,8 +7,6 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-// import { grey } from '@material-ui/core/colors';
-
 const styles = theme => ({
   root: {
     width: '100%',
@@ -19,9 +17,7 @@ const styles = theme => ({
     fontWeight: theme.typography.fontWeightRegular,
     wordBreak: 'break-all',
   },
-  panel: {
-    // backgroundColor: grey[200],
-  },
+  panel: {},
 });
 
 function ExpansionPanelList({ classes, panels }) {

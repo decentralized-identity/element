@@ -26,10 +26,10 @@ function NoOptionsMessage(props) {
 }
 
 NoOptionsMessage.propTypes = {
-  inputRef: PropTypes.any.isRequired,
-  selectProps: PropTypes.any.isRequired,
-  innerProps: PropTypes.any.isRequired,
-  children: PropTypes.any.isRequired,
+  inputRef: PropTypes.any,
+  selectProps: PropTypes.any,
+  innerProps: PropTypes.any,
+  children: PropTypes.any,
 };
 
 function inputComponent({ inputRef, ...props }) {
@@ -37,7 +37,7 @@ function inputComponent({ inputRef, ...props }) {
 }
 
 inputComponent.propTypes = {
-  inputRef: PropTypes.any.isRequired,
+  inputRef: PropTypes.any,
 };
 
 function Control(props) {
@@ -59,10 +59,10 @@ function Control(props) {
 }
 
 Control.propTypes = {
-  selectProps: PropTypes.any.isRequired,
-  innerProps: PropTypes.any.isRequired,
-  children: PropTypes.any.isRequired,
-  innerRef: PropTypes.any.isRequired,
+  selectProps: PropTypes.any,
+  innerProps: PropTypes.any,
+  children: PropTypes.any,
+  innerRef: PropTypes.any,
 };
 
 function Option(props) {
@@ -82,12 +82,12 @@ function Option(props) {
 }
 
 Option.propTypes = {
-  selectProps: PropTypes.any.isRequired,
-  innerProps: PropTypes.any.isRequired,
-  children: PropTypes.any.isRequired,
-  innerRef: PropTypes.any.isRequired,
-  isFocused: PropTypes.any.isRequired,
-  isSelected: PropTypes.any.isRequired,
+  selectProps: PropTypes.any,
+  innerProps: PropTypes.any,
+  children: PropTypes.any,
+  innerRef: PropTypes.any,
+  isFocused: PropTypes.any,
+  isSelected: PropTypes.any,
 };
 
 function Placeholder(props) {
@@ -103,9 +103,9 @@ function Placeholder(props) {
 }
 
 Placeholder.propTypes = {
-  selectProps: PropTypes.any.isRequired,
+  selectProps: PropTypes.any,
   innerProps: PropTypes.any,
-  children: PropTypes.any.isRequired,
+  children: PropTypes.any,
 };
 
 function ValueContainer(props) {
@@ -122,7 +122,7 @@ function ValueContainer(props) {
 
 ValueContainer.propTypes = {
   selectProps: PropTypes.object.isRequired,
-  children: PropTypes.any.isRequired,
+  children: PropTypes.any,
 };
 
 function MultiValue(props) {
@@ -140,11 +140,11 @@ function MultiValue(props) {
 }
 
 MultiValue.propTypes = {
-  selectProps: PropTypes.any.isRequired,
-  innerProps: PropTypes.any.isRequired,
-  children: PropTypes.any.isRequired,
-  removeProps: PropTypes.any.isRequired,
-  isFocused: PropTypes.any.isRequired,
+  selectProps: PropTypes.any,
+  innerProps: PropTypes.any,
+  children: PropTypes.any,
+  removeProps: PropTypes.any,
+  isFocused: PropTypes.any,
 };
 
 function Menu(props) {
@@ -160,9 +160,9 @@ function Menu(props) {
 }
 
 Menu.propTypes = {
-  selectProps: PropTypes.any.isRequired,
-  innerProps: PropTypes.any.isRequired,
-  children: PropTypes.any.isRequired,
+  selectProps: PropTypes.any,
+  innerProps: PropTypes.any,
+  children: PropTypes.any,
 };
 
 const components = {

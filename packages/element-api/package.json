@@ -52,6 +52,7 @@
     "faker": "^4.1.0",
     "firebase-tools": "^7.3.2",
     "jest": "^23.6.0",
+    "prettier": "^1.19.1",
     "supertest": "^4.0.2"
   },
   "jest": {

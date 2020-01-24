@@ -44,7 +44,7 @@ export class SidetreeTransaction extends Component {
 
   componentDidMount() {
     this.setState({
-      expanded: this.props.expanded,
+      expanded: this.props.expanded || false,
     });
   }
 

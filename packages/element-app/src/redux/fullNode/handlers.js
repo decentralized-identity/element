@@ -82,10 +82,9 @@ export default withHandlers({
     getDidDocumentKey,
     set,
   }) => async newKey => {
-    set({ resolving: true });
     const newPublicKey = getDidDocumentKey(newKey);
     const didUniqueSuffix = await getMyDidUniqueSuffix();
-    const res = await axios.get(
+    let res = await axios.get(
       `${API_BASE}/sidetree/operations/${didUniqueSuffix}`
     );
     const lastOperation = res.data.pop();
@@ -106,6 +105,32 @@ export default withHandlers({
         autoHideDuration: 5000,
       },
     });
+
+    setTimeout(async () => {
+      doSetTmuiProp({
+        snackBarMessage: {
+          message: 'Resolving....',
+          variant: 'info',
+          open: true,
+          vertical: 'top',
+          horizontal: 'right',
+          autoHideDuration: 5000,
+        },
+      });
+      res = await axios.get(`${API_BASE}/sidetree/did:elem:${didUniqueSuffix}`);
+      set({ myDidDocument: res.data });
+      doSetTmuiProp({
+        snackBarMessage: {
+          message: `Resolved ${res.data.id.substring(0, 24)}...`,
+          variant: 'success',
+          open: true,
+          vertical: 'top',
+          horizontal: 'right',
+          autoHideDuration: 5000,
+        },
+      });
+      set({ resolving: false });
+    }, 1.5 * 60 * 1000);
   },
   removeKeyFromDIDDocument: ({
     doSetTmuiProp,
@@ -113,9 +138,8 @@ export default withHandlers({
     createRemoveKeyRequest,
     set,
   }) => async kid => {
-    set({ resolving: true });
     const didUniqueSuffix = await getMyDidUniqueSuffix();
-    const res = await axios.get(
+    let res = await axios.get(
       `${API_BASE}/sidetree/operations/${didUniqueSuffix}`
     );
     const lastOperation = res.data.pop();
@@ -136,6 +160,32 @@ export default withHandlers({
         autoHideDuration: 5000,
       },
     });
+
+    setTimeout(async () => {
+      doSetTmuiProp({
+        snackBarMessage: {
+          message: 'Resolving....',
+          variant: 'info',
+          open: true,
+          vertical: 'top',
+          horizontal: 'right',
+          autoHideDuration: 5000,
+        },
+      });
+      res = await axios.get(`${API_BASE}/sidetree/did:elem:${didUniqueSuffix}`);
+      set({ myDidDocument: res.data });
+      doSetTmuiProp({
+        snackBarMessage: {
+          message: `Resolved ${res.data.id.substring(0, 24)}...`,
+          variant: 'success',
+          open: true,
+          vertical: 'top',
+          horizontal: 'right',
+          autoHideDuration: 5000,
+        },
+      });
+      set({ resolving: false });
+    }, 1.5 * 60 * 1000);
   },
   getNodeInfo: ({ doSetTmuiProp, set }) => async () => {
     set({ resolving: true });
@@ -199,10 +249,11 @@ export default withHandlers({
   resolveDID: ({ didResolved, doSetTmuiProp, set }) => async did => {
     set({ resolving: true });
     try {
-      const { data } = await axios.get(`${API_BASE}/sidetree/${did}`);
+      let res = await axios.get(`${API_BASE}/sidetree/${did}`);
+      const { data } = res;
       didResolved({ didDocument: data });
 
-      const res = await axios.get(
+      res = await axios.get(
         `${API_BASE}/sidetree/operations/${data.id.split(':').pop()}`
       );
       set({ sidetreeOperations: res.data, resolving: false });
