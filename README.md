@@ -4,7 +4,7 @@
 
 #### 🔥 Experimental Sidetree Protocol based DID Method `elem` with Ethereum and IPFS
 
-### [See the DID method specification](./packages/docs/did-method-spec/spec.md)
+### [See the DID method specification](./docs/did-method-spec/spec.md)
 
 ### [See our blog post](https://medium.com/transmute-techtalk/introducing-element-328b4260e757)
 
