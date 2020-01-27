@@ -16,7 +16,7 @@
     "coverage": "NODE_ENV='testing' jest --runInBand --coverage",
     "serve": "firebase serve --only functions --port=5002",
     "start": "NODE_ENV='development' npm run serve",
-    "start:docker": "NODE_ENV='production' DOCKER=true node express.js",
+    "start:standalone": "NODE_ENV='production' DOCKER=true node express.js",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log"
   },
