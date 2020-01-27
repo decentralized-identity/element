@@ -32,7 +32,7 @@ npm run services:start
 
 This will start 3 services:
 
-- [Ganache](): A local Ethereum chain initialized with the [Element start contract]() running with on port 8545
+- [Ganache](): A local Ethereum chain initialized with the [Element smart contract]() running with on port 8545
 - [IPFS](): A local IPFS node running on port 5001
 - [CouchDB](): A local CouchDB instance running on port 5984. CouchDB will be ran in the Docker container, so you will need Docker installed. If you don't have it and / or don't want to install it, it is fine. Just be aware that the CouchDB tests will fail
 
