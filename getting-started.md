@@ -8,13 +8,13 @@ cd element
 npm install
 ```
 
-Element follows the [Mono Repo structure](#TODO). Running `npm install` will install dependencies in the top level npm project as well as in the following packages:
+Element follows the [Mono Repo structure](https://github.com/lerna/lerna). Running `npm install` will install dependencies in the top level npm project as well as in the following packages:
 
 - [Element LIB](./packages/element-lib): Javascript SDK for using Element. Works with node 10, node 12 and in the browser
 - [Element APP](./packages/element-app): Progressive Web App to create a wallet, create a DID, add and remove keys, search through the Element Block explorer, etc... The PWA allows you to use two different types of Sidetree nodes:
-    - The light node (or browser node) which uses element-lib in the browser for Sidetree operations and interacts with Ethereum through [Metamask]() Make sure you have the Metamask browser extension installed if you want to use it the light node.
+    - The light node (or browser node) which uses element-lib in the browser for Sidetree operations and interacts with Ethereum through [Metamask](https://metamask.io/) Make sure you have the Metamask browser extension installed if you want to use it the light node.
     - The full node which uses element-api for Sidetree operations
-- [Element API](./packages/element-api): API powered by element-lib that exposes Sidetree operations with an HTTP interface. See [Swagger documentation](TODO) for more details.
+- [Element API](./packages/element-api): API powered by element-lib that exposes Sidetree operations with an HTTP interface. See [Swagger documentation](https://element-did.com/api/docs/) for more details.
 
 ## 2) How to use element-lib
 
@@ -32,9 +32,9 @@ npm run services:start
 
 This will start 3 services:
 
-- [Ganache](): A local Ethereum chain initialized with the [Element smart contract]() running with on port 8545
-- [IPFS](): A local IPFS node running on port 5001
-- [CouchDB](): A local CouchDB instance running on port 5984. CouchDB will be ran in the Docker container, so you will need Docker installed. If you don't have it and / or don't want to install it, it is fine. Just be aware that the CouchDB tests will fail
+- [Ganache](https://www.trufflesuite.com/ganache): A local Ethereum chain initialized with the [Element smart contract](https://ropsten.etherscan.io/address/0xD49Da2b7C0A15f6ac5A856f026D68A9B9848D96f) running with on port 8545
+- [IPFS](https://ipfs.io/): A local IPFS node running on port 5001
+- [CouchDB](https://couchdb.apache.org/): A local CouchDB instance running on port 5984. CouchDB will be ran in the Docker container, so you will need Docker installed. If you don't have it and / or don't want to install it, it is fine. Just be aware that the CouchDB tests will fail
 
 Check that services are properly initalized with
 ```
@@ -58,9 +58,9 @@ npm run services:stop
 In order to use element-lib in node or in the browser, you will need to initalize the Sidetree class by providing three interfaces:
 
 - A `db` interface: this is where all the caching artifacts will be stored. While caching is not technically required for Element to work, CRUD operations will be prohibitively slow without it. To initialize, chose one db adapter (several options are available [here](./packages/element-lib/src/adapters/database)):
-    - [RXDB](TODO)
-    - [CouchDB](TODO)
-    - [Firestore]: A good option if you're going to use Element in a [Firebase Cloud Function](), pretty slow otherwise. Also note that this technology is proprietary as opposed to the two above which are open source..
+    - [RXDB](https://github.com/pubkey/rxdb)
+    - [CouchDB](https://couchdb.apache.org/)
+    - [Firestore](https://firebase.google.com/docs/firestore/): A good option if you're going to use Element in a [Firebase Cloud Function](https://cloud.google.com/functions/), pretty slow otherwise. Also note that this technology is proprietary as opposed to the two above which are open source..
 
 - A `storage` interface: the Content Addressed Storage layer where Sidetree operation data will be stored. To initialize, chose one storage adapter (several options are available [here](./packages/element-lib/src/adapters/storage)):
     - IPFS
