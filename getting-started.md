@@ -202,3 +202,11 @@ You may now start the API by running
 npm run start # if you have setup a firebase project
 npm run start:standalone # to run the standalone express version of the API
 ```
+
+## 3) How to use element-app
+
+All config is checked into source so you can run the app by:
+```bash
+npm run start # if you have setup a firebase project
+npm run start:standalone # to run the standalone express version of the API
+```
