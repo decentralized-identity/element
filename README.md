@@ -36,7 +36,7 @@ Element follows the [Mono Repo structure](https://github.com/lerna/lerna). Runni
     - The full node which uses element-api for Sidetree operations
 - [Element API](./packages/element-api): API powered by element-lib that exposes Sidetree operations with an HTTP interface. See [Swagger documentation](https://element-did.com/api/docs/) for more details.
 
-## 2) How to use element-lib
+## How to use element-lib
 
 ```
 cd packages/element-lib
@@ -194,7 +194,7 @@ const deletedDidDocument = await element.resolve(didUniqueSuffix, true);
 console.log(`${JSON.stringify(deletedDidDocument, null, 2)} was deleted`)
 ```
 
-## 3) How to use element-api
+## How to use element-api
 
 ### Define the environment file
 
@@ -223,7 +223,7 @@ npm run start # if you have setup a firebase project
 npm run start:standalone # to run the standalone express version of the API
 ```
 
-## 3) How to use element-app
+## How to use element-app
 
 All config is checked into source so you can run the app by:
 ```bash
