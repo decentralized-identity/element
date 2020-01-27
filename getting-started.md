@@ -143,3 +143,33 @@ console.log(`${JSON.stringify(newDidDocument, null, 2)} has a new publicKey`)
 
 #### Recover a did document
 
+How to recover a did document using the recovery key if the private key is lost:
+
+```js
+// Generate a recovery payload with the inital did document model
+const recoveryPayload = await element.op.getRecoverPayload(
+  didUniqueSuffix,
+  didDocumentModel,
+  recoveryKey.privateKey
+);
+
+// Send Sidetree transaction
+const transaction = await element.batchScheduler.writeNow(recoveryPayload);
+const recoveredDidDocument = await element.resolve(didUniqueSuffix, true);
+console.log(`${JSON.stringify(recoveredDidDocument, null, 2)} was recovered`)
+```
+
+#### Delete a did document
+
+```js
+// Generate a delete payload this will brick the did forever
+const deletePayload = await element.op.getDeletePayload(
+  didUniqueSuffix,
+  recoveryKey.privateKey
+);
+
+// Send Sidetree transaction
+const deleteTransaction = await element.batchScheduler.writeNow(deletePayload);
+const deletedDidDocument = await element.resolve(didUniqueSuffix, true);
+console.log(`${JSON.stringify(deletedDidDocument, null, 2)} was delete`)
+```
