@@ -173,3 +173,32 @@ const deleteTransaction = await element.batchScheduler.writeNow(deletePayload);
 const deletedDidDocument = await element.resolve(didUniqueSuffix, true);
 console.log(`${JSON.stringify(deletedDidDocument, null, 2)} was deleted`)
 ```
+
+## 3) How to use element-api
+
+### Define the environment file
+
+In the root level directory copy the example config
+```
+cp example.env .env
+```
+then fill the following values:
+
+- ELEMENT_MNEMONIC: a mnemonic funded with ethereum. See step 1 and 2 of [this tutorial](./create-funded-mnemonic.md)
+- ELEMENT_PROVIDER: either `http://localhost:8545` for connecting with local ganache network or use an Infura URL that should look like this `https://ropsten.infura.io/v3/<API_TOKEN>`
+- ELEMENT_IPFS_MULTIADDR: either `/ip4/127.0.0.1/tcp/5001` for connecting with local IPFS node or `/dns4/ipfs.infura.io/tcp/5001/https` for connecting through Infura
+- ELEMENT_CONTRACT_ADDRESS: "0xD49Da2b7C0A15f6ac5A856f026D68A9B9848D96f"
+- ELEMENT_COUCHDB_REMOTE: Only use this if you want to you the replication feature of CouchDB
+
+Then run the following create the api config file
+
+```
+cd packages/element-api
+npm run env:create:prod
+```
+
+You may now start the API by running
+```bash
+npm run start # if you have setup a firebase project
+npm run start:standalone # to run the standalone express version of the API
+```
