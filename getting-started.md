@@ -74,3 +74,72 @@ See several examples for how to initialize the Sidetree class:
 - [For a production node running in the browser](./packages/element-app/src/services/sidetree.js): uses RXDB for in browser cache, IPFS Storage Manager for the storage interface and Metamask for the blockchain interface
 
 ### Using element-lib to Create Read Update Delete DIDs
+
+Once you have an instance of the Sidetree class with the suitable adapters, you can access all the helper functions (`sidetree.func`) and perform CRUD operations (`sidetree.op`). Here are a few code snippet to get you started:
+
+#### Create a DID
+
+```js
+const { Sidetree } = require('@transmute/element-lib');
+
+// Instantiate the Sidetree class
+const element = new Sidetree(/* See previous section for how to initialize the Sidetree class*/);
+
+// Generate a simple did document model
+const mks = new element.MnemonicKeySystem(element.MnemonicKeySystem.generateMnemonic());
+const primaryKey = await mks.getKeyForPurpose('primary', 0);
+const recoveryKey = await mks.getKeyForPurpose('recovery', 0);
+const didDocumentModel = element.op.getDidDocumentModel(
+  primaryKey.publicKey,
+  recoveryKey.publicKey
+);
+
+// Generate Sidetree Create payload
+const createPayload = await element.op.getCreatePayload(didDocumentModel, primaryKey);
+
+// Create the Sidetree transaction.
+// This can potentially take a few minutes if you're not on a local network
+const createTransaction = await element.batchScheduler.writeNow(createPayload);
+const didUniqueSuffix = element.func.getDidUniqueSuffix(createPayload);
+const did = `did:elem:${didUniqueSuffix}`;
+console.log(`${did} was successfully created`);
+```
+
+#### Read a DID (aka resolve a DID)
+
+```js
+const didDocument = await element.resolve(didUniqueSuffix, true);
+console.log(`${did} was successfully resolved into ${JSON.stringify(didDocument, null, 2)}`);
+```
+
+#### Update a DID document
+
+Add a new key to the did document
+
+```js
+// Get last operation data
+const operations = await element.db.readCollection(didUniqueSuffix);
+const lastOperation = operations.pop();
+
+// Generate update payload for adding a new key
+const newKey = await mks.getKeyForPurpose('primary', 1);
+const newPublicKey = {
+  id: '#newKey',
+  usage: 'signing',
+  type: 'Secp256k1VerificationKey2018',
+  publicKeyHex: newKey.publicKey,
+};
+const payload = await element.op.getUpdatePayloadForAddingAKey(
+  lastOperation,
+  newPublicKey,
+  primaryKey.privateKey
+);
+
+// Create the Sidetree transaction.
+const transaction = await element.batchScheduler.writeNow(payload);
+const newDidDocument = await element.resolve(didUniqueSuffix, true);
+console.log(`${JSON.stringify(newDidDocument, null, 2)} has a new publicKey`)
+```
+
+#### Recover a did document
+
