@@ -80,13 +80,13 @@ Once you have an instance of the Sidetree class with the suitable adapters, you 
 #### Create a DID
 
 ```js
-const { Sidetree } = require('@transmute/element-lib');
+const { Sidetree, MnemonicKeySystem } = require('@transmute/element-lib');
 
 // Instantiate the Sidetree class
 const element = new Sidetree(/* See previous section for how to initialize the Sidetree class*/);
 
 // Generate a simple did document model
-const mks = new element.MnemonicKeySystem(element.MnemonicKeySystem.generateMnemonic());
+const mks = new MnemonicKeySystem(MnemonicKeySystem.generateMnemonic());
 const primaryKey = await mks.getKeyForPurpose('primary', 0);
 const recoveryKey = await mks.getKeyForPurpose('recovery', 0);
 const didDocumentModel = element.op.getDidDocumentModel(
@@ -129,14 +129,14 @@ const newPublicKey = {
   type: 'Secp256k1VerificationKey2018',
   publicKeyHex: newKey.publicKey,
 };
-const payload = await element.op.getUpdatePayloadForAddingAKey(
+const updatePayload = await element.op.getUpdatePayloadForAddingAKey(
   lastOperation,
   newPublicKey,
   primaryKey.privateKey
 );
 
 // Create the Sidetree transaction.
-const transaction = await element.batchScheduler.writeNow(payload);
+const updateTransaction = await element.batchScheduler.writeNow(updatePayload);
 const newDidDocument = await element.resolve(didUniqueSuffix, true);
 console.log(`${JSON.stringify(newDidDocument, null, 2)} has a new publicKey`)
 ```
@@ -154,7 +154,7 @@ const recoveryPayload = await element.op.getRecoverPayload(
 );
 
 // Send Sidetree transaction
-const transaction = await element.batchScheduler.writeNow(recoveryPayload);
+const recoveryTransaction = await element.batchScheduler.writeNow(recoveryPayload);
 const recoveredDidDocument = await element.resolve(didUniqueSuffix, true);
 console.log(`${JSON.stringify(recoveredDidDocument, null, 2)} was recovered`)
 ```
@@ -171,5 +171,5 @@ const deletePayload = await element.op.getDeletePayload(
 // Send Sidetree transaction
 const deleteTransaction = await element.batchScheduler.writeNow(deletePayload);
 const deletedDidDocument = await element.resolve(didUniqueSuffix, true);
-console.log(`${JSON.stringify(deletedDidDocument, null, 2)} was delete`)
+console.log(`${JSON.stringify(deletedDidDocument, null, 2)} was deleted`)
 ```
