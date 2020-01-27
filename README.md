@@ -15,6 +15,9 @@
 
 See also [ion](https://github.com/decentralized-identity/ion), [sidetree](https://github.com/decentralized-identity/sidetree), [sidetree-ethereum](https://github.com/decentralized-identity/sidetree-ethereum).
 
+## Useful resources
+
+- [Element documentation](https://docs.element-did.com)
 - [Web App](https://element-did.com)
 - [API Docs](https://element-did.com/api/docs)
 - [React Storybook](https://storybook.element-did.com)
