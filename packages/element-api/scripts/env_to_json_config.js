@@ -29,11 +29,6 @@ const config = {
       provider_url: process.env.ELEMENT_PROVIDER,
       mnemonic: process.env.ELEMENT_MNEMONIC,
     },
-    sidetree: {
-      max_batch_size: process.env.ELEMENT_MAX_BATCH_SIZE,
-      batch_interval_in_seconds: process.env.ELEMENT_BATCH_INTERVAL_SECONDS,
-      verbosity: process.env.ELEMENT_VERBOSITY,
-    },
   },
 };
 
