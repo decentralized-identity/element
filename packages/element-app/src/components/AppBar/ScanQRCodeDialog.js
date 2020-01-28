@@ -13,8 +13,6 @@ import Typography from '@material-ui/core/Typography';
 
 import QrReader from 'react-qr-reader';
 
-import { history } from '../../redux/store';
-
 class ScanQRCodeDialog extends React.Component {
   state = {
     scannedDID: '',
