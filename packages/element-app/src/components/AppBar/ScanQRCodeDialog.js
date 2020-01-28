@@ -13,8 +13,6 @@ import Typography from '@material-ui/core/Typography';
 
 import QrReader from 'react-qr-reader';
 
-import { history } from '../../redux/store';
-
 class ScanQRCodeDialog extends React.Component {
   state = {
     scannedDID: '',
@@ -26,9 +24,10 @@ class ScanQRCodeDialog extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-
     this.props.onClose();
-    history.push(`/server/resolver/${this.state.scannedDID}`);
+    window.location.href = `${window.location.origin}/server/resolver/${
+      this.state.scannedDID
+    }`;
   };
 
   render() {
@@ -43,7 +42,7 @@ class ScanQRCodeDialog extends React.Component {
           <DialogTitle id="form-dialog-title">Scan QR Code</DialogTitle>
           <DialogContent>
             <Grid container>
-              <Grid item xs={4}>
+              <Grid item xs={12} sm={4}>
                 <QrReader
                   delay={300}
                   onError={() => {
@@ -59,7 +58,7 @@ class ScanQRCodeDialog extends React.Component {
                   style={{ width: '100%' }}
                 />
               </Grid>
-              <Grid item xs={8}>
+              <Grid item xs={12} sm={8}>
                 <Typography variant="body2" style={{ margin: '16px' }}>
                   {this.state.scannedDID === ''
                     ? 'No Results'
