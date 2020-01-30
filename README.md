@@ -295,5 +295,5 @@ docker run --rm -p 80:80 gjgd/ement-app:latest
 To run the API in docker, run
 
 ```
-docker run --rm -p 80:5002jgd/element-api:latest
+docker run --rm -p 80:5002 gjgd/element-api:latest
 ```
