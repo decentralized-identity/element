@@ -230,8 +230,7 @@ npm run start:standalone # to run the standalone express version of the API
 
 All config is checked into source so you can run the app by:
 ```bash
-npm run start # if you have setup a firebase project
-npm run start:standalone # to run the standalone express version of the API
+npm run start
 ```
 
 ## Useful commands
