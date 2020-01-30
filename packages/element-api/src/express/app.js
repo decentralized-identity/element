@@ -17,6 +17,8 @@ app.use(cors({ origin: true }));
 app.use(express.json());
 if (process.env.NODE_ENV === 'testing') {
   app.set('sidetree', require('../services/sidetree-test'));
+} else if (process.env.STANDALONE) {
+  app.set('sidetree', require('../services/sidetree-standalone'));
 } else {
   app.set('sidetree', require('../services/sidetree'));
 }
