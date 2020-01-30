@@ -296,3 +296,12 @@ To run the API in docker, run
 ```
 docker run --rm -p 80:5002 gjgd/element-api:latest
 ```
+
+### How to build Element APP with a different domain for the API:
+
+1) Clone Element
+2) `cd packages/element-app`
+3) edit the content of `.env.production` to the API_URL you want to use
+4) `docker build -t my-tag .`
+5) `docker run --rm -p 80:5002 my-tag`
+6) Now the app runs on port 80 and will use the API_URL specified in 3)
