@@ -45,7 +45,7 @@
     "start": "react-scripts start",
     "start:standalone": "env-cmd -f ./.env.docker react-scripts start",
     "build": "NODE_OPTIONS='--max-old-space-size=4096' react-scripts build",
-    "build:docker": "NODE_OPTIONS='--max-old-space-size=4096' env-cmd -f ./.env.docker react-scripts build",
+    "build:standalone": "NODE_OPTIONS='--max-old-space-size=4096' env-cmd -f ./.env.docker react-scripts build",
     "deploy": "firebase deploy --only hosting",
     "test": "react-scripts test --no-watch",
     "coverage": "react-scripts test --coverage",
