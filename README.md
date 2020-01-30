@@ -288,7 +288,7 @@ See [.travis.yml](./.travis.yml) for setup and test commands for linux.
 To run the APP in docker, run
 
 ```
-docker run --rm -p 80:80 gjgd/ement-app:latest
+docker run --rm -p 80:80 gjgd/element-app:latest
 ```
 
 To run the API in docker, run
