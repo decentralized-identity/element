@@ -283,3 +283,17 @@ serve ./docs
 ```
 
 See [.travis.yml](./.travis.yml) for setup and test commands for linux.
+
+## Docker
+
+To run the APP in docker, run
+
+```
+docker run --rm -p 80:80 gjgd/ement-app:latest
+```
+
+To run the API in docker, run
+
+```
+docker run --rm -p 80:5002jgd/element-api:latest
+```
