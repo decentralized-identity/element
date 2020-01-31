@@ -46,6 +46,8 @@
     "build": "NODE_OPTIONS='--max-old-space-size=4096' react-scripts build",
     "build:standalone": "NODE_OPTIONS='--max-old-space-size=4096' env-cmd -f ./.env.production react-scripts build",
     "deploy": "firebase deploy --only hosting",
+    "docker:build": "./build-docker.sh",
+    "docker:push": "npm run docker:build && docker push gjgd/element-app",
     "test": "react-scripts test --no-watch",
     "coverage": "react-scripts test --coverage",
     "eject": "react-scripts eject",

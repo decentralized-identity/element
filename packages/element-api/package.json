@@ -17,6 +17,8 @@
     "start": "NODE_ENV='development' npm run serve",
     "start:standalone": "STANDALONE=true node express.js",
     "deploy": "firebase deploy --only functions",
+    "docker:build": "./build-docker.sh",
+    "docker:push": "npm run docker:build && docker push gjgd/element-api",
     "logs": "firebase functions:log"
   },
   "dependencies": {
