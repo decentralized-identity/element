@@ -230,8 +230,7 @@ npm run start:standalone # to run the standalone express version of the API
 
 All config is checked into source so you can run the app by:
 ```bash
-npm run start # if you have setup a firebase project
-npm run start:standalone # to run the standalone express version of the API
+npm run start
 ```
 
 ## Useful commands
@@ -283,3 +282,26 @@ serve ./docs
 ```
 
 See [.travis.yml](./.travis.yml) for setup and test commands for linux.
+
+## Docker
+
+To run the APP in docker, run
+
+```
+docker run --rm -p 80:80 gjgd/element-app:latest
+```
+
+To run the API in docker, run
+
+```
+docker run --rm -p 80:5002 gjgd/element-api:latest
+```
+
+### How to build Element APP with a different domain for the API:
+
+1) Clone Element
+2) `cd packages/element-app`
+3) edit the content of `.env.production` to the API_URL you want to use
+4) `docker build -t my-tag .`
+5) `docker run --rm -p 80:5002 my-tag`
+6) Now the app runs on port 80 and will use the API_URL specified in 3)
