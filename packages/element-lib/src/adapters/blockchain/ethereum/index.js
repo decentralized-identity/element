@@ -186,10 +186,6 @@ class EthereumBlockchain {
     };
   }
 
-  async getCurrentTime() {
-    return this.getBlockchainTime('latest');
-  }
-
   async write(anchorFileHash) {
     await this.resolving;
     const [from] = await getAccounts(this.web3);
