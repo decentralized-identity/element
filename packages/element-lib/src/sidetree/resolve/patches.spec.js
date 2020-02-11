@@ -32,7 +32,6 @@ describe('patches', () => {
     didUniqueSuffix = await sidetree.func.getDidUniqueSuffix(createPayload);
     did = `did:elem${didUniqueSuffix}`;
     await sidetree.batchScheduler.writeNow(createPayload);
-    await sidetree.sync(didUniqueSuffix);
   });
 
   it('should add a new key', async () => {

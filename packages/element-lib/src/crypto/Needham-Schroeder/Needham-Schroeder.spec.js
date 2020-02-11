@@ -23,7 +23,6 @@ const addRSAKey = async actor => {
   // eslint-disable-next-line
   actor.key = key;
   const { didUniqueSuffix } = actor;
-  await sidetree.resolve(didUniqueSuffix, true);
   const lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
   const payload = {
     didUniqueSuffix: lastOperation.didUniqueSuffix,

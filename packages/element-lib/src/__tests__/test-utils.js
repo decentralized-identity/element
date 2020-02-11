@@ -63,7 +63,6 @@ const getCreatePayloadForKeyIndex = async (mks, index) => {
   return getCreatePayload(didDocumentModel, primaryKey);
 };
 
-// TODO
 const getLastOperation = async (sidetree, didUniqueSuffix) => {
   await sidetree.sync(didUniqueSuffix);
   const operations = await sidetree.db.readCollection(didUniqueSuffix);
@@ -147,7 +146,6 @@ const updateByActorIndex = async (sidetree, actorIndex) => {
   // FIXME
   // make sure getPreviousOperationHash will hit cache.
   const { didUniqueSuffix } = getActorByIndex(actorIndex);
-  await sidetree.resolve(didUniqueSuffix, true);
   const lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
   const newKey = actor.mks.getKeyForPurpose('primary', 10);
   const newPublicKey = {
