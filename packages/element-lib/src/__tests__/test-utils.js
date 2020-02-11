@@ -3,7 +3,6 @@ const faker = require('faker');
 const element = require('../../index');
 const { encodeJson, decodeJson } = require('../func');
 const { getDidDocumentModel, getCreatePayload } = require('../sidetree/op');
-const resolve = require('../sidetree/resolve');
 
 const getTestSideTree = () => {
   const db = new element.adapters.database.ElementRXDBAdapter({
@@ -50,10 +49,8 @@ const changeKid = (payload, newKid) => {
 };
 
 const getDidDocumentForPayload = async (sidetree, payload, didUniqueSuffix) => {
-  const transaction = await sidetree.batchScheduler.writeNow(payload);
-  await sidetree.syncTransaction(transaction);
-  const didDocument = await resolve(sidetree)(didUniqueSuffix);
-  return didDocument;
+  await sidetree.batchScheduler.writeNow(payload);
+  return sidetree.resolve(didUniqueSuffix, true);
 };
 
 const getCreatePayloadForKeyIndex = async (mks, index) => {
@@ -66,7 +63,9 @@ const getCreatePayloadForKeyIndex = async (mks, index) => {
   return getCreatePayload(didDocumentModel, primaryKey);
 };
 
+// TODO
 const getLastOperation = async (sidetree, didUniqueSuffix) => {
+  await sidetree.sync(didUniqueSuffix);
   const operations = await sidetree.db.readCollection(didUniqueSuffix);
   const orderedOperations = sidetree.func.getOrderedOperations(operations);
   const last = orderedOperations.pop();
