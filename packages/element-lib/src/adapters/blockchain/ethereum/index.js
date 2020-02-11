@@ -157,7 +157,7 @@ class EthereumBlockchain {
     return this.extendSidetreeTransactionWithTimestamp(txns);
   }
 
-  async getEthereumTransaction(transactionHash) {
+  async getTransactionsBlockNumber(transactionHash) {
     const transaction = await new Promise((resolve, reject) => {
       this.web3.eth.getTransaction(transactionHash, (err, data) => {
         if (err) {
@@ -166,7 +166,7 @@ class EthereumBlockchain {
         return resolve(data);
       });
     });
-    return transaction;
+    return transaction.blockNumber;
   }
 
   async getBlockchainTime(blockHashOrBlockNumber) {
