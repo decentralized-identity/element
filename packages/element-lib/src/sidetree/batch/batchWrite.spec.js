@@ -1,5 +1,4 @@
 const batchWrite = require('./batchWrite');
-const resolve = require('../resolve');
 const {
   getTestSideTree,
   getCreatePayloadForKeyIndex,
@@ -61,13 +60,12 @@ describe('batchWrite with one operation', () => {
   });
 
   it('should not return the did before sync is called', async () => {
-    const didDocument = await resolve(sidetree)(didUniqueSuffix);
+    const didDocument = await sidetree.resolve(didUniqueSuffix, false);
     expect(didDocument).not.toBeDefined();
   });
 
   it('should resolve the did when the observer synced the transaction', async () => {
-    await sidetree.syncTransaction(transaction);
-    const didDocument = await resolve(sidetree)(didUniqueSuffix);
+    const didDocument = await sidetree.resolve(didUniqueSuffix, true);
     const did = `did:elem:${didUniqueSuffix}`;
     expect(didDocument.id).toBe(did);
     const decodedPayload = decodeJson(createPayload.payload);
@@ -130,15 +128,14 @@ describe('batchWrite with several operations', () => {
   });
 
   it('should not return the did before sync is called', async () => {
-    const didDocument1 = await resolve(sidetree)(didUniqueSuffix1);
+    const didDocument1 = await sidetree.resolve(didUniqueSuffix1, false);
     expect(didDocument1).not.toBeDefined();
-    const didDocument2 = await resolve(sidetree)(didUniqueSuffix2);
+    const didDocument2 = await sidetree.resolve(didUniqueSuffix2, false);
     expect(didDocument2).not.toBeDefined();
   });
 
   it('should resolve the first did when the observer synced the transaction', async () => {
-    await sidetree.syncTransaction(transaction);
-    const didDocument = await resolve(sidetree)(didUniqueSuffix1);
+    const didDocument = await sidetree.resolve(didUniqueSuffix1, true);
     const did = `did:elem:${didUniqueSuffix1}`;
     expect(didDocument.id).toBe(did);
     const decodedPayload = decodeJson(createPayload1.payload);
@@ -154,7 +151,7 @@ describe('batchWrite with several operations', () => {
   });
 
   it('should resolve the second did when the observer synced the transaction', async () => {
-    const didDocument = await resolve(sidetree)(didUniqueSuffix2);
+    const didDocument = await sidetree.resolve(didUniqueSuffix2, true);
     const did = `did:elem:${didUniqueSuffix2}`;
     expect(didDocument.id).toBe(did);
     const decodedPayload = decodeJson(createPayload2.payload);
