@@ -12,7 +12,7 @@ const getTransactions = sidetree => async ({ limit } = {}) => {
 };
 
 const getTransactionSummary = sidetree => async transactionHash => {
-  const { blockNumber } = await sidetree.blockchain.getEthereumTransaction(
+  const blockNumber = await sidetree.blockchain.getTransactionsBlockNumber(
     transactionHash
   );
   const transactions = await sidetree.blockchain.getTransactions(

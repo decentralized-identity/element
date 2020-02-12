@@ -75,7 +75,8 @@ describe('LatePublishAttack', () => {
     // Instead of writing the anchorFile to IPFS, we only compute its hash
     anchorFileHash = await sidetree.func.objectToMultihash(anchorFile);
     // Anchor on ethereum
-    await sidetree.blockchain.write(anchorFileHash);
+    const txn = await sidetree.blockchain.write(anchorFileHash);
+    expect(txn).toBeDefined();
   });
 
   it('pretend to transfer', async () => {

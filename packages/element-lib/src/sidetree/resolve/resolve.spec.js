@@ -1,5 +1,4 @@
 /* eslint-disable max-len */
-const resolve = require('./');
 const {
   getTestSideTree,
   changeKid,
@@ -21,11 +20,12 @@ const { MnemonicKeySystem } = require('../../../index');
 
 const sidetree = getTestSideTree();
 
+jest.setTimeout(10 * 1000);
+
 describe('resolve', () => {
   describe('create', () => {
     const mks = new MnemonicKeySystem(MnemonicKeySystem.generateMnemonic());
     let createPayload;
-    let createTransaction;
     let didUniqueSuffix;
     let primaryKey;
     let recoveryKey;
@@ -39,7 +39,6 @@ describe('resolve', () => {
         recoveryKey.publicKey
       );
       createPayload = await getCreatePayload(didDocumentModel, primaryKey);
-      createTransaction = await sidetree.batchScheduler.writeNow(createPayload);
       didUniqueSuffix = getDidUniqueSuffix(createPayload);
     });
 
@@ -86,13 +85,14 @@ describe('resolve', () => {
     });
 
     it('should not be resolveable before sync', async () => {
-      const didDocument = await resolve(sidetree)(didUniqueSuffix);
+      // Here we set the just in time flag to false so that no syncing will occur
+      await sidetree.batchScheduler.writeNow(createPayload);
+      const didDocument = await sidetree.resolve(didUniqueSuffix, false);
       expect(didDocument).not.toBeDefined();
     });
 
     it('should be resolveable after sync', async () => {
-      await sidetree.syncTransaction(createTransaction);
-      const didDocument = await resolve(sidetree)(didUniqueSuffix);
+      const didDocument = await sidetree.resolve(didUniqueSuffix, true);
       const did = `did:elem:${didUniqueSuffix}`;
       expect(didDocument.id).toBe(did);
       const decodedPayload = decodeJson(createPayload.payload);
@@ -118,7 +118,7 @@ describe('resolve', () => {
     });
 
     it('should be resolveable again', async () => {
-      const didDocument = await resolve(sidetree)(didUniqueSuffix);
+      const didDocument = await sidetree.resolve(didUniqueSuffix, true);
       const did = `did:elem:${didUniqueSuffix}`;
       expect(didDocument.id).toBe(did);
     });
@@ -141,10 +141,7 @@ describe('resolve', () => {
       );
       createPayload = await getCreatePayload(didDocumentModel, primaryKey);
       didUniqueSuffix = getDidUniqueSuffix(createPayload);
-      const createTransaction = await sidetree.batchScheduler.writeNow(
-        createPayload
-      );
-      await sidetree.syncTransaction(createTransaction);
+      await sidetree.batchScheduler.writeNow(createPayload);
       lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
     });
 
@@ -204,10 +201,9 @@ describe('resolve', () => {
         newPublicKey,
         primaryKey.privateKey
       );
-      const transaction = await sidetree.batchScheduler.writeNow(payload);
-      await sidetree.syncTransaction(transaction);
+      await sidetree.batchScheduler.writeNow(payload);
       lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
-      const didDocument = await resolve(sidetree)(didUniqueSuffix);
+      const didDocument = await sidetree.resolve(didUniqueSuffix, true);
       expect(didDocument.publicKey).toHaveLength(3);
       expect(didDocument.publicKey[2].publicKeyHex).toBe(newKey.publicKey);
       expect(didDocument.publicKey[2].controller).toBe(didDocument.id);
@@ -219,10 +215,9 @@ describe('resolve', () => {
         '#newKey',
         primaryKey.privateKey
       );
-      const transaction = await sidetree.batchScheduler.writeNow(payload);
-      await sidetree.syncTransaction(transaction);
+      await sidetree.batchScheduler.writeNow(payload);
       lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
-      const didDocument = await resolve(sidetree)(didUniqueSuffix);
+      const didDocument = await sidetree.resolve(didUniqueSuffix, true);
       expect(didDocument.publicKey).toHaveLength(2);
       expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey.publicKey);
       expect(didDocument.publicKey[1].publicKeyHex).toBe(recoveryKey.publicKey);
@@ -268,10 +263,9 @@ describe('resolve', () => {
         payload,
         primaryKey.privateKey
       );
-      const transaction = await sidetree.batchScheduler.writeNow(operation);
-      await sidetree.syncTransaction(transaction);
+      await sidetree.batchScheduler.writeNow(operation);
       lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
-      const didDocument = await resolve(sidetree)(didUniqueSuffix);
+      const didDocument = await sidetree.resolve(didUniqueSuffix, true);
       expect(didDocument.publicKey).toHaveLength(3);
       expect(didDocument.publicKey[0].publicKeyHex).toBe(recoveryKey.publicKey);
       expect(didDocument.publicKey[1].publicKeyHex).toBe(newKey2.publicKey);
@@ -284,9 +278,8 @@ describe('resolve', () => {
         '#recovery',
         primaryKey.privateKey
       );
-      const transaction = await sidetree.batchScheduler.writeNow(payload);
-      await sidetree.syncTransaction(transaction);
-      const didDocument = await resolve(sidetree)(didUniqueSuffix);
+      await sidetree.batchScheduler.writeNow(payload);
+      const didDocument = await sidetree.resolve(didUniqueSuffix, true);
       expect(didDocument.publicKey).toHaveLength(3);
       expect(didDocument.publicKey[0].publicKeyHex).toBe(recoveryKey.publicKey);
     });
@@ -297,20 +290,16 @@ describe('resolve', () => {
         '#fakekid',
         primaryKey.privateKey
       );
-      const transaction = await sidetree.batchScheduler.writeNow(payload);
-      await sidetree.syncTransaction(transaction);
+      await sidetree.batchScheduler.writeNow(payload);
       lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
-      const didDocument = await resolve(sidetree)(didUniqueSuffix);
+      const didDocument = await sidetree.resolve(didUniqueSuffix, true);
       expect(didDocument.publicKey).toHaveLength(3);
       expect(didDocument.publicKey[0].publicKeyHex).toBe(recoveryKey.publicKey);
     });
 
     it('should not process another create operation after update', async () => {
-      const createTransaction = await sidetree.batchScheduler.writeNow(
-        createPayload
-      );
-      await sidetree.syncTransaction(createTransaction);
-      const didDocument = await resolve(sidetree)(didUniqueSuffix);
+      await sidetree.batchScheduler.writeNow(createPayload);
+      const didDocument = await sidetree.resolve(didUniqueSuffix, true);
       expect(didDocument.publicKey).toHaveLength(3);
       expect(didDocument.publicKey[0].publicKeyHex).toBe(recoveryKey.publicKey);
     });
@@ -336,10 +325,7 @@ describe('resolve', () => {
         didDocumentModel,
         primaryKey
       );
-      const createTransaction = await sidetree.batchScheduler.writeNow(
-        createPayload
-      );
-      await sidetree.syncTransaction(createTransaction);
+      await sidetree.batchScheduler.writeNow(createPayload);
       didUniqueSuffix = getDidUniqueSuffix(createPayload);
       primaryKey2 = await mks.getKeyForPurpose('primary', 1);
       recoveryKey2 = await mks.getKeyForPurpose('recovery', 1);
@@ -415,11 +401,8 @@ describe('resolve', () => {
         didDocumentModel2,
         recoveryKey.privateKey
       );
-      const invalidTransaction = await sidetree.batchScheduler.writeNow(
-        invalidPayload
-      );
-      await sidetree.syncTransaction(invalidTransaction);
-      const didDocument = await resolve(sidetree)(fakeDidUniqueSuffix);
+      await sidetree.batchScheduler.writeNow(invalidPayload);
+      const didDocument = await sidetree.resolve(fakeDidUniqueSuffix, true);
       expect(didDocument).not.toBeDefined();
     });
 
@@ -429,9 +412,8 @@ describe('resolve', () => {
         didDocumentModel2,
         recoveryKey.privateKey
       );
-      const transaction = await sidetree.batchScheduler.writeNow(payload);
-      await sidetree.syncTransaction(transaction);
-      const didDocument = await resolve(sidetree)(didUniqueSuffix);
+      await sidetree.batchScheduler.writeNow(payload);
+      const didDocument = await sidetree.resolve(didUniqueSuffix, true);
       expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey2.publicKey);
       expect(didDocument.publicKey[1].publicKeyHex).toBe(
         recoveryKey2.publicKey
@@ -457,10 +439,7 @@ describe('resolve', () => {
         didDocumentModel,
         primaryKey
       );
-      const createTransaction = await sidetree.batchScheduler.writeNow(
-        createPayload
-      );
-      await sidetree.syncTransaction(createTransaction);
+      await sidetree.batchScheduler.writeNow(createPayload);
       didUniqueSuffix = getDidUniqueSuffix(createPayload);
     });
 
@@ -497,11 +476,8 @@ describe('resolve', () => {
         fakeDidUniqueSuffix,
         recoveryKey.privateKey
       );
-      const invalidDeleteTransaction = await sidetree.batchScheduler.writeNow(
-        invalidDeletePayload
-      );
-      await sidetree.syncTransaction(invalidDeleteTransaction);
-      const didDocument = await resolve(sidetree)(fakeDidUniqueSuffix);
+      await sidetree.batchScheduler.writeNow(invalidDeletePayload);
+      const didDocument = await sidetree.resolve(fakeDidUniqueSuffix, true);
       expect(didDocument).not.toBeDefined();
     });
 
@@ -510,11 +486,8 @@ describe('resolve', () => {
         didUniqueSuffix,
         recoveryKey.privateKey
       );
-      const deleteTransaction = await sidetree.batchScheduler.writeNow(
-        deletePayload
-      );
-      await sidetree.syncTransaction(deleteTransaction);
-      const didDocument = await resolve(sidetree)(didUniqueSuffix);
+      await sidetree.batchScheduler.writeNow(deletePayload);
+      const didDocument = await sidetree.resolve(didUniqueSuffix, true);
       expect(didDocument).not.toBeDefined();
     });
 
@@ -523,11 +496,8 @@ describe('resolve', () => {
         didUniqueSuffix,
         recoveryKey.privateKey
       );
-      const secondDeleteTransaction = await sidetree.batchScheduler.writeNow(
-        secondDeletePayload
-      );
-      await sidetree.syncTransaction(secondDeleteTransaction);
-      const didDocument = await resolve(sidetree)(didUniqueSuffix);
+      await sidetree.batchScheduler.writeNow(secondDeletePayload);
+      const didDocument = await sidetree.resolve(didUniqueSuffix, true);
       expect(didDocument).not.toBeDefined();
     });
   });
@@ -561,7 +531,7 @@ describe('resolve just in time', () => {
     });
 
     it('should resolve the did just in time without syncing first', async () => {
-      const didDocument = await resolve(sidetree)(didUniqueSuffix1, true);
+      const didDocument = await sidetree.resolve(didUniqueSuffix1, true);
       expect(didDocument.id).toContain(didUniqueSuffix1);
     });
 

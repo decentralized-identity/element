@@ -6,6 +6,8 @@ const { MnemonicKeySystem } = require('../../../index');
 
 const sidetree = getTestSideTree();
 
+jest.setTimeout(10 * 1000);
+
 describe('patches', () => {
   let mks;
   let primaryKey;
@@ -29,10 +31,7 @@ describe('patches', () => {
     );
     didUniqueSuffix = await sidetree.func.getDidUniqueSuffix(createPayload);
     did = `did:elem${didUniqueSuffix}`;
-    const createTransaction = await sidetree.batchScheduler.writeNow(
-      createPayload
-    );
-    await sidetree.syncTransaction(createTransaction);
+    await sidetree.batchScheduler.writeNow(createPayload);
   });
 
   it('should add a new key', async () => {
