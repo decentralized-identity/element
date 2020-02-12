@@ -51,7 +51,7 @@ class EthereumBlockchain {
     if (options && options.omitTimestamp) {
       return txns;
     }
-    return utils.extendSidetreeTransactionWithTimestamp(txns);
+    return this.extendSidetreeTransactionWithTimestamp(txns);
   }
 
   async getTransactionsBlockNumber(transactionHash) {
@@ -96,7 +96,7 @@ class EthereumBlockchain {
   }
 
   async _createNewContract(fromAddress) {
-    const from = fromAddress || (await utils.getAccounts(this.web3));
+    const from = fromAddress || (await utils.getAccounts(this.web3))[0];
     const instance = await utils.retryWithLatestTransactionCount(
       this.web3,
       this.anchorContract.new,

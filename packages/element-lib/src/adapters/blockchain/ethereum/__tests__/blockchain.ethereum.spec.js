@@ -1,5 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 const element = require('../../../../../index');
+const utils = require('../utils');
 
 const config = require('../../../json/config.local.json');
 
@@ -23,17 +24,15 @@ describe('blockchain.ethereum', () => {
     });
 
     it('can create new contracts on the fly', async () => {
-      const accounts = await blockchain.web3.eth.getAccounts();
-      // FIXME
+      const accounts = await utils.getAccounts(blockchain.web3);
       const instance = await blockchain._createNewContract(accounts[0]);
       expect(blockchain.anchorContractAddress).toBe(instance.address);
     });
   });
 
-  // FIXME
   describe('getBlockchainTime', () => {
     it('should return hash and blocknumber', async () => {
-      const result = await blockchain.getBlockchainTime(0);
+      const result = await utils.getBlockchainTime(blockchain.web3, 0);
       expect(result.time).toBe(0);
       expect(result.hash).toBeDefined();
     });
