@@ -197,7 +197,7 @@ const addDIDToWallet = (did, wallet) => {
   return wallet;
 };
 
-const getNewWallet = async () => {
+const getNewWallet = async didMethodName => {
   const mnemonic = await MnemonicKeySystem.generateMnemonic();
   const ed25519Key = await elementCrypto.ed25519.createKeys();
   const x25519Key = await elementCrypto.ed25519.X25519KeyPair.fromEdKeyPair({
@@ -290,7 +290,7 @@ const getNewWallet = async () => {
   const createPayload = await getCreatePayload(didDocumentModel, primaryKey);
   const didUniqueSuffix = getDidUniqueSuffix(createPayload);
 
-  const predictedDID = `did:elem:${didUniqueSuffix}`;
+  const predictedDID = `${didMethodName}:${didUniqueSuffix}`;
 
   addDIDToWallet(predictedDID, wall);
 
@@ -305,7 +305,6 @@ module.exports = {
   getUpdatePayloadForRemovingAKey,
   getRecoverPayload,
   getDeletePayload,
-
   getNewWallet,
   walletToInitionalDIDDoc,
 };

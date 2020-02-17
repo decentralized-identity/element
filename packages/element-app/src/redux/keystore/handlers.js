@@ -10,7 +10,7 @@ export default withHandlers({
     });
   },
   doCreateWalletKeystore: ({ setKeystoreProp }) => async () => {
-    const wall = await element.op.getNewWallet();
+    const wall = await element.op.getNewWallet('did:elem');
     setKeystoreProp({
       keystore: {
         data: {
