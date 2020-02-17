@@ -33,7 +33,7 @@ export default withHandlers({
     const primaryKey = keys.find(k => {
       return k.tags.indexOf('#primary') !== -1;
     });
-    const didDocumentModel = op.walletToInitionalDIDDoc(wall);
+    const didDocumentModel = op.walletToInitialDIDDoc(wall);
     const createPayload = await op.getCreatePayload(
       didDocumentModel,
       primaryKey
@@ -49,7 +49,7 @@ export default withHandlers({
     const primaryKey = keys.find(k => {
       return k.tags.indexOf('#primary') !== -1;
     });
-    const didDocumentModel = op.walletToInitionalDIDDoc(wall);
+    const didDocumentModel = op.walletToInitialDIDDoc(wall);
     const createPayload = await op.getCreatePayload(
       didDocumentModel,
       primaryKey

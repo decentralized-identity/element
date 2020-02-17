@@ -127,7 +127,7 @@ const getDeletePayload = async (didUniqueSuffix, recoveryPrivateKey) => {
   return makeSignedOperation(header, payload, recoveryPrivateKey);
 };
 
-const walletToInitionalDIDDoc = wallet => {
+const walletToInitialDIDDoc = wallet => {
   const didDocumentModel = {
     '@context': [
       'https://www.w3.org/ns/did/v1',
@@ -285,7 +285,7 @@ const getNewWallet = async didMethodName => {
     notes,
   });
 
-  const didDocumentModel = walletToInitionalDIDDoc(wall);
+  const didDocumentModel = walletToInitialDIDDoc(wall);
 
   const createPayload = await getCreatePayload(didDocumentModel, primaryKey);
   const didUniqueSuffix = getDidUniqueSuffix(createPayload);
@@ -306,5 +306,5 @@ module.exports = {
   getRecoverPayload,
   getDeletePayload,
   getNewWallet,
-  walletToInitionalDIDDoc,
+  walletToInitialDIDDoc,
 };
