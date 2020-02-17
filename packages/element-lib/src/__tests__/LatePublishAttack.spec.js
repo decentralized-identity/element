@@ -34,7 +34,7 @@ describe('LatePublishAttack', () => {
 
   it('create a did', async () => {
     const txn = await sidetree.batchScheduler.writeNow(actor.createPayload);
-    expect(txn.transactionTime).toBeDefined();
+    expect(txn.transactionHash).toBeDefined();
     await sidetree.resolve(actor.didUniqueSuffix, true);
     const type = 'did:documentRecord';
     const [docRecord] = await sidetree.db.readCollection(type);
@@ -117,7 +117,7 @@ describe('LatePublishAttack', () => {
       actor.primaryKey.privateKey
     );
     const txn = await sidetree.batchScheduler.writeNow(operation);
-    expect(txn.transactionTime).toBeDefined();
+    expect(txn.transactionHash).toBeDefined();
   });
 
   it('observers think the transfer occured', async () => {

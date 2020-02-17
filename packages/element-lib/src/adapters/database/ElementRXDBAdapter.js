@@ -81,6 +81,9 @@ class ElementRXDBAdapter {
           decodedOperation: {},
           decodedOperationPayload: {},
           queue: {},
+          blockHash: {},
+          sidetreeTransactionsInBlock: {},
+          blockHeight: {},
         },
       },
     });

@@ -42,6 +42,7 @@ const blockchain = element.blockchain.ethereum.configure({
 const parameters = {
   maxOperationsPerBatch: 10000,
   batchingIntervalInSeconds: 10,
+  didMethodName: 'did:elem',
 };
 
 const sidetree = new element.Sidetree({

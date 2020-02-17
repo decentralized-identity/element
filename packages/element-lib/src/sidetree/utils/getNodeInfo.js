@@ -1,6 +1,4 @@
 const getNodeInfo = sidetree => async () => {
-  const accounts = await sidetree.blockchain.web3.eth.getAccounts();
-
   // TODO: https://github.com/decentralized-identity/element/issues/91
   // expose manager pattern meta data about nodes
 
@@ -13,7 +11,6 @@ const getNodeInfo = sidetree => async () => {
     ipfs: ipfsData,
     ethereum: {
       anchor_contract_address: sidetree.blockchain.anchorContractAddress,
-      accounts,
     },
     sidetree: sidetree.parameters,
   };

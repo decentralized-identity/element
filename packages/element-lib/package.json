@@ -1,6 +1,6 @@
 {
   "name": "@transmute/element-lib",
-  "version": "0.5.0",
+  "version": "0.5.2",
   "description": "Experimental Sidetree Protocol based DID Method `elem` with Ethereum and IPFS",
   "main": "index.js",
   "repository": {
@@ -22,7 +22,6 @@
     "test": "NODE_OPTIONS=--max_old_space_size=4096 jest --runInBand ",
     "precoverage": "npm run services:start",
     "coverage": "jest --runInBand --coverage ",
-    "postcoverage": "npm run services:stop",
     "test:contracts": "npx truffle test",
     "pretest:contracts": "npm run services:start",
     "contracts:migrate:dev": "truffle migrate --network development --reset",
