@@ -30,13 +30,16 @@ describe('Poisoned Batch File Attack', () => {
       brokenAnchorFileHash
     );
     const didDoc = await sidetree.resolve(actor.didUniqueSuffix, true);
-    expect(didDoc.id).toBe(`did:elem:${actor.didUniqueSuffix}`);
 
-    const cachedTransaction = await sidetree.db.read(
-      `transaction:${poisonedTransaction.transactionNumber}`
+    expect(didDoc.id).toBe(`did:elem:${actor.didUniqueSuffix}`);
+    const transactions = await sidetree.db.readCollection('transaction');
+    const lastCachedTransaction = transactions.pop();
+    // Cached transaction is the same as poisoned transaction
+    expect(lastCachedTransaction.transactionHash).toBe(
+      poisonedTransaction.transactionHash
     );
-    expect(cachedTransaction.error).toBeDefined();
-    expect(cachedTransaction.error).toContain('Error: Invalid JSON');
+    expect(lastCachedTransaction.error).toBeDefined();
+    expect(lastCachedTransaction.error).toContain('Error: Invalid JSON');
   });
 
   it('skips poison after it is discovered', async () => {
