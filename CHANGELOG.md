@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/decentralized-identity/element/compare/v0.4.4...v0.5.0) (2020-02-17)
+
+
+### Bug Fixes
+
+* make api node 10 ([219dd0f](https://github.com/decentralized-identity/element/commit/219dd0f))
+* qr code mobile view and page refresh bug ([fa769a8](https://github.com/decentralized-identity/element/commit/fa769a8))
+
+
+
+
+
 ## [0.4.4](https://github.com/decentralized-identity/element/compare/v0.4.3...v0.4.4) (2020-01-24)
 
 
