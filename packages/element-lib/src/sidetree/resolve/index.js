@@ -59,7 +59,7 @@ const transformDidDocument = didDocument => {
   return transformed;
 };
 
-const create = async (state, operation, lastValidOperation) => {
+const create = async (state, operation, lastValidOperation, didMethodName) => {
   const previousOperationHash =
     lastValidOperation && lastValidOperation.operation.operationHash;
   if (previousOperationHash !== undefined || state) {
@@ -70,7 +70,7 @@ const create = async (state, operation, lastValidOperation) => {
   // Validate did document model
   isDidDocumentModelValid(originalDidDocument);
   await isSignatureValid(originalDidDocument, operation);
-  const did = `did:elem:${operation.operationHash}`;
+  const did = `${didMethodName}:${operation.operationHash}`;
   // Add id to did doc
   const didDocument = {
     ...operation.decodedOperationPayload,
@@ -236,7 +236,7 @@ const update = async (state, operation, lastValidOperation) => {
   return decodedOperationPayload.patches.reduce(applyPatch, state);
 };
 
-const recover = async (state, operation) => {
+const recover = async (state, operation, didMethodName) => {
   if (!state) {
     throw new Error('no create operation');
   }
@@ -246,7 +246,7 @@ const recover = async (state, operation) => {
   isDidDocumentModelValid(newDidDocument);
   return {
     ...newDidDocument,
-    id: `did:elem:${didUniqueSuffix}`,
+    id: `${didMethodName}:${didUniqueSuffix}`,
   };
 };
 
@@ -258,19 +258,29 @@ const deletE = async (state, operation) => {
   return undefined;
 };
 
-const applyOperation = async (state, operation, lastValidOperation) => {
+const applyOperation = async (
+  state,
+  operation,
+  lastValidOperation,
+  didMethodName
+) => {
   const type = operation.decodedHeader.operation;
   let newState = state;
   try {
     switch (type) {
       case 'create':
-        newState = await create(state, operation, lastValidOperation);
+        newState = await create(
+          state,
+          operation,
+          lastValidOperation,
+          didMethodName
+        );
         break;
       case 'update':
         newState = await update(state, operation, lastValidOperation);
         break;
       case 'recover':
-        newState = await recover(state, operation);
+        newState = await recover(state, operation, didMethodName);
         break;
       case 'delete':
         newState = await deletE(state, operation);
@@ -305,7 +315,8 @@ const resolve = sidetree => async (did, justInTime = false) => {
         const { valid, newState } = await applyOperation(
           acc,
           operation.operation,
-          lastValidFullOperation
+          lastValidFullOperation,
+          sidetree.parameters.didMethodName
         );
         if (valid) {
           lastValidFullOperation = operation;
