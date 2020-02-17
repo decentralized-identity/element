@@ -20,7 +20,6 @@ class EthereumBlockchain {
     }
   }
 
-  // eslint-disable-next-line class-methods-use-this
   async extendSidetreeTransactionWithTimestamp(txns) {
     return Promise.all(
       txns.map(async txn => ({
