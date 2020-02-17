@@ -24,6 +24,7 @@ if (window.web3) {
 const parameters = {
   maxOperationsPerBatch: 10 * 1000,
   batchingIntervalInSeconds: 10,
+  didMethodName: 'did:elem',
 };
 
 export const initSidetree = async () => {
