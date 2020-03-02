@@ -83,6 +83,12 @@ class ElementCouchDBAdapter {
     await this.init();
   }
 
+  async deleteDB() {
+    await this.init();
+    await this.couch.dropDatabase(this.name);
+    this.created = false;
+  }
+
   async close() {
     return this;
   }
