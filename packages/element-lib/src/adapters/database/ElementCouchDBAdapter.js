@@ -17,7 +17,14 @@ class ElementCouchDBAdapter {
       });
     } else {
       this.name = name;
-      this.couch = new NodeCouchDb();
+      this.couch = new NodeCouchDb({
+        protocol: 'http',
+        port: 5984,
+        auth: {
+          user: 'admin',
+          pass: 'password',
+        },
+      });
     }
   }
 
