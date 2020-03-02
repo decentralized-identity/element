@@ -1,4 +1,4 @@
-jest.setTimeout(10 * 1000);
+jest.setTimeout(20 * 1000);
 
 const {
   getTestSideTree,
@@ -13,6 +13,7 @@ const wrongBatchFileHash = 'QmTJGHccriUtq3qf3bvAQUcDUHnBbHNJG2x2FYwYUecN43';
 
 beforeAll(async () => {
   sidetree = getTestSideTree();
+  await sidetree.db.deleteDB();
   await generateActors(1);
   actor = await getActorByIndex(0);
   txn = await sidetree.batchScheduler.writeNow(actor.createPayload);

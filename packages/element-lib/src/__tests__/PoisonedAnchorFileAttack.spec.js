@@ -4,13 +4,14 @@ const {
   getActorByIndex,
 } = require('./test-utils');
 
-jest.setTimeout(10 * 1000);
+jest.setTimeout(20 * 1000);
 
 let sidetree;
 let actor;
 
 beforeAll(async () => {
   sidetree = getTestSideTree();
+  await sidetree.db.deleteDB();
   await generateActors(1);
   actor = await getActorByIndex(0);
   await sidetree.batchScheduler.writeNow(actor.createPayload);
