@@ -1,6 +1,6 @@
 {
   "name": "@transmute/element-api",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "Node.js REST API For Element / Sidetree Ethereum",
   "author": "Orie Steele",
   "private": true,
@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@google-cloud/logging-winston": "^0.10.2",
-    "@transmute/element-lib": "^0.5.4",
+    "@transmute/element-lib": "^0.5.5",
     "base64url": "^3.0.1",
     "cors": "^2.8.5",
     "express": "^4.16.4",
