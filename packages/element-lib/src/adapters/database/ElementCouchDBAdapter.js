@@ -32,8 +32,6 @@ class ElementCouchDBAdapter {
   async init() {
     if (!this.created) {
       await this.couch.createDatabase(this.name).catch(err => {
-        console.log(err);
-        console.log(err.body);
         // Sometimes the db already exists
         if (err.body.error !== 'file_exists') {
           throw err;
