@@ -21,7 +21,7 @@ describe('ElementCouchDBAdapter', () => {
 
     db = new ElementCouchDBAdapter({
       name: dbName,
-      remote: null,
+      host: 'localhost',
     });
     await db.reset();
   });

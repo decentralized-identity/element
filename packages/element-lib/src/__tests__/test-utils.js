@@ -7,7 +7,7 @@ const { getDidDocumentModel, getCreatePayload } = require('../sidetree/op');
 const getTestSideTree = () => {
   const db = new element.adapters.database.ElementCouchDBAdapter({
     name: 'element-test',
-    remote: null,
+    host: 'localhost',
   });
 
   const storage = element.storage.ipfs.configure({
