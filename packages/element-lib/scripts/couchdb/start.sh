@@ -4,7 +4,7 @@ couchdb_running() {
 }
 
 start_couchdb() {
-  docker run -p 5984:5984 -d couchdb > /dev/null
+  docker run -e COUCHDB_USER=admin -e COUCHDB_PASSWORD=password -p 5984:5984 -d couchdb:latest > /dev/null
 }
 
 if couchdb_running; then

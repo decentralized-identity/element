@@ -5,9 +5,9 @@ const { encodeJson, decodeJson } = require('../func');
 const { getDidDocumentModel, getCreatePayload } = require('../sidetree/op');
 
 const getTestSideTree = () => {
-  const db = new element.adapters.database.ElementRXDBAdapter({
+  const db = new element.adapters.database.ElementCouchDBAdapter({
     name: 'element-test',
-    adapter: 'memory',
+    host: 'localhost',
   });
 
   const storage = element.storage.ipfs.configure({

@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.7](https://github.com/decentralized-identity/element/compare/v0.5.6...v0.5.7) (2020-03-03)
+
+**Note:** Version bump only for package @transmute/element
+
+
+
+
+
+## [0.5.6](https://github.com/decentralized-identity/element/compare/v0.5.5...v0.5.6) (2020-03-03)
+
+**Note:** Version bump only for package @transmute/element
+
+
+
+
+
+## [0.5.5](https://github.com/decentralized-identity/element/compare/v0.5.4...v0.5.5) (2020-03-03)
+
+**Note:** Version bump only for package @transmute/element
+
+
+
+
+
+## [0.5.4](https://github.com/decentralized-identity/element/compare/v0.5.3...v0.5.4) (2020-03-02)
+
+**Note:** Version bump only for package @transmute/element
+
+
+
+
+
+## [0.5.3](https://github.com/decentralized-identity/element/compare/v0.5.2...v0.5.3) (2020-03-02)
+
+
+### Features
+
+* update couchdb to latest version ([05a1418](https://github.com/decentralized-identity/element/commit/05a1418))
+
+
+
+
+
 ## [0.5.2](https://github.com/decentralized-identity/element/compare/v0.5.1...v0.5.2) (2020-02-17)
 
 **Note:** Version bump only for package @transmute/element
