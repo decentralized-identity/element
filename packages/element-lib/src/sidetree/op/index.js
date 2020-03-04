@@ -44,7 +44,7 @@ const makeSignedOperation = (header, payload, privateKey) => {
   return operation;
 };
 
-const getCreatePayload = async (didDocumentModel, primaryKey) => {
+const getCreatePayload = (didDocumentModel, primaryKey) => {
   // Create the encoded protected header.
   const header = {
     operation: 'create',
@@ -54,7 +54,7 @@ const getCreatePayload = async (didDocumentModel, primaryKey) => {
   return makeSignedOperation(header, didDocumentModel, primaryKey.privateKey);
 };
 
-const getUpdatePayloadForAddingAKey = async (
+const getUpdatePayloadForAddingAKey = (
   previousOperation,
   newPublicKey,
   primaryPrivateKey
@@ -77,7 +77,7 @@ const getUpdatePayloadForAddingAKey = async (
   return makeSignedOperation(header, payload, primaryPrivateKey);
 };
 
-const getUpdatePayloadForRemovingAKey = async (
+const getUpdatePayloadForRemovingAKey = (
   previousOperation,
   kid,
   primaryPrivateKey
@@ -100,7 +100,7 @@ const getUpdatePayloadForRemovingAKey = async (
   return makeSignedOperation(header, payload, primaryPrivateKey);
 };
 
-const getRecoverPayload = async (
+const getRecoverPayload = (
   didUniqueSuffix,
   newDidDocument,
   recoveryPrivateKey
@@ -117,7 +117,7 @@ const getRecoverPayload = async (
   return makeSignedOperation(header, payload, recoveryPrivateKey);
 };
 
-const getDeletePayload = async (didUniqueSuffix, recoveryPrivateKey) => {
+const getDeletePayload = (didUniqueSuffix, recoveryPrivateKey) => {
   const header = {
     operation: 'delete',
     kid: '#recovery',
@@ -200,7 +200,7 @@ const addDIDToWallet = (did, wallet) => {
 const getNewWallet = async didMethodName => {
   const mnemonic = await MnemonicKeySystem.generateMnemonic();
   const ed25519Key = await elementCrypto.ed25519.createKeys();
-  const x25519Key = await elementCrypto.ed25519.X25519KeyPair.fromEdKeyPair({
+  const x25519Key = elementCrypto.ed25519.X25519KeyPair.fromEdKeyPair({
     publicKeyBase58: ed25519Key.publicKey,
     privateKeyBase58: ed25519Key.privateKey,
   });
@@ -287,7 +287,7 @@ const getNewWallet = async didMethodName => {
 
   const didDocumentModel = walletToInitialDIDDoc(wall);
 
-  const createPayload = await getCreatePayload(didDocumentModel, primaryKey);
+  const createPayload = getCreatePayload(didDocumentModel, primaryKey);
   const didUniqueSuffix = getDidUniqueSuffix(createPayload);
 
   const predictedDID = `${didMethodName}:${didUniqueSuffix}`;

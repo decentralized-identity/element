@@ -88,8 +88,8 @@ const generateActors = async count => {
       primaryKey.publicKey,
       recoveryKey.publicKey
     );
-    // eslint-disable-next-line no-await-in-loop
-    const createPayload = await element.op.getCreatePayload(
+
+    const createPayload = element.op.getCreatePayload(
       didDocumentModel,
       primaryKey
     );
@@ -118,7 +118,7 @@ const generateActors = async count => {
   return actors;
 };
 
-const createByActorIndex = async actorIndex => {
+const createByActorIndex = actorIndex => {
   const actor = getActorByIndex(actorIndex);
   const primaryKey = actor.mks.getKeyForPurpose('primary', 0);
   const recoveryKey = actor.mks.getKeyForPurpose('recovery', 0);
@@ -162,7 +162,7 @@ const updateByActorIndex = async (sidetree, actorIndex) => {
   );
 };
 
-const recoverByActorIndex = async (sidetree, actorIndex) => {
+const recoverByActorIndex = (sidetree, actorIndex) => {
   const actor = getActorByIndex(actorIndex);
   const { didUniqueSuffix } = getActorByIndex(actorIndex);
   const newPrimaryPublicKey = actor.mks.getKeyForPurpose('primary', 20)

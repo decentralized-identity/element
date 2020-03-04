@@ -2,7 +2,7 @@
 const faker = require('faker');
 const { op, func, MnemonicKeySystem } = require('@transmute/element-lib');
 
-const generateActors = async count => {
+const generateActors = count => {
   const actors = [];
   let i = 0;
 
@@ -14,11 +14,8 @@ const generateActors = async count => {
       primaryKey.publicKey,
       recoveryKey.publicKey
     );
-    // eslint-disable-next-line no-await-in-loop
-    const createPayload = await op.getCreatePayload(
-      didDocumentModel,
-      primaryKey
-    );
+
+    const createPayload = op.getCreatePayload(didDocumentModel, primaryKey);
     const didUniqueSuffix = func.getDidUniqueSuffix(createPayload);
     const actor = {
       '@context': 'https://schema.org',

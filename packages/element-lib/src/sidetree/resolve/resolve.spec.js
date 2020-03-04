@@ -31,14 +31,14 @@ describe('resolve', () => {
     let recoveryKey;
     let didDocumentModel;
 
-    beforeAll(async () => {
-      primaryKey = await mks.getKeyForPurpose('primary', 0);
-      recoveryKey = await mks.getKeyForPurpose('recovery', 0);
+    beforeAll(() => {
+      primaryKey = mks.getKeyForPurpose('primary', 0);
+      recoveryKey = mks.getKeyForPurpose('recovery', 0);
       didDocumentModel = getDidDocumentModel(
         primaryKey.publicKey,
         recoveryKey.publicKey
       );
-      createPayload = await getCreatePayload(didDocumentModel, primaryKey);
+      createPayload = getCreatePayload(didDocumentModel, primaryKey);
       didUniqueSuffix = getDidUniqueSuffix(createPayload);
     });
 
@@ -53,7 +53,7 @@ describe('resolve', () => {
     });
 
     it('should not work if signature is not valid', async () => {
-      const invalidCreatePayload = await getCreatePayload(
+      const invalidCreatePayload = getCreatePayload(
         didDocumentModel,
         recoveryKey
       );
@@ -133,27 +133,27 @@ describe('resolve', () => {
     let createPayload;
 
     beforeAll(async () => {
-      primaryKey = await mks.getKeyForPurpose('primary', 0);
-      recoveryKey = await mks.getKeyForPurpose('recovery', 0);
+      primaryKey = mks.getKeyForPurpose('primary', 0);
+      recoveryKey = mks.getKeyForPurpose('recovery', 0);
       const didDocumentModel = getDidDocumentModel(
         primaryKey.publicKey,
         recoveryKey.publicKey
       );
-      createPayload = await getCreatePayload(didDocumentModel, primaryKey);
+      createPayload = getCreatePayload(didDocumentModel, primaryKey);
       didUniqueSuffix = getDidUniqueSuffix(createPayload);
       await sidetree.batchScheduler.writeNow(createPayload);
       lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
     });
 
     it('should not work if specified kid does not exist in did document', async () => {
-      const newKey = await mks.getKeyForPurpose('primary', 1);
+      const newKey = mks.getKeyForPurpose('primary', 1);
       const newPublicKey = {
         id: '#newKey',
         usage: 'signing',
         type: 'Secp256k1VerificationKey2018',
         publicKeyHex: newKey.publicKey,
       };
-      const updatePayload = await getUpdatePayloadForAddingAKey(
+      const updatePayload = getUpdatePayloadForAddingAKey(
         lastOperation,
         newPublicKey,
         primaryKey.privateKey
@@ -168,14 +168,14 @@ describe('resolve', () => {
     });
 
     it('should not work if signature is not valid', async () => {
-      const newKey = await mks.getKeyForPurpose('primary', 1);
+      const newKey = mks.getKeyForPurpose('primary', 1);
       const newPublicKey = {
         id: '#newKey',
         usage: 'signing',
         type: 'Secp256k1VerificationKey2018',
         publicKeyHex: newKey.publicKey,
       };
-      const invalidUpdatePayload = await getUpdatePayloadForAddingAKey(
+      const invalidUpdatePayload = getUpdatePayloadForAddingAKey(
         lastOperation,
         newPublicKey,
         recoveryKey.privateKey
@@ -189,14 +189,14 @@ describe('resolve', () => {
     });
 
     it('should add a new key', async () => {
-      const newKey = await mks.getKeyForPurpose('primary', 1);
+      const newKey = mks.getKeyForPurpose('primary', 1);
       const newPublicKey = {
         id: '#newKey',
         usage: 'signing',
         type: 'Secp256k1VerificationKey2018',
         publicKeyHex: newKey.publicKey,
       };
-      const payload = await getUpdatePayloadForAddingAKey(
+      const payload = getUpdatePayloadForAddingAKey(
         lastOperation,
         newPublicKey,
         primaryKey.privateKey
@@ -210,7 +210,7 @@ describe('resolve', () => {
     });
 
     it('should remove a key', async () => {
-      const payload = await getUpdatePayloadForRemovingAKey(
+      const payload = getUpdatePayloadForRemovingAKey(
         lastOperation,
         '#newKey',
         primaryKey.privateKey
@@ -224,8 +224,8 @@ describe('resolve', () => {
     });
 
     it('should support multiple patches', async () => {
-      const newKey2 = await mks.getKeyForPurpose('primary', 2);
-      const newKey3 = await mks.getKeyForPurpose('primary', 3);
+      const newKey2 = mks.getKeyForPurpose('primary', 2);
+      const newKey3 = mks.getKeyForPurpose('primary', 3);
       const payload = {
         didUniqueSuffix: lastOperation.didUniqueSuffix,
         previousOperationHash: lastOperation.operation.operationHash,
@@ -273,7 +273,7 @@ describe('resolve', () => {
     });
 
     it('should not process a patch removing the recovery key', async () => {
-      const payload = await getUpdatePayloadForRemovingAKey(
+      const payload = getUpdatePayloadForRemovingAKey(
         lastOperation,
         '#recovery',
         primaryKey.privateKey
@@ -285,7 +285,7 @@ describe('resolve', () => {
     });
 
     it('should do nothing if removing a key that does not exist', async () => {
-      const payload = await getUpdatePayloadForRemovingAKey(
+      const payload = getUpdatePayloadForRemovingAKey(
         lastOperation,
         '#fakekid',
         primaryKey.privateKey
@@ -315,20 +315,17 @@ describe('resolve', () => {
     let didDocumentModel2;
 
     beforeAll(async () => {
-      primaryKey = await mks.getKeyForPurpose('primary', 0);
-      recoveryKey = await mks.getKeyForPurpose('recovery', 0);
+      primaryKey = mks.getKeyForPurpose('primary', 0);
+      recoveryKey = mks.getKeyForPurpose('recovery', 0);
       const didDocumentModel = getDidDocumentModel(
         primaryKey.publicKey,
         recoveryKey.publicKey
       );
-      const createPayload = await getCreatePayload(
-        didDocumentModel,
-        primaryKey
-      );
+      const createPayload = getCreatePayload(didDocumentModel, primaryKey);
       await sidetree.batchScheduler.writeNow(createPayload);
       didUniqueSuffix = getDidUniqueSuffix(createPayload);
-      primaryKey2 = await mks.getKeyForPurpose('primary', 1);
-      recoveryKey2 = await mks.getKeyForPurpose('recovery', 1);
+      primaryKey2 = mks.getKeyForPurpose('primary', 1);
+      recoveryKey2 = mks.getKeyForPurpose('recovery', 1);
       didDocumentModel2 = getDidDocumentModel(
         primaryKey2.publicKey,
         recoveryKey2.publicKey
@@ -336,7 +333,7 @@ describe('resolve', () => {
     });
 
     it('should not work if specified kid does not exist in did document', async () => {
-      const recoverPayload = await getRecoverPayload(
+      const recoverPayload = getRecoverPayload(
         didUniqueSuffix,
         didDocumentModel2,
         recoveryKey.privateKey
@@ -352,7 +349,7 @@ describe('resolve', () => {
     });
 
     it('should not work if signature is not valid', async () => {
-      const invalidRecoverPayload = await getRecoverPayload(
+      const invalidRecoverPayload = getRecoverPayload(
         didUniqueSuffix,
         didDocumentModel2,
         primaryKey.privateKey
@@ -396,7 +393,7 @@ describe('resolve', () => {
 
     it('should not work if there is no corresponding create operation', async () => {
       const fakeDidUniqueSuffix = 'fakediduniquesuffix';
-      const invalidPayload = await getRecoverPayload(
+      const invalidPayload = getRecoverPayload(
         fakeDidUniqueSuffix,
         didDocumentModel2,
         recoveryKey.privateKey
@@ -407,7 +404,7 @@ describe('resolve', () => {
     });
 
     it('should replace the did document with the one provided in the payload', async () => {
-      const payload = await getRecoverPayload(
+      const payload = getRecoverPayload(
         didUniqueSuffix,
         didDocumentModel2,
         recoveryKey.privateKey
@@ -429,22 +426,19 @@ describe('resolve', () => {
     let recoveryKey;
 
     beforeAll(async () => {
-      primaryKey = await mks.getKeyForPurpose('primary', 0);
-      recoveryKey = await mks.getKeyForPurpose('recovery', 0);
+      primaryKey = mks.getKeyForPurpose('primary', 0);
+      recoveryKey = mks.getKeyForPurpose('recovery', 0);
       const didDocumentModel = getDidDocumentModel(
         primaryKey.publicKey,
         recoveryKey.publicKey
       );
-      const createPayload = await getCreatePayload(
-        didDocumentModel,
-        primaryKey
-      );
+      const createPayload = getCreatePayload(didDocumentModel, primaryKey);
       await sidetree.batchScheduler.writeNow(createPayload);
       didUniqueSuffix = getDidUniqueSuffix(createPayload);
     });
 
     it('should not work if specified kid does not exist in did document', async () => {
-      const deletePayload = await getDeletePayload(
+      const deletePayload = getDeletePayload(
         didUniqueSuffix,
         recoveryKey.privateKey
       );
@@ -458,7 +452,7 @@ describe('resolve', () => {
     });
 
     it('should not work if signature is not valid', async () => {
-      const invalidDeletePayload = await getDeletePayload(
+      const invalidDeletePayload = getDeletePayload(
         didUniqueSuffix,
         primaryKey.privateKey
       );
@@ -472,7 +466,7 @@ describe('resolve', () => {
 
     it('should not work if there is no corresponding create operation', async () => {
       const fakeDidUniqueSuffix = 'fakediduniquesuffix';
-      const invalidDeletePayload = await getDeletePayload(
+      const invalidDeletePayload = getDeletePayload(
         fakeDidUniqueSuffix,
         recoveryKey.privateKey
       );
@@ -482,7 +476,7 @@ describe('resolve', () => {
     });
 
     it('should delete a did document', async () => {
-      const deletePayload = await getDeletePayload(
+      const deletePayload = getDeletePayload(
         didUniqueSuffix,
         recoveryKey.privateKey
       );
@@ -492,7 +486,7 @@ describe('resolve', () => {
     });
 
     it('should return null if two delete operations are sent for the same did', async () => {
-      const secondDeletePayload = await getDeletePayload(
+      const secondDeletePayload = getDeletePayload(
         didUniqueSuffix,
         recoveryKey.privateKey
       );

@@ -24,13 +24,13 @@ describe('batchWrite with one operation', () => {
   let batchFile;
 
   beforeAll(async () => {
-    const primaryKey = await mks.getKeyForPurpose('primary', 0);
-    const recoveryKey = await mks.getKeyForPurpose('recovery', 0);
+    const primaryKey = mks.getKeyForPurpose('primary', 0);
+    const recoveryKey = mks.getKeyForPurpose('recovery', 0);
     const didDocumentModel = getDidDocumentModel(
       primaryKey.publicKey,
       recoveryKey.publicKey
     );
-    createPayload = await getCreatePayload(didDocumentModel, primaryKey);
+    createPayload = getCreatePayload(didDocumentModel, primaryKey);
     didUniqueSuffix = getDidUniqueSuffix(createPayload);
     await sidetree.operationQueue.enqueue(didUniqueSuffix, createPayload);
     transaction = await batchWrite(sidetree)();

@@ -12,13 +12,13 @@ describe('DID Document model', () => {
   let did;
 
   it('should create a generic did', async () => {
-    primaryKey = await element.crypto.secp256k1.createKeys();
-    recoveryKey = await element.crypto.secp256k1.createKeys();
+    primaryKey = element.crypto.secp256k1.createKeys();
+    recoveryKey = element.crypto.secp256k1.createKeys();
     const didDocumentModel = sidetree.op.getDidDocumentModel(
       primaryKey.publicKey,
       recoveryKey.publicKey
     );
-    const createPayload = await sidetree.op.getCreatePayload(
+    const createPayload = sidetree.op.getCreatePayload(
       didDocumentModel,
       primaryKey
     );
@@ -89,7 +89,7 @@ describe('DID Document model', () => {
       kid: '#primary',
       alg: 'ES256K',
     };
-    const updatePayload = await sidetree.op.makeSignedOperation(
+    const updatePayload = sidetree.op.makeSignedOperation(
       header,
       payload,
       primaryKey.privateKey
@@ -111,8 +111,8 @@ describe('DID Document model', () => {
   });
 
   it('should add controller property where necessay', async () => {
-    primaryKey = await element.crypto.secp256k1.createKeys();
-    recoveryKey = await element.crypto.secp256k1.createKeys();
+    primaryKey = element.crypto.secp256k1.createKeys();
+    recoveryKey = element.crypto.secp256k1.createKeys();
     const edvKey = await element.crypto.ed25519.createKeys();
     const keyAgreement = element.crypto.ed25519.X25519KeyPair.fromEdKeyPair({
       publicKeyBase58: edvKey.publicKeyBase58,
@@ -153,7 +153,7 @@ describe('DID Document model', () => {
       ],
     };
     expect(didDocumentModel).toBeDefined();
-    const createPayload = await sidetree.op.getCreatePayload(
+    const createPayload = sidetree.op.getCreatePayload(
       didDocumentModel,
       primaryKey
     );
