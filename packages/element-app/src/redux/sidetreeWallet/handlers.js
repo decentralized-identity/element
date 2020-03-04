@@ -25,7 +25,7 @@ export default withHandlers({
       [publicKeyType]: publicKey,
     };
   },
-  getMyDidUniqueSuffix: ({ keystore }) => async () => {
+  getMyDidUniqueSuffix: ({ keystore }) => () => {
     const keys = Object.values(keystore.keystore.data.keys);
     const wall = DIDWallet.create({
       keys,
@@ -34,14 +34,11 @@ export default withHandlers({
       return k.tags.indexOf('#primary') !== -1;
     });
     const didDocumentModel = op.walletToInitialDIDDoc(wall);
-    const createPayload = await op.getCreatePayload(
-      didDocumentModel,
-      primaryKey
-    );
+    const createPayload = op.getCreatePayload(didDocumentModel, primaryKey);
     const didUniqueSuffix = func.getDidUniqueSuffix(createPayload);
     return didUniqueSuffix;
   },
-  createDIDRequest: ({ keystore }) => async () => {
+  createDIDRequest: ({ keystore }) => () => {
     const keys = Object.values(keystore.keystore.data.keys);
     const wall = DIDWallet.create({
       keys,
@@ -50,13 +47,10 @@ export default withHandlers({
       return k.tags.indexOf('#primary') !== -1;
     });
     const didDocumentModel = op.walletToInitialDIDDoc(wall);
-    const createPayload = await op.getCreatePayload(
-      didDocumentModel,
-      primaryKey
-    );
+    const createPayload = op.getCreatePayload(didDocumentModel, primaryKey);
     return createPayload;
   },
-  createAddKeyRequest: ({ keystore }) => async (
+  createAddKeyRequest: ({ keystore }) => (
     newKey,
     didUniqueSuffix,
     operationHash
@@ -69,14 +63,14 @@ export default withHandlers({
     const primaryKey = keys.find(k => {
       return k.tags.indexOf('#primary') !== -1;
     });
-    const payload = await op.getUpdatePayloadForAddingAKey(
+    const payload = op.getUpdatePayloadForAddingAKey(
       lastOperation,
       newKey,
       primaryKey.privateKey
     );
     return payload;
   },
-  createRemoveKeyRequest: ({ keystore }) => async (
+  createRemoveKeyRequest: ({ keystore }) => (
     kid,
     didUniqueSuffix,
     operationHash
@@ -89,7 +83,7 @@ export default withHandlers({
     const primaryKey = keys.find(k => {
       return k.tags.indexOf('#primary') !== -1;
     });
-    const payload = await op.getUpdatePayloadForRemovingAKey(
+    const payload = op.getUpdatePayloadForRemovingAKey(
       lastOperation,
       kid,
       primaryKey.privateKey

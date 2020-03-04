@@ -118,7 +118,7 @@ const didDocumentModel = element.op.getDidDocumentModel(
 );
 
 // Generate Sidetree Create payload
-const createPayload = await element.op.getCreatePayload(didDocumentModel, primaryKey);
+const createPayload = element.op.getCreatePayload(didDocumentModel, primaryKey);
 
 // Create the Sidetree transaction.
 // This can potentially take a few minutes if you're not on a local network

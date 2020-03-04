@@ -19,16 +19,13 @@ describe('patches', () => {
 
   beforeAll(async () => {
     mks = new MnemonicKeySystem(MnemonicKeySystem.generateMnemonic());
-    primaryKey = await mks.getKeyForPurpose('primary', 0);
-    recoveryKey = await mks.getKeyForPurpose('recovery', 0);
-    const didDocumentModel = await sidetree.op.getDidDocumentModel(
+    primaryKey = mks.getKeyForPurpose('primary', 0);
+    recoveryKey = mks.getKeyForPurpose('recovery', 0);
+    const didDocumentModel = sidetree.op.getDidDocumentModel(
       primaryKey.publicKey,
       recoveryKey.publicKey
     );
-    createPayload = await await sidetree.op.getCreatePayload(
-      didDocumentModel,
-      primaryKey
-    );
+    createPayload = sidetree.op.getCreatePayload(didDocumentModel, primaryKey);
     didUniqueSuffix = await sidetree.func.getDidUniqueSuffix(createPayload);
     did = `did:elem${didUniqueSuffix}`;
     await sidetree.batchScheduler.writeNow(createPayload);
@@ -58,7 +55,7 @@ describe('patches', () => {
       kid: '#primary',
       alg: 'ES256K',
     };
-    const updatePayload = await sidetree.op.makeSignedOperation(
+    const updatePayload = sidetree.op.makeSignedOperation(
       header,
       payload,
       primaryKey.privateKey
@@ -88,7 +85,7 @@ describe('patches', () => {
       kid: '#primary',
       alg: 'ES256K',
     };
-    const updatePayload = await sidetree.op.makeSignedOperation(
+    const updatePayload = sidetree.op.makeSignedOperation(
       header,
       payload,
       primaryKey.privateKey
@@ -116,7 +113,7 @@ describe('patches', () => {
       kid: '#primary',
       alg: 'ES256K',
     };
-    const updatePayload = await sidetree.op.makeSignedOperation(
+    const updatePayload = sidetree.op.makeSignedOperation(
       header,
       payload,
       primaryKey.privateKey
@@ -144,7 +141,7 @@ describe('patches', () => {
       kid: '#primary',
       alg: 'ES256K',
     };
-    const updatePayload = await sidetree.op.makeSignedOperation(
+    const updatePayload = sidetree.op.makeSignedOperation(
       header,
       payload,
       primaryKey.privateKey
@@ -172,7 +169,7 @@ describe('patches', () => {
       kid: '#primary',
       alg: 'ES256K',
     };
-    const updatePayload = await sidetree.op.makeSignedOperation(
+    const updatePayload = sidetree.op.makeSignedOperation(
       header,
       payload,
       primaryKey.privateKey
@@ -200,7 +197,7 @@ describe('patches', () => {
       kid: '#primary',
       alg: 'ES256K',
     };
-    const updatePayload = await sidetree.op.makeSignedOperation(
+    const updatePayload = sidetree.op.makeSignedOperation(
       header,
       payload,
       primaryKey.privateKey
@@ -228,7 +225,7 @@ describe('patches', () => {
       kid: '#primary',
       alg: 'ES256K',
     };
-    const updatePayload = await sidetree.op.makeSignedOperation(
+    const updatePayload = sidetree.op.makeSignedOperation(
       header,
       payload,
       primaryKey.privateKey
@@ -256,7 +253,7 @@ describe('patches', () => {
       kid: '#primary',
       alg: 'ES256K',
     };
-    const updatePayload = await sidetree.op.makeSignedOperation(
+    const updatePayload = sidetree.op.makeSignedOperation(
       header,
       payload,
       primaryKey.privateKey
@@ -284,7 +281,7 @@ describe('patches', () => {
       kid: '#primary',
       alg: 'ES256K',
     };
-    const updatePayload = await sidetree.op.makeSignedOperation(
+    const updatePayload = sidetree.op.makeSignedOperation(
       header,
       payload,
       primaryKey.privateKey
@@ -318,7 +315,7 @@ describe('patches', () => {
       kid: '#primary',
       alg: 'ES256K',
     };
-    const updatePayload = await sidetree.op.makeSignedOperation(
+    const updatePayload = sidetree.op.makeSignedOperation(
       header,
       payload,
       primaryKey.privateKey
@@ -346,7 +343,7 @@ describe('patches', () => {
       kid: '#primary',
       alg: 'ES256K',
     };
-    const updatePayload = await sidetree.op.makeSignedOperation(
+    const updatePayload = sidetree.op.makeSignedOperation(
       header,
       payload,
       primaryKey.privateKey
@@ -379,7 +376,7 @@ describe('patches', () => {
       kid: '#primary',
       alg: 'ES256K',
     };
-    const updatePayload = await sidetree.op.makeSignedOperation(
+    const updatePayload = sidetree.op.makeSignedOperation(
       header,
       payload,
       primaryKey.privateKey
@@ -407,7 +404,7 @@ describe('patches', () => {
       kid: '#primary',
       alg: 'ES256K',
     };
-    const updatePayload = await sidetree.op.makeSignedOperation(
+    const updatePayload = sidetree.op.makeSignedOperation(
       header,
       payload,
       primaryKey.privateKey

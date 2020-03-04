@@ -9,9 +9,9 @@ let actor;
 
 jest.setTimeout(20 * 1000);
 
-beforeAll(async () => {
-  server = await request(app);
-  [actor] = await elementFixtures.generateActors(1);
+beforeAll(() => {
+  server = request(app);
+  [actor] = elementFixtures.generateActors(1);
 });
 
 afterAll(async () => {});
@@ -24,7 +24,7 @@ describe('sidetree', () => {
       primaryKey.publicKey,
       recoveryKey.publicKey
     );
-    const createPayload = await element.op.getCreatePayload(
+    const createPayload = element.op.getCreatePayload(
       didDocumentModel,
       primaryKey
     );

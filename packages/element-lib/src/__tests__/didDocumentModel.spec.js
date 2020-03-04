@@ -9,13 +9,13 @@ describe('DID Document model', () => {
   let didUniqueSuffix;
 
   it('should support secp256k1 keys', async () => {
-    primaryKey = await element.crypto.secp256k1.createKeys();
-    recoveryKey = await element.crypto.secp256k1.createKeys();
+    primaryKey = element.crypto.secp256k1.createKeys();
+    recoveryKey = element.crypto.secp256k1.createKeys();
     const didDocumentModel = sidetree.op.getDidDocumentModel(
       primaryKey.publicKey,
       recoveryKey.publicKey
     );
-    const createPayload = await sidetree.op.getCreatePayload(
+    const createPayload = sidetree.op.getCreatePayload(
       didDocumentModel,
       primaryKey
     );
@@ -38,7 +38,7 @@ describe('DID Document model', () => {
       type: 'Ed25519VerificationKey2018',
       publicKeyBase58: newKey.publicKeyBase58,
     };
-    const updatePayload = await sidetree.op.getUpdatePayloadForAddingAKey(
+    const updatePayload = sidetree.op.getUpdatePayloadForAddingAKey(
       previousOperation,
       newPublicKey,
       primaryKey.privateKey
