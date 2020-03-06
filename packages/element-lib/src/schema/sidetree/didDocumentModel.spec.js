@@ -13,9 +13,14 @@ describe('didDocumentModel', () => {
     doc.keyAgreement[0].usage = 'signing';
     // required because of create restrictions
     delete doc.id;
-    schema.validator.validate(doc, schema.schemas.sidetreeDidDocumentModel, {
-      throwError: true,
-    });
+    const res = schema.validator.validate(
+      doc,
+      schema.schemas.sidetreeDidDocumentModel,
+      {
+        throwError: true,
+      }
+    );
+    expect(res.errors).toHaveLength(0);
   });
 
   it('supports common did work', () => {
@@ -25,9 +30,14 @@ describe('didDocumentModel', () => {
     doc.publicKey[0].usage = 'signing';
     // required because of create restrictions
     delete doc.id;
-    schema.validator.validate(doc, schema.schemas.sidetreeDidDocumentModel, {
-      throwError: true,
-    });
+    const res = schema.validator.validate(
+      doc,
+      schema.schemas.sidetreeDidDocumentModel,
+      {
+        throwError: true,
+      }
+    );
+    expect(res.errors).toHaveLength(0);
   });
 
   it('supports common did github', () => {
@@ -46,8 +56,13 @@ describe('didDocumentModel', () => {
 
     // required because of create restrictions
     delete doc.id;
-    schema.validator.validate(doc, schema.schemas.sidetreeDidDocumentModel, {
-      throwError: true,
-    });
+    const res = schema.validator.validate(
+      doc,
+      schema.schemas.sidetreeDidDocumentModel,
+      {
+        throwError: true,
+      }
+    );
+    expect(res.errors).toHaveLength(0);
   });
 });
