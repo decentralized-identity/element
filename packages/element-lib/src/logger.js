@@ -9,14 +9,16 @@ const winston = require('winston');
 // Create a Winston logger that streams to Stackdriver Logging
 // Logs will be written to: "projects/YOUR_PROJECT_ID/logs/winston_log"
 
-const transports = [new winston.transports.Console()];
-let level = 'info';
+let transports;
+let level;
 
 if (process.env.NODE_ENV === 'test') {
   // Disable logs in tests
   level = 'error';
+  transports = [new winston.transports.Console()];
 } else {
   level = 'info';
+  transports = [new winston.transports.Console()];
 }
 
 const logger = winston.createLogger({
