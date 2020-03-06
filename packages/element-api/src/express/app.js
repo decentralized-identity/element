@@ -15,7 +15,7 @@ const onErrorResponse = require('../../src/express/onErrorResponse');
 // Automatically allow cross-origin requests
 app.use(cors({ origin: true }));
 app.use(express.json());
-if (process.env.NODE_ENV === 'testing') {
+if (process.env.NODE_ENV === 'test') {
   app.set('sidetree', require('../services/sidetree-test'));
 } else if (process.env.STANDALONE) {
   app.set('sidetree', require('../services/sidetree-standalone'));

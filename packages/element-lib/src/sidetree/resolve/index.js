@@ -1,4 +1,5 @@
 /* eslint-disable arrow-body-style */
+const logger = require('../../logger');
 const { verifyOperationSignature } = require('../../func');
 const { isDidDocumentModelValid, isKeyValid } = require('../utils/validation');
 
@@ -286,11 +287,11 @@ const applyOperation = async (
         newState = await deletE(state, operation);
         break;
       default:
-        console.warn('Operation type not handled', operation);
+        logger.warn('Operation type not handled', operation);
     }
     return { valid: true, newState };
   } catch (e) {
-    console.error(e.message);
+    logger.warn(e.message);
     return { valid: false, newState };
   }
 };

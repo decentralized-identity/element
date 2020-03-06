@@ -9,14 +9,13 @@ const {
   isBatchFileValid,
   isAnchorFileValid,
 } = require('../utils/validation');
+const logger = require('../../logger');
 
 const syncTransaction = sidetree => async (
   transaction,
   onlyDidUniqueSuffix = null
 ) => {
-  if (process.env.NODE_ENV !== 'test') {
-    console.info('sync', transaction.transactionNumber);
-  }
+  logger.info(`sync ${transaction.transactionNumber}`);
   try {
     isTransactionValid(transaction);
     const anchorFile = await readThenWriteToCache(
@@ -75,12 +74,12 @@ const syncTransaction = sidetree => async (
       });
     });
   } catch (error) {
-    console.log(error);
     // https://stackoverflow.com/questions/18391212/is-it-not-possible-to-stringify-an-error-using-json-stringify
     const stringifiedError = JSON.stringify(
       error,
       Object.getOwnPropertyNames(error)
     );
+    logger.warn(stringifiedError);
     return sidetree.db.write(`transaction:${transaction.transactionNumber}`, {
       type: 'transaction',
       ...transaction,

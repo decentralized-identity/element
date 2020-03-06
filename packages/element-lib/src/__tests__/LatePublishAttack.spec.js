@@ -126,13 +126,11 @@ describe('LatePublishAttack', () => {
     expect(didDoc.publicKey[0].publicKeyHex).toBe(actor.recoveryKey.publicKey);
   });
 
-  it('publish attack payload', async () => {
+  it('observers can see the transfer never occured.', async () => {
     // Now we publish our sneeky trick.
     await sidetree.storage.write(batchFile);
     await sidetree.storage.write(anchorFile);
-  });
 
-  it('observers can see the transfer never occured.', async () => {
     await sidetree.db.deleteDB();
     const didDoc = await sidetree.resolve(actor.didUniqueSuffix, true);
     expect(didDoc.publicKey[0].publicKeyHex).toBe(actor.primaryKey.publicKey);
