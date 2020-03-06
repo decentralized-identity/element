@@ -3,7 +3,7 @@ const functions = require('firebase-functions');
 const getBaseConfig = () => {
   let config;
   switch (process.env.NODE_ENV) {
-    case 'testing':
+    case 'test':
       // eslint-disable-next-line
       config = require('../../local.runtimeconfig.json');
       break;
