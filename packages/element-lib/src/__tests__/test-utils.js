@@ -1,3 +1,4 @@
+/* eslint-disable security/detect-object-injection */
 // eslint-disable-next-line node/no-unpublished-require
 const faker = require('faker');
 const element = require('../../index');

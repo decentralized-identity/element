@@ -29,6 +29,7 @@ describe('JSON LD Signatures', () => {
     };
 
     documentLoader = async url => {
+      // eslint-disable-next-line security/detect-object-injection
       const context = contexts[url];
       if (context) {
         return {

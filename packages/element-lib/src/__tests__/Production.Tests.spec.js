@@ -15,6 +15,7 @@ const config = {
 };
 
 // These tests are for debuging syncing issues in production
+// eslint-disable-next-line jest/no-disabled-tests
 describe.skip('Production Tests', () => {
   const blockchain = element.blockchain.ethereum.configure({
     hdPath: "m/44'/60'/0'/0/0",
@@ -107,37 +108,4 @@ describe.skip('Production Tests', () => {
       );
     });
   });
-
-  // TODO: Fix this code to test creation of a production DID End to End.
-  // it('can create a transaction with the manager', async () => {
-  //   const mnemonic = 'panda lion unfold live venue spice urban member march gift obvious gossip';
-  //   const mks = new element.MnemonicKeySystem(mnemonic);
-  //   const rootKey = mks.getKeyForPurpose('root', 0);
-  //   const recoveryKey = mks.getKeyForPurpose('recovery', 0);
-  //   const txn0 = await sidetree.createTransactionFromRequests([
-  //     element.op.create({
-  //       primaryKey: rootKey,
-  //       recoveryPublicKey: recoveryKey.publicKey,
-  //     }),
-  //   ]);
-  //   expect(txn0.transactionTime).toBeDefined();
-  //   const anchorFile = await ipfsStorage.read(txn0.anchorFileHash);
-  //   const didUniqueSuffix = await element.op.getDidUniqueSuffix({
-  //     primaryKey: rootKey,
-  //     recoveryPublicKey: recoveryKey.publicKey,
-  //   });
-  //   expect(anchorFile.batchFileHash).toBeDefined();
-  //   const ddo = await sidetree.resolve(`did:elem:${didUniqueSuffix}`);
-  //   expect(ddo.id).toBe('did:elem:2Qe8QPUp3oitHs0IO1D68sF3uOmmpBrD8BKd0IPG7Po');
-  // });
-  // it('can sync manually', async () => {
-  //   const res = await sidetree.storage.db.awaitableSync();
-  //   expect(res.ok).toBe(true);
-  //   expect(res.docs_written).toBe(5);
-  //   // 1 transaction
-  //   // 2 operation
-  //   // 3 anchor file cache
-  //   // 4 batch file cache
-  //   // 5 did doc
-  // });
 });
