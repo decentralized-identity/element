@@ -12,7 +12,7 @@ const winston = require('winston');
 let transports;
 let level;
 
-if (process.env.NODE_ENV !== 'test') {
+if (process.env.NODE_ENV === 'test') {
   // Disable logs in tests
   level = 'error';
   transports = [new winston.transports.Console()];
