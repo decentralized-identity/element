@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const { getCreatePayloadForKeyIndex } = require('../../__tests__/test-utils');
 const { MnemonicKeySystem } = require('../../../index');
 const element = require('../../../index');
