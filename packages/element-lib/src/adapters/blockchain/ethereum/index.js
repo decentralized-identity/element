@@ -22,6 +22,7 @@ class EthereumBlockchain {
   }
 
   async extendSidetreeTransactionWithTimestamp(txns) {
+    console.log('txns', txns);
     return Promise.all(
       txns.map(async txn => ({
         ...txn,
