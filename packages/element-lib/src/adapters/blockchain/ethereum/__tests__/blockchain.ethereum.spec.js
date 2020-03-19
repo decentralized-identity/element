@@ -32,9 +32,8 @@ describe('blockchain.ethereum', () => {
 
   describe('getBlockchainTime', () => {
     it('should return hash and blocknumber', async () => {
-      const result = await utils.getBlockchainTime(blockchain.web3, 0);
-      expect(result.time).toBe(0);
-      expect(result.hash).toBeDefined();
+      const time = await utils.getBlockchainTime(blockchain.web3, 0);
+      expect(typeof time).toBe('number');
     });
   });
 
