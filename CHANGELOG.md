@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.11](https://github.com/decentralized-identity/element/compare/v0.5.10...v0.5.11) (2020-03-19)
+
+**Note:** Version bump only for package @transmute/element
+
+
+
+
+
+## [0.5.10](https://github.com/decentralized-identity/element/compare/v0.5.9...v0.5.10) (2020-03-19)
+
+
+### Features
+
+* change getBlockchainTime ([1ccd624](https://github.com/decentralized-identity/element/commit/1ccd624))
+
+
+
+
+
+## [0.5.9](https://github.com/decentralized-identity/element/compare/v0.5.8...v0.5.9) (2020-03-19)
+
+**Note:** Version bump only for package @transmute/element
+
+
+
+
+
+## [0.5.8](https://github.com/decentralized-identity/element/compare/v0.5.7...v0.5.8) (2020-03-16)
+
+
+### Features
+
+* remove unnecessary awaits ([b9e9f01](https://github.com/decentralized-identity/element/commit/b9e9f01))
+
+
+
+
+
 ## [0.5.7](https://github.com/decentralized-identity/element/compare/v0.5.6...v0.5.7) (2020-03-03)
 
 **Note:** Version bump only for package @transmute/element
