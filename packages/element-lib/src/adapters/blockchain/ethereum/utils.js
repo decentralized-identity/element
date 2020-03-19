@@ -91,8 +91,8 @@ const getBlockchainTime = async (web3, blockHashOrBlockNumber) => {
   console.log('getBlockchainTime', blockHashOrBlockNumber);
   const block = await new Promise((resolve, reject) => {
     web3.eth.getBlock(blockHashOrBlockNumber, (err, data) => {
-      console.log('err', err);
-      console.log('data', data);
+      console.log('ethereum err', err);
+      console.log('ethereum data', data);
       if (err) {
         return reject(err);
       }
