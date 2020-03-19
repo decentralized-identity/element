@@ -33,13 +33,11 @@ const syncTransaction = sidetree => async (
     const batchFile = await sidetree.storage.read(anchorFile.batchFileHash);
     isBatchFileValid(batchFile);
     const operations = batchFileToOperations(batchFile);
-    console.log('operations', operations);
     const [
       transactionWithTimestamp,
     ] = await sidetree.blockchain.extendSidetreeTransactionWithTimestamp([
       transaction,
     ]);
-    console.log('transactionWithTimestamp');
     const operationsByDidUniqueSuffixes = operations.map(operation => {
       const didUniqueSuffix = getDidUniqueSuffix(operation.decodedOperation);
       return {

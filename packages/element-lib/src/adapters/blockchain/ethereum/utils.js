@@ -88,9 +88,7 @@ const retryWithLatestTransactionCount = async (
 };
 
 const getBlockchainTime = async (web3, blockHashOrBlockNumber) => {
-  console.log('getBlockchainTime', blockHashOrBlockNumber);
   const block = await web3.eth.getBlock(blockHashOrBlockNumber);
-  console.log('block', block);
   if (block) {
     return block.timestamp;
   }
