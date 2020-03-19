@@ -24,13 +24,16 @@ class EthereumBlockchain {
   async extendSidetreeTransactionWithTimestamp(txns) {
     console.log('txns', txns);
     return Promise.all(
-      txns.map(async txn => ({
-        ...txn,
-        transactionTimestamp: (await utils.getBlockchainTime(
+      txns.map(async txn => {
+        const timestamp = await utils.getBlockchainTime(
           this.web3,
           txn.transactionTime
-        )).timestamp,
-      }))
+        );
+        return {
+          ...txn,
+          transactionTimestamp: timestamp,
+        };
+      })
     );
   }
 

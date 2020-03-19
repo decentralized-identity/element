@@ -89,23 +89,12 @@ const retryWithLatestTransactionCount = async (
 
 const getBlockchainTime = async (web3, blockHashOrBlockNumber) => {
   console.log('getBlockchainTime', blockHashOrBlockNumber);
-  const block = await new Promise((resolve, reject) => {
-    web3.eth.getBlock(blockHashOrBlockNumber, (err, data) => {
-      console.log('ethereum err', err);
-      console.log('ethereum data', data);
-      if (err) {
-        return reject(err);
-      }
-      return resolve(data);
-    });
-  });
+  const block = await web3.eth.getBlock(blockHashOrBlockNumber);
   console.log('block', block);
-  const unPrefixedBlockhash = block.hash.replace('0x', '');
-  return {
-    time: block.number,
-    timestamp: block.timestamp,
-    hash: unPrefixedBlockhash,
-  };
+  if (block) {
+    return block.timestamp;
+  }
+  return null;
 };
 
 module.exports = {
