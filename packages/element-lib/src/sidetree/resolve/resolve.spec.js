@@ -99,10 +99,12 @@ describe('resolve', () => {
       expect(didDocument['@context']).toBe(decodedPayload['@context']);
       expect(didDocument.publicKey[0]).toEqual({
         ...decodedPayload.publicKey[0],
+        id: didDocument.id + decodedPayload.publicKey[0].id,
         controller: didDocument.id,
       });
       expect(didDocument.publicKey[1]).toEqual({
         ...decodedPayload.publicKey[1],
+        id: didDocument.id + decodedPayload.publicKey[1].id,
         controller: didDocument.id,
       });
     });

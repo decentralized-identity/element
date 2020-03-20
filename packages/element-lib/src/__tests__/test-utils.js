@@ -151,7 +151,7 @@ const updateByActorIndex = async (sidetree, actorIndex) => {
   const lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
   const newKey = actor.mks.getKeyForPurpose('primary', 10);
   const newPublicKey = {
-    id: '#newKey',
+    id: `did:elem:${didUniqueSuffix}#newKey`,
     usage: 'signing',
     type: 'Secp256k1VerificationKey2018',
     publicKeyHex: newKey.publicKey,
@@ -189,7 +189,7 @@ const assertUpdateSucceeded = async (sidetree, actorIndex) => {
     true
   );
   expect(didDoc.id).toBe(`did:elem:${actor.didUniqueSuffix}`);
-  expect(didDoc.publicKey[2].id).toBe('#newKey');
+  expect(didDoc.publicKey[2].id).toBe(`did:elem:${actor.didUniqueSuffix}#newKey`);
   expect(didDoc.publicKey[2].publicKeyHex).toBe(newKey.publicKey);
 };
 

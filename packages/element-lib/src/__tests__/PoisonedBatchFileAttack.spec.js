@@ -19,6 +19,7 @@ beforeAll(async () => {
   txn = await sidetree.batchScheduler.writeNow(actor.createPayload);
 });
 
+// Seeing intermitent failure here, when running tests on an existing setup.
 describe('Poisoned Batch File Attack', () => {
   it('survives small poison', async () => {
     // Insert poison
@@ -36,6 +37,7 @@ describe('Poisoned Batch File Attack', () => {
     const transactions = await sidetree.db.readCollection('transaction');
     const lastCachedTransaction = transactions.pop();
     // Cached transaction is the same as poisoned transaction
+    // console.log(lastCachedTransaction)
     expect(lastCachedTransaction.transactionHash).toBe(
       poisonedTransaction.transactionHash
     );

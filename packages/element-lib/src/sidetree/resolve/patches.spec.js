@@ -35,7 +35,7 @@ describe('patches', () => {
     const lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
     const newKey = await mks.getKeyForPurpose('primary', 1);
     const newPublicKey = {
-      id: '#newKey',
+      id: `did:elem:${didUniqueSuffix}#newKey`,
       usage: 'signing',
       type: 'Secp256k1VerificationKey2018',
       publicKeyHex: newKey.publicKey,
@@ -52,7 +52,7 @@ describe('patches', () => {
     };
     const header = {
       operation: 'update',
-      kid: '#primary',
+      kid: `did:elem:${didUniqueSuffix}#primary`,
       alg: 'ES256K',
     };
     const updatePayload = sidetree.op.makeSignedOperation(
@@ -65,7 +65,7 @@ describe('patches', () => {
     const didDocument = await sidetree.resolve(didUniqueSuffix, true);
     expect(didDocument.publicKey).toHaveLength(3);
     expect(didDocument.publicKey[2].publicKeyHex).toBe(newKey.publicKey);
-    keyId = `did:elem${didUniqueSuffix}#newKey`;
+    keyId = `did:elem:${didUniqueSuffix}#newKey`;
   });
 
   it('should add an authentication method', async () => {
@@ -82,7 +82,7 @@ describe('patches', () => {
     };
     const header = {
       operation: 'update',
-      kid: '#primary',
+      kid: `did:elem:${didUniqueSuffix}#primary`,
       alg: 'ES256K',
     };
     const updatePayload = sidetree.op.makeSignedOperation(
@@ -110,7 +110,7 @@ describe('patches', () => {
     };
     const header = {
       operation: 'update',
-      kid: '#primary',
+      kid: `did:elem:${didUniqueSuffix}#primary`,
       alg: 'ES256K',
     };
     const updatePayload = sidetree.op.makeSignedOperation(
@@ -138,7 +138,7 @@ describe('patches', () => {
     };
     const header = {
       operation: 'update',
-      kid: '#primary',
+      kid: `did:elem:${didUniqueSuffix}#primary`,
       alg: 'ES256K',
     };
     const updatePayload = sidetree.op.makeSignedOperation(
@@ -166,7 +166,7 @@ describe('patches', () => {
     };
     const header = {
       operation: 'update',
-      kid: '#primary',
+      kid: `did:elem:${didUniqueSuffix}#primary`,
       alg: 'ES256K',
     };
     const updatePayload = sidetree.op.makeSignedOperation(
@@ -194,7 +194,7 @@ describe('patches', () => {
     };
     const header = {
       operation: 'update',
-      kid: '#primary',
+      kid: `did:elem:${didUniqueSuffix}#primary`,
       alg: 'ES256K',
     };
     const updatePayload = sidetree.op.makeSignedOperation(
@@ -222,7 +222,7 @@ describe('patches', () => {
     };
     const header = {
       operation: 'update',
-      kid: '#primary',
+      kid: `did:elem:${didUniqueSuffix}#primary`,
       alg: 'ES256K',
     };
     const updatePayload = sidetree.op.makeSignedOperation(
@@ -250,7 +250,7 @@ describe('patches', () => {
     };
     const header = {
       operation: 'update',
-      kid: '#primary',
+      kid: `did:elem:${didUniqueSuffix}#primary`,
       alg: 'ES256K',
     };
     const updatePayload = sidetree.op.makeSignedOperation(
@@ -278,7 +278,7 @@ describe('patches', () => {
     };
     const header = {
       operation: 'update',
-      kid: '#primary',
+      kid: `did:elem:${didUniqueSuffix}#primary`,
       alg: 'ES256K',
     };
     const updatePayload = sidetree.op.makeSignedOperation(
@@ -312,7 +312,7 @@ describe('patches', () => {
     };
     const header = {
       operation: 'update',
-      kid: '#primary',
+      kid: `did:elem:${didUniqueSuffix}#primary`,
       alg: 'ES256K',
     };
     const updatePayload = sidetree.op.makeSignedOperation(
@@ -373,7 +373,7 @@ describe('patches', () => {
     };
     const header = {
       operation: 'update',
-      kid: '#primary',
+      kid: `did:elem:${didUniqueSuffix}#primary`,
       alg: 'ES256K',
     };
     const updatePayload = sidetree.op.makeSignedOperation(
@@ -384,7 +384,7 @@ describe('patches', () => {
     const transaction = await sidetree.batchScheduler.writeNow(updatePayload);
     expect(transaction).toBeDefined();
     const didDocument = await sidetree.resolve(didUniqueSuffix, true);
-    expect(didDocument.service).toEqual([endpoint]);
+    expect(didDocument.service).toEqual([{...endpoint, id: `did:elem:${didUniqueSuffix}${endpoint.id}`}]);
   });
 
   it('should remove a service endpoint', async () => {
