@@ -89,7 +89,7 @@ const create = async (state, operation, lastValidOperation, didMethodName) => {
 
 const applyPatch = (didDocument, patch) => {
   if (patch.action === 'add-public-keys') {
-    const publicKeySet = new Set(didDocument.publicKey.map(key => key.id));
+    const publicKeySet = new Set(didDocument.publicKey.map(publicKey => publicKey.id));
     // Validate keys
     patch.publicKeys.forEach(isKeyValid);
     return patch.publicKeys.reduce((currentState, publicKey) => {
@@ -98,6 +98,7 @@ const applyPatch = (didDocument, patch) => {
           ...currentState,
           publicKey: [
             ...currentState.publicKey,
+            
             addControllerToPublicKey(didDocument.id, publicKey),
           ],
         };
@@ -107,13 +108,23 @@ const applyPatch = (didDocument, patch) => {
   }
   if (patch.action === 'remove-public-keys') {
     const publicKeyMap = new Map(
-      didDocument.publicKey.map(publicKey => [
-        didDocument.id + publicKey.id,
-        publicKey,
-      ])
+      didDocument.publicKey.map(publicKey => {
+        let id = publicKey.id;
+        if (id.indexOf(didDocument.id) === -1){
+          publicKey.id = `${didDocument.id}${publicKey.id}`
+          id = publicKey.id;
+        }
+        return [
+          id,
+          publicKey,
+        ]
+      })
     );
+    
     return patch.publicKeys.reduce((currentState, publicKey) => {
+    
       const existingKey = publicKeyMap.get(publicKey);
+
       // Deleting recovery key is NOT allowed.
       if (
         existingKey !== undefined &&

@@ -71,7 +71,7 @@ const getUpdatePayloadForAddingAKey = (
   };
   const header = {
     operation: 'update',
-    kid: '#primary',
+    kid: `did:elem:${previousOperation.didUniqueSuffix}#primary`,
     alg: 'ES256K',
   };
   return makeSignedOperation(header, payload, primaryPrivateKey);
@@ -94,7 +94,7 @@ const getUpdatePayloadForRemovingAKey = (
   };
   const header = {
     operation: 'update',
-    kid: '#primary',
+    kid: `did:elem:${previousOperation.didUniqueSuffix}#primary`,
     alg: 'ES256K',
   };
   return makeSignedOperation(header, payload, primaryPrivateKey);
