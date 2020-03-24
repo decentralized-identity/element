@@ -60,7 +60,7 @@ class DIDDocument extends Component {
             <ExpansionPanel style={{ width: '100%' }} key={publicKey.id}>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography>
-                  {publicKey.id} {publicKey.type}
+                  {publicKey.id.split('#').pop()} {publicKey.type}
                 </Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
