@@ -1,11 +1,13 @@
 /* eslint-disable arrow-body-style */
 const logger = require('../../logger');
-const { verifyOperationSignature } = require('../../func');
+const { verifyOperationSignature, toFullyQualifiedDidDocument } = require('../../func');
 const { isDidDocumentModelValid, isKeyValid } = require('../utils/validation');
 
 const isSignatureValid = async (didDocument, operation) => {
   const { kid } = operation.decodedHeader;
-  const signingKey = didDocument.publicKey.find(pubKey => pubKey.id === kid);
+  const signingKey = didDocument.publicKey.find(pubKey => {
+    return kid === pubKey.id || kid === didDocument.id + pubKey.id
+  });
   if (!signingKey) {
     throw new Error('signing key not found');
   }
@@ -107,7 +109,7 @@ const applyPatch = (didDocument, patch) => {
     return patch.publicKeys.reduce((currentState, publicKey) => {
       const existingKey = publicKeyMap.get(publicKey);
       // Deleting recovery key is NOT allowed.
-      if (existingKey !== undefined && existingKey.id !== '#recovery') {
+      if (existingKey !== undefined && existingKey.id !== '#recovery' && existingKey.id !== didDocument.id + '#recovery') {
         publicKeyMap.delete(publicKey);
         return {
           ...currentState,
@@ -368,6 +370,11 @@ const resolve = sidetree => async (did, justInTime = false) => {
       },
     });
   }
+
+  if (didDocument === null || didDocument === undefined){
+    return didDocument;
+  }
+  didDocument = toFullyQualifiedDidDocument(didDocument)
   return didDocument;
 };
 

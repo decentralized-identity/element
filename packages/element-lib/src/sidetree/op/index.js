@@ -111,7 +111,7 @@ const getRecoverPayload = (
   };
   const header = {
     operation: 'recover',
-    kid: '#recovery',
+    kid: `did:elem:${didUniqueSuffix}#recovery`,
     alg: 'ES256K',
   };
   return makeSignedOperation(header, payload, recoveryPrivateKey);
@@ -120,7 +120,7 @@ const getRecoverPayload = (
 const getDeletePayload = (didUniqueSuffix, recoveryPrivateKey) => {
   const header = {
     operation: 'delete',
-    kid: '#recovery',
+    kid: `did:elem:${didUniqueSuffix}#recovery`,
     alg: 'ES256K',
   };
   const payload = { didUniqueSuffix };

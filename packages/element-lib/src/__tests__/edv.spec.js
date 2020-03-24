@@ -43,7 +43,7 @@ describe('DID Document model', () => {
       publicKeyBase58: 'JhNWeSVLMYccCk7iopQW4guaSJTojqpMEELgSLhKwRr',
     };
     const newPublicKey = {
-      id: '#edv',
+      id: `${did}#edv`,
       usage: 'signing',
       type: 'Ed25519VerificationKey2018',
       publicKeyBase58: newKey.publicKeyBase58,
@@ -86,7 +86,7 @@ describe('DID Document model', () => {
     };
     const header = {
       operation: 'update',
-      kid: '#primary',
+      kid: `${did}#primary`,
       alg: 'ES256K',
     };
     const updatePayload = sidetree.op.makeSignedOperation(
@@ -166,9 +166,9 @@ describe('DID Document model', () => {
     expect(didDocument.publicKey[1].controller).toBe(did);
     expect(didDocument.publicKey[2].controller).toBe(did);
     expect(didDocument.keyAgreement[0].controller).toBe(did);
-    expect(didDocument.authentication[0]).toBe('#edv');
-    expect(didDocument.assertionMethod[0]).toBe('#edv');
-    expect(didDocument.capabilityDelegation[0]).toBe('#edv');
-    expect(didDocument.capabilityInvocation[0]).toBe('#edv');
+    expect(didDocument.authentication[0]).toBe(did + '#edv');
+    expect(didDocument.assertionMethod[0]).toBe(did + '#edv');
+    expect(didDocument.capabilityDelegation[0]).toBe(did + '#edv');
+    expect(didDocument.capabilityInvocation[0]).toBe(did + '#edv');
   });
 });
