@@ -135,6 +135,6 @@ describe('LatePublishAttack', () => {
     const didDoc = await sidetree.resolve(actor.didUniqueSuffix, true);
     expect(didDoc.publicKey[0].publicKeyHex).toBe(actor.primaryKey.publicKey);
     expect(didDoc.publicKey[1].publicKeyHex).toBe(actor.recoveryKey.publicKey);
-    expect(didDoc.publicKey[2].id).toBe(didDoc.id + '#newKey');
+    expect(didDoc.publicKey[2].id).toBe(`${didDoc.id}#newKey`);
   });
 });

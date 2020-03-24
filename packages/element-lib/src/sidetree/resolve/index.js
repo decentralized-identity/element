@@ -1,12 +1,15 @@
 /* eslint-disable arrow-body-style */
 const logger = require('../../logger');
-const { verifyOperationSignature, toFullyQualifiedDidDocument } = require('../../func');
+const {
+  verifyOperationSignature,
+  toFullyQualifiedDidDocument,
+} = require('../../func');
 const { isDidDocumentModelValid, isKeyValid } = require('../utils/validation');
 
 const isSignatureValid = async (didDocument, operation) => {
   const { kid } = operation.decodedHeader;
   const signingKey = didDocument.publicKey.find(pubKey => {
-    return kid === pubKey.id || kid === didDocument.id + pubKey.id
+    return kid === pubKey.id || kid === didDocument.id + pubKey.id;
   });
   if (!signingKey) {
     throw new Error('signing key not found');
@@ -104,12 +107,21 @@ const applyPatch = (didDocument, patch) => {
   }
   if (patch.action === 'remove-public-keys') {
     const publicKeyMap = new Map(
-      didDocument.publicKey.map(publicKey => [didDocument.id + publicKey.id, publicKey])
+      didDocument.publicKey.map(publicKey => [
+        didDocument.id + publicKey.id,
+        publicKey,
+      ])
     );
     return patch.publicKeys.reduce((currentState, publicKey) => {
       const existingKey = publicKeyMap.get(publicKey);
       // Deleting recovery key is NOT allowed.
-      if (existingKey !== undefined && !(existingKey.id === '#recovery' || existingKey.id === didDocument.id + '#recovery')) {
+      if (
+        existingKey !== undefined &&
+        !(
+          existingKey.id === '#recovery' ||
+          existingKey.id === `${didDocument.id}#recovery`
+        )
+      ) {
         publicKeyMap.delete(publicKey);
         return {
           ...currentState,
@@ -135,7 +147,6 @@ const applyPatch = (didDocument, patch) => {
     // eslint-disable-next-line security/detect-object-injection
     const property = didDocument[propertyName] || [];
     const filtered = property.filter(verificationMethod => {
-      console.log(verificationMethod)
       if (typeof verificationMethod === 'string') {
         return verificationMethod !== id;
       }
@@ -372,10 +383,10 @@ const resolve = sidetree => async (did, justInTime = false) => {
     });
   }
 
-  if (didDocument === null || didDocument === undefined){
+  if (didDocument === null || didDocument === undefined) {
     return didDocument;
   }
-  didDocument = toFullyQualifiedDidDocument(didDocument)
+  didDocument = toFullyQualifiedDidDocument(didDocument);
   return didDocument;
 };
 
