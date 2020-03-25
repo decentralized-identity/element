@@ -189,7 +189,9 @@ const assertUpdateSucceeded = async (sidetree, actorIndex) => {
     true
   );
   expect(didDoc.id).toBe(`did:elem:${actor.didUniqueSuffix}`);
-  expect(didDoc.publicKey[2].id).toBe(`did:elem:${actor.didUniqueSuffix}#newKey`);
+  expect(didDoc.publicKey[2].id).toBe(
+    `did:elem:${actor.didUniqueSuffix}#newKey`
+  );
   expect(didDoc.publicKey[2].publicKeyHex).toBe(newKey.publicKey);
 };
 

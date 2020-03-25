@@ -3,6 +3,8 @@ const { getTestSideTree, getLastOperation } = require('./test-utils');
 const sidetree = getTestSideTree();
 const element = require('../../index');
 
+jest.setTimeout(10 * 1000);
+
 describe('DID Document model', () => {
   let primaryKey;
   let recoveryKey;

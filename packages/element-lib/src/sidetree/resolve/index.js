@@ -1,12 +1,15 @@
 /* eslint-disable arrow-body-style */
 const logger = require('../../logger');
-const { verifyOperationSignature, toFullyQualifiedDidDocument } = require('../../func');
+const {
+  verifyOperationSignature,
+  toFullyQualifiedDidDocument,
+} = require('../../func');
 const { isDidDocumentModelValid, isKeyValid } = require('../utils/validation');
 
 const isSignatureValid = async (didDocument, operation) => {
   const { kid } = operation.decodedHeader;
   const signingKey = didDocument.publicKey.find(pubKey => {
-    return kid === pubKey.id || kid === didDocument.id + pubKey.id
+    return kid === pubKey.id || kid === didDocument.id + pubKey.id;
   });
   if (!signingKey) {
     throw new Error('signing key not found');
@@ -86,7 +89,9 @@ const create = async (state, operation, lastValidOperation, didMethodName) => {
 
 const applyPatch = (didDocument, patch) => {
   if (patch.action === 'add-public-keys') {
-    const publicKeySet = new Set(didDocument.publicKey.map(key => key.id));
+    const publicKeySet = new Set(
+      didDocument.publicKey.map(publicKey => publicKey.id)
+    );
     // Validate keys
     patch.publicKeys.forEach(isKeyValid);
     return patch.publicKeys.reduce((currentState, publicKey) => {
@@ -95,6 +100,7 @@ const applyPatch = (didDocument, patch) => {
           ...currentState,
           publicKey: [
             ...currentState.publicKey,
+
             addControllerToPublicKey(didDocument.id, publicKey),
           ],
         };
@@ -104,12 +110,28 @@ const applyPatch = (didDocument, patch) => {
   }
   if (patch.action === 'remove-public-keys') {
     const publicKeyMap = new Map(
-      didDocument.publicKey.map(publicKey => [publicKey.id, publicKey])
+      didDocument.publicKey.map(publicKey => {
+        let { id } = publicKey;
+        if (id.indexOf(didDocument.id) === -1) {
+          // eslint-disable-next-line
+          publicKey.id = `${didDocument.id}${publicKey.id}`;
+          id = publicKey.id;
+        }
+        return [id, publicKey];
+      })
     );
+
     return patch.publicKeys.reduce((currentState, publicKey) => {
       const existingKey = publicKeyMap.get(publicKey);
+
       // Deleting recovery key is NOT allowed.
-      if (existingKey !== undefined && existingKey.id !== '#recovery' && existingKey.id !== didDocument.id + '#recovery') {
+      if (
+        existingKey !== undefined &&
+        !(
+          existingKey.id === '#recovery' ||
+          existingKey.id === `${didDocument.id}#recovery`
+        )
+      ) {
         publicKeyMap.delete(publicKey);
         return {
           ...currentState,
@@ -371,10 +393,10 @@ const resolve = sidetree => async (did, justInTime = false) => {
     });
   }
 
-  if (didDocument === null || didDocument === undefined){
+  if (didDocument === null || didDocument === undefined) {
     return didDocument;
   }
-  didDocument = toFullyQualifiedDidDocument(didDocument)
+  didDocument = toFullyQualifiedDidDocument(didDocument);
   return didDocument;
 };
 

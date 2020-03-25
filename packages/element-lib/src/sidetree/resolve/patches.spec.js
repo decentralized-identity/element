@@ -384,7 +384,9 @@ describe('patches', () => {
     const transaction = await sidetree.batchScheduler.writeNow(updatePayload);
     expect(transaction).toBeDefined();
     const didDocument = await sidetree.resolve(didUniqueSuffix, true);
-    expect(didDocument.service).toEqual([{...endpoint, id: `did:elem:${didUniqueSuffix}${endpoint.id}`}]);
+    expect(didDocument.service).toEqual([
+      { ...endpoint, id: `did:elem:${didUniqueSuffix}${endpoint.id}` },
+    ]);
   });
 
   it('should remove a service endpoint', async () => {

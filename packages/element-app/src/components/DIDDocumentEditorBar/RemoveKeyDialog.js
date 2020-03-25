@@ -25,7 +25,7 @@ export class RemoveKeyDialog extends React.Component {
     const { selected } = this.state;
     const { open } = this.props;
     const suggestions = Object.values(this.props.keys).map(key => ({
-      label: key.id,
+      label: key.id.split('#').pop(),
       value: key.id,
     }));
     return (
