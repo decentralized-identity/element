@@ -1,5 +1,6 @@
 import { withHandlers } from 'recompose';
 import axios from 'axios';
+import config from '../../config';
 
 const API_BASE = process.env.REACT_APP_API_URL;
 
@@ -9,7 +10,7 @@ export default withHandlers({
       resolving: true,
     });
     const didUniqueSuffix = await getMyDidUniqueSuffix();
-    const did = `did:elem:${didUniqueSuffix}`;
+    const did = `${config.DID_METHOD_NAME}:${didUniqueSuffix}`;
     set({
       predictedDID: did,
     });
@@ -21,7 +22,7 @@ export default withHandlers({
   getOperationsForDidUniqueSuffix: ({ set }) => async didUniqueSuffix => {
     set({ loading: true });
     let res = await axios.get(
-      `${API_BASE}/sidetree/did:elem:${didUniqueSuffix}`
+      `${API_BASE}/sidetree/${config.DID_METHOD_NAME}:${didUniqueSuffix}`
     );
     set({ didDocumentForOperations: res.data });
     res = await axios.get(`${API_BASE}/sidetree/operations/${didUniqueSuffix}`);
@@ -60,7 +61,9 @@ export default withHandlers({
           autoHideDuration: 5000,
         },
       });
-      res = await axios.get(`${API_BASE}/sidetree/did:elem:${didUniqueSuffix}`);
+      res = await axios.get(
+        `${API_BASE}/sidetree/${config.DID_METHOD_NAME}:${didUniqueSuffix}`
+      );
       set({ myDidDocument: res.data });
       doSetTmuiProp({
         snackBarMessage: {
@@ -117,7 +120,9 @@ export default withHandlers({
           autoHideDuration: 5000,
         },
       });
-      res = await axios.get(`${API_BASE}/sidetree/did:elem:${didUniqueSuffix}`);
+      res = await axios.get(
+        `${API_BASE}/sidetree/${config.DID_METHOD_NAME}:${didUniqueSuffix}`
+      );
       set({ myDidDocument: res.data });
       doSetTmuiProp({
         snackBarMessage: {
@@ -172,7 +177,9 @@ export default withHandlers({
           autoHideDuration: 5000,
         },
       });
-      res = await axios.get(`${API_BASE}/sidetree/did:elem:${didUniqueSuffix}`);
+      res = await axios.get(
+        `${API_BASE}/sidetree/${config.DID_METHOD_NAME}:${didUniqueSuffix}`
+      );
       set({ myDidDocument: res.data });
       doSetTmuiProp({
         snackBarMessage: {
@@ -270,8 +277,9 @@ export default withHandlers({
     } catch (e) {
       doSetTmuiProp({
         snackBarMessage: {
-          message:
-            'Could not resolve DID, make sure it is of the form did:elem:didUniqueSuffix.',
+          message: `Could not resolve DID, make sure it is of the form ${
+            config.DID_METHOD_NAME
+          }:didUniqueSuffix.`,
           variant: 'error',
           open: true,
           vertical: 'top',

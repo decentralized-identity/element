@@ -1,17 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import Button from '@material-ui/core/Button';
-
 import Grid from '@material-ui/core/Grid';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Typography from '@material-ui/core/Typography';
-
 import QrReader from 'react-qr-reader';
+import config from '../../config';
 
 class ScanQRCodeDialog extends React.Component {
   state = {
@@ -49,7 +46,7 @@ class ScanQRCodeDialog extends React.Component {
                     // do nothing
                   }}
                   onScan={data => {
-                    if (data && data.indexOf('did:elem:') !== -1) {
+                    if (data && data.indexOf(config.DID_METHOD_NAME) !== -1) {
                       this.setState({
                         scannedDID: `did:${data.split('did:').pop()}`,
                       });

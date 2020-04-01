@@ -1,10 +1,11 @@
 import { withHandlers } from 'recompose';
+import config from '../../config';
 
 export default withHandlers({
   predictDID: ({ set, sidetree, getMyDidUniqueSuffix }) => async () => {
     const didUniqueSuffix = await getMyDidUniqueSuffix();
     set({
-      predictedDID: `did:elem:${didUniqueSuffix}`,
+      predictedDID: `${config.DID_METHOD_NAME}:${didUniqueSuffix}`,
     });
     const myDidDocument = await sidetree.resolve(didUniqueSuffix, true);
     set({ myDidDocument });
@@ -221,8 +222,9 @@ export default withHandlers({
     } catch (e) {
       doSetTmuiProp({
         snackBarMessage: {
-          message:
-            'Could not resolve DID, make sure it is of the form did:elem:didUniqueSuffix.',
+          message: `Could not resolve DID, make sure it is of the form ${
+            config.DID_METHOD_NAME
+          }:didUniqueSuffix.`,
           variant: 'error',
           open: true,
           vertical: 'top',
