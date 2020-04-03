@@ -11,7 +11,7 @@ const elementCrypto = require('../../crypto');
 const MnemonicKeySystem = require('../../crypto/MnemonicKeySystem');
 
 // FIXME
-const didMethodName = 'did:elem';
+const didMethodName = 'did:elem:ropsten';
 
 const getDidDocumentModel = (primaryPublicKey, recoveryPublicKey) => ({
   '@context': 'https://w3id.org/did/v1',
