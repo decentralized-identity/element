@@ -106,7 +106,7 @@ const generateActors = async count => {
       sameAs: [
         `https://www.facebook.com/${i}`,
         `https://www.linkedin.com/${i}`,
-        `https://did.example.com/did:elem:${didUniqueSuffix}`,
+        `https://did.example.com/${didMethodName}:${didUniqueSuffix}`,
       ],
     };
     actors[didUniqueSuffix] = {
