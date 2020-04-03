@@ -28,7 +28,7 @@ const getTestSideTree = () => {
   const parameters = {
     maxOperationsPerBatch: 5,
     batchingIntervalInSeconds: 1,
-    didMethodName: 'did:elem',
+    didMethodName,
   };
 
   const sidetree = new element.Sidetree({
