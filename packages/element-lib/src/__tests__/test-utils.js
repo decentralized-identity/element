@@ -5,7 +5,7 @@ const element = require('../../index');
 const { encodeJson, decodeJson } = require('../func');
 const { getDidDocumentModel, getCreatePayload } = require('../sidetree/op');
 
-const didMethodName = 'did:elem';
+const didMethodName = 'did:elem:ropsten';
 
 const getTestSideTree = () => {
   const db = new element.adapters.database.ElementCouchDBAdapter({
