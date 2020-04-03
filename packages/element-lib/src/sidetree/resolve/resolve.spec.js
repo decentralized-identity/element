@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 const {
+  didMethodName,
   getTestSideTree,
   changeKid,
   getDidDocumentForPayload,
@@ -93,7 +94,7 @@ describe('resolve', () => {
 
     it('should be resolveable after sync', async () => {
       const didDocument = await sidetree.resolve(didUniqueSuffix, true);
-      const did = `did:elem:${didUniqueSuffix}`;
+      const did = `${didMethodName}:${didUniqueSuffix}`;
       expect(didDocument.id).toBe(did);
       const decodedPayload = decodeJson(createPayload.payload);
       expect(didDocument['@context']).toBe(decodedPayload['@context']);
@@ -121,7 +122,7 @@ describe('resolve', () => {
 
     it('should be resolveable again', async () => {
       const didDocument = await sidetree.resolve(didUniqueSuffix, true);
-      const did = `did:elem:${didUniqueSuffix}`;
+      const did = `${didMethodName}:${didUniqueSuffix}`;
       expect(didDocument.id).toBe(did);
     });
   });
@@ -150,7 +151,7 @@ describe('resolve', () => {
     it('should not work if specified kid does not exist in did document', async () => {
       const newKey = mks.getKeyForPurpose('primary', 1);
       const newPublicKey = {
-        id: `did:elem:${didUniqueSuffix}#newKey`,
+        id: `${didMethodName}:${didUniqueSuffix}#newKey`,
         usage: 'signing',
         type: 'Secp256k1VerificationKey2018',
         publicKeyHex: newKey.publicKey,
@@ -172,7 +173,7 @@ describe('resolve', () => {
     it('should not work if signature is not valid', async () => {
       const newKey = mks.getKeyForPurpose('primary', 1);
       const newPublicKey = {
-        id: `did:elem:${didUniqueSuffix}#newKey`,
+        id: `${didMethodName}:${didUniqueSuffix}#newKey`,
         usage: 'signing',
         type: 'Secp256k1VerificationKey2018',
         publicKeyHex: newKey.publicKey,
@@ -193,7 +194,7 @@ describe('resolve', () => {
     it('should add a new key', async () => {
       const newKey = mks.getKeyForPurpose('primary', 1);
       const newPublicKey = {
-        id: `did:elem:${didUniqueSuffix}#newKey`,
+        id: `${didMethodName}:${didUniqueSuffix}#newKey`,
         usage: 'signing',
         type: 'Secp256k1VerificationKey2018',
         publicKeyHex: newKey.publicKey,
@@ -214,7 +215,7 @@ describe('resolve', () => {
     it('should remove a key', async () => {
       const payload = getUpdatePayloadForRemovingAKey(
         lastOperation,
-        `did:elem:${didUniqueSuffix}#newKey`,
+        `${didMethodName}:${didUniqueSuffix}#newKey`,
         primaryKey.privateKey
       );
       await sidetree.batchScheduler.writeNow(payload);
@@ -236,13 +237,13 @@ describe('resolve', () => {
             action: 'add-public-keys',
             publicKeys: [
               {
-                id: `did:elem:${didUniqueSuffix}#newKey2`,
+                id: `${didMethodName}:${didUniqueSuffix}#newKey2`,
                 usage: 'signing',
                 type: 'Secp256k1VerificationKey2018',
                 publicKeyHex: newKey2.publicKey,
               },
               {
-                id: `did:elem:${didUniqueSuffix}#newKey3`,
+                id: `${didMethodName}:${didUniqueSuffix}#newKey3`,
                 usage: 'signing',
                 type: 'Secp256k1VerificationKey2018',
                 publicKeyHex: newKey3.publicKey,
@@ -251,13 +252,13 @@ describe('resolve', () => {
           },
           {
             action: 'remove-public-keys',
-            publicKeys: [`did:elem:${didUniqueSuffix}#primary`],
+            publicKeys: [`${didMethodName}:${didUniqueSuffix}#primary`],
           },
         ],
       };
       const header = {
         operation: 'update',
-        kid: `did:elem:${didUniqueSuffix}#primary`,
+        kid: `${didMethodName}:${didUniqueSuffix}#primary`,
         alg: 'ES256K',
       };
       const operation = makeSignedOperation(
@@ -277,7 +278,7 @@ describe('resolve', () => {
     it('should not process a patch removing the recovery key', async () => {
       const payload = getUpdatePayloadForRemovingAKey(
         lastOperation,
-        `did:elem:${didUniqueSuffix}#recovery`,
+        `${didMethodName}:${didUniqueSuffix}#recovery`,
         primaryKey.privateKey
       );
       await sidetree.batchScheduler.writeNow(payload);
@@ -376,7 +377,7 @@ describe('resolve', () => {
       };
       const header = {
         operation: 'recover',
-        kid: `did:elem:${didUniqueSuffix}#recovery`,
+        kid: `${didMethodName}:${didUniqueSuffix}#recovery`,
         alg: 'ES256K',
       };
       const invalidRecoverPayload = makeSignedOperation(

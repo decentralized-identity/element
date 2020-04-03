@@ -5,6 +5,8 @@ const element = require('../../index');
 const { encodeJson, decodeJson } = require('../func');
 const { getDidDocumentModel, getCreatePayload } = require('../sidetree/op');
 
+const didMethodName = 'did:elem';
+
 const getTestSideTree = () => {
   const db = new element.adapters.database.ElementCouchDBAdapter({
     name: 'element-test',
@@ -132,7 +134,7 @@ const createByActorIndex = actorIndex => {
 
 const assertCreateSucceeded = async (sidetree, actorIndex) => {
   const actor = getActorByIndex(actorIndex);
-  const did = `did:elem:${actor.didUniqueSuffix}`;
+  const did = `${didMethodName}:${actor.didUniqueSuffix}`;
   const didDoc = await sidetree.resolve(did, true);
   expect(didDoc.id).toBe(did);
   expect(didDoc.publicKey[0].publicKeyHex).toBe(
@@ -151,7 +153,7 @@ const updateByActorIndex = async (sidetree, actorIndex) => {
   const lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
   const newKey = actor.mks.getKeyForPurpose('primary', 10);
   const newPublicKey = {
-    id: `did:elem:${didUniqueSuffix}#newKey`,
+    id: `${didMethodName}:${didUniqueSuffix}#newKey`,
     usage: 'signing',
     type: 'Secp256k1VerificationKey2018',
     publicKeyHex: newKey.publicKey,
@@ -185,12 +187,12 @@ const assertUpdateSucceeded = async (sidetree, actorIndex) => {
   const actor = getActorByIndex(actorIndex);
   const newKey = actor.mks.getKeyForPurpose('primary', 10);
   const didDoc = await sidetree.resolve(
-    `did:elem:${actor.didUniqueSuffix}`,
+    `${didMethodName}:${actor.didUniqueSuffix}`,
     true
   );
-  expect(didDoc.id).toBe(`did:elem:${actor.didUniqueSuffix}`);
+  expect(didDoc.id).toBe(`${didMethodName}:${actor.didUniqueSuffix}`);
   expect(didDoc.publicKey[2].id).toBe(
-    `did:elem:${actor.didUniqueSuffix}#newKey`
+    `${didMethodName}:${actor.didUniqueSuffix}#newKey`
   );
   expect(didDoc.publicKey[2].publicKeyHex).toBe(newKey.publicKey);
 };
@@ -198,10 +200,10 @@ const assertUpdateSucceeded = async (sidetree, actorIndex) => {
 const assertRecoverSucceeded = async (sidetree, actorIndex) => {
   const actor = getActorByIndex(actorIndex);
   const didDoc = await sidetree.resolve(
-    `did:elem:${actor.didUniqueSuffix}`,
+    `${didMethodName}:${actor.didUniqueSuffix}`,
     true
   );
-  expect(didDoc.id).toBe(`did:elem:${actor.didUniqueSuffix}`);
+  expect(didDoc.id).toBe(`${didMethodName}:${actor.didUniqueSuffix}`);
   expect(didDoc.publicKey[0].publicKeyHex).toBe(
     actor.mks.getKeyForPurpose('primary', 20).publicKey
   );
@@ -222,13 +224,14 @@ const deactivateByActorIndex = async actorIndex => {
 
 const assertDeactivateSucceeded = async (sidetree, actorIndex) => {
   const didDoc = await sidetree.resolve(
-    `did:elem:${getActorByIndex(actorIndex).didUniqueSuffix}`,
+    `${didMethodName}:${getActorByIndex(actorIndex).didUniqueSuffix}`,
     true
   );
   expect(didDoc).not.toBeDefined();
 };
 
 module.exports = {
+  didMethodName,
   getTestSideTree,
   changeKid,
   getDidDocumentForPayload,

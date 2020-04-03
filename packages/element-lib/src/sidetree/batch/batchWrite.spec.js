@@ -1,5 +1,6 @@
 const batchWrite = require('./batchWrite');
 const {
+  didMethodName,
   getTestSideTree,
   getCreatePayloadForKeyIndex,
 } = require('../../__tests__/test-utils');
@@ -66,7 +67,7 @@ describe('batchWrite with one operation', () => {
 
   it('should resolve the did when the observer synced the transaction', async () => {
     const didDocument = await sidetree.resolve(didUniqueSuffix, true);
-    const did = `did:elem:${didUniqueSuffix}`;
+    const did = `${didMethodName}:${didUniqueSuffix}`;
     expect(didDocument.id).toBe(did);
     const decodedPayload = decodeJson(createPayload.payload);
     expect(didDocument['@context']).toBe(decodedPayload['@context']);
@@ -138,7 +139,7 @@ describe('batchWrite with several operations', () => {
 
   it('should resolve the first did when the observer synced the transaction', async () => {
     const didDocument = await sidetree.resolve(didUniqueSuffix1, true);
-    const did = `did:elem:${didUniqueSuffix1}`;
+    const did = `${didMethodName}:${didUniqueSuffix1}`;
     expect(didDocument.id).toBe(did);
     const decodedPayload = decodeJson(createPayload1.payload);
     expect(didDocument['@context']).toBe(decodedPayload['@context']);
@@ -156,7 +157,7 @@ describe('batchWrite with several operations', () => {
 
   it('should resolve the second did when the observer synced the transaction', async () => {
     const didDocument = await sidetree.resolve(didUniqueSuffix2, true);
-    const did = `did:elem:${didUniqueSuffix2}`;
+    const did = `${didMethodName}:${didUniqueSuffix2}`;
     expect(didDocument.id).toBe(did);
     const decodedPayload = decodeJson(createPayload2.payload);
     expect(didDocument['@context']).toBe(decodedPayload['@context']);

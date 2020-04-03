@@ -1,4 +1,5 @@
 const {
+  didMethodName,
   getTestSideTree,
   getLastOperation,
 } = require('../../__tests__/test-utils');
@@ -27,7 +28,7 @@ describe('patches', () => {
     );
     createPayload = sidetree.op.getCreatePayload(didDocumentModel, primaryKey);
     didUniqueSuffix = await sidetree.func.getDidUniqueSuffix(createPayload);
-    did = `did:elem${didUniqueSuffix}`;
+    did = `${didMethodName}${didUniqueSuffix}`;
     await sidetree.batchScheduler.writeNow(createPayload);
   });
 
@@ -35,7 +36,7 @@ describe('patches', () => {
     const lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
     const newKey = await mks.getKeyForPurpose('primary', 1);
     const newPublicKey = {
-      id: `did:elem:${didUniqueSuffix}#newKey`,
+      id: `${didMethodName}:${didUniqueSuffix}#newKey`,
       usage: 'signing',
       type: 'Secp256k1VerificationKey2018',
       publicKeyHex: newKey.publicKey,
@@ -52,7 +53,7 @@ describe('patches', () => {
     };
     const header = {
       operation: 'update',
-      kid: `did:elem:${didUniqueSuffix}#primary`,
+      kid: `${didMethodName}:${didUniqueSuffix}#primary`,
       alg: 'ES256K',
     };
     const updatePayload = sidetree.op.makeSignedOperation(
@@ -65,7 +66,7 @@ describe('patches', () => {
     const didDocument = await sidetree.resolve(didUniqueSuffix, true);
     expect(didDocument.publicKey).toHaveLength(3);
     expect(didDocument.publicKey[2].publicKeyHex).toBe(newKey.publicKey);
-    keyId = `did:elem:${didUniqueSuffix}#newKey`;
+    keyId = `${didMethodName}:${didUniqueSuffix}#newKey`;
   });
 
   it('should add an authentication method', async () => {
@@ -82,7 +83,7 @@ describe('patches', () => {
     };
     const header = {
       operation: 'update',
-      kid: `did:elem:${didUniqueSuffix}#primary`,
+      kid: `${didMethodName}:${didUniqueSuffix}#primary`,
       alg: 'ES256K',
     };
     const updatePayload = sidetree.op.makeSignedOperation(
@@ -110,7 +111,7 @@ describe('patches', () => {
     };
     const header = {
       operation: 'update',
-      kid: `did:elem:${didUniqueSuffix}#primary`,
+      kid: `${didMethodName}:${didUniqueSuffix}#primary`,
       alg: 'ES256K',
     };
     const updatePayload = sidetree.op.makeSignedOperation(
@@ -138,7 +139,7 @@ describe('patches', () => {
     };
     const header = {
       operation: 'update',
-      kid: `did:elem:${didUniqueSuffix}#primary`,
+      kid: `${didMethodName}:${didUniqueSuffix}#primary`,
       alg: 'ES256K',
     };
     const updatePayload = sidetree.op.makeSignedOperation(
@@ -166,7 +167,7 @@ describe('patches', () => {
     };
     const header = {
       operation: 'update',
-      kid: `did:elem:${didUniqueSuffix}#primary`,
+      kid: `${didMethodName}:${didUniqueSuffix}#primary`,
       alg: 'ES256K',
     };
     const updatePayload = sidetree.op.makeSignedOperation(
@@ -194,7 +195,7 @@ describe('patches', () => {
     };
     const header = {
       operation: 'update',
-      kid: `did:elem:${didUniqueSuffix}#primary`,
+      kid: `${didMethodName}:${didUniqueSuffix}#primary`,
       alg: 'ES256K',
     };
     const updatePayload = sidetree.op.makeSignedOperation(
@@ -222,7 +223,7 @@ describe('patches', () => {
     };
     const header = {
       operation: 'update',
-      kid: `did:elem:${didUniqueSuffix}#primary`,
+      kid: `${didMethodName}:${didUniqueSuffix}#primary`,
       alg: 'ES256K',
     };
     const updatePayload = sidetree.op.makeSignedOperation(
@@ -250,7 +251,7 @@ describe('patches', () => {
     };
     const header = {
       operation: 'update',
-      kid: `did:elem:${didUniqueSuffix}#primary`,
+      kid: `${didMethodName}:${didUniqueSuffix}#primary`,
       alg: 'ES256K',
     };
     const updatePayload = sidetree.op.makeSignedOperation(
@@ -278,7 +279,7 @@ describe('patches', () => {
     };
     const header = {
       operation: 'update',
-      kid: `did:elem:${didUniqueSuffix}#primary`,
+      kid: `${didMethodName}:${didUniqueSuffix}#primary`,
       alg: 'ES256K',
     };
     const updatePayload = sidetree.op.makeSignedOperation(
@@ -312,7 +313,7 @@ describe('patches', () => {
     };
     const header = {
       operation: 'update',
-      kid: `did:elem:${didUniqueSuffix}#primary`,
+      kid: `${didMethodName}:${didUniqueSuffix}#primary`,
       alg: 'ES256K',
     };
     const updatePayload = sidetree.op.makeSignedOperation(
@@ -373,7 +374,7 @@ describe('patches', () => {
     };
     const header = {
       operation: 'update',
-      kid: `did:elem:${didUniqueSuffix}#primary`,
+      kid: `${didMethodName}:${didUniqueSuffix}#primary`,
       alg: 'ES256K',
     };
     const updatePayload = sidetree.op.makeSignedOperation(
@@ -385,7 +386,7 @@ describe('patches', () => {
     expect(transaction).toBeDefined();
     const didDocument = await sidetree.resolve(didUniqueSuffix, true);
     expect(didDocument.service).toEqual([
-      { ...endpoint, id: `did:elem:${didUniqueSuffix}${endpoint.id}` },
+      { ...endpoint, id: `${didMethodName}:${didUniqueSuffix}${endpoint.id}` },
     ]);
   });
 

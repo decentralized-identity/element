@@ -1,6 +1,7 @@
 jest.setTimeout(10 * 1000);
 
 const {
+  didMethodName,
   getTestSideTree,
   getLastOperation,
   getActorByIndex,
@@ -32,7 +33,7 @@ const addRSAKey = async actor => {
         action: 'add-public-keys',
         publicKeys: [
           {
-            id: `did:elem:${actor.didUniqueSuffix}#auth`,
+            id: `${didMethodName}:${actor.didUniqueSuffix}#auth`,
             controller: actor.did,
             usage: 'signing',
             type: 'RsaVerificationKey2018',

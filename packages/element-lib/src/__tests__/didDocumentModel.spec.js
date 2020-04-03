@@ -1,4 +1,8 @@
-const { getTestSideTree, getLastOperation } = require('./test-utils');
+const {
+  didMethodName,
+  getTestSideTree,
+  getLastOperation,
+} = require('./test-utils');
 
 const sidetree = getTestSideTree();
 const element = require('../../index');
@@ -24,7 +28,7 @@ describe('DID Document model', () => {
     const txn = await sidetree.batchScheduler.writeNow(createPayload);
     expect(txn).toBeDefined();
     didUniqueSuffix = sidetree.func.getDidUniqueSuffix(createPayload);
-    const did = `did:elem:${didUniqueSuffix}`;
+    const did = `${didMethodName}:${didUniqueSuffix}`;
     const didDocument = await sidetree.resolve(did, true);
     expect(didDocument.id).toBe(did);
     expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey.publicKey);
