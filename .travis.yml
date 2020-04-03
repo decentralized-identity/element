@@ -2,7 +2,7 @@ language: node_js
 
 node_js:
   - "10.15.3"
-  - "12"
+  # - "12"
 
 services:
   - docker
@@ -11,10 +11,10 @@ install:
   - npm i
 
 script:
-  - npm run services:start
-  - npm run services:healthcheck
-  - npm run lint
-  - npm run test:contracts
-  - npm run coverage
-  - npm run codecov
-  - npm run services:stop
+  # - npm run services:start
+  # - npm run services:healthcheck
+  # - npm run lint
+  # - npm run test:contracts
+  - npm run test
+  # - npm run codecov
+  # - npm run services:stop
