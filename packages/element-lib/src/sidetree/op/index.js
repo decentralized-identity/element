@@ -10,8 +10,7 @@ const {
 const elementCrypto = require('../../crypto');
 const MnemonicKeySystem = require('../../crypto/MnemonicKeySystem');
 
-// FIXME
-const didMethodName = 'did:elem:ropsten';
+const defaultDidMethodName = 'did:elem:ropsten';
 
 const getDidDocumentModel = (primaryPublicKey, recoveryPublicKey) => ({
   '@context': 'https://w3id.org/did/v1',
@@ -60,7 +59,8 @@ const getCreatePayload = (didDocumentModel, primaryKey) => {
 const getUpdatePayloadForAddingAKey = (
   previousOperation,
   newPublicKey,
-  primaryPrivateKey
+  primaryPrivateKey,
+  didMethodName = defaultDidMethodName
 ) => {
   const payload = {
     didUniqueSuffix: previousOperation.didUniqueSuffix,
@@ -83,7 +83,8 @@ const getUpdatePayloadForAddingAKey = (
 const getUpdatePayloadForRemovingAKey = (
   previousOperation,
   kid,
-  primaryPrivateKey
+  primaryPrivateKey,
+  didMethodName = defaultDidMethodName
 ) => {
   const payload = {
     didUniqueSuffix: previousOperation.didUniqueSuffix,
@@ -106,7 +107,8 @@ const getUpdatePayloadForRemovingAKey = (
 const getRecoverPayload = (
   didUniqueSuffix,
   newDidDocument,
-  recoveryPrivateKey
+  recoveryPrivateKey,
+  didMethodName = defaultDidMethodName
 ) => {
   const payload = {
     didUniqueSuffix,
@@ -120,7 +122,11 @@ const getRecoverPayload = (
   return makeSignedOperation(header, payload, recoveryPrivateKey);
 };
 
-const getDeletePayload = (didUniqueSuffix, recoveryPrivateKey) => {
+const getDeletePayload = (
+  didUniqueSuffix,
+  recoveryPrivateKey,
+  didMethodName = defaultDidMethodName
+) => {
   const header = {
     operation: 'delete',
     kid: `${didMethodName}:${didUniqueSuffix}#recovery`,
@@ -200,8 +206,7 @@ const addDIDToWallet = (did, wallet) => {
   return wallet;
 };
 
-// eslint-disable-next-line no-shadow
-const getNewWallet = async didMethodName => {
+const getNewWallet = async (didMethodName = defaultDidMethodName) => {
   const mnemonic = await MnemonicKeySystem.generateMnemonic();
   const ed25519Key = await elementCrypto.ed25519.createKeys();
   const x25519Key = elementCrypto.ed25519.X25519KeyPair.fromEdKeyPair({
