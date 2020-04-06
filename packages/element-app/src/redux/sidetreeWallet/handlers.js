@@ -1,6 +1,12 @@
 import { withHandlers } from 'recompose';
-import { func, op } from '@transmute/element-lib';
+import { func, Sidetree } from '@transmute/element-lib';
 import DIDWallet from '@transmute/did-wallet';
+
+const sidetree = new Sidetree({
+  parameters: {
+    didMethodName: 'did:elem:ropsten',
+  },
+});
 
 export default withHandlers({
   getDidDocumentKey: () => walletKey => {
@@ -33,8 +39,11 @@ export default withHandlers({
     const primaryKey = keys.find(k => {
       return k.tags.indexOf('#primary') !== -1;
     });
-    const didDocumentModel = op.walletToInitialDIDDoc(wall);
-    const createPayload = op.getCreatePayload(didDocumentModel, primaryKey);
+    const didDocumentModel = sidetree.op.walletToInitialDIDDoc(wall);
+    const createPayload = sidetree.op.getCreatePayload(
+      didDocumentModel,
+      primaryKey
+    );
     const didUniqueSuffix = func.getDidUniqueSuffix(createPayload);
     return didUniqueSuffix;
   },
@@ -46,8 +55,11 @@ export default withHandlers({
     const primaryKey = keys.find(k => {
       return k.tags.indexOf('#primary') !== -1;
     });
-    const didDocumentModel = op.walletToInitialDIDDoc(wall);
-    const createPayload = op.getCreatePayload(didDocumentModel, primaryKey);
+    const didDocumentModel = sidetree.op.walletToInitialDIDDoc(wall);
+    const createPayload = sidetree.op.getCreatePayload(
+      didDocumentModel,
+      primaryKey
+    );
     return createPayload;
   },
   createAddKeyRequest: ({ keystore }) => (
@@ -63,7 +75,7 @@ export default withHandlers({
     const primaryKey = keys.find(k => {
       return k.tags.indexOf('#primary') !== -1;
     });
-    const payload = op.getUpdatePayloadForAddingAKey(
+    const payload = sidetree.op.getUpdatePayloadForAddingAKey(
       lastOperation,
       newKey,
       primaryKey.privateKey
@@ -83,7 +95,7 @@ export default withHandlers({
     const primaryKey = keys.find(k => {
       return k.tags.indexOf('#primary') !== -1;
     });
-    const payload = op.getUpdatePayloadForRemovingAKey(
+    const payload = sidetree.op.getUpdatePayloadForRemovingAKey(
       lastOperation,
       kid,
       primaryKey.privateKey
