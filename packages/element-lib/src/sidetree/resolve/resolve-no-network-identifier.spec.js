@@ -1,5 +1,6 @@
 const {
   didMethodName,
+  didMethodNameWithoutNetworkIdentifier,
   getTestSideTree,
   getLastOperation,
 } = require('../../__tests__/test-utils');
@@ -7,8 +8,6 @@ const { getDidUniqueSuffix } = require('../../func');
 const { MnemonicKeySystem } = require('../../../index');
 
 const sidetree = getTestSideTree();
-
-const didMethodNameWithoutNetworkIdentifier = 'did:elem';
 
 const replaceKid = (payload, privateKey) => {
   const header = sidetree.func.decodeJson(payload.protected);

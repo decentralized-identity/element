@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 const {
   didMethodName,
+  didMethodNameWithoutNetworkIdentifier,
   getTestSideTree,
   changeKid,
   getDidDocumentForPayload,
@@ -15,10 +16,11 @@ const sidetree = getTestSideTree();
 jest.setTimeout(10 * 1000);
 
 describe('resolve', () => {
+  let didUniqueSuffix;
+
   describe('create', () => {
     const mks = new MnemonicKeySystem(MnemonicKeySystem.generateMnemonic());
     let createPayload;
-    let didUniqueSuffix;
     let primaryKey;
     let recoveryKey;
     let didDocumentModel;
@@ -119,13 +121,19 @@ describe('resolve', () => {
       const did = `${didMethodName}:${didUniqueSuffix}`;
       expect(didDocument.id).toBe(did);
     });
+
+    it('should be resolveable without network identifier', async () => {
+      const did = `${didMethodNameWithoutNetworkIdentifier}:${didUniqueSuffix}`;
+      const didDocument = await sidetree.resolve(did, true);
+      expect(didDocument.id).toBe(`${didMethodName}:${didUniqueSuffix}`);
+      expect(didDocument.publicKey).toHaveLength(2);
+    });
   });
 
   describe('update', () => {
     const mks = new MnemonicKeySystem(MnemonicKeySystem.generateMnemonic());
     let primaryKey;
     let recoveryKey;
-    let didUniqueSuffix;
     let lastOperation;
     let createPayload;
 
@@ -303,6 +311,14 @@ describe('resolve', () => {
       expect(didDocument.publicKey).toHaveLength(3);
       expect(didDocument.publicKey[0].publicKeyHex).toBe(recoveryKey.publicKey);
     });
+
+    it('should be resolveable without network identifier', async () => {
+      const did = `${didMethodNameWithoutNetworkIdentifier}:${didUniqueSuffix}`;
+      const didDocument = await sidetree.resolve(did, true);
+      console.log({ didDocument });
+      expect(didDocument.id).toBe(`${didMethodName}:${didUniqueSuffix}`);
+      expect(didDocument.publicKey).toHaveLength(3);
+    });
   });
 
   describe('recover', () => {
@@ -311,7 +327,6 @@ describe('resolve', () => {
     let recoveryKey;
     let primaryKey2;
     let recoveryKey2;
-    let didUniqueSuffix;
     let didDocumentModel2;
 
     beforeAll(async () => {
@@ -420,11 +435,18 @@ describe('resolve', () => {
       );
       expect(didDocument.id).toContain(didUniqueSuffix);
     });
+
+    it('should be resolveable without network identifier', async () => {
+      const did = `${didMethodNameWithoutNetworkIdentifier}:${didUniqueSuffix}`;
+      const didDocument = await sidetree.resolve(did, true);
+      console.log({ didDocument });
+      expect(didDocument.id).toBe(`${didMethodName}:${didUniqueSuffix}`);
+      expect(didDocument.publicKey).toHaveLength(2);
+    });
   });
 
   describe('delete', () => {
     const mks = new MnemonicKeySystem(MnemonicKeySystem.generateMnemonic());
-    let didUniqueSuffix;
     let primaryKey;
     let recoveryKey;
 

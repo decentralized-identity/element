@@ -6,6 +6,8 @@ const { encodeJson, decodeJson } = require('../func');
 
 const didMethodName = 'did:elem:ropsten';
 
+const didMethodNameWithoutNetworkIdentifier = 'did:elem';
+
 const getTestSideTree = () => {
   const db = new element.adapters.database.ElementCouchDBAdapter({
     name: 'element-test',
@@ -222,6 +224,7 @@ const assertDeactivateSucceeded = async (sidetree, actorIndex) => {
 
 module.exports = {
   didMethodName,
+  didMethodNameWithoutNetworkIdentifier,
   getTestSideTree,
   changeKid,
   getDidDocumentForPayload,
