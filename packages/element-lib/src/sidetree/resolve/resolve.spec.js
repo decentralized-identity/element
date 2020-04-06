@@ -513,15 +513,15 @@ describe('resolve just in time', () => {
     beforeAll(async () => {
       await sidetree.db.deleteDB();
       // Create a first transaction with two operations
-      createPayload1 = await getCreatePayloadForKeyIndex(mks, 0);
-      createPayload2 = await getCreatePayloadForKeyIndex(mks, 1);
+      createPayload1 = await getCreatePayloadForKeyIndex(sidetree, mks, 0);
+      createPayload2 = await getCreatePayloadForKeyIndex(sidetree, mks, 1);
       didUniqueSuffix1 = getDidUniqueSuffix(createPayload1);
       didUniqueSuffix2 = getDidUniqueSuffix(createPayload2);
       await sidetree.operationQueue.enqueue(didUniqueSuffix1, createPayload1);
       await sidetree.operationQueue.enqueue(didUniqueSuffix2, createPayload2);
       await sidetree.batchWrite();
       // Create a second transaction with one other operation
-      createPayload3 = await getCreatePayloadForKeyIndex(mks, 2);
+      createPayload3 = await getCreatePayloadForKeyIndex(sidetree, mks, 2);
       didUniqueSuffix3 = getDidUniqueSuffix(createPayload3);
       await sidetree.operationQueue.enqueue(didUniqueSuffix3, createPayload3);
       await sidetree.batchWrite();

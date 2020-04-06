@@ -95,8 +95,8 @@ describe('batchWrite with several operations', () => {
   let batchFile;
 
   beforeAll(async () => {
-    createPayload1 = await getCreatePayloadForKeyIndex(mks, 0);
-    createPayload2 = await getCreatePayloadForKeyIndex(mks, 1);
+    createPayload1 = await getCreatePayloadForKeyIndex(sidetree, mks, 0);
+    createPayload2 = await getCreatePayloadForKeyIndex(sidetree, mks, 1);
     didUniqueSuffix1 = getDidUniqueSuffix(createPayload1);
     didUniqueSuffix2 = getDidUniqueSuffix(createPayload2);
   });
@@ -193,12 +193,12 @@ describe('batchWrite with more operations than maxOperationsPerBatch', () => {
   let batchFile;
 
   beforeAll(async () => {
-    createPayload1 = await getCreatePayloadForKeyIndex(mks, 0);
-    createPayload2 = await getCreatePayloadForKeyIndex(mks, 1);
-    createPayload3 = await getCreatePayloadForKeyIndex(mks, 3);
-    createPayload4 = await getCreatePayloadForKeyIndex(mks, 4);
-    createPayload5 = await getCreatePayloadForKeyIndex(mks, 5);
-    createPayload6 = await getCreatePayloadForKeyIndex(mks, 6);
+    createPayload1 = await getCreatePayloadForKeyIndex(sidetree, mks, 0);
+    createPayload2 = await getCreatePayloadForKeyIndex(sidetree, mks, 1);
+    createPayload3 = await getCreatePayloadForKeyIndex(sidetree, mks, 3);
+    createPayload4 = await getCreatePayloadForKeyIndex(sidetree, mks, 4);
+    createPayload5 = await getCreatePayloadForKeyIndex(sidetree, mks, 5);
+    createPayload6 = await getCreatePayloadForKeyIndex(sidetree, mks, 6);
     didUniqueSuffix1 = getDidUniqueSuffix(createPayload1);
     didUniqueSuffix2 = getDidUniqueSuffix(createPayload2);
     didUniqueSuffix3 = getDidUniqueSuffix(createPayload3);

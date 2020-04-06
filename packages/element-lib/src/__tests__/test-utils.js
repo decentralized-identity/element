@@ -3,7 +3,6 @@
 const faker = require('faker');
 const element = require('../../index');
 const { encodeJson, decodeJson } = require('../func');
-const { getDidDocumentModel, getCreatePayload } = require('../sidetree/op');
 
 const didMethodName = 'did:elem:ropsten';
 
@@ -57,14 +56,14 @@ const getDidDocumentForPayload = async (sidetree, payload, didUniqueSuffix) => {
   return sidetree.resolve(didUniqueSuffix, true);
 };
 
-const getCreatePayloadForKeyIndex = async (mks, index) => {
+const getCreatePayloadForKeyIndex = async (sidetree, mks, index) => {
   const primaryKey = await mks.getKeyForPurpose('primary', index);
   const recoveryKey = await mks.getKeyForPurpose('recovery', index);
-  const didDocumentModel = getDidDocumentModel(
+  const didDocumentModel = sidetree.op.getDidDocumentModel(
     primaryKey.publicKey,
     recoveryKey.publicKey
   );
-  return getCreatePayload(didDocumentModel, primaryKey);
+  return sidetree.op.getCreatePayload(didDocumentModel, primaryKey);
 };
 
 const getLastOperation = async (sidetree, didUniqueSuffix) => {

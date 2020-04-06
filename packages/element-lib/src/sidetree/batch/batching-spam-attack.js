@@ -13,7 +13,11 @@ class Attacker {
   async start() {
     const operationNumbers = [...Array(this.numberOfOperations).keys()];
     const promises = operationNumbers.map(async index => {
-      const createPayload = await getCreatePayloadForKeyIndex(this.mks, index);
+      const createPayload = await getCreatePayloadForKeyIndex(
+        this.sidetree,
+        this.mks,
+        index
+      );
       const didUniqueSuffix = this.sidetree.func.getDidUniqueSuffix(
         createPayload
       );

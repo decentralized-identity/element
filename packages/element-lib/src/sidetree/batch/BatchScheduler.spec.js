@@ -31,9 +31,9 @@ describe('BatchScheduler', () => {
     let didUniqueSuffix3;
 
     beforeAll(async () => {
-      createPayload1 = await getCreatePayloadForKeyIndex(mks, 0);
-      createPayload2 = await getCreatePayloadForKeyIndex(mks, 1);
-      createPayload3 = await getCreatePayloadForKeyIndex(mks, 2);
+      createPayload1 = await getCreatePayloadForKeyIndex(sidetree, mks, 0);
+      createPayload2 = await getCreatePayloadForKeyIndex(sidetree, mks, 1);
+      createPayload3 = await getCreatePayloadForKeyIndex(sidetree, mks, 2);
       didUniqueSuffix1 = sidetree.func.getDidUniqueSuffix(createPayload1);
       didUniqueSuffix2 = sidetree.func.getDidUniqueSuffix(createPayload2);
       didUniqueSuffix3 = sidetree.func.getDidUniqueSuffix(createPayload3);
