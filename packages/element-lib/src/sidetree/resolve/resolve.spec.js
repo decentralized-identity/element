@@ -315,7 +315,6 @@ describe('resolve', () => {
     it('should be resolveable without network identifier', async () => {
       const did = `${didMethodNameWithoutNetworkIdentifier}:${didUniqueSuffix}`;
       const didDocument = await sidetree.resolve(did, true);
-      console.log({ didDocument });
       expect(didDocument.id).toBe(`${didMethodName}:${didUniqueSuffix}`);
       expect(didDocument.publicKey).toHaveLength(3);
     });
@@ -439,7 +438,6 @@ describe('resolve', () => {
     it('should be resolveable without network identifier', async () => {
       const did = `${didMethodNameWithoutNetworkIdentifier}:${didUniqueSuffix}`;
       const didDocument = await sidetree.resolve(did, true);
-      console.log({ didDocument });
       expect(didDocument.id).toBe(`${didMethodName}:${didUniqueSuffix}`);
       expect(didDocument.publicKey).toHaveLength(2);
     });
@@ -520,6 +518,12 @@ describe('resolve', () => {
       );
       await sidetree.batchScheduler.writeNow(secondDeletePayload);
       const didDocument = await sidetree.resolve(didUniqueSuffix, true);
+      expect(didDocument).not.toBeDefined();
+    });
+
+    it('should be resolveable without network identifier', async () => {
+      const did = `${didMethodNameWithoutNetworkIdentifier}:${didUniqueSuffix}`;
+      const didDocument = await sidetree.resolve(did, true);
       expect(didDocument).not.toBeDefined();
     });
   });
