@@ -124,7 +124,7 @@ const createPayload = element.op.getCreatePayload(didDocumentModel, primaryKey);
 // This can potentially take a few minutes if you're not on a local network
 const createTransaction = await element.batchScheduler.writeNow(createPayload);
 const didUniqueSuffix = element.func.getDidUniqueSuffix(createPayload);
-const did = `did:elem:${didUniqueSuffix}`;
+const did = `did:elem:ropsten:${didUniqueSuffix}`;
 console.log(`${did} was successfully created`);
 ```
 

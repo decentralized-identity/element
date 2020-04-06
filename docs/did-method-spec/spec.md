@@ -10,6 +10,14 @@ The namestring identifying this did method is `elem`
 
 A DID that uses this method MUST begin with the following prefix: `did:elem`. Per the DID specification, this string MUST be in lowercase.
 
+An additional optional network specific identifier may be added as such
+- `did:elem:ropsten:EiBOWH8368BI9NSaVZTmtxuqwpfN9NwAwy4Z95_VCl6A9g`
+- `did:elem:mainnet:EiBOWH8368BI9NSaVZTmtxuqwpfN9NwAwy4Z95_VCl6A9g`
+- `did:elem:EiBOWH8368BI9NSaVZTmtxuqwpfN9NwAwy4Z95_VCl6A9g`
+
+By default, if the network specific identifier is not present, then the default is `ropsten`.
+The default may change in the future once `mainnet` is supported.
+
 The remainder of a DID after the prefix, called the did unique suffix, MUST be `SHA256` hash of the encoded create payload (see below)
 
 ## Format and Encoding
