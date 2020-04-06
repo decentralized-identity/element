@@ -1,7 +1,11 @@
 const request = require('supertest');
-const element = require('@transmute/element-lib');
 const app = require('../../../express/app');
-const elementFixtures = require('../../../fixtures/elementFixtures');
+const {
+  generateActors,
+  getTestSidetree,
+} = require('../../../fixtures/elementFixtures');
+
+const sidetree = getTestSidetree();
 
 let server;
 let res;
@@ -11,7 +15,7 @@ jest.setTimeout(20 * 1000);
 
 beforeAll(() => {
   server = request(app);
-  [actor] = elementFixtures.generateActors(1);
+  [actor] = generateActors(sidetree, 1);
 });
 
 afterAll(async () => {});
@@ -20,11 +24,11 @@ describe('sidetree', () => {
   it('requests', async () => {
     const primaryKey = actor.mks.getKeyForPurpose('primary', 0);
     const recoveryKey = actor.mks.getKeyForPurpose('recovery', 0);
-    const didDocumentModel = element.op.getDidDocumentModel(
+    const didDocumentModel = sidetree.op.getDidDocumentModel(
       primaryKey.publicKey,
       recoveryKey.publicKey
     );
-    const createPayload = element.op.getCreatePayload(
+    const createPayload = sidetree.op.getCreatePayload(
       didDocumentModel,
       primaryKey
     );

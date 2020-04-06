@@ -1,8 +1,16 @@
 // eslint-disable-next-line
 const faker = require('faker');
-const { op, func, MnemonicKeySystem } = require('@transmute/element-lib');
+const { Sidetree, func, MnemonicKeySystem } = require('@transmute/element-lib');
 
-const generateActors = count => {
+const getTestSidetree = () => {
+  return new Sidetree({
+    parameters: {
+      didMethodName: 'did:elem:ropsten',
+    },
+  });
+};
+
+const generateActors = (sidetree, count) => {
   const actors = [];
   let i = 0;
 
@@ -10,12 +18,15 @@ const generateActors = count => {
     const mks = new MnemonicKeySystem(MnemonicKeySystem.generateMnemonic());
     const primaryKey = mks.getKeyForPurpose('primary', 0);
     const recoveryKey = mks.getKeyForPurpose('recovery', 0);
-    const didDocumentModel = op.getDidDocumentModel(
+    const didDocumentModel = sidetree.op.getDidDocumentModel(
       primaryKey.publicKey,
       recoveryKey.publicKey
     );
 
-    const createPayload = op.getCreatePayload(didDocumentModel, primaryKey);
+    const createPayload = sidetree.op.getCreatePayload(
+      didDocumentModel,
+      primaryKey
+    );
     const didUniqueSuffix = func.getDidUniqueSuffix(createPayload);
     const actor = {
       '@context': 'https://schema.org',
@@ -40,4 +51,5 @@ const generateActors = count => {
 
 module.exports = {
   generateActors,
+  getTestSidetree,
 };
