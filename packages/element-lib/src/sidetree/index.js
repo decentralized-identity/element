@@ -18,7 +18,7 @@ class Sidetree {
     this.blockchain = blockchain;
     this.storage = storage;
     this.db = db;
-    this.op = op;
+    this.op = op(this);
     this.func = func;
     // Observer
     this.sync = sync(this);
