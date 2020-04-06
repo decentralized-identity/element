@@ -27,7 +27,7 @@ const storage = new element.adapters.storage.StorageManager(
 const parameters = {
   maxOperationsPerBatch: 10 * 1000,
   batchingIntervalInSeconds: 10,
-  didMethodName: 'did:elem',
+  didMethodName: 'did:elem:ropsten',
 };
 
 const sidetree = new element.Sidetree({

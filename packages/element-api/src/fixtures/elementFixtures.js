@@ -20,14 +20,14 @@ const generateActors = count => {
     const actor = {
       '@context': 'https://schema.org',
       '@type': 'Person',
-      did: `did:elem:${didUniqueSuffix}`,
+      did: `did:elem:ropsten:${didUniqueSuffix}`,
       name: faker.name.findName(),
       email: faker.internet.email(),
       jobTitle: faker.name.jobTitle(),
       sameAs: [
         `https://www.facebook.com/${i}`,
         `https://www.linkedin.com/${i}`,
-        `https://did.example.com/did:elem:${didUniqueSuffix}`,
+        `https://did.example.com/did:elem:ropsten:${didUniqueSuffix}`,
       ],
       mks,
       didUniqueSuffix,
