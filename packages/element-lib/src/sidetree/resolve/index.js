@@ -8,8 +8,9 @@ const { isDidDocumentModelValid, isKeyValid } = require('../utils/validation');
 
 const isSignatureValid = async (didDocument, operation) => {
   const { kid } = operation.decodedHeader;
+  const suffix = didDocument.id ? didDocument.id.split(':').pop() : '';
   const signingKey = didDocument.publicKey.find(pubKey => {
-    return kid === pubKey.id || kid === didDocument.id + pubKey.id;
+    return kid === pubKey.id || kid.includes(`${suffix}${pubKey.id}`);
   });
   if (!signingKey) {
     throw new Error('signing key not found');
