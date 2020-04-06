@@ -25,7 +25,7 @@ class Sidetree {
     if (!parameters) {
       throw new Error('parameters is missing');
     }
-    if (parameters.didMethodName) {
+    if (!parameters.didMethodName) {
       throw new Error('didMethodName parameter is missing');
     }
     const operationQueue = new OperationQueue(db);
