@@ -4,7 +4,6 @@ const {
   getTestSideTree,
   getCreatePayloadForKeyIndex,
 } = require('../../__tests__/test-utils');
-const { getDidDocumentModel, getCreatePayload } = require('../op');
 const {
   batchFileToOperations,
   getDidUniqueSuffix,
@@ -27,11 +26,11 @@ describe('batchWrite with one operation', () => {
   beforeAll(async () => {
     const primaryKey = mks.getKeyForPurpose('primary', 0);
     const recoveryKey = mks.getKeyForPurpose('recovery', 0);
-    const didDocumentModel = getDidDocumentModel(
+    const didDocumentModel = sidetree.op.getDidDocumentModel(
       primaryKey.publicKey,
       recoveryKey.publicKey
     );
-    createPayload = getCreatePayload(didDocumentModel, primaryKey);
+    createPayload = sidetree.op.getCreatePayload(didDocumentModel, primaryKey);
     didUniqueSuffix = getDidUniqueSuffix(createPayload);
     await sidetree.operationQueue.enqueue(didUniqueSuffix, createPayload);
     transaction = await batchWrite(sidetree)();

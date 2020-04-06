@@ -17,7 +17,7 @@ let actors;
 let alice;
 
 beforeAll(async () => {
-  actors = await generateActors(1);
+  actors = await generateActors(sidetree, 1);
   [alice] = Object.values(actors);
 });
 
@@ -51,7 +51,7 @@ describe('CRUD.One', () => {
   });
 
   it('deactivate', async () => {
-    const deletePayload = await deactivateByActorIndex(0);
+    const deletePayload = await deactivateByActorIndex(sidetree, 0);
     const txn = await sidetree.batchScheduler.writeNow(deletePayload);
     expect(txn).toBeDefined();
     await assertDeactivateSucceeded(sidetree, 0);

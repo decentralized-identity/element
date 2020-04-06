@@ -76,9 +76,11 @@ const getLastOperation = async (sidetree, didUniqueSuffix) => {
 
 const actors = {};
 
-const getActorByIndex = index => actors[Object.keys(actors)[index]];
+const getActorByIndex = index => {
+  return actors[Object.keys(actors)[index]];
+};
 
-const generateActors = async count => {
+const generateActors = async (sidetree, count) => {
   // eslint-disable-next-line
   for (let i = 0; i < count; i++) {
     const mks = new element.MnemonicKeySystem(
@@ -86,12 +88,12 @@ const generateActors = async count => {
     );
     const primaryKey = mks.getKeyForPurpose('primary', 0);
     const recoveryKey = mks.getKeyForPurpose('recovery', 0);
-    const didDocumentModel = element.op.getDidDocumentModel(
+    const didDocumentModel = sidetree.op.getDidDocumentModel(
       primaryKey.publicKey,
       recoveryKey.publicKey
     );
 
-    const createPayload = element.op.getCreatePayload(
+    const createPayload = sidetree.op.getCreatePayload(
       didDocumentModel,
       primaryKey
     );
@@ -120,17 +122,6 @@ const generateActors = async count => {
   return actors;
 };
 
-const createByActorIndex = actorIndex => {
-  const actor = getActorByIndex(actorIndex);
-  const primaryKey = actor.mks.getKeyForPurpose('primary', 0);
-  const recoveryKey = actor.mks.getKeyForPurpose('recovery', 0);
-  const didDocumentModel = element.op.getDidDocumentModel(
-    primaryKey.publicKey,
-    recoveryKey.publicKey
-  );
-  return element.op.getCreatePayload(didDocumentModel, primaryKey);
-};
-
 const assertCreateSucceeded = async (sidetree, actorIndex) => {
   const actor = getActorByIndex(actorIndex);
   const did = `${didMethodName}:${actor.didUniqueSuffix}`;
@@ -157,7 +148,7 @@ const updateByActorIndex = async (sidetree, actorIndex) => {
     type: 'Secp256k1VerificationKey2018',
     publicKeyHex: newKey.publicKey,
   };
-  return element.op.getUpdatePayloadForAddingAKey(
+  return sidetree.op.getUpdatePayloadForAddingAKey(
     lastOperation,
     newPublicKey,
     actor.primaryKey.privateKey
@@ -212,10 +203,10 @@ const assertRecoverSucceeded = async (sidetree, actorIndex) => {
 };
 
 // FIXME jit by default
-const deactivateByActorIndex = async actorIndex => {
+const deactivateByActorIndex = async (sidetree, actorIndex) => {
   const actor = getActorByIndex(actorIndex);
   const { didUniqueSuffix } = getActorByIndex(actorIndex);
-  return element.op.getDeletePayload(
+  return sidetree.op.getDeletePayload(
     didUniqueSuffix,
     actor.recoveryKey.privateKey
   );
@@ -242,7 +233,6 @@ module.exports = {
   assertRecoverSucceeded,
   assertUpdateSucceeded,
   deactivateByActorIndex,
-  createByActorIndex,
   updateByActorIndex,
   assertDeactivateSucceeded,
   recoverByActorIndex,

@@ -25,7 +25,7 @@ let actors = {};
 
 describe('CRUD.Many', () => {
   it('can use fixtures to generate actors', async () => {
-    actors = await generateActors(count);
+    actors = await generateActors(sidetree, count);
     expect(Object.keys(actors).length).toBe(count);
   });
 
@@ -104,8 +104,8 @@ describe('CRUD.Many', () => {
   it('transaction 4 & 5 deactivate', async () => {
     const actor1 = getActorByIndex(0);
     const actor3 = getActorByIndex(2);
-    const deletePayload1 = await deactivateByActorIndex(0);
-    const deletePayload3 = await deactivateByActorIndex(2);
+    const deletePayload1 = await deactivateByActorIndex(sidetree, 0);
+    const deletePayload3 = await deactivateByActorIndex(sidetree, 2);
     await sidetree.operationQueue.enqueue(
       actor1.didUniqueSuffix,
       deletePayload1
@@ -119,7 +119,7 @@ describe('CRUD.Many', () => {
     await assertDeactivateSucceeded(sidetree, 2);
 
     const actor2 = getActorByIndex(1);
-    const deletePayload2 = await deactivateByActorIndex(1);
+    const deletePayload2 = await deactivateByActorIndex(sidetree, 1);
     await sidetree.operationQueue.enqueue(
       actor2.didUniqueSuffix,
       deletePayload2

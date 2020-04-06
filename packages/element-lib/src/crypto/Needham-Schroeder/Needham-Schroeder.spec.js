@@ -59,7 +59,7 @@ const addRSAKey = async actor => {
 
 beforeAll(async () => {
   sidetree = getTestSideTree();
-  await generateActors(2);
+  await generateActors(sidetree, 2);
   alice = getActorByIndex(0);
   bob = getActorByIndex(1);
   await sidetree.operationQueue.enqueue(

@@ -29,7 +29,7 @@ afterAll(async () => {
 describe('LatePublishAttack', () => {
   beforeAll(async () => {
     sidetree = await getTestSideTree();
-    await generateActors(1);
+    await generateActors(sidetree, 1);
     actor = await getActorByIndex(0);
   });
 

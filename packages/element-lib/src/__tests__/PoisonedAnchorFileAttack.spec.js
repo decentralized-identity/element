@@ -13,7 +13,7 @@ let actor;
 beforeAll(async () => {
   sidetree = getTestSideTree();
   await sidetree.db.deleteDB();
-  await generateActors(1);
+  await generateActors(sidetree, 1);
   actor = await getActorByIndex(0);
   await sidetree.batchScheduler.writeNow(actor.createPayload);
 });
