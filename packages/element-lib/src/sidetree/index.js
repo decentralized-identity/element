@@ -13,7 +13,24 @@ const func = require('../func');
 
 class Sidetree {
   constructor({ db, blockchain, storage, parameters } = {}) {
+    // if (!db) {
+    //   throw new Error('db is missing');
+    // }
+    // if (!blockchain) {
+    //   throw new Error('blockchain is missing');
+    // }
+    // if (!storage) {
+    //   throw new Error('storage is missing');
+    // }
+    if (!parameters) {
+      throw new Error('parameters is missing');
+    }
+    if (parameters.didMethodName) {
+      throw new Error('didMethodName parameter is missing');
+    }
     const operationQueue = new OperationQueue(db);
+    // Parameters
+    this.parameters = parameters;
     // Utils for sidetree
     this.blockchain = blockchain;
     this.storage = storage;
@@ -29,8 +46,6 @@ class Sidetree {
     this.operationQueue = operationQueue;
     this.batchWrite = batchWrite(this);
     this.batchScheduler = new BatchScheduler(this);
-    // Parameters
-    this.parameters = parameters;
 
     this.getTransactions = getTransactions(this);
     this.getTransactionSummary = getTransactionSummary(this);
