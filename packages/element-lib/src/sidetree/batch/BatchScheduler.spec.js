@@ -15,7 +15,7 @@ describe('BatchScheduler', () => {
     const mks = new MnemonicKeySystem(MnemonicKeySystem.generateMnemonic());
 
     it('should submit a transaction now', async () => {
-      const createPayload = await getCreatePayloadForKeyIndex(mks, 0);
+      const createPayload = await getCreatePayloadForKeyIndex(sidetree, mks, 0);
       const transaction = await batchScheduler.writeNow(createPayload);
       expect(transaction).toBeDefined();
     });
