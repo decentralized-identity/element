@@ -49,7 +49,7 @@ describe('resolve', () => {
     await sidetree.batchScheduler.writeNow(createPayload);
   };
 
-  describe.only('create', () => {
+  describe('create', () => {
     beforeAll(resetDid);
 
     it('should be resolveable with network identifier', async () => {
@@ -67,7 +67,7 @@ describe('resolve', () => {
     });
   });
 
-  describe.only('update', () => {
+  describe('update', () => {
     beforeAll(resetDid);
 
     it('should add a new key', async () => {
@@ -102,11 +102,14 @@ describe('resolve', () => {
   });
 
   describe('recover', () => {
+    let primaryKey2;
+    let recoveryKey2;
+
     beforeAll(resetDid);
 
     it('should replace the did document with the one provided in the payload', async () => {
-      const primaryKey2 = mks.getKeyForPurpose('primary', 1);
-      const recoveryKey2 = mks.getKeyForPurpose('recovery', 1);
+      primaryKey2 = mks.getKeyForPurpose('primary', 1);
+      recoveryKey2 = mks.getKeyForPurpose('recovery', 1);
       const didDocumentModel2 = sidetree.op.getDidDocumentModel(
         primaryKey2.publicKey,
         recoveryKey2.publicKey
@@ -116,7 +119,7 @@ describe('resolve', () => {
         didDocumentModel2,
         recoveryKey.privateKey
       );
-      payload = replaceKid(payload);
+      payload = await replaceKid(payload, recoveryKey.privateKey);
       await sidetree.batchScheduler.writeNow(payload);
       const didDocument = await sidetree.resolve(didUniqueSuffix, true);
       expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey2.publicKey);
@@ -124,6 +127,14 @@ describe('resolve', () => {
         recoveryKey2.publicKey
       );
       expect(didDocument.id).toContain(didUniqueSuffix);
+    });
+
+    it('should be resolveable without network identifier', async () => {
+      const did = `${didMethodNameWithoutNetworkIdentifier}:${didUniqueSuffix}`;
+      const didDocument = await sidetree.resolve(did, true);
+      expect(didDocument.id).toBe(`${didMethodName}:${didUniqueSuffix}`);
+      expect(didDocument.publicKey).toHaveLength(2);
+      expect(didDocument.publicKey[0].publicKeyHex).toBe(primaryKey2.publicKey);
     });
   });
 
@@ -135,9 +146,15 @@ describe('resolve', () => {
         didUniqueSuffix,
         recoveryKey.privateKey
       );
-      deletePayload = replaceKid(deletePayload);
+      deletePayload = await replaceKid(deletePayload, recoveryKey.privateKey);
       await sidetree.batchScheduler.writeNow(deletePayload);
       const didDocument = await sidetree.resolve(didUniqueSuffix, true);
+      expect(didDocument).not.toBeDefined();
+    });
+
+    it('should be resolveable without network identifier', async () => {
+      const did = `${didMethodNameWithoutNetworkIdentifier}:${didUniqueSuffix}`;
+      const didDocument = await sidetree.resolve(did, true);
       expect(didDocument).not.toBeDefined();
     });
   });
