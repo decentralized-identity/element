@@ -13,15 +13,6 @@ const func = require('../func');
 
 class Sidetree {
   constructor({ db, blockchain, storage, parameters } = {}) {
-    // if (!db) {
-    //   throw new Error('db is missing');
-    // }
-    // if (!blockchain) {
-    //   throw new Error('blockchain is missing');
-    // }
-    // if (!storage) {
-    //   throw new Error('storage is missing');
-    // }
     if (!parameters) {
       throw new Error('parameters is missing');
     }
