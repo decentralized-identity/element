@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/decentralized-identity/element/compare/v0.6.2...v0.7.0) (2020-04-07)
+
+
+### Bug Fixes
+
+* light node bug ([d62b86c](https://github.com/decentralized-identity/element/commit/d62b86c))
+
+
+### Features
+
+* fix isSignatureValid to support default network identifier ([9cf2559](https://github.com/decentralized-identity/element/commit/9cf2559))
+
+
+
+
+
 ## [0.6.2](https://github.com/decentralized-identity/element/compare/v0.6.1...v0.6.2) (2020-03-25)
 
 **Note:** Version bump only for package @transmute/element-lib
