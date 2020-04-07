@@ -1,12 +1,20 @@
 const jsonld = require('jsonld');
 const jsigs = require('jsonld-signatures');
 const { Ed25519KeyPair } = require('crypto-ld');
+const fs = require('fs');
+const path = require('path');
 
 const { AssertionProofPurpose } = jsigs.purposes;
 const { Ed25519Signature2018 } = jsigs.suites;
 const didDocumentWithCustomContext = require('./__fixtures__/didDocumentWithCustomContext');
 
 jest.setTimeout(10 * 1000);
+
+const loadContext = relativePath => {
+  return JSON.parse(
+    fs.readFileSync(path.resolve(__dirname, relativePath)).toString()
+  );
+};
 
 describe('JSON LD Signatures', () => {
   let suite;
@@ -26,6 +34,12 @@ describe('JSON LD Signatures', () => {
         id: keyPair.controller,
         assertionMethod: [keyPair.id],
       },
+      'https://www.w3.org/ns/did/v1': loadContext(
+        './__fixtures__/context.json'
+      ),
+      'https://docs.element-did.com/contexts/sidetree/sidetree-v0.1.jsonld': loadContext(
+        '../../../../docs/contexts/sidetree/sidetree-v0.1.jsonld'
+      ),
     };
 
     documentLoader = async url => {
