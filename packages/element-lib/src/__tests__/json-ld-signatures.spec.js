@@ -35,7 +35,7 @@ describe('JSON LD Signatures', () => {
         assertionMethod: [keyPair.id],
       },
       'https://www.w3.org/ns/did/v1': loadContext(
-        './__fixtures__/context.json'
+        './__fixtures__/www.w3.org-ns-did-v1.json'
       ),
       'https://docs.element-did.com/contexts/sidetree/sidetree-v0.1.jsonld': loadContext(
         '../../../../docs/contexts/sidetree/sidetree-v0.1.jsonld'
