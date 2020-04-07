@@ -26,6 +26,8 @@ const withMetaMask = WrappedComponent => {
         window.web3 = new Web3(window.web3.currentProvider);
       }
       const sidetree = await initSidetree();
+      // Make sidetree available as a global object (convenient for devs)
+      global.sidetree = sidetree;
 
       this.setState({
         sidetree,
