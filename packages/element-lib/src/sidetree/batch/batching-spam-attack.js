@@ -13,7 +13,11 @@ class Attacker {
   async start() {
     const operationNumbers = [...Array(this.numberOfOperations).keys()];
     const promises = operationNumbers.map(async index => {
-      const createPayload = await getCreatePayloadForKeyIndex(this.mks, index);
+      const createPayload = await getCreatePayloadForKeyIndex(
+        this.sidetree,
+        this.mks,
+        index
+      );
       const didUniqueSuffix = this.sidetree.func.getDidUniqueSuffix(
         createPayload
       );
@@ -43,7 +47,7 @@ const blockchain = element.blockchain.ethereum.configure({
 const parameters = {
   maxOperationsPerBatch: 10000,
   batchingIntervalInSeconds: 10,
-  didMethodName: 'did:elem',
+  didMethodName: 'did:elem:ropsten',
 };
 
 const sidetree = new element.Sidetree({

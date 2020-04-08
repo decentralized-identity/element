@@ -1,4 +1,5 @@
 const {
+  didMethodName,
   getTestSideTree,
   generateActors,
   getActorByIndex,
@@ -12,7 +13,7 @@ let actor;
 beforeAll(async () => {
   sidetree = getTestSideTree();
   await sidetree.db.deleteDB();
-  await generateActors(1);
+  await generateActors(sidetree, 1);
   actor = await getActorByIndex(0);
   await sidetree.batchScheduler.writeNow(actor.createPayload);
 });
@@ -24,7 +25,7 @@ describe('Poisoned Anchor File Attack', () => {
       'QmTJGHccriUtq3qf3bvAQUcDUHnBbHNJG2x2FYwYUecN43'
     );
     const didDoc = await sidetree.resolve(actor.didUniqueSuffix, true);
-    expect(didDoc.id).toBe(`did:elem:${actor.didUniqueSuffix}`);
+    expect(didDoc.id).toBe(`${didMethodName}:${actor.didUniqueSuffix}`);
 
     const transactions = await sidetree.db.readCollection('transaction');
     const lastCachedTransaction = transactions.pop();
@@ -38,7 +39,7 @@ describe('Poisoned Anchor File Attack', () => {
 
   it('skips poison after it is discovered', async () => {
     const didDoc = await sidetree.resolve(actor.didUniqueSuffix, true);
-    expect(didDoc.id).toBe(`did:elem:${actor.didUniqueSuffix}`);
+    expect(didDoc.id).toBe(`${didMethodName}:${actor.didUniqueSuffix}`);
     const record = await sidetree.db.read(
       'QmTJGHccriUtq3qf3bvAQUcDUHnBbHNJG2x2FYwYUecN43'
     );

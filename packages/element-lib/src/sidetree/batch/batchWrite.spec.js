@@ -1,9 +1,9 @@
 const batchWrite = require('./batchWrite');
 const {
+  didMethodName,
   getTestSideTree,
   getCreatePayloadForKeyIndex,
 } = require('../../__tests__/test-utils');
-const { getDidDocumentModel, getCreatePayload } = require('../op');
 const {
   batchFileToOperations,
   getDidUniqueSuffix,
@@ -26,11 +26,11 @@ describe('batchWrite with one operation', () => {
   beforeAll(async () => {
     const primaryKey = mks.getKeyForPurpose('primary', 0);
     const recoveryKey = mks.getKeyForPurpose('recovery', 0);
-    const didDocumentModel = getDidDocumentModel(
+    const didDocumentModel = sidetree.op.getDidDocumentModel(
       primaryKey.publicKey,
       recoveryKey.publicKey
     );
-    createPayload = getCreatePayload(didDocumentModel, primaryKey);
+    createPayload = sidetree.op.getCreatePayload(didDocumentModel, primaryKey);
     didUniqueSuffix = getDidUniqueSuffix(createPayload);
     await sidetree.operationQueue.enqueue(didUniqueSuffix, createPayload);
     transaction = await batchWrite(sidetree)();
@@ -66,7 +66,7 @@ describe('batchWrite with one operation', () => {
 
   it('should resolve the did when the observer synced the transaction', async () => {
     const didDocument = await sidetree.resolve(didUniqueSuffix, true);
-    const did = `did:elem:${didUniqueSuffix}`;
+    const did = `${didMethodName}:${didUniqueSuffix}`;
     expect(didDocument.id).toBe(did);
     const decodedPayload = decodeJson(createPayload.payload);
     expect(didDocument['@context']).toBe(decodedPayload['@context']);
@@ -94,8 +94,8 @@ describe('batchWrite with several operations', () => {
   let batchFile;
 
   beforeAll(async () => {
-    createPayload1 = await getCreatePayloadForKeyIndex(mks, 0);
-    createPayload2 = await getCreatePayloadForKeyIndex(mks, 1);
+    createPayload1 = await getCreatePayloadForKeyIndex(sidetree, mks, 0);
+    createPayload2 = await getCreatePayloadForKeyIndex(sidetree, mks, 1);
     didUniqueSuffix1 = getDidUniqueSuffix(createPayload1);
     didUniqueSuffix2 = getDidUniqueSuffix(createPayload2);
   });
@@ -138,7 +138,7 @@ describe('batchWrite with several operations', () => {
 
   it('should resolve the first did when the observer synced the transaction', async () => {
     const didDocument = await sidetree.resolve(didUniqueSuffix1, true);
-    const did = `did:elem:${didUniqueSuffix1}`;
+    const did = `${didMethodName}:${didUniqueSuffix1}`;
     expect(didDocument.id).toBe(did);
     const decodedPayload = decodeJson(createPayload1.payload);
     expect(didDocument['@context']).toBe(decodedPayload['@context']);
@@ -156,7 +156,7 @@ describe('batchWrite with several operations', () => {
 
   it('should resolve the second did when the observer synced the transaction', async () => {
     const didDocument = await sidetree.resolve(didUniqueSuffix2, true);
-    const did = `did:elem:${didUniqueSuffix2}`;
+    const did = `${didMethodName}:${didUniqueSuffix2}`;
     expect(didDocument.id).toBe(did);
     const decodedPayload = decodeJson(createPayload2.payload);
     expect(didDocument['@context']).toBe(decodedPayload['@context']);
@@ -192,12 +192,12 @@ describe('batchWrite with more operations than maxOperationsPerBatch', () => {
   let batchFile;
 
   beforeAll(async () => {
-    createPayload1 = await getCreatePayloadForKeyIndex(mks, 0);
-    createPayload2 = await getCreatePayloadForKeyIndex(mks, 1);
-    createPayload3 = await getCreatePayloadForKeyIndex(mks, 3);
-    createPayload4 = await getCreatePayloadForKeyIndex(mks, 4);
-    createPayload5 = await getCreatePayloadForKeyIndex(mks, 5);
-    createPayload6 = await getCreatePayloadForKeyIndex(mks, 6);
+    createPayload1 = await getCreatePayloadForKeyIndex(sidetree, mks, 0);
+    createPayload2 = await getCreatePayloadForKeyIndex(sidetree, mks, 1);
+    createPayload3 = await getCreatePayloadForKeyIndex(sidetree, mks, 3);
+    createPayload4 = await getCreatePayloadForKeyIndex(sidetree, mks, 4);
+    createPayload5 = await getCreatePayloadForKeyIndex(sidetree, mks, 5);
+    createPayload6 = await getCreatePayloadForKeyIndex(sidetree, mks, 6);
     didUniqueSuffix1 = getDidUniqueSuffix(createPayload1);
     didUniqueSuffix2 = getDidUniqueSuffix(createPayload2);
     didUniqueSuffix3 = getDidUniqueSuffix(createPayload3);

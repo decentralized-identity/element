@@ -4,13 +4,11 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-
 import Typography from '@material-ui/core/Typography';
-
 import { ElementDIDDocument } from '../index';
-
 import { Loading } from '../Loading/Loading';
 import { SidetreeOperation } from '../SidetreeOperation';
+import config from '../../config';
 
 const styles = theme => ({
   progress: {
@@ -61,7 +59,7 @@ class DIDResolver extends Component {
           <TextField
             label="Element Resolver"
             value={currentDID}
-            placeholder={'Enter a DID (did:elem:...)'}
+            placeholder={`Enter a DID (${config.DID_METHOD_NAME}:...)`}
             fullWidth
             onChange={event => {
               this.setState({

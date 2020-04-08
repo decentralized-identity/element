@@ -3,6 +3,7 @@ const MerkleTools = require('merkle-tools');
 jest.setTimeout(20 * 1000);
 
 const {
+  didMethodName,
   getTestSideTree,
   getLastOperation,
   getActorByIndex,
@@ -28,7 +29,7 @@ afterAll(async () => {
 describe('LatePublishAttack', () => {
   beforeAll(async () => {
     sidetree = await getTestSideTree();
-    await generateActors(1);
+    await generateActors(sidetree, 1);
     actor = await getActorByIndex(0);
   });
 
@@ -93,7 +94,7 @@ describe('LatePublishAttack', () => {
           action: 'add-public-keys',
           publicKeys: [
             {
-              id: `did:elem:${actor.didUniqueSuffix}#newKey`,
+              id: `${didMethodName}:${actor.didUniqueSuffix}#newKey`,
               usage: 'signing',
               type: 'Secp256k1VerificationKey2018',
               publicKeyHex: newKey.publicKey,
@@ -102,13 +103,13 @@ describe('LatePublishAttack', () => {
         },
         {
           action: 'remove-public-keys',
-          publicKeys: [`did:elem:${actor.didUniqueSuffix}#primary`],
+          publicKeys: [`${didMethodName}:${actor.didUniqueSuffix}#primary`],
         },
       ],
     };
     const header = {
       operation: 'update',
-      kid: `did:elem:${actor.didUniqueSuffix}#primary`,
+      kid: `${didMethodName}:${actor.didUniqueSuffix}#primary`,
       alg: 'ES256K',
     };
     const operation = sidetree.op.makeSignedOperation(

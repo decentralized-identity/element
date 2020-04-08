@@ -1,6 +1,7 @@
 jest.setTimeout(20 * 1000);
 
 const {
+  didMethodName,
   getTestSideTree,
   generateActors,
   getActorByIndex,
@@ -14,7 +15,7 @@ const wrongBatchFileHash = 'QmTJGHccriUtq3qf3bvAQUcDUHnBbHNJG2x2FYwYUecN43';
 beforeAll(async () => {
   sidetree = getTestSideTree();
   await sidetree.db.deleteDB();
-  await generateActors(1);
+  await generateActors(sidetree, 1);
   actor = await getActorByIndex(0);
   txn = await sidetree.batchScheduler.writeNow(actor.createPayload);
 });
@@ -33,7 +34,7 @@ describe('Poisoned Batch File Attack', () => {
     );
     const didDoc = await sidetree.resolve(actor.didUniqueSuffix, true);
 
-    expect(didDoc.id).toBe(`did:elem:${actor.didUniqueSuffix}`);
+    expect(didDoc.id).toBe(`${didMethodName}:${actor.didUniqueSuffix}`);
     const transactions = await sidetree.db.readCollection('transaction');
     const lastCachedTransaction = transactions.pop();
     // Cached transaction is the same as poisoned transaction
@@ -47,7 +48,7 @@ describe('Poisoned Batch File Attack', () => {
 
   it('skips poison after it is discovered', async () => {
     const didDoc = await sidetree.resolve(actor.didUniqueSuffix, true);
-    expect(didDoc.id).toBe(`did:elem:${actor.didUniqueSuffix}`);
+    expect(didDoc.id).toBe(`${didMethodName}:${actor.didUniqueSuffix}`);
     const record = await sidetree.db.read(wrongBatchFileHash);
     // FIXME
     // expect(record.consideredUnresolvableUntil).toBeDefined();

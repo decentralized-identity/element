@@ -1,7 +1,13 @@
 import { withHandlers } from 'recompose';
-
-import element from '@transmute/element-lib';
+import { Sidetree } from '@transmute/element-lib';
 import DIDWallet from '@transmute/did-wallet';
+import config from '../../config';
+
+const sidetree = new Sidetree({
+  parameters: {
+    didMethodName: 'did:elem:ropsten',
+  },
+});
 
 export default withHandlers({
   doImportKeystore: ({ setKeystoreProp }) => async data => {
@@ -10,7 +16,7 @@ export default withHandlers({
     });
   },
   doCreateWalletKeystore: ({ setKeystoreProp }) => async () => {
-    const wall = await element.op.getNewWallet('did:elem');
+    const wall = await sidetree.op.getNewWallet(`${config.DID_METHOD_NAME}`);
     setKeystoreProp({
       keystore: {
         data: {

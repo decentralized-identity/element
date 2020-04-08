@@ -20,7 +20,7 @@ const blockchain = element.blockchain.ethereum.configure({
 const parameters = {
   maxOperationsPerBatch: 5,
   batchingIntervalInSeconds: 1,
-  didMethodName: 'did:elem',
+  didMethodName: 'did:elem:ropsten',
 };
 
 const sidetree = new element.Sidetree({

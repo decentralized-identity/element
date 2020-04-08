@@ -1,20 +1,13 @@
 /* eslint-disable max-len */
 const {
+  didMethodName,
+  didMethodNameWithoutNetworkIdentifier,
   getTestSideTree,
   changeKid,
   getDidDocumentForPayload,
   getCreatePayloadForKeyIndex,
   getLastOperation,
 } = require('../../__tests__/test-utils');
-const {
-  getDidDocumentModel,
-  makeSignedOperation,
-  getCreatePayload,
-  getUpdatePayloadForAddingAKey,
-  getUpdatePayloadForRemovingAKey,
-  getRecoverPayload,
-  getDeletePayload,
-} = require('../op');
 const { getDidUniqueSuffix, decodeJson } = require('../../func');
 const { MnemonicKeySystem } = require('../../../index');
 
@@ -23,10 +16,11 @@ const sidetree = getTestSideTree();
 jest.setTimeout(10 * 1000);
 
 describe('resolve', () => {
+  let didUniqueSuffix;
+
   describe('create', () => {
     const mks = new MnemonicKeySystem(MnemonicKeySystem.generateMnemonic());
     let createPayload;
-    let didUniqueSuffix;
     let primaryKey;
     let recoveryKey;
     let didDocumentModel;
@@ -34,11 +28,14 @@ describe('resolve', () => {
     beforeAll(() => {
       primaryKey = mks.getKeyForPurpose('primary', 0);
       recoveryKey = mks.getKeyForPurpose('recovery', 0);
-      didDocumentModel = getDidDocumentModel(
+      didDocumentModel = sidetree.op.getDidDocumentModel(
         primaryKey.publicKey,
         recoveryKey.publicKey
       );
-      createPayload = getCreatePayload(didDocumentModel, primaryKey);
+      createPayload = sidetree.op.getCreatePayload(
+        didDocumentModel,
+        primaryKey
+      );
       didUniqueSuffix = getDidUniqueSuffix(createPayload);
     });
 
@@ -53,7 +50,7 @@ describe('resolve', () => {
     });
 
     it('should not work if signature is not valid', async () => {
-      const invalidCreatePayload = getCreatePayload(
+      const invalidCreatePayload = sidetree.op.getCreatePayload(
         didDocumentModel,
         recoveryKey
       );
@@ -71,7 +68,7 @@ describe('resolve', () => {
         '@context': undefined,
       };
       const header = decodeJson(createPayload.protected);
-      const invalidCreatePayload = makeSignedOperation(
+      const invalidCreatePayload = sidetree.op.makeSignedOperation(
         header,
         invalidDidDocumentModel,
         primaryKey.privateKey
@@ -93,7 +90,7 @@ describe('resolve', () => {
 
     it('should be resolveable after sync', async () => {
       const didDocument = await sidetree.resolve(didUniqueSuffix, true);
-      const did = `did:elem:${didUniqueSuffix}`;
+      const did = `${didMethodName}:${didUniqueSuffix}`;
       expect(didDocument.id).toBe(did);
       const decodedPayload = decodeJson(createPayload.payload);
       expect(didDocument['@context']).toBe(decodedPayload['@context']);
@@ -121,8 +118,15 @@ describe('resolve', () => {
 
     it('should be resolveable again', async () => {
       const didDocument = await sidetree.resolve(didUniqueSuffix, true);
-      const did = `did:elem:${didUniqueSuffix}`;
+      const did = `${didMethodName}:${didUniqueSuffix}`;
       expect(didDocument.id).toBe(did);
+    });
+
+    it('should be resolveable without network identifier', async () => {
+      const did = `${didMethodNameWithoutNetworkIdentifier}:${didUniqueSuffix}`;
+      const didDocument = await sidetree.resolve(did, true);
+      expect(didDocument.id).toBe(`${didMethodName}:${didUniqueSuffix}`);
+      expect(didDocument.publicKey).toHaveLength(2);
     });
   });
 
@@ -130,18 +134,20 @@ describe('resolve', () => {
     const mks = new MnemonicKeySystem(MnemonicKeySystem.generateMnemonic());
     let primaryKey;
     let recoveryKey;
-    let didUniqueSuffix;
     let lastOperation;
     let createPayload;
 
     beforeAll(async () => {
       primaryKey = mks.getKeyForPurpose('primary', 0);
       recoveryKey = mks.getKeyForPurpose('recovery', 0);
-      const didDocumentModel = getDidDocumentModel(
+      const didDocumentModel = sidetree.op.getDidDocumentModel(
         primaryKey.publicKey,
         recoveryKey.publicKey
       );
-      createPayload = getCreatePayload(didDocumentModel, primaryKey);
+      createPayload = sidetree.op.getCreatePayload(
+        didDocumentModel,
+        primaryKey
+      );
       didUniqueSuffix = getDidUniqueSuffix(createPayload);
       await sidetree.batchScheduler.writeNow(createPayload);
       lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
@@ -150,12 +156,12 @@ describe('resolve', () => {
     it('should not work if specified kid does not exist in did document', async () => {
       const newKey = mks.getKeyForPurpose('primary', 1);
       const newPublicKey = {
-        id: `did:elem:${didUniqueSuffix}#newKey`,
+        id: `${didMethodName}:${didUniqueSuffix}#newKey`,
         usage: 'signing',
         type: 'Secp256k1VerificationKey2018',
         publicKeyHex: newKey.publicKey,
       };
-      const updatePayload = getUpdatePayloadForAddingAKey(
+      const updatePayload = sidetree.op.getUpdatePayloadForAddingAKey(
         lastOperation,
         newPublicKey,
         primaryKey.privateKey
@@ -172,12 +178,12 @@ describe('resolve', () => {
     it('should not work if signature is not valid', async () => {
       const newKey = mks.getKeyForPurpose('primary', 1);
       const newPublicKey = {
-        id: `did:elem:${didUniqueSuffix}#newKey`,
+        id: `${didMethodName}:${didUniqueSuffix}#newKey`,
         usage: 'signing',
         type: 'Secp256k1VerificationKey2018',
         publicKeyHex: newKey.publicKey,
       };
-      const invalidUpdatePayload = getUpdatePayloadForAddingAKey(
+      const invalidUpdatePayload = sidetree.op.getUpdatePayloadForAddingAKey(
         lastOperation,
         newPublicKey,
         recoveryKey.privateKey
@@ -193,12 +199,12 @@ describe('resolve', () => {
     it('should add a new key', async () => {
       const newKey = mks.getKeyForPurpose('primary', 1);
       const newPublicKey = {
-        id: `did:elem:${didUniqueSuffix}#newKey`,
+        id: `${didMethodName}:${didUniqueSuffix}#newKey`,
         usage: 'signing',
         type: 'Secp256k1VerificationKey2018',
         publicKeyHex: newKey.publicKey,
       };
-      const payload = getUpdatePayloadForAddingAKey(
+      const payload = sidetree.op.getUpdatePayloadForAddingAKey(
         lastOperation,
         newPublicKey,
         primaryKey.privateKey
@@ -212,9 +218,9 @@ describe('resolve', () => {
     });
 
     it('should remove a key', async () => {
-      const payload = getUpdatePayloadForRemovingAKey(
+      const payload = sidetree.op.getUpdatePayloadForRemovingAKey(
         lastOperation,
-        `did:elem:${didUniqueSuffix}#newKey`,
+        `${didMethodName}:${didUniqueSuffix}#newKey`,
         primaryKey.privateKey
       );
       await sidetree.batchScheduler.writeNow(payload);
@@ -236,13 +242,13 @@ describe('resolve', () => {
             action: 'add-public-keys',
             publicKeys: [
               {
-                id: `did:elem:${didUniqueSuffix}#newKey2`,
+                id: `${didMethodName}:${didUniqueSuffix}#newKey2`,
                 usage: 'signing',
                 type: 'Secp256k1VerificationKey2018',
                 publicKeyHex: newKey2.publicKey,
               },
               {
-                id: `did:elem:${didUniqueSuffix}#newKey3`,
+                id: `${didMethodName}:${didUniqueSuffix}#newKey3`,
                 usage: 'signing',
                 type: 'Secp256k1VerificationKey2018',
                 publicKeyHex: newKey3.publicKey,
@@ -251,16 +257,16 @@ describe('resolve', () => {
           },
           {
             action: 'remove-public-keys',
-            publicKeys: [`did:elem:${didUniqueSuffix}#primary`],
+            publicKeys: [`${didMethodName}:${didUniqueSuffix}#primary`],
           },
         ],
       };
       const header = {
         operation: 'update',
-        kid: `did:elem:${didUniqueSuffix}#primary`,
+        kid: `${didMethodName}:${didUniqueSuffix}#primary`,
         alg: 'ES256K',
       };
-      const operation = makeSignedOperation(
+      const operation = sidetree.op.makeSignedOperation(
         header,
         payload,
         primaryKey.privateKey
@@ -275,9 +281,9 @@ describe('resolve', () => {
     });
 
     it('should not process a patch removing the recovery key', async () => {
-      const payload = getUpdatePayloadForRemovingAKey(
+      const payload = sidetree.op.getUpdatePayloadForRemovingAKey(
         lastOperation,
-        `did:elem:${didUniqueSuffix}#recovery`,
+        `${didMethodName}:${didUniqueSuffix}#recovery`,
         primaryKey.privateKey
       );
       await sidetree.batchScheduler.writeNow(payload);
@@ -287,7 +293,7 @@ describe('resolve', () => {
     });
 
     it('should do nothing if removing a key that does not exist', async () => {
-      const payload = getUpdatePayloadForRemovingAKey(
+      const payload = sidetree.op.getUpdatePayloadForRemovingAKey(
         lastOperation,
         '#fakekid',
         primaryKey.privateKey
@@ -305,6 +311,13 @@ describe('resolve', () => {
       expect(didDocument.publicKey).toHaveLength(3);
       expect(didDocument.publicKey[0].publicKeyHex).toBe(recoveryKey.publicKey);
     });
+
+    it('should be resolveable without network identifier', async () => {
+      const did = `${didMethodNameWithoutNetworkIdentifier}:${didUniqueSuffix}`;
+      const didDocument = await sidetree.resolve(did, true);
+      expect(didDocument.id).toBe(`${didMethodName}:${didUniqueSuffix}`);
+      expect(didDocument.publicKey).toHaveLength(3);
+    });
   });
 
   describe('recover', () => {
@@ -313,29 +326,31 @@ describe('resolve', () => {
     let recoveryKey;
     let primaryKey2;
     let recoveryKey2;
-    let didUniqueSuffix;
     let didDocumentModel2;
 
     beforeAll(async () => {
       primaryKey = mks.getKeyForPurpose('primary', 0);
       recoveryKey = mks.getKeyForPurpose('recovery', 0);
-      const didDocumentModel = getDidDocumentModel(
+      const didDocumentModel = sidetree.op.getDidDocumentModel(
         primaryKey.publicKey,
         recoveryKey.publicKey
       );
-      const createPayload = getCreatePayload(didDocumentModel, primaryKey);
+      const createPayload = sidetree.op.getCreatePayload(
+        didDocumentModel,
+        primaryKey
+      );
       await sidetree.batchScheduler.writeNow(createPayload);
       didUniqueSuffix = getDidUniqueSuffix(createPayload);
       primaryKey2 = mks.getKeyForPurpose('primary', 1);
       recoveryKey2 = mks.getKeyForPurpose('recovery', 1);
-      didDocumentModel2 = getDidDocumentModel(
+      didDocumentModel2 = sidetree.op.getDidDocumentModel(
         primaryKey2.publicKey,
         recoveryKey2.publicKey
       );
     });
 
     it('should not work if specified kid does not exist in did document', async () => {
-      const recoverPayload = getRecoverPayload(
+      const recoverPayload = sidetree.op.getRecoverPayload(
         didUniqueSuffix,
         didDocumentModel2,
         recoveryKey.privateKey
@@ -351,7 +366,7 @@ describe('resolve', () => {
     });
 
     it('should not work if signature is not valid', async () => {
-      const invalidRecoverPayload = getRecoverPayload(
+      const invalidRecoverPayload = sidetree.op.getRecoverPayload(
         didUniqueSuffix,
         didDocumentModel2,
         primaryKey.privateKey
@@ -376,10 +391,10 @@ describe('resolve', () => {
       };
       const header = {
         operation: 'recover',
-        kid: `did:elem:${didUniqueSuffix}#recovery`,
+        kid: `${didMethodName}:${didUniqueSuffix}#recovery`,
         alg: 'ES256K',
       };
-      const invalidRecoverPayload = makeSignedOperation(
+      const invalidRecoverPayload = sidetree.op.makeSignedOperation(
         header,
         payload,
         recoveryKey.privateKey
@@ -395,7 +410,7 @@ describe('resolve', () => {
 
     it('should not work if there is no corresponding create operation', async () => {
       const fakeDidUniqueSuffix = 'fakediduniquesuffix';
-      const invalidPayload = getRecoverPayload(
+      const invalidPayload = sidetree.op.getRecoverPayload(
         fakeDidUniqueSuffix,
         didDocumentModel2,
         recoveryKey.privateKey
@@ -406,7 +421,7 @@ describe('resolve', () => {
     });
 
     it('should replace the did document with the one provided in the payload', async () => {
-      const payload = getRecoverPayload(
+      const payload = sidetree.op.getRecoverPayload(
         didUniqueSuffix,
         didDocumentModel2,
         recoveryKey.privateKey
@@ -419,28 +434,37 @@ describe('resolve', () => {
       );
       expect(didDocument.id).toContain(didUniqueSuffix);
     });
+
+    it('should be resolveable without network identifier', async () => {
+      const did = `${didMethodNameWithoutNetworkIdentifier}:${didUniqueSuffix}`;
+      const didDocument = await sidetree.resolve(did, true);
+      expect(didDocument.id).toBe(`${didMethodName}:${didUniqueSuffix}`);
+      expect(didDocument.publicKey).toHaveLength(2);
+    });
   });
 
   describe('delete', () => {
     const mks = new MnemonicKeySystem(MnemonicKeySystem.generateMnemonic());
-    let didUniqueSuffix;
     let primaryKey;
     let recoveryKey;
 
     beforeAll(async () => {
       primaryKey = mks.getKeyForPurpose('primary', 0);
       recoveryKey = mks.getKeyForPurpose('recovery', 0);
-      const didDocumentModel = getDidDocumentModel(
+      const didDocumentModel = sidetree.op.getDidDocumentModel(
         primaryKey.publicKey,
         recoveryKey.publicKey
       );
-      const createPayload = getCreatePayload(didDocumentModel, primaryKey);
+      const createPayload = sidetree.op.getCreatePayload(
+        didDocumentModel,
+        primaryKey
+      );
       await sidetree.batchScheduler.writeNow(createPayload);
       didUniqueSuffix = getDidUniqueSuffix(createPayload);
     });
 
     it('should not work if specified kid does not exist in did document', async () => {
-      const deletePayload = getDeletePayload(
+      const deletePayload = sidetree.op.getDeletePayload(
         didUniqueSuffix,
         recoveryKey.privateKey
       );
@@ -454,7 +478,7 @@ describe('resolve', () => {
     });
 
     it('should not work if signature is not valid', async () => {
-      const invalidDeletePayload = getDeletePayload(
+      const invalidDeletePayload = sidetree.op.getDeletePayload(
         didUniqueSuffix,
         primaryKey.privateKey
       );
@@ -468,7 +492,7 @@ describe('resolve', () => {
 
     it('should not work if there is no corresponding create operation', async () => {
       const fakeDidUniqueSuffix = 'fakediduniquesuffix';
-      const invalidDeletePayload = getDeletePayload(
+      const invalidDeletePayload = sidetree.op.getDeletePayload(
         fakeDidUniqueSuffix,
         recoveryKey.privateKey
       );
@@ -478,7 +502,7 @@ describe('resolve', () => {
     });
 
     it('should delete a did document', async () => {
-      const deletePayload = getDeletePayload(
+      const deletePayload = sidetree.op.getDeletePayload(
         didUniqueSuffix,
         recoveryKey.privateKey
       );
@@ -488,12 +512,18 @@ describe('resolve', () => {
     });
 
     it('should return null if two delete operations are sent for the same did', async () => {
-      const secondDeletePayload = getDeletePayload(
+      const secondDeletePayload = sidetree.op.getDeletePayload(
         didUniqueSuffix,
         recoveryKey.privateKey
       );
       await sidetree.batchScheduler.writeNow(secondDeletePayload);
       const didDocument = await sidetree.resolve(didUniqueSuffix, true);
+      expect(didDocument).not.toBeDefined();
+    });
+
+    it('should be resolveable without network identifier', async () => {
+      const did = `${didMethodNameWithoutNetworkIdentifier}:${didUniqueSuffix}`;
+      const didDocument = await sidetree.resolve(did, true);
       expect(didDocument).not.toBeDefined();
     });
   });
@@ -512,15 +542,15 @@ describe('resolve just in time', () => {
     beforeAll(async () => {
       await sidetree.db.deleteDB();
       // Create a first transaction with two operations
-      createPayload1 = await getCreatePayloadForKeyIndex(mks, 0);
-      createPayload2 = await getCreatePayloadForKeyIndex(mks, 1);
+      createPayload1 = await getCreatePayloadForKeyIndex(sidetree, mks, 0);
+      createPayload2 = await getCreatePayloadForKeyIndex(sidetree, mks, 1);
       didUniqueSuffix1 = getDidUniqueSuffix(createPayload1);
       didUniqueSuffix2 = getDidUniqueSuffix(createPayload2);
       await sidetree.operationQueue.enqueue(didUniqueSuffix1, createPayload1);
       await sidetree.operationQueue.enqueue(didUniqueSuffix2, createPayload2);
       await sidetree.batchWrite();
       // Create a second transaction with one other operation
-      createPayload3 = await getCreatePayloadForKeyIndex(mks, 2);
+      createPayload3 = await getCreatePayloadForKeyIndex(sidetree, mks, 2);
       didUniqueSuffix3 = getDidUniqueSuffix(createPayload3);
       await sidetree.operationQueue.enqueue(didUniqueSuffix3, createPayload3);
       await sidetree.batchWrite();

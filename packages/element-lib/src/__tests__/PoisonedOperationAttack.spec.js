@@ -1,6 +1,7 @@
 jest.setTimeout(10 * 1000);
 
 const {
+  didMethodName,
   getTestSideTree,
   generateActors,
   getActorByIndex,
@@ -11,7 +12,7 @@ let actor;
 
 beforeAll(async () => {
   sidetree = getTestSideTree();
-  await generateActors(1);
+  await generateActors(sidetree, 1);
   actor = await getActorByIndex(0);
   await sidetree.batchScheduler.writeNow(actor.createPayload);
 });
@@ -45,7 +46,7 @@ describe('Poisoned Operation Attack', () => {
       poisonedTransaction.anchorFileHash
     );
     const didDoc = await sidetree.resolve(actor.didUniqueSuffix, true);
-    expect(didDoc.id).toBe(`did:elem:${actor.didUniqueSuffix}`);
+    expect(didDoc.id).toBe(`${didMethodName}:${actor.didUniqueSuffix}`);
     const badDidDoc = await sidetree.resolve(
       anchorFile.didUniqueSuffixes[0],
       true
