@@ -14,7 +14,7 @@ const syncTransaction = sidetree => async (
   transaction,
   onlyDidUniqueSuffix = null
 ) => {
-  sidetree.logger.info(`sync ${transaction.transactionNumber}`);
+  sidetree.logger.debug(`sync ${transaction.transactionNumber}`);
   try {
     isTransactionValid(transaction);
     const anchorFile = await readThenWriteToCache(
