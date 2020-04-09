@@ -377,7 +377,9 @@ const resolve = sidetree => async (did, justInTime = false) => {
       const { valid, newState } = await applyOperation(
         acc,
         operation.operation,
-        lastValidOperation
+        lastValidOperation,
+        sidetree.parameters.didMethodName,
+        sidetree.logger
       );
       if (valid) {
         lastValidOperation = operation;
