@@ -9,13 +9,12 @@ const {
   isBatchFileValid,
   isAnchorFileValid,
 } = require('../utils/validation');
-const logger = require('../../logger');
 
 const syncTransaction = sidetree => async (
   transaction,
   onlyDidUniqueSuffix = null
 ) => {
-  logger.info(`sync ${transaction.transactionNumber}`);
+  sidetree.logger.info(`sync ${transaction.transactionNumber}`);
   try {
     isTransactionValid(transaction);
     const anchorFile = await readThenWriteToCache(
@@ -79,7 +78,7 @@ const syncTransaction = sidetree => async (
       error,
       Object.getOwnPropertyNames(error)
     );
-    logger.warn(stringifiedError);
+    sidetree.logger.warn(stringifiedError);
     return sidetree.db.write(`transaction:${transaction.transactionNumber}`, {
       type: 'transaction',
       ...transaction,
