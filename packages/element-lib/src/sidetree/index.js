@@ -44,9 +44,14 @@ class Sidetree {
     this.getNodeInfo = getNodeInfo(this);
 
     // Logger
+    const { logLevel } = parameters;
+    const winstonLevels = Object.keys(winston.config.npm.levels);
+    if (logLevel && !winstonLevels.includes(logLevel)) {
+      throw new Error('invalid logLevel value');
+    }
     const logger = winston.createLogger({
       // By default, we have the most open log level
-      level: parameters.logLevel || 'info',
+      level: logLevel || 'info',
       transports: [new winston.transports.Console()],
     });
     this.logger = logger;
