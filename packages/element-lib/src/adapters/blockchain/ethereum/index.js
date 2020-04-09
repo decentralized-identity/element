@@ -18,6 +18,7 @@ class EthereumBlockchain {
         this.anchorContract.setProvider(this.web3.currentProvider);
       });
     }
+    this.logger = console;
   }
 
   async extendSidetreeTransactionWithTimestamp(txns) {

@@ -28,6 +28,7 @@ class IpfsStorage {
         protocol: parts[5],
       });
     }
+    this.logger = console;
   }
 
   close() {

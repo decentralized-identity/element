@@ -5,6 +5,7 @@ class StorageManager {
     this.db = db;
     this.storage = storage;
     this.options = options || { autoPersist: false, retryIntervalSeconds: 5 };
+    this.logger = console;
   }
 
   retryUntilDone() {
