@@ -1,3 +1,4 @@
+const winston = require('winston');
 const resolve = require('./resolve');
 const { sync, syncTransaction } = require('./sync');
 const {
@@ -41,6 +42,26 @@ class Sidetree {
     this.getTransactions = getTransactions(this);
     this.getTransactionSummary = getTransactionSummary(this);
     this.getNodeInfo = getNodeInfo(this);
+
+    // let transports;
+    // let level;
+
+    // if (process.env.NODE_ENV === 'test') {
+    //   // Disable logs in tests
+    //   level = 'error';
+    //   transports = ;
+    // } else {
+    //   level = 'info';
+    //   transports = [new winston.transports.Console()];
+    // }
+
+    const { logLevel } = parameters;
+    console.log({ logLevel });
+    const logger = winston.createLogger({
+      level: logLevel || 'info',
+      transports: [new winston.transports.Console()],
+    });
+    this.logger = logger;
   }
 
   async close() {
