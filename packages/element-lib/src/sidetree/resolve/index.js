@@ -321,6 +321,7 @@ const applyOperation = async (
   }
 };
 const resolve = sidetree => async (did, justInTime = false) => {
+  sidetree.logger.info(`resolving ${did}`);
   const didUniqueSuffix = did.split(':').pop();
   if (justInTime) {
     // If the justInTime flag is true then perform a partial sync to only sync
