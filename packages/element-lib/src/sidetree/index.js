@@ -55,8 +55,12 @@ class Sidetree {
       transports: [new winston.transports.Console()],
     });
     this.logger = logger;
-    this.blockchain.logger = logger;
-    this.storage.logger = logger;
+    if (this.blockchain) {
+      this.blockchain.logger = logger;
+    }
+    if (this.storage) {
+      this.storage.logger = logger;
+    }
   }
 
   async close() {
