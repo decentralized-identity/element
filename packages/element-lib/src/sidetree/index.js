@@ -51,7 +51,7 @@ class Sidetree {
     }
     const logger = winston.createLogger({
       // By default, we have the most open log level
-      level: logLevel || 'info',
+      level: logLevel || 'silly',
       transports: [new winston.transports.Console()],
     });
     this.logger = logger;
