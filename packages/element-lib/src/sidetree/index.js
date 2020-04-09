@@ -43,26 +43,15 @@ class Sidetree {
     this.getTransactionSummary = getTransactionSummary(this);
     this.getNodeInfo = getNodeInfo(this);
 
-    // let transports;
-    // let level;
-
-    // if (process.env.NODE_ENV === 'test') {
-    //   // Disable logs in tests
-    //   level = 'error';
-    //   transports = ;
-    // } else {
-    //   level = 'info';
-    //   transports = [new winston.transports.Console()];
-    // }
-
-    const { logLevel } = parameters;
-    console.log({ logLevel });
+    // Logger
     const logger = winston.createLogger({
-      level: logLevel || 'info',
+      // By default, we have the most open log level
+      level: parameters.logLevel || 'info',
       transports: [new winston.transports.Console()],
     });
     this.logger = logger;
     this.blockchain.logger = logger;
+    this.storage.logger = logger;
   }
 
   async close() {

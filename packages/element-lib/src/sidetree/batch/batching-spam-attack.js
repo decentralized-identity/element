@@ -48,6 +48,7 @@ const parameters = {
   maxOperationsPerBatch: 10000,
   batchingIntervalInSeconds: 10,
   didMethodName: 'did:elem:ropsten',
+  logLevel: 'info',
 };
 
 const sidetree = new element.Sidetree({
