@@ -1,4 +1,3 @@
-const winston = require('winston');
 const resolve = require('./resolve');
 const { sync, syncTransaction } = require('./sync');
 const {
@@ -11,6 +10,7 @@ const BatchScheduler = require('./batch/BatchScheduler');
 const batchWrite = require('./batch/batchWrite');
 const op = require('./op');
 const func = require('../func');
+const initLogger = require('./logger');
 
 class Sidetree {
   constructor({ db, blockchain, storage, parameters } = {}) {
@@ -42,25 +42,8 @@ class Sidetree {
     this.getTransactions = getTransactions(this);
     this.getTransactionSummary = getTransactionSummary(this);
     this.getNodeInfo = getNodeInfo(this);
-
     // Logger
-    const { logLevel } = parameters;
-    const winstonLevels = Object.keys(winston.config.npm.levels);
-    if (logLevel && !winstonLevels.includes(logLevel)) {
-      throw new Error('invalid logLevel value');
-    }
-    const logger = winston.createLogger({
-      // By default, we have the most open log level
-      level: logLevel || 'silly',
-      transports: [new winston.transports.Console()],
-    });
-    this.logger = logger;
-    if (this.blockchain) {
-      this.blockchain.logger = logger;
-    }
-    if (this.storage) {
-      this.storage.logger = logger;
-    }
+    initLogger(this);
   }
 
   async close() {
