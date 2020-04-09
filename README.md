@@ -91,6 +91,12 @@ In order to use element-lib in node or in the browser, you will need to initaliz
 
 - A `blockchain` interface: An interface for the decentralized ledger to be used for anchoring Sidetree operations. Element may only be used with the [Ethereum interface](./packages/element-lib/src/adapters/blockchain), however feel free to reuse this codebase to implement a did method that uses a different ledger.
 
+- A `parameter` object. Currently the supported parameters are:
+  - maxOperationsPerBatch: recommended value is 10000,
+  - batchingIntervalInSeconds: recommended value is 10,
+  - didMethodName: recommended value is `did:elem:ropsten` for Element testnet
+  - logLevel: one of [ error, warn, info, http, verbose, debug, silly ]. `error` would log all the logs, while `silly` would only capture the most unimportant ones
+
 See several examples for how to initialize the Sidetree class:
 - [For a local node used for testing purposes](./packages/element-lib/src/__tests__/test-utils.js) : uses RXDB for in memory cache, local IPFS node for the storage interface, and local Ethereum node for the blockchain interface
 - [For a production node running in nodeJS](./packages/element-api/src/services/sidetree.js): uses Firestore for the cache, IPFS Storage Manager for the storage interface, and Infura Ropsten for the blockchain interface
