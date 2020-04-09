@@ -1,5 +1,4 @@
 /* eslint-disable arrow-body-style */
-const logger = require('../../logger');
 const {
   verifyOperationSignature,
   toFullyQualifiedDidDocument,
@@ -288,7 +287,8 @@ const applyOperation = async (
   state,
   operation,
   lastValidOperation,
-  didMethodName
+  didMethodName,
+  logger
 ) => {
   const type = operation.decodedHeader.operation;
   let newState = state;
@@ -342,7 +342,8 @@ const resolve = sidetree => async (did, justInTime = false) => {
           acc,
           operation.operation,
           lastValidFullOperation,
-          sidetree.parameters.didMethodName
+          sidetree.parameters.didMethodName,
+          sidetree.logger
         );
         if (valid) {
           lastValidFullOperation = operation;
