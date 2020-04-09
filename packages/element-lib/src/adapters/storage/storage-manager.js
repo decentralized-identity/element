@@ -105,8 +105,9 @@ class StorageManager {
         return data.object;
       }
       this.logger.warn(
-        'Data returned from manager, but not persisted...',
-        data
+        `Data returned from manager, but not persisted... ${JSON.stringify(
+          data
+        )}`
       );
       return data.object;
     } catch (e) {
