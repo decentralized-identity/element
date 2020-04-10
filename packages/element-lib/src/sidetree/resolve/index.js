@@ -1,5 +1,4 @@
 /* eslint-disable arrow-body-style */
-const logger = require('../../logger');
 const {
   verifyOperationSignature,
   toFullyQualifiedDidDocument,
@@ -288,7 +287,8 @@ const applyOperation = async (
   state,
   operation,
   lastValidOperation,
-  didMethodName
+  didMethodName,
+  logger
 ) => {
   const type = operation.decodedHeader.operation;
   let newState = state;
@@ -321,6 +321,7 @@ const applyOperation = async (
   }
 };
 const resolve = sidetree => async (did, justInTime = false) => {
+  sidetree.logger.info(`resolving ${did}`);
   const didUniqueSuffix = did.split(':').pop();
   if (justInTime) {
     // If the justInTime flag is true then perform a partial sync to only sync
@@ -342,7 +343,8 @@ const resolve = sidetree => async (did, justInTime = false) => {
           acc,
           operation.operation,
           lastValidFullOperation,
-          sidetree.parameters.didMethodName
+          sidetree.parameters.didMethodName,
+          sidetree.logger
         );
         if (valid) {
           lastValidFullOperation = operation;
@@ -375,7 +377,9 @@ const resolve = sidetree => async (did, justInTime = false) => {
       const { valid, newState } = await applyOperation(
         acc,
         operation.operation,
-        lastValidOperation
+        lastValidOperation,
+        sidetree.parameters.didMethodName,
+        sidetree.logger
       );
       if (valid) {
         lastValidOperation = operation;

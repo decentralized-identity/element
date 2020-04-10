@@ -10,6 +10,7 @@ const BatchScheduler = require('./batch/BatchScheduler');
 const batchWrite = require('./batch/batchWrite');
 const op = require('./op');
 const func = require('../func');
+const initLogger = require('./logger');
 
 class Sidetree {
   constructor({ db, blockchain, storage, parameters } = {}) {
@@ -41,6 +42,8 @@ class Sidetree {
     this.getTransactions = getTransactions(this);
     this.getTransactionSummary = getTransactionSummary(this);
     this.getNodeInfo = getNodeInfo(this);
+    // Logger
+    initLogger(this);
   }
 
   async close() {

@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.1](https://github.com/decentralized-identity/element/compare/v0.7.0...v0.7.1) (2020-04-10)
+
+
+### Features
+
+* add logger to sidetree class ([ef0aa8c](https://github.com/decentralized-identity/element/commit/ef0aa8c28cb5f56bc65cc5e9d7cf5328cb09b709))
+* log which did is being resolved ([64af69f](https://github.com/decentralized-identity/element/commit/64af69f7f1ae74d04e31e5f79462b35bd4f0ea93))
+* throw error if log level is invalid ([3f50222](https://github.com/decentralized-identity/element/commit/3f50222d0e57011e5211aef31c3e97c99c66d20e))
+
+
+
+
+
 # [0.7.0](https://github.com/decentralized-identity/element/compare/v0.6.2...v0.7.0) (2020-04-07)
 
 

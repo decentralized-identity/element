@@ -3,7 +3,6 @@ const contract = require('@truffle/contract');
 const { base58EncodedMultihashToBytes32 } = require('../../../func');
 const anchorContractArtifact = require('../../../../SimpleSidetreeAnchor.json');
 const utils = require('./utils');
-const logger = require('../../../logger');
 
 class EthereumBlockchain {
   constructor(web3, contractAddress) {
@@ -19,6 +18,7 @@ class EthereumBlockchain {
         this.anchorContract.setProvider(this.web3.currentProvider);
       });
     }
+    this.logger = console;
   }
 
   async extendSidetreeTransactionWithTimestamp(txns) {
@@ -86,7 +86,7 @@ class EthereumBlockchain {
       );
       return utils.eventLogToSidetreeTransaction(receipt.logs[0]);
     } catch (e) {
-      logger.error(e);
+      this.logger.error(e.message);
       return null;
     }
   }

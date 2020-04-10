@@ -1,11 +1,11 @@
 const { objectToMultihash } = require('../../func');
-const logger = require('../../logger');
 
 class StorageManager {
   constructor(db, storage, options) {
     this.db = db;
     this.storage = storage;
     this.options = options || { autoPersist: false, retryIntervalSeconds: 5 };
+    this.logger = console;
   }
 
   retryUntilDone() {
@@ -105,7 +105,11 @@ class StorageManager {
       if (data.persisted) {
         return data.object;
       }
-      logger.warn('Data returned from manager, but not persisted...', data);
+      this.logger.warn(
+        `Data returned from manager, but not persisted... ${JSON.stringify(
+          data
+        )}`
+      );
       return data.object;
     } catch (e) {
       throw new Error('Could not read element:sidetree:cas-cachable');

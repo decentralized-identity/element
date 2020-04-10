@@ -1,5 +1,4 @@
 const { getDidUniqueSuffix } = require('../../func');
-const logger = require('../../logger');
 
 class BatchScheduler {
   constructor(sidetree) {
@@ -23,7 +22,7 @@ class BatchScheduler {
    * Mainly used for test purposes.
    */
   stopPeriodicBatchWriting() {
-    logger.info('Stopped periodic batch writing.');
+    this.sidetree.logger.info('Stopped periodic batch writing.');
     this.continuePeriodicBatchWriting = false;
   }
 
@@ -41,23 +40,23 @@ class BatchScheduler {
     )).length;
 
     try {
-      logger.info('Start batch writing...');
+      this.sidetree.logger.info('Start batch writing...');
       await this.sidetree.batchWrite();
     } catch (error) {
-      logger.error(
+      this.sidetree.logger.error(
         'Unexpected and unhandled error during batch writing, investigate and fix:'
       );
-      logger.error(error);
+      this.sidetree.logger.error(error);
     } finally {
       const end = Date.now();
-      logger.info(
+      this.sidetree.logger.info(
         `End batch writing of ${operationCount} operations. Duration: ${(end -
           start) /
           1000} ms.`
       );
 
       if (this.continuePeriodicBatchWriting) {
-        logger.info(
+        this.sidetree.logger.info(
           `Waiting for ${batchingIntervalInSeconds} seconds before writing another batch.`
         );
         setTimeout(
@@ -77,7 +76,7 @@ class BatchScheduler {
     try {
       await this.sidetree.operationQueue.enqueue(didUniqueSuffix, payload);
     } catch (e) {
-      logger.error(e);
+      this.sidetree.logger.error(e);
     }
     return this.sidetree.batchWrite();
   }

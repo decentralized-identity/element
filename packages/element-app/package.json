@@ -1,6 +1,6 @@
 {
   "name": "@transmute/element-app",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "private": true,
   "homepage": "https://element-did.com",
   "license": "Apache-2.0",
@@ -8,7 +8,7 @@
     "@material-ui/core": "^4.9.0",
     "@material-ui/icons": "^3.0.2",
     "@transmute/did-wallet": "0.0.0-6",
-    "@transmute/element-lib": "^0.7.0",
+    "@transmute/element-lib": "^0.7.1",
     "axios": "^0.18.0",
     "base64url": "^3.0.1",
     "classnames": "^2.2.6",
