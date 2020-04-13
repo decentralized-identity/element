@@ -4,7 +4,6 @@ const {
   getTestSideTree,
   getLastOperation,
 } = require('../../__tests__/test-utils');
-const { getDidUniqueSuffix } = require('../../func');
 const { MnemonicKeySystem } = require('../../../index');
 
 const sidetree = getTestSideTree();
@@ -43,7 +42,7 @@ describe('resolve', () => {
       recoveryKey.publicKey
     );
     createPayload = sidetree.op.getCreatePayload(didDocumentModel, primaryKey);
-    didUniqueSuffix = getDidUniqueSuffix(createPayload);
+    didUniqueSuffix = sidetree.func.getDidUniqueSuffix(createPayload);
     createPayload = await replaceKid(createPayload, primaryKey.privateKey);
     await sidetree.batchScheduler.writeNow(createPayload);
   };

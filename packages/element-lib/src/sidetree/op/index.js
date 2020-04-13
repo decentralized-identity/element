@@ -1,5 +1,6 @@
 const DIDWallet = require('@transmute/did-wallet');
 const ES256K = require('@transmute/es256k-jws-ts');
+const jsonpatch = require('fast-json-patch');
 
 const {
   encodeJson,
@@ -55,6 +56,31 @@ const op = sidetree => {
       alg: 'ES256K',
     };
     return makeSignedOperation(header, didDocumentModel, primaryKey.privateKey);
+  };
+
+  const getUpdatePayload = (
+    previousOperation,
+    oldDidDocument,
+    newDidDocument,
+    primaryPrivateKey
+  ) => {
+    const patches = jsonpatch.compare(oldDidDocument, newDidDocument);
+    const payload = {
+      didUniqueSuffix: previousOperation.didUniqueSuffix,
+      previousOperationHash: previousOperation.operation.operationHash,
+      patches: [
+        {
+          action: 'ietf-json-patch',
+          patches,
+        },
+      ],
+    };
+    const header = {
+      operation: 'update',
+      kid: `${didMethodName}:${previousOperation.didUniqueSuffix}#primary`,
+      alg: 'ES256K',
+    };
+    return makeSignedOperation(header, payload, primaryPrivateKey);
   };
 
   const getUpdatePayloadForAddingAKey = (
@@ -303,6 +329,7 @@ const op = sidetree => {
     getDidDocumentModel,
     makeSignedOperation,
     getCreatePayload,
+    getUpdatePayload,
     getUpdatePayloadForAddingAKey,
     getUpdatePayloadForRemovingAKey,
     getRecoverPayload,
