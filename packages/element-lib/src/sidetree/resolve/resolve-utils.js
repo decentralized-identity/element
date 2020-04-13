@@ -1,4 +1,4 @@
-const { verifyOperationSignature } = require('../../func');
+const jsonpatch = require('fast-json-patch');
 const { isDidDocumentModelValid, isKeyValid } = require('../utils/validation');
 
 const getResolveUtils = sidetree => {
@@ -12,7 +12,7 @@ const getResolveUtils = sidetree => {
       throw new Error('signing key not found');
     }
 
-    const valid = await verifyOperationSignature(
+    const valid = await sidetree.func.verifyOperationSignature(
       operation.decodedOperation.protected,
       operation.decodedOperation.payload,
       operation.decodedOperation.signature,
@@ -85,6 +85,13 @@ const getResolveUtils = sidetree => {
   };
 
   const applyPatch = (didDocument, patch) => {
+    if (patch.action === 'ietf-json-patch') {
+      const res = jsonpatch.applyPatch({ ...didDocument }, patch.patches);
+      const { newDocument } = res;
+      newDocument.publicKey.forEach(isKeyValid);
+      const transformedDidDocument = transformDidDocument(newDocument);
+      return transformedDidDocument;
+    }
     if (patch.action === 'add-public-keys') {
       const publicKeySet = new Set(
         didDocument.publicKey.map(publicKey => publicKey.id)
