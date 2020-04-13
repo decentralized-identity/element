@@ -25,8 +25,7 @@ const resolve = sidetree => async (did, justInTime = false) => {
           acc,
           operation.operation,
           lastValidFullOperation,
-          sidetree.parameters.didMethodName,
-          sidetree.logger
+          sidetree.parameters.didMethodName
         );
         if (valid) {
           lastValidFullOperation = operation;
@@ -60,8 +59,7 @@ const resolve = sidetree => async (did, justInTime = false) => {
         acc,
         operation.operation,
         lastValidOperation,
-        sidetree.parameters.didMethodName,
-        sidetree.logger
+        sidetree.parameters.didMethodName
       );
       if (valid) {
         lastValidOperation = operation;

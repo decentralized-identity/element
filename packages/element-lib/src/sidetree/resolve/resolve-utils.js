@@ -274,7 +274,8 @@ const getResolveUtils = sidetree => {
     }
     await isSignatureValid(state, operation);
     const {
-      didUniqueSuffix, newDidDocument,
+      didUniqueSuffix,
+      newDidDocument,
     } = operation.decodedOperationPayload;
     // Validate did document model
     isDidDocumentModelValid(newDidDocument);
@@ -296,8 +297,7 @@ const getResolveUtils = sidetree => {
     state,
     operation,
     lastValidOperation,
-    didMethodName,
-    logger
+    didMethodName
   ) => {
     const type = operation.decodedHeader.operation;
     let newState = state;
@@ -321,11 +321,11 @@ const getResolveUtils = sidetree => {
           newState = await deletE(state, operation);
           break;
         default:
-          logger.warn('Operation type not handled', operation);
+          sidetree.logger.warn('Operation type not handled', operation);
       }
       return { valid: true, newState };
     } catch (e) {
-      logger.warn(e.message);
+      sidetree.logger.warn(e.message);
       return { valid: false, newState };
     }
   };
