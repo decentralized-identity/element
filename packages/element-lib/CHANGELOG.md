@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.2](https://github.com/decentralized-identity/element/compare/v0.7.1...v0.7.2) (2020-04-13)
+
+
+### Features
+
+* add support for infering patches ([abfc2c2](https://github.com/decentralized-identity/element/commit/abfc2c28e13df3a07fc46df9aaeb2d72de324317))
+* add support for json patch updates ([98a0bb9](https://github.com/decentralized-identity/element/commit/98a0bb9d8d3962853397a7edb8f039d164d3f7d2))
+
+
+### Reverts
+
+* Revert "chore: add logs when tests are not ran in CI" ([ff58af7](https://github.com/decentralized-identity/element/commit/ff58af78912a7d2a5a371b232623339add4214cb))
+
+
+
+
+
 ## [0.7.1](https://github.com/decentralized-identity/element/compare/v0.7.0...v0.7.1) (2020-04-10)
 
 
