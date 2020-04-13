@@ -30,7 +30,7 @@ const getTestSideTree = () => {
     maxOperationsPerBatch: 5,
     batchingIntervalInSeconds: 1,
     didMethodName,
-    logLevel: process.env.CI ? 'error' : 'silly',
+    logLevel: 'error',
   };
 
   const sidetree = new element.Sidetree({
