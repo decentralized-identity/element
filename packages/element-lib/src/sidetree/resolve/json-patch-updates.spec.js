@@ -17,6 +17,19 @@ describe('json patch updates', () => {
   let createPayload;
   let didUniqueSuffix;
 
+  const reset = async () => {
+    mks = new MnemonicKeySystem(MnemonicKeySystem.generateMnemonic());
+    primaryKey = mks.getKeyForPurpose('primary', 0);
+    recoveryKey = mks.getKeyForPurpose('recovery', 0);
+    didDocumentModel = sidetree.op.getDidDocumentModel(
+      primaryKey.publicKey,
+      recoveryKey.publicKey
+    );
+    createPayload = sidetree.op.getCreatePayload(didDocumentModel, primaryKey);
+    didUniqueSuffix = sidetree.func.getDidUniqueSuffix(createPayload);
+    await sidetree.batchScheduler.writeNow(createPayload);
+  };
+
   const makeUpdate = async patches => {
     const lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
     const payload = {
@@ -42,20 +55,8 @@ describe('json patch updates', () => {
     await sidetree.batchScheduler.writeNow(sidetreeOp);
   };
 
-  beforeEach(async () => {
-    mks = new MnemonicKeySystem(MnemonicKeySystem.generateMnemonic());
-    primaryKey = mks.getKeyForPurpose('primary', 0);
-    recoveryKey = mks.getKeyForPurpose('recovery', 0);
-    didDocumentModel = sidetree.op.getDidDocumentModel(
-      primaryKey.publicKey,
-      recoveryKey.publicKey
-    );
-    createPayload = sidetree.op.getCreatePayload(didDocumentModel, primaryKey);
-    didUniqueSuffix = sidetree.func.getDidUniqueSuffix(createPayload);
-    await sidetree.batchScheduler.writeNow(createPayload);
-  });
-
   it('should add a new key', async () => {
+    await reset();
     const newKey = mks.getKeyForPurpose('primary', 1);
     const patches = [
       {
@@ -82,13 +83,48 @@ describe('json patch updates', () => {
     const patches = [
       {
         op: 'remove',
-        path: '/publicKey/1',
+        path: '/publicKey/2',
       },
     ];
     await makeUpdate(patches);
     const did = `${didMethodName}:${didUniqueSuffix}`;
     const didDocument = await sidetree.resolve(did, true);
     expect(didDocument).toBeDefined();
-    expect(didDocument.publicKey).toHaveLength(1);
+    expect(didDocument.publicKey).toHaveLength(2);
+  });
+
+  it('should add a new service endpoint', async () => {
+    const patches = [
+      {
+        op: 'add',
+        path: '/service',
+        value: [
+          {
+            id: '#endpoint1',
+            type: 'UserServiceEndpoint',
+            serviceEndpoint: 'https://example.com',
+          },
+        ],
+      },
+    ];
+    await makeUpdate(patches);
+    const did = `${didMethodName}:${didUniqueSuffix}`;
+    const didDocument = await sidetree.resolve(did, true);
+    expect(didDocument).toBeDefined();
+    expect(didDocument.service).toHaveLength(1);
+  });
+
+  it('should remove a service endpoint', async () => {
+    const patches = [
+      {
+        op: 'remove',
+        path: '/service',
+      },
+    ];
+    await makeUpdate(patches);
+    const did = `${didMethodName}:${didUniqueSuffix}`;
+    const didDocument = await sidetree.resolve(did, true);
+    expect(didDocument).toBeDefined();
+    expect(didDocument.service).not.toBeDefined();
   });
 });
