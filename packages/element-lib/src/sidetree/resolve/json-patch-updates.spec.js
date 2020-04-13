@@ -150,4 +150,35 @@ describe('json patch updates', () => {
     expect(didDocument.publicKey[2].controller).toBe(didDocument.id);
     expect(didDocument.service).toHaveLength(1);
   });
+
+  it('should support infering patches', async () => {
+    const did = `${didMethodName}:${didUniqueSuffix}`;
+    let didDocument = await sidetree.resolve(did, true);
+    const newDidDocument = {
+      ...didDocument,
+      publicKey: [didDocument.publicKey[0]],
+      service: [
+        {
+          id: '#endpoint1',
+          type: 'UserServiceEndpoint',
+          serviceEndpoint: 'https://example.com',
+        },
+      ],
+    };
+    const lastOperation = await getLastOperation(sidetree, didUniqueSuffix);
+    const sidetreeOp = await sidetree.op.getUpdatePayload(
+      lastOperation,
+      didDocument,
+      newDidDocument,
+      primaryKey.privateKey
+    );
+    await sidetree.batchScheduler.writeNow(sidetreeOp);
+    didDocument = await sidetree.resolve(did, true);
+    expect(didDocument).toBeDefined();
+    expect(didDocument.publicKey).toHaveLength(1);
+    expect(didDocument.service).toHaveLength(1);
+    expect(didDocument).toEqual(
+      sidetree.func.toFullyQualifiedDidDocument(newDidDocument)
+    );
+  });
 });
