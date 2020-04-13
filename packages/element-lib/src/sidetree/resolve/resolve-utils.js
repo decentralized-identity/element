@@ -86,11 +86,16 @@ const getResolveUtils = sidetree => {
 
   const applyPatch = (didDocument, patch) => {
     if (patch.action === 'ietf-json-patch') {
-      const res = jsonpatch.applyPatch({ ...didDocument }, patch.patches);
-      const { newDocument } = res;
-      newDocument.publicKey.forEach(isKeyValid);
-      const transformedDidDocument = transformDidDocument(newDocument);
-      return transformedDidDocument;
+      try {
+        const res = jsonpatch.applyPatch({ ...didDocument }, patch.patches);
+        const { newDocument } = res;
+        newDocument.publicKey.forEach(isKeyValid);
+        const transformedDidDocument = transformDidDocument(newDocument);
+        return transformedDidDocument;
+      } catch (e) {
+        sidetree.logger.error(e.message);
+        return didDocument;
+      }
     }
     if (patch.action === 'add-public-keys') {
       const publicKeySet = new Set(
