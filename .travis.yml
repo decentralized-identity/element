@@ -16,5 +16,5 @@ script:
   - npm run lint
   - npm run test:contracts
   - npm run coverage
-  - npm run codecov
+  # - npm run codecov
   - npm run services:stop
