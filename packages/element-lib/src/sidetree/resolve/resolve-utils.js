@@ -62,12 +62,7 @@ const getResolveUtils = sidetree => {
     return transformed;
   };
 
-  const create = async (
-    state,
-    operation,
-    lastValidOperation,
-    didMethodName
-  ) => {
+  const create = async (state, operation, lastValidOperation) => {
     const previousOperationHash =
       lastValidOperation && lastValidOperation.operation.operationHash;
     if (previousOperationHash !== undefined || state) {
@@ -80,12 +75,10 @@ const getResolveUtils = sidetree => {
     // Validate did document model
     isDidDocumentModelValid(originalDidDocument);
     await isSignatureValid(originalDidDocument, operation);
+    const { didMethodName } = sidetree.parameters;
     const did = `${didMethodName}:${operation.operationHash}`;
     // Add id to did doc
-    const didDocument = {
-      ...operation.decodedOperationPayload,
-      id: did,
-    };
+    const didDocument = { ...operation.decodedOperationPayload, id: did };
     // Add controller property to each public key
     const transformedDidDocument = transformDidDocument(didDocument);
     return transformedDidDocument;
@@ -268,7 +261,7 @@ const getResolveUtils = sidetree => {
     return decodedOperationPayload.patches.reduce(applyPatch, state);
   };
 
-  const recover = async (state, operation, didMethodName) => {
+  const recover = async (state, operation) => {
     if (!state) {
       throw new Error('no create operation');
     }
@@ -279,6 +272,7 @@ const getResolveUtils = sidetree => {
     } = operation.decodedOperationPayload;
     // Validate did document model
     isDidDocumentModelValid(newDidDocument);
+    const { didMethodName } = sidetree.parameters;
     return {
       ...newDidDocument,
       id: `${didMethodName}:${didUniqueSuffix}`,
@@ -293,29 +287,19 @@ const getResolveUtils = sidetree => {
     return undefined;
   };
 
-  const applyOperation = async (
-    state,
-    operation,
-    lastValidOperation,
-    didMethodName
-  ) => {
+  const applyOperation = async (state, operation, lastValidOperation) => {
     const type = operation.decodedHeader.operation;
     let newState = state;
     try {
       switch (type) {
         case 'create':
-          newState = await create(
-            state,
-            operation,
-            lastValidOperation,
-            didMethodName
-          );
+          newState = await create(state, operation, lastValidOperation);
           break;
         case 'update':
           newState = await update(state, operation, lastValidOperation);
           break;
         case 'recover':
-          newState = await recover(state, operation, didMethodName);
+          newState = await recover(state, operation);
           break;
         case 'delete':
           newState = await deletE(state, operation);

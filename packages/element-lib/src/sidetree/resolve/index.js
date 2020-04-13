@@ -24,8 +24,7 @@ const resolve = sidetree => async (did, justInTime = false) => {
         const { valid, newState } = await applyOperation(
           acc,
           operation.operation,
-          lastValidFullOperation,
-          sidetree.parameters.didMethodName
+          lastValidFullOperation
         );
         if (valid) {
           lastValidFullOperation = operation;
@@ -58,8 +57,7 @@ const resolve = sidetree => async (did, justInTime = false) => {
       const { valid, newState } = await applyOperation(
         acc,
         operation.operation,
-        lastValidOperation,
-        sidetree.parameters.didMethodName
+        lastValidOperation
       );
       if (valid) {
         lastValidOperation = operation;
