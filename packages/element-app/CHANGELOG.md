@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.3](https://github.com/decentralized-identity/element/compare/v0.7.2...v0.7.3) (2020-04-15)
+
+
+### Features
+
+* default to ropsten network for looking dids in app ([dcfe8e8](https://github.com/decentralized-identity/element/commit/dcfe8e877c79af9708b39b5208cbd8d6391e076e))
+
+
+
+
+
 ## [0.7.2](https://github.com/decentralized-identity/element/compare/v0.7.1...v0.7.2) (2020-04-13)
 
 **Note:** Version bump only for package @transmute/element-app
