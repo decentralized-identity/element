@@ -86,7 +86,7 @@
     "eslint-plugin-security": "^1.4.0",
     "faker": "^4.1.0",
     "ganache-cli": "^6.8.2",
-    "go-ipfs": "^0.4.22",
+    "go-ipfs": "0.4.22",
     "jest": "^24.5.0",
     "jsonld": "^2.0.1",
     "jsonld-signatures": "^4.5.1",
