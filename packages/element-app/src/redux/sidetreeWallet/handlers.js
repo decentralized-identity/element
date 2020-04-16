@@ -102,4 +102,26 @@ export default withHandlers({
     );
     return payload;
   },
+  createEditDocumentRequest: ({ keystore }) => (
+    didUniqueSuffix,
+    operationHash,
+    oldDidDocument,
+    newDidDocument
+  ) => {
+    const lastOperation = {
+      didUniqueSuffix,
+      operation: { operationHash },
+    };
+    const keys = Object.values(keystore.keystore.data.keys);
+    const primaryKey = keys.find(k => {
+      return k.tags.indexOf('#primary') !== -1;
+    });
+    const payload = sidetree.op.getUpdatePayload(
+      lastOperation,
+      oldDidDocument,
+      newDidDocument,
+      primaryKey.privateKey
+    );
+    return payload;
+  },
 });

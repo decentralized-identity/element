@@ -194,6 +194,64 @@ export default withHandlers({
       set({ resolving: false });
     }, 1.5 * 60 * 1000);
   },
+  editDidDocument: ({
+    getMyDidUniqueSuffix,
+    createEditDocumentRequest,
+    doSetTmuiProp,
+    set,
+  }) => async (oldDidDocument, newDidDocument) => {
+    const didUniqueSuffix = await getMyDidUniqueSuffix();
+    let res = await axios.get(
+      `${API_BASE}/sidetree/operations/${didUniqueSuffix}`
+    );
+    const lastOperation = res.data.pop();
+    const { operationHash } = lastOperation.operation;
+    const updatePayload = await createEditDocumentRequest(
+      didUniqueSuffix,
+      operationHash,
+      oldDidDocument,
+      newDidDocument
+    );
+    axios.post(`${API_BASE}/sidetree/requests`, updatePayload);
+    doSetTmuiProp({
+      snackBarMessage: {
+        message: 'This will take a few minutes....',
+        variant: 'info',
+        open: true,
+        vertical: 'top',
+        horizontal: 'right',
+        autoHideDuration: 5000,
+      },
+    });
+
+    setTimeout(async () => {
+      doSetTmuiProp({
+        snackBarMessage: {
+          message: 'Resolving....',
+          variant: 'info',
+          open: true,
+          vertical: 'top',
+          horizontal: 'right',
+          autoHideDuration: 5000,
+        },
+      });
+      res = await axios.get(
+        `${API_BASE}/sidetree/${config.DID_METHOD_NAME}:${didUniqueSuffix}`
+      );
+      set({ myDidDocument: res.data });
+      doSetTmuiProp({
+        snackBarMessage: {
+          message: `Resolved ${res.data.id.substring(0, 24)}...`,
+          variant: 'success',
+          open: true,
+          vertical: 'top',
+          horizontal: 'right',
+          autoHideDuration: 5000,
+        },
+      });
+      set({ resolving: false });
+    }, 1.5 * 60 * 1000);
+  },
   getNodeInfo: ({ doSetTmuiProp, set }) => async () => {
     set({ resolving: true });
     try {
