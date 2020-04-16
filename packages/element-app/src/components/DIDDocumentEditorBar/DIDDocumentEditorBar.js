@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { AddKeyDialog } from './AddKeyDialog';
 import { RemoveKeyDialog } from './RemoveKeyDialog';
+import { EditDocumentDialog } from './EditDocumentDialog';
 
 const styles = () => ({
   title: {
@@ -29,6 +30,7 @@ class DIDDocumentEditorBar extends Component {
   state = {
     isAddKeyDialogOpen: false,
     isRemoveKeyDialogOpen: false,
+    isEditDocumentDialogOpen: false,
   };
 
   handleAddKey = item => {
@@ -36,6 +38,7 @@ class DIDDocumentEditorBar extends Component {
     this.setState({
       isAddKeyDialogOpen: false,
       isRemoveKeyDialogOpen: false,
+      isEditDocumentDialogOpen: false,
     });
   };
 
@@ -44,6 +47,16 @@ class DIDDocumentEditorBar extends Component {
     this.setState({
       isAddKeyDialogOpen: false,
       isRemoveKeyDialogOpen: false,
+      isEditDocumentDialogOpen: false,
+    });
+  };
+
+  handleEditDocument = item => {
+    this.props.handleEditDocument(this.props.didDocument, item);
+    this.setState({
+      isAddKeyDialogOpen: false,
+      isRemoveKeyDialogOpen: false,
+      isEditDocumentDialogOpen: false,
     });
   };
 
@@ -86,7 +99,11 @@ class DIDDocumentEditorBar extends Component {
   };
 
   render() {
-    const { isAddKeyDialogOpen, isRemoveKeyDialogOpen } = this.state;
+    const {
+      isAddKeyDialogOpen,
+      isRemoveKeyDialogOpen,
+      isEditDocumentDialogOpen,
+    } = this.state;
     return (
       <React.Fragment>
         <AppBar position="static" color="default">
@@ -116,6 +133,18 @@ class DIDDocumentEditorBar extends Component {
                   Remove Key
                 </Button>
               </Grid>
+              <Grid item>
+                <Button
+                  color="secondary"
+                  onClick={() => {
+                    this.setState({
+                      isEditDocumentDialogOpen: true,
+                    });
+                  }}
+                >
+                  Edit Document
+                </Button>
+              </Grid>
             </Grid>
           </Toolbar>
         </AppBar>
@@ -139,6 +168,16 @@ class DIDDocumentEditorBar extends Component {
           }}
           onSubmit={this.handleRemoveKey}
         />
+        <EditDocumentDialog
+          open={isEditDocumentDialogOpen}
+          didDocument={this.props.didDocument || {}}
+          onClose={() => {
+            this.setState({
+              isEditDocumentDialogOpen: false,
+            });
+          }}
+          onSubmit={this.handleEditDocument}
+        />
       </React.Fragment>
     );
   }
@@ -150,6 +189,7 @@ DIDDocumentEditorBar.propTypes = {
   keys: PropTypes.object.isRequired,
   handleAddKey: PropTypes.func.isRequired,
   handleRemoveKey: PropTypes.func.isRequired,
+  handleEditDocument: PropTypes.func.isRequired,
 };
 
 const MaterialUIDIDDocument = withStyles(styles)(DIDDocumentEditorBar);
