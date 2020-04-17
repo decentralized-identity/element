@@ -40,7 +40,13 @@ class DIDResolver extends Component {
 
     const showProgress = currentDID && store.resolving;
     // eslint-disable-next-line security/detect-object-injection
-    const didDocument = store.dids[currentDID];
+    let didDocument = store.dids[currentDID];
+    const hasNoTestnetIdentifier = /^did:elem:[^:]*$/.test(currentDID);
+    if (hasNoTestnetIdentifier) {
+      const didUniqueSuffix = currentDID.split(':').pop();
+      // If no testnet identifier is specified, default to ropsten
+      didDocument = store.dids[`did:elem:ropsten:${didUniqueSuffix}`];
+    }
 
     const { sidetreeOperations } = store;
 

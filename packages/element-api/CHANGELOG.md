@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.3](https://github.com/decentralized-identity/element/compare/v0.7.2...v0.7.3) (2020-04-15)
+
+
+### Reverts
+
+* Revert "chore: run lerna clean bootstrap" ([23f5f8e](https://github.com/decentralized-identity/element/commit/23f5f8e5deec0611cc33d82ab455c19856712c54))
+
+
+
+
+
 ## [0.7.2](https://github.com/decentralized-identity/element/compare/v0.7.1...v0.7.2) (2020-04-13)
 
 **Note:** Version bump only for package @transmute/element-api
