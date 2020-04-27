@@ -32,9 +32,9 @@ export class DIDProfilePage extends Component {
       nodeStore,
       keystore,
       createDID,
-
       addKeyToDIDDocument,
       removeKeyFromDIDDocument,
+      editDidDocument,
     } = this.props;
     const {
       myDidDocument,
@@ -70,6 +70,7 @@ export class DIDProfilePage extends Component {
                     keys={this.props.keystore.keystore.data.keys}
                     handleAddKey={addKeyToDIDDocument}
                     handleRemoveKey={removeKeyFromDIDDocument}
+                    handleEditDocument={editDidDocument}
                   />
                 }
                 onCopyToClipboard={() => {
@@ -156,6 +157,7 @@ DIDProfilePage.propTypes = {
   doSetTmuiProp: PropTypes.func.isRequired,
   addKeyToDIDDocument: PropTypes.func.isRequired,
   removeKeyFromDIDDocument: PropTypes.func.isRequired,
+  editDidDocument: PropTypes.func.isRequired,
   history: PropTypes.any.isRequired,
 };
 
