@@ -9,6 +9,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import AceEditor from 'react-ace';
 import 'brace/mode/java';
 import 'brace/theme/github';
+import 'brace/ext/language_tools';
 
 export class EditDocumentDialog extends React.Component {
   state = {
