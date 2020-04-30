@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
@@ -7,9 +6,12 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import AceEditor from 'react-ace';
-import 'brace/mode/java';
-import 'brace/theme/github';
-import 'brace/ext/language_tools';
+
+import 'ace-builds/webpack-resolver';
+import 'ace-builds/src-min-noconflict/ext-language_tools';
+import 'ace-builds/src-noconflict/ace';
+import 'ace-builds/src-noconflict/mode-json';
+import 'ace-builds/src-noconflict/theme-github';
 
 export class EditDocumentDialog extends React.Component {
   state = {

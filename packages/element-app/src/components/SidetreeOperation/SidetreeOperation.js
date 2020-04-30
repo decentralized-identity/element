@@ -4,14 +4,13 @@ import { withStyles } from '@material-ui/core/styles';
 
 import moment from 'moment';
 
-// eslint-disable-next-line
-import brace from 'brace';
 import AceEditor from 'react-ace';
 
-// eslint-disable-next-line
-import 'brace/mode/json';
-// eslint-disable-next-line
-import 'brace/theme/mono_industrial';
+import 'ace-builds/webpack-resolver';
+import 'ace-builds/src-min-noconflict/ext-language_tools';
+import 'ace-builds/src-noconflict/ace';
+import 'ace-builds/src-noconflict/mode-json';
+import 'ace-builds/src-noconflict/theme-mono_industrial';
 
 import Grid from '@material-ui/core/Grid/Grid';
 import Typography from '@material-ui/core/Typography/Typography';
