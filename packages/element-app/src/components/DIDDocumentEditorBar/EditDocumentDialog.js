@@ -43,6 +43,9 @@ export class EditDocumentDialog extends React.Component {
         <DialogTitle id="form-dialog-title">Edit DID Document</DialogTitle>
         <DialogContent style={{ minHeight: '200px' }}>
           <AceEditor
+            editorProps={{
+              $blockScrolling: Infinity,
+            }}
             mode="json"
             theme="github"
             style={{ width: '100%' }}
