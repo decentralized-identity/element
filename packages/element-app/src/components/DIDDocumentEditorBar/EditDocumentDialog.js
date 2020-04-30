@@ -45,13 +45,11 @@ export class EditDocumentDialog extends React.Component {
         <DialogTitle id="form-dialog-title">Edit DID Document</DialogTitle>
         <DialogContent style={{ minHeight: '200px' }}>
           <AceEditor
-            editorProps={{
-              $blockScrolling: Infinity,
-            }}
+            name="edit_document_dialog"
+            editorProps={{ $blockScrolling: true }}
             mode="json"
             theme="github"
             style={{ width: '100%' }}
-            onLoad={() => {}}
             onChange={this.onChange}
             fontSize={12}
             showPrintMargin={true}
@@ -59,13 +57,11 @@ export class EditDocumentDialog extends React.Component {
             highlightActiveLine={true}
             defaultValue={JSON.stringify(didDocument, null, 2)}
             value={JSON.stringify(this.state.newDidDocument, null, 2)}
-            setOptions={{
-              enableBasicAutocompletion: true,
-              enableLiveAutocompletion: true,
-              enableSnippets: true,
-              showLineNumbers: true,
-              tabSize: 2,
-            }}
+            enableBasicAutocompletion={true}
+            enableLiveAutocompletion={true}
+            enableSnippets={true}
+            showLineNumbers={true}
+            tabSize={2}
           />
         </DialogContent>
 
