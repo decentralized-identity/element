@@ -1,14 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-// eslint-disable-next-line
-import brace from 'brace';
 import AceEditor from 'react-ace';
 
-// eslint-disable-next-line
-import 'brace/mode/json';
-// eslint-disable-next-line
-import 'brace/theme/github';
+import 'ace-builds/webpack-resolver';
+import 'ace-builds/src-min-noconflict/ext-language_tools';
+import 'ace-builds/src-noconflict/ace';
+import 'ace-builds/src-noconflict/mode-json';
+import 'ace-builds/src-noconflict/theme-github';
 
 class KeystoreEditor extends React.Component {
   render() {
