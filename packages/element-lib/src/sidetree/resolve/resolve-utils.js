@@ -23,45 +23,6 @@ const getResolveUtils = sidetree => {
     }
   };
 
-  const addControllerToPublicKey = (controller, publicKey) => {
-    if (typeof publicKey === 'string' || Array.isArray(publicKey)) {
-      return publicKey;
-    }
-    return {
-      ...publicKey,
-      controller: publicKey.controller || controller,
-    };
-  };
-
-  const transformDidDocument = didDocument => {
-    const transformProperties = [
-      'assertionMethod',
-      'authentication',
-      'capabilityDelegation',
-      'capabilityInvocation',
-      'publicKey',
-      'keyAgreement',
-    ];
-    const transformed = Object.entries(didDocument).reduce(
-      (acc, [property, value]) => {
-        if (transformProperties.includes(property)) {
-          return {
-            ...acc,
-            [property]: value.map(pk =>
-              addControllerToPublicKey(didDocument.id, pk)
-            ),
-          };
-        }
-        return {
-          ...acc,
-          [property]: value,
-        };
-      },
-      {}
-    );
-    return transformed;
-  };
-
   const create = async (state, operation, lastValidOperation) => {
     const previousOperationHash =
       lastValidOperation && lastValidOperation.operation.operationHash;
@@ -80,7 +41,9 @@ const getResolveUtils = sidetree => {
     // Add id to did doc
     const didDocument = { ...operation.decodedOperationPayload, id: did };
     // Add controller property to each public key
-    const transformedDidDocument = transformDidDocument(didDocument);
+    const transformedDidDocument = sidetree.func.transformDidDocument(
+      didDocument
+    );
     return transformedDidDocument;
   };
 
@@ -90,7 +53,9 @@ const getResolveUtils = sidetree => {
         const res = jsonpatch.applyPatch({ ...didDocument }, patch.patches);
         const { newDocument } = res;
         newDocument.publicKey.forEach(isKeyValid);
-        const transformedDidDocument = transformDidDocument(newDocument);
+        const transformedDidDocument = sidetree.func.transformDidDocument(
+          newDocument
+        );
         return transformedDidDocument;
       } catch (e) {
         sidetree.logger.error(e.message);
@@ -110,7 +75,7 @@ const getResolveUtils = sidetree => {
             publicKey: [
               ...currentState.publicKey,
 
-              addControllerToPublicKey(didDocument.id, publicKey),
+              sidetree.func.addControllerToPublicKey(didDocument.id, publicKey),
             ],
           };
         }

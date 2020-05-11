@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.4](https://github.com/decentralized-identity/element/compare/v0.7.3...v0.7.4) (2020-05-11)
+
+
+### Features
+
+* add editDidDocumentDialog ([922350d](https://github.com/decentralized-identity/element/commit/922350da5d3a90c7bf4ff8da13236b05a20e23d2))
+
+
+
+
+
 ## [0.7.3](https://github.com/decentralized-identity/element/compare/v0.7.2...v0.7.3) (2020-04-15)
 
 
