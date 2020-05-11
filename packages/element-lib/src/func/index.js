@@ -156,6 +156,45 @@ const getOrderedOperations = operations => {
   return orderedOperations;
 };
 
+const addControllerToPublicKey = (controller, publicKey) => {
+  if (typeof publicKey === 'string' || Array.isArray(publicKey)) {
+    return publicKey;
+  }
+  return {
+    ...publicKey,
+    controller: publicKey.controller || controller,
+  };
+};
+
+const transformDidDocument = didDocument => {
+  const transformProperties = [
+    'assertionMethod',
+    'authentication',
+    'capabilityDelegation',
+    'capabilityInvocation',
+    'publicKey',
+    'keyAgreement',
+  ];
+  const transformed = Object.entries(didDocument).reduce(
+    (acc, [property, value]) => {
+      if (transformProperties.includes(property)) {
+        return {
+          ...acc,
+          [property]: value.map(pk =>
+            addControllerToPublicKey(didDocument.id, pk)
+          ),
+        };
+      }
+      return {
+        ...acc,
+        [property]: value,
+      };
+    },
+    {}
+  );
+  return transformed;
+};
+
 module.exports = {
   executeSequentially,
   encodeJson,
@@ -171,4 +210,6 @@ module.exports = {
   objectToMultihash,
   toFullyQualifiedDidDocument,
   getOrderedOperations,
+  addControllerToPublicKey,
+  transformDidDocument,
 };
