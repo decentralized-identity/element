@@ -1,6 +1,6 @@
 {
   "name": "@transmute/element-lib",
-  "version": "0.7.3",
+  "version": "0.7.4",
   "description": "Experimental Sidetree Protocol based DID Method `elem` with Ethereum and IPFS",
   "main": "index.js",
   "repository": {
