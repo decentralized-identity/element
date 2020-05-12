@@ -31,6 +31,7 @@ const getTestSideTree = () => {
     batchingIntervalInSeconds: 1,
     didMethodName,
     logLevel: 'error',
+    mapSync: true,
   };
 
   const sidetree = new element.Sidetree({
