@@ -29,6 +29,7 @@ afterAll(async () => {
 describe('LatePublishAttack', () => {
   beforeAll(async () => {
     sidetree = await getTestSideTree();
+    sidetree.parameters.mapSync = false;
     await generateActors(sidetree, 1);
     actor = await getActorByIndex(0);
   });
