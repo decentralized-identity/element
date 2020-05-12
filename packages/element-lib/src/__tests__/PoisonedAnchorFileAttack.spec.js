@@ -11,6 +11,7 @@ let sidetree;
 let actor;
 
 beforeAll(async () => {
+  sidetree.parameters.mapSync = false;
   sidetree = getTestSideTree();
   await sidetree.db.deleteDB();
   await generateActors(sidetree, 1);
