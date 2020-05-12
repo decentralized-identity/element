@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.1](https://github.com/decentralized-identity/element/compare/v0.8.0...v0.8.1) (2020-05-12)
+
+
+### Bug Fixes
+
+* logging the startBlock and endblock during mapSync ([3136def](https://github.com/decentralized-identity/element/commit/3136def3dc74a2472573607d08d6a019d8702ba5))
+
+
+
+
+
 # [0.8.0](https://github.com/decentralized-identity/element/compare/v0.7.4...v0.8.0) (2020-05-12)
 
 
