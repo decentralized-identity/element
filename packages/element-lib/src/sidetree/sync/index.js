@@ -161,7 +161,7 @@ const mapSyncTransaction = sidetree => async transaction => {
       );
     }, anchorFile.didUniqueSuffixes);
   } catch (e) {
-    sidetree.logger.error(e);
+    sidetree.logger.error(e.message);
   }
 };
 
