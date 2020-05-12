@@ -1,3 +1,4 @@
+const { executeSequentially } = require('../../func');
 const { getResolveUtils } = require('./resolve-utils');
 
 const resolve = sidetree => async (did, justInTime = false) => {
@@ -5,10 +6,28 @@ const resolve = sidetree => async (did, justInTime = false) => {
 
   sidetree.logger.info(`resolving ${did}`);
   const didUniqueSuffix = did.split(':').pop();
+  const mapSync = Boolean(sidetree.parameters.mapSync);
   if (justInTime) {
-    // If the justInTime flag is true then perform a partial sync to only sync
-    // the batch files containing operations for that didUniqueSuffix
-    await sidetree.sync(didUniqueSuffix);
+    if (mapSync) {
+      await sidetree.mapSync();
+      const cached = await sidetree.db.readCollection(
+        `transactions:${didUniqueSuffix}`
+      );
+      const transactions = cached.map(c => c.transaction);
+      await executeSequentially(async t => {
+        const cachedTransaction = await sidetree.db.read(
+          `transaction:${t.transactionNumber}`
+        );
+        if (!cachedTransaction) {
+          return sidetree.syncTransaction(t);
+        }
+        return cachedTransaction;
+      }, transactions);
+    } else {
+      // If the justInTime flag is true then perform a partial sync to only sync
+      // the batch files containing operations for that didUniqueSuffix
+      await sidetree.sync(didUniqueSuffix);
+    }
   }
   const operations = await sidetree.db.readCollection(didUniqueSuffix);
   const orderedOperations = sidetree.func.getOrderedOperations(operations);

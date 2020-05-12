@@ -1,5 +1,10 @@
 const resolve = require('./resolve');
-const { sync, syncTransaction } = require('./sync');
+const {
+  sync,
+  syncTransaction,
+  mapSync,
+  mapSyncTransaction,
+} = require('./sync');
 const {
   getTransactions,
   getTransactionSummary,
@@ -29,9 +34,11 @@ class Sidetree {
     this.db = db;
     this.op = op(this);
     this.func = func;
-    // Observer
+    // Sync
     this.sync = sync(this);
     this.syncTransaction = syncTransaction(this);
+    this.mapSync = mapSync(this);
+    this.mapSyncTransaction = mapSyncTransaction(this);
     // Resolver
     this.resolve = resolve(this);
     // Batching
