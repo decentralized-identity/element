@@ -171,7 +171,7 @@ const mapSync = sidetree => async () => {
     (lastSyncedBlock && lastSyncedBlock.transactionTime) ||
       sidetree.blockchain.startBlock
   );
-  sidetree.logger.info('map sync starting at', startBlock);
+  sidetree.logger.info(`map sync starting at ${startBlock}`);
   const maxNumberOfBlocksPerSync =
     sidetree.parameters.maxNumberOfBlocksPerSync || 100;
   const blockchainHeight = await sidetree.blockchain.getBlockchainHeight();
@@ -187,7 +187,7 @@ const mapSync = sidetree => async () => {
   await sidetree.db.write('mapSyncLastBlock', {
     transactionTime: endBlock,
   });
-  sidetree.logger.info('map synced up to', endBlock);
+  sidetree.logger.info(`map synced up to ${endBlock}`);
 };
 
 module.exports = { syncTransaction, sync, mapSync, mapSyncTransaction };
