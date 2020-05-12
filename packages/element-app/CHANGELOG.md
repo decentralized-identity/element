@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/decentralized-identity/element/compare/v0.7.4...v0.8.0) (2020-05-12)
+
+**Note:** Version bump only for package @transmute/element-app
+
+
+
+
+
 ## [0.7.4](https://github.com/decentralized-identity/element/compare/v0.7.3...v0.7.4) (2020-05-11)
 
 
