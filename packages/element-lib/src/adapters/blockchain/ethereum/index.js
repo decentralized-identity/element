@@ -19,6 +19,7 @@ class EthereumBlockchain {
       });
     }
     this.logger = console;
+    this.startBlock = 0;
   }
 
   async extendSidetreeTransactionWithTimestamp(txns) {
@@ -89,6 +90,18 @@ class EthereumBlockchain {
       this.logger.error(e.message);
       return null;
     }
+  }
+
+  async getBlockchainHeight() {
+    const height = await new Promise((resolve, reject) => {
+      this.web3.eth.getBlockNumber((err, data) => {
+        if (err) {
+          return reject(err);
+        }
+        return resolve(data);
+      });
+    });
+    return height;
   }
 
   async _getInstance() {
