@@ -32,6 +32,7 @@ const getTestSideTree = () => {
     didMethodName,
     logLevel: 'error',
     mapSync: true,
+    maxNumberOfBlocksPerSync: 1000,
   };
 
   const sidetree = new element.Sidetree({
