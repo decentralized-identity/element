@@ -31,7 +31,7 @@ const getTestSideTree = () => {
     batchingIntervalInSeconds: 1,
     didMethodName,
     logLevel: 'error',
-    mapSync: true,
+    mapSync: false,
     maxNumberOfBlocksPerSync: 1000,
   };
 
