@@ -540,6 +540,7 @@ describe('resolve just in time', () => {
     let didUniqueSuffix3;
 
     beforeAll(async () => {
+      sidetree.parameters.mapSync = false;
       await sidetree.db.deleteDB();
       // Create a first transaction with two operations
       createPayload1 = await getCreatePayloadForKeyIndex(sidetree, mks, 0);
