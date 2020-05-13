@@ -46,7 +46,7 @@ class BatchScheduler {
       this.sidetree.logger.error(
         'Unexpected and unhandled error during batch writing, investigate and fix:'
       );
-      this.sidetree.logger.error(error);
+      this.sidetree.logger.error(error.message);
     } finally {
       const end = Date.now();
       this.sidetree.logger.info(

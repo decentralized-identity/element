@@ -12,6 +12,7 @@ let actor;
 
 beforeAll(async () => {
   sidetree = getTestSideTree();
+  sidetree.parameters.mapSync = false;
   await generateActors(sidetree, 1);
   actor = await getActorByIndex(0);
   await sidetree.batchScheduler.writeNow(actor.createPayload);

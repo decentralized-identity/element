@@ -142,4 +142,52 @@ const sync = sidetree => async (onlyDidUniqueSuffix = null) => {
   }
 };
 
-module.exports = { syncTransaction, sync };
+const mapSyncTransaction = sidetree => async transaction => {
+  try {
+    isTransactionValid(transaction);
+    const anchorFile = await readThenWriteToCache(
+      sidetree,
+      transaction.anchorFileHash
+    );
+    isAnchorFileValid(anchorFile);
+    const { transactionNumber } = transaction;
+    await executeSequentially(uniqueSuffix => {
+      return sidetree.db.write(
+        `transaction:${transactionNumber}:${uniqueSuffix}`,
+        {
+          type: `transactions:${uniqueSuffix}`,
+          transaction,
+        }
+      );
+    }, anchorFile.didUniqueSuffixes);
+  } catch (e) {
+    sidetree.logger.error(e.message);
+  }
+};
+
+const mapSync = sidetree => async () => {
+  const lastSyncedBlock = await sidetree.db.read('mapSyncLastBlock');
+  const startBlock = Number(
+    (lastSyncedBlock && lastSyncedBlock.transactionTime) ||
+      sidetree.blockchain.startBlock
+  );
+  sidetree.logger.info(`map sync starting at ${startBlock}`);
+  const maxNumberOfBlocksPerSync =
+    sidetree.parameters.maxNumberOfBlocksPerSync || 100;
+  const blockchainHeight = await sidetree.blockchain.getBlockchainHeight();
+  let endBlock = Number(startBlock) + maxNumberOfBlocksPerSync;
+  endBlock = Math.min(endBlock, blockchainHeight);
+  const transactions = await sidetree.blockchain.getTransactions(
+    startBlock,
+    endBlock,
+    { omitTimestamp: true }
+  );
+  sidetree.logger.info(`found ${transactions.length} transactions`);
+  await executeSequentially(t => sidetree.mapSyncTransaction(t), transactions);
+  await sidetree.db.write('mapSyncLastBlock', {
+    transactionTime: endBlock,
+  });
+  sidetree.logger.info(`map synced up to ${endBlock}`);
+};
+
+module.exports = { syncTransaction, sync, mapSync, mapSyncTransaction };

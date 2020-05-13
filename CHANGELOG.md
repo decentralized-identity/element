@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.1](https://github.com/decentralized-identity/element/compare/v0.8.0...v0.8.1) (2020-05-12)
+
+
+### Bug Fixes
+
+* logging the startBlock and endblock during mapSync ([3136def](https://github.com/decentralized-identity/element/commit/3136def3dc74a2472573607d08d6a019d8702ba5))
+
+
+
+
+
+# [0.8.0](https://github.com/decentralized-identity/element/compare/v0.7.4...v0.8.0) (2020-05-12)
+
+
+### Features
+
+* add startBlock and getBlockchainHeight to blockchain adapter ([ea6fdc7](https://github.com/decentralized-identity/element/commit/ea6fdc738b1a124907faaa8dabc8d66a36754e5c))
+* implement mapSync ([3a55f3f](https://github.com/decentralized-identity/element/commit/3a55f3ff16a68f70919bc3d0742cd85a7e13cd5b))
+
+
+
+
+
 ## [0.7.4](https://github.com/decentralized-identity/element/compare/v0.7.3...v0.7.4) (2020-05-11)
 
 
