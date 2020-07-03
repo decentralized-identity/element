@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.3](https://github.com/decentralized-identity/element/compare/v0.8.2...v0.8.3) (2020-07-03)
+
+
+### Features
+
+* upgrade to @truffle/hdwallet-provider@1.0.38 ([5d29fea](https://github.com/decentralized-identity/element/commit/5d29fea38eb2479d7a9c38a6a8c6404bca7dbf66))
+
+
+
+
+
+## [0.8.2](https://github.com/decentralized-identity/element/compare/v0.8.1...v0.8.2) (2020-07-02)
+
+
+### Features
+
+* upgrade to @truffle/hdwallet-provider@1.0.36 ([2eae85e](https://github.com/decentralized-identity/element/commit/2eae85ee0f7f946eb5fc5cd0366d2a2b52415097))
+
+
+
+
+
 ## [0.8.1](https://github.com/decentralized-identity/element/compare/v0.8.0...v0.8.1) (2020-05-12)
 
 
