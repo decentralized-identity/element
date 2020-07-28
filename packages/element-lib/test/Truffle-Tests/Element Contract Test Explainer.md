@@ -2,7 +2,7 @@
 
 Primary Modules:
 Ganache CLI v6.9.0 (ganache-core: 2.10.1)
-Truffle v5.1.33 (core: 5.1.33)
+Truffle v5.1.36 (core: 5.1.36)
 Solidity v0.5.16 (solc-js)
 Node v12.14.0
 Web3.js v1.2.1

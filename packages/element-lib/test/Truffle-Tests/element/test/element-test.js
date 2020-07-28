@@ -17,6 +17,54 @@ contract("Element Contract Test", async accounts => {
 
   let instance;
 
+  async function stopMining() {
+    return new Promise((resolve, reject) => {
+      web3.currentProvider.send({
+        jsonrpc: "2.0",
+        method: "miner_stop",
+        id: new Date().getTime()
+      }, (err, result) => {
+        if (err) { return reject(err) }
+        return resolve(result)
+      })
+    })
+  }
+  
+  async function startMining() {
+    return new Promise((resolve, reject) => {
+      web3.currentProvider.send({
+        jsonrpc: "2.0",
+        method: "miner_start",
+        params: [1],
+        id: new Date().getTime()
+      }, (err, result) => {
+        if (err) { return reject(err) }
+        return resolve(result)
+      })
+    })
+  }
+  
+  async function queueTransaction(from, to, gasLimit, data) {
+    return new Promise((resolve, reject) => {
+      web3.currentProvider.send({
+        jsonrpc: "2.0",
+        method: "eth_sendTransaction",
+        id: new Date().getTime(),
+        params: [
+          {
+            from: from,
+            to: to,
+            gas: gasLimit,
+            data: data
+          }
+        ]
+      }, (err, result) => {
+        if (err) { return reject(err) }
+        return resolve(result)
+      })
+    })
+  }
+
   before(async () => {
     instance = await Element.new();
     instance1 = await Test.new();
@@ -120,7 +168,7 @@ contract("Element Contract Test", async accounts => {
             await instance.registerStake(commitment_hash2,{from:doris, value:stake});
             //get current block number and stop mining
             let currentblocknumber = await web3.eth.getBlockNumber();
-            await helper.stopMining();
+            await stopMining();
             //submit Bob's 1st transaction and make sure it is not mined
             let encodedmethod = {
                 name: 'registerAnchorhash',
@@ -135,21 +183,21 @@ contract("Element Contract Test", async accounts => {
             };
             let paramValues = [commitment_hash, anchorhash];
             let dataEncoded = web3Abi.encodeFunctionCall(encodedmethod,paramValues);
-            let tx1 = await helper.queueTransaction(bob, instance.address, 190000, dataEncoded);
+            let tx1 = await queueTransaction(bob, instance.address, 190000, dataEncoded);
             let receipt1 = await web3.eth.getTransactionReceipt(tx1);
             assert.strictEqual(receipt1, null);
             //submit Doris' transaction and make sure it is not mined
             let paramValues1 = [commitment_hash2, anchorhash];
             let dataEncoded1 = web3Abi.encodeFunctionCall(encodedmethod,paramValues1);
-            let tx2 = await helper.queueTransaction(doris, instance.address, 190000, dataEncoded1);
+            let tx2 = await queueTransaction(doris, instance.address, 190000, dataEncoded1);
             let receipt2 = await web3.eth.getTransactionReceipt(tx2);
             assert.strictEqual(receipt2, null);
             //submit Bob's 2nd Transaction and make sure it is not mined
-            let tx3 = await helper.queueTransaction(bob, instance.address, 190000, dataEncoded);
+            let tx3 = await queueTransaction(bob, instance.address, 190000, dataEncoded);
             let receipt3 = await web3.eth.getTransactionReceipt(tx3);
             assert.strictEqual(receipt3, null);
             //start mining
-            await helper.startMining();
+            await startMining();
             //check that block properly advanced
                 let newblocknumber = await web3.eth.getBlockNumber();
                 assert.strictEqual(newblocknumber, currentblocknumber + 1);
