@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const bip39 = require('bip39');
 const hdkey = require('hdkey');
 const ethUtil = require('ethereumjs-util');
-const X25519KeyPair = require('x25519-key-pair');
+const { X25519KeyPair } = require('@transmute/did-key-x25519');
 
 const getCompressedPublicFromPrivate = privateKeyHex =>
   secp256k1.publicKeyCreate(Buffer.from(privateKeyHex, 'hex')).toString('hex');

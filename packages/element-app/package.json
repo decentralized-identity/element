@@ -84,6 +84,6 @@
     "eslint-plugin-security": "^1.4.0",
     "firebase-tools": "^7.16.0",
     "gh-pages": "^2.0.1",
-    "serve": "^11.2.0"
+    "serve": "^11.3.2"
   }
 }
