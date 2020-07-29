@@ -36,9 +36,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@transmute/did-key-x25519": "^0.2.1-unstable.3",
     "@transmute/did-wallet": "0.0.0-6",
     "@transmute/es256k-jws-ts": "0.0.4",
-    "@truffle/contract": "^4.0.39",
+    "@truffle/contract": "^4.2.14",
     "@truffle/hdwallet-provider": "1.0.38-next.0",
     "base64url": "^3.0.1",
     "bip39": "^2.5.0",
@@ -70,8 +71,7 @@
     "rxjs": "^6.5.2",
     "secp256k1": "^3.6.2",
     "web3": "^1.2.2",
-    "winston": "^3.2.1",
-    "x25519-key-pair": "digitalbazaar/x25519-key-pair#initial"
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "@transmute/eslint-config": "0.1.0",
@@ -91,7 +91,7 @@
     "jsonld": "^2.0.1",
     "jsonld-signatures": "^4.5.1",
     "jsonwebtoken": "^8.5.1",
-    "truffle": "^5.0.8"
+    "truffle": "^5.1.36"
   },
   "engines": {
     "node": ">=10.0.0"
