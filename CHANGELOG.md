@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.4](https://github.com/decentralized-identity/element/compare/v0.8.3...v0.8.4) (2020-07-29)
+
+
+### Features
+
+* add release process to readme ([848b8da](https://github.com/decentralized-identity/element/commit/848b8da17cc53f1d227e64779de41c604e8ecb38))
+
+
+
+
+
 ## [0.8.3](https://github.com/decentralized-identity/element/compare/v0.8.2...v0.8.3) (2020-07-03)
 
 
