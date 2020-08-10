@@ -5,7 +5,7 @@ Ganache CLI v6.9.0 (ganache-core: 2.10.1)
 Truffle v5.1.36 (core: 5.1.36)
 Solidity v0.5.16 (solc-js)
 Node v12.14.0
-Web3.js v1.2.1
+Web3.js v1.2.2
 Chai 4.2.0
 Truffle Assertions 0.9.2
 Ganache Time Traveler 1.0.14
@@ -14,11 +14,11 @@ To begin, clone the repo.
 
 Then start ganache from your node command line window in the element folder:
 ```
-$ ganache-cli
+$ npx ganache-cli
 ```
 From another Node command line editor:
 ```
-$ truffle console
+$ npx truffle console
 ```
 This connects Truffle to the Ganache client by connecting to the 'Development' network as defined in the config.js file
 
@@ -30,12 +30,12 @@ This deploys the Element contracts to the Ganache client.
 From a third node command line window, go to the element/test folder:
 
 ```
-$ truffle test
+$ npx truffle test
 ```
 This runs the 4 Truffle unit tests of the element contracts:
 1. Adds an operator to the registry, tests that 0 in bytes32 is an invalid hash and proves that an operator cannot be added twice
 2. Stakes an operator, tests that only a registered operator can stake, tests that the stake is large enough or that if stake is increased that the current amount is over current limit of 32 eth
-3. Tests withdrawl of stake from contract including attempting to withdraw too early
+3. Tests withdrawal of stake from contract including attempting to withdraw too early
 4. Tests submission of anchorhash, checks that only a non-withdrawing operator can submit a hash, checks slashing condition
 
 The Element contract testing suit consists of 5 contracts but only 3 will be actually used in production:
