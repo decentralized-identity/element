@@ -1,4 +1,9 @@
-# Element
+
+## See [sidetree.js](https://github.com/transmute-industries/sidetree.js)
+
+This repo is no longer maintained.
+
+### Element
 
 [![Build Status](https://travis-ci.org/decentralized-identity/element.svg?branch=master)](https://travis-ci.org/decentralized-identity/element) [![codecov](https://codecov.io/gh/decentralized-identity/element/branch/master/graph/badge.svg)](https://codecov.io/gh/decentralized-identity/element)
 
