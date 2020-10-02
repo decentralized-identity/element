@@ -17,7 +17,6 @@ This repo is no longer maintained.
 
 [![Element Testnet Demo](./BrowserDemo.png)](https://www.youtube.com/watch?v=KY_dt2tKQxw)
 
-
 See also [ion](https://github.com/decentralized-identity/ion), [sidetree](https://github.com/decentralized-identity/sidetree), [sidetree-ethereum](https://github.com/decentralized-identity/sidetree-ethereum).
 
 ## Useful resources
@@ -40,8 +39,8 @@ Element follows the [Mono Repo structure](https://github.com/lerna/lerna). Runni
 
 - [Element LIB](./packages/element-lib): Javascript SDK for using Element. Works with node 10, node 12 and in the browser
 - [Element APP](./packages/element-app): Progressive Web App to create a wallet, create a DID, add and remove keys, search through the Element Block explorer, etc... The PWA allows you to use two different types of Sidetree nodes:
-    - The light node (or browser node) which uses element-lib in the browser for Sidetree operations and interacts with Ethereum through [Metamask](https://metamask.io/) Make sure you have the Metamask browser extension installed if you want to use it the light node.
-    - The full node which uses element-api for Sidetree operations
+  - The light node (or browser node) which uses element-lib in the browser for Sidetree operations and interacts with Ethereum through [Metamask](https://metamask.io/) Make sure you have the Metamask browser extension installed if you want to use it the light node.
+  - The full node which uses element-api for Sidetree operations
 - [Element API](./packages/element-api): API powered by element-lib that exposes Sidetree operations with an HTTP interface. See [Swagger documentation](https://element-did.com/api/docs/) for more details.
 
 ## How to use element-lib
@@ -65,6 +64,7 @@ This will start 3 services:
 - [CouchDB](https://couchdb.apache.org/): A local CouchDB instance running on port 5984. CouchDB will be ran in the Docker container, so you will need Docker installed. If you don't have it and / or don't want to install it, it is fine. Just be aware that the CouchDB tests will fail
 
 Check that services are properly initalized with
+
 ```
 npm run services:healthcheck
 ```
@@ -86,13 +86,15 @@ npm run services:stop
 In order to use element-lib in node or in the browser, you will need to initalize the Sidetree class by providing three interfaces:
 
 - A `db` interface: this is where all the caching artifacts will be stored. While caching is not technically required for Element to work, CRUD operations will be prohibitively slow without it. To initialize, chose one db adapter (several options are available [here](./packages/element-lib/src/adapters/database)):
-    - [RXDB](https://github.com/pubkey/rxdb)
-    - [CouchDB](https://couchdb.apache.org/)
-    - [Firestore](https://firebase.google.com/docs/firestore/): A good option if you're going to use Element in a [Firebase Cloud Function](https://cloud.google.com/functions/), pretty slow otherwise. Also note that this technology is proprietary as opposed to the two above which are open source..
+
+  - [RXDB](https://github.com/pubkey/rxdb)
+  - [CouchDB](https://couchdb.apache.org/)
+  - [Firestore](https://firebase.google.com/docs/firestore/): A good option if you're going to use Element in a [Firebase Cloud Function](https://cloud.google.com/functions/), pretty slow otherwise. Also note that this technology is proprietary as opposed to the two above which are open source..
 
 - A `storage` interface: the Content Addressed Storage layer where Sidetree operation data will be stored. To initialize, chose one storage adapter (several options are available [here](./packages/element-lib/src/adapters/storage)):
-    - IPFS
-    - IPFS Storage Manager: A layer on top of IPFS that uses a cache and some retry logic when the call to IPFS fails: This one is recommended for production use as the IPFS link provided by Infura tend to fail intermittently
+
+  - IPFS
+  - IPFS Storage Manager: A layer on top of IPFS that uses a cache and some retry logic when the call to IPFS fails: This one is recommended for production use as the IPFS link provided by Infura tend to fail intermittently
 
 - A `blockchain` interface: An interface for the decentralized ledger to be used for anchoring Sidetree operations. Element may only be used with the [Ethereum interface](./packages/element-lib/src/adapters/blockchain), however feel free to reuse this codebase to implement a did method that uses a different ledger.
 
@@ -103,6 +105,7 @@ In order to use element-lib in node or in the browser, you will need to initaliz
   - logLevel: one of [ error, warn, info, http, verbose, debug, silly ]. `error` would log all the logs, while `silly` would only capture the most unimportant ones
 
 See several examples for how to initialize the Sidetree class:
+
 - [For a local node used for testing purposes](./packages/element-lib/src/__tests__/test-utils.js) : uses RXDB for in memory cache, local IPFS node for the storage interface, and local Ethereum node for the blockchain interface
 - [For a production node running in nodeJS](./packages/element-api/src/services/sidetree.js): uses Firestore for the cache, IPFS Storage Manager for the storage interface, and Infura Ropsten for the blockchain interface
 - [For a production node running in the browser](./packages/element-app/src/services/sidetree.js): uses RXDB for in browser cache, IPFS Storage Manager for the storage interface and Metamask for the blockchain interface
@@ -114,15 +117,15 @@ Once you have an instance of the Sidetree class with the suitable adapters, you 
 #### Create a DID
 
 ```js
-const { Sidetree, MnemonicKeySystem } = require('@transmute/element-lib');
+const { Sidetree, MnemonicKeySystem } = require("@transmute/element-lib");
 
 // Instantiate the Sidetree class
 const element = new Sidetree(/* See previous section for how to initialize the Sidetree class*/);
 
 // Generate a simple did document model
 const mks = new MnemonicKeySystem(MnemonicKeySystem.generateMnemonic());
-const primaryKey = await mks.getKeyForPurpose('primary', 0);
-const recoveryKey = await mks.getKeyForPurpose('recovery', 0);
+const primaryKey = await mks.getKeyForPurpose("primary", 0);
+const recoveryKey = await mks.getKeyForPurpose("recovery", 0);
 const didDocumentModel = element.op.getDidDocumentModel(
   primaryKey.publicKey,
   recoveryKey.publicKey
@@ -143,7 +146,13 @@ console.log(`${did} was successfully created`);
 
 ```js
 const didDocument = await element.resolve(didUniqueSuffix, true);
-console.log(`${did} was successfully resolved into ${JSON.stringify(didDocument, null, 2)}`);
+console.log(
+  `${did} was successfully resolved into ${JSON.stringify(
+    didDocument,
+    null,
+    2
+  )}`
+);
 ```
 
 #### Update a DID document
@@ -156,11 +165,11 @@ const operations = await element.db.readCollection(didUniqueSuffix);
 const lastOperation = operations.pop();
 
 // Generate update payload for adding a new key
-const newKey = await mks.getKeyForPurpose('primary', 1);
+const newKey = await mks.getKeyForPurpose("primary", 1);
 const newPublicKey = {
-  id: '#newKey',
-  usage: 'signing',
-  type: 'Secp256k1VerificationKey2018',
+  id: "#newKey",
+  usage: "signing",
+  type: "Secp256k1VerificationKey2018",
   publicKeyHex: newKey.publicKey,
 };
 const updatePayload = await element.op.getUpdatePayloadForAddingAKey(
@@ -172,7 +181,7 @@ const updatePayload = await element.op.getUpdatePayloadForAddingAKey(
 // Create the Sidetree transaction.
 const updateTransaction = await element.batchScheduler.writeNow(updatePayload);
 const newDidDocument = await element.resolve(didUniqueSuffix, true);
-console.log(`${JSON.stringify(newDidDocument, null, 2)} has a new publicKey`)
+console.log(`${JSON.stringify(newDidDocument, null, 2)} has a new publicKey`);
 ```
 
 #### Recover a did document
@@ -188,9 +197,11 @@ const recoveryPayload = await element.op.getRecoverPayload(
 );
 
 // Send Sidetree transaction
-const recoveryTransaction = await element.batchScheduler.writeNow(recoveryPayload);
+const recoveryTransaction = await element.batchScheduler.writeNow(
+  recoveryPayload
+);
 const recoveredDidDocument = await element.resolve(didUniqueSuffix, true);
-console.log(`${JSON.stringify(recoveredDidDocument, null, 2)} was recovered`)
+console.log(`${JSON.stringify(recoveredDidDocument, null, 2)} was recovered`);
 ```
 
 #### Delete a did document
@@ -205,7 +216,7 @@ const deletePayload = await element.op.getDeletePayload(
 // Send Sidetree transaction
 const deleteTransaction = await element.batchScheduler.writeNow(deletePayload);
 const deletedDidDocument = await element.resolve(didUniqueSuffix, true);
-console.log(`${JSON.stringify(deletedDidDocument, null, 2)} was deleted`)
+console.log(`${JSON.stringify(deletedDidDocument, null, 2)} was deleted`);
 ```
 
 ## How to use element-api
@@ -213,9 +224,11 @@ console.log(`${JSON.stringify(deletedDidDocument, null, 2)} was deleted`)
 ### Define the environment file
 
 In the root level directory copy the example config
+
 ```
 cp example.env .env
 ```
+
 then fill the following values:
 
 - ELEMENT_MNEMONIC: a mnemonic funded with ethereum. See step 1 and 2 of [this tutorial](./create-funded-mnemonic.md)
@@ -232,6 +245,7 @@ npm run env:create:prod
 ```
 
 You may now start the API by running
+
 ```bash
 npm run start # if you have setup a firebase project
 npm run start:standalone # to run the standalone express version of the API
@@ -240,6 +254,7 @@ npm run start:standalone # to run the standalone express version of the API
 ## How to use element-app
 
 All config is checked into source so you can run the app by:
+
 ```bash
 npm run start
 ```
@@ -310,9 +325,15 @@ docker run --rm -p 80:5002 gjgd/element-api:latest
 
 ### How to build Element APP with a different domain for the API:
 
-1) Clone Element
-2) `cd packages/element-app`
-3) edit the content of `.env.production` to the API_URL you want to use
-4) `docker build -t my-tag .`
-5) `docker run --rm -p 80:5002 my-tag`
-6) Now the app runs on port 80 and will use the API_URL specified in 3)
+1. Clone Element
+2. `cd packages/element-app`
+3. edit the content of `.env.production` to the API_URL you want to use
+4. `docker build -t my-tag .`
+5. `docker run --rm -p 80:5002 my-tag`
+6. Now the app runs on port 80 and will use the API_URL specified in 3)
+
+### Release process
+
+```
+lerna publish
+```

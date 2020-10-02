@@ -1,6 +1,6 @@
 {
   "name": "@transmute/element-lib",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "description": "Experimental Sidetree Protocol based DID Method `elem` with Ethereum and IPFS",
   "main": "index.js",
   "repository": {
@@ -40,7 +40,9 @@
     "@transmute/did-wallet": "0.0.0-6",
     "@transmute/es256k-jws-ts": "0.0.4",
     "@truffle/contract": "^4.2.14",
-    "@truffle/hdwallet-provider": "1.0.38-next.0",
+    "@truffle/hdwallet-provider": "^1.0.40",
+    "@types/webassembly-js-api": "0.0.2",
+    "acorn": "^7.3.1",
     "base64url": "^3.0.1",
     "bip39": "^2.5.0",
     "crypto-ld": "^3.7.0",
@@ -70,11 +72,12 @@
     "rxdb": "^8.5.0",
     "rxjs": "^6.5.2",
     "secp256k1": "^3.6.2",
-    "web3": "^1.2.2",
+    "web3": "^1.2.11",
     "winston": "^3.2.1"
   },
   "devDependencies": {
     "@transmute/eslint-config": "0.1.0",
+    "chai": "^4.2.0",
     "dotenv": "^7.0.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^14.0.0",
@@ -85,13 +88,17 @@
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-security": "^1.4.0",
     "faker": "^4.1.0",
-    "ganache-cli": "^6.8.2",
+    "ganache-cli": "^6.9.1",
+    "ganache-time-traveler": "^1.0.14",
     "go-ipfs": "0.4.22",
     "jest": "^24.5.0",
     "jsonld": "^2.0.1",
     "jsonld-signatures": "^4.5.1",
     "jsonwebtoken": "^8.5.1",
-    "truffle": "^5.1.36"
+    "prettier": "^2.0.5",
+    "truffle": "^5.1.36",
+    "truffle-assertions": "^0.9.2",
+    "typescript": "^3.9.7"
   },
   "engines": {
     "node": ">=10.0.0"
